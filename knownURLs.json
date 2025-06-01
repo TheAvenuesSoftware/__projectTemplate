@@ -1,0 +1,11 @@
+{
+    "safe_URLs": [
+        "/.well-known/appspecific/com.chrome.devtools.json",
+        "/heartbeat-session-extension"
+    ],
+    "startup_URLs": [
+        "/globalRouter/getGlobalFooter",
+        "/loginRouter/isLoginRequired",
+        "/session-check"
+    ]
+}

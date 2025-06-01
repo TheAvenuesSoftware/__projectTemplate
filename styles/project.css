@@ -1,0 +1,44 @@
+* {
+  font-family: "Consolas", "Courier New", monospace;
+}
+
+input {
+  color: darkblue;
+  background-color: beige;
+}
+
+.project-footer {
+  background-color: #222;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+.project-footer .global-footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.project-footer .global-footer-content p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.project-footer .global-footer-content nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 15px;
+}
+.project-footer .global-footer-content nav ul li a {
+  color: #ccc;
+  background-color: #007bff;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+.project-footer .global-footer-content nav ul li a:hover {
+  color: #fff;
+}
+
+/*# sourceMappingURL=project.css.map */

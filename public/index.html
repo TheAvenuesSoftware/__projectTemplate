@@ -1,0 +1,102 @@
+<!-- collapse all     Ctrl + k + 0 -->
+<!-- expand all       Ctrl + k + j -->
+<!-- format           Alt + Shift + F (USE WITH CAUTION)-->
+<!-- word wrap toggle Alt + z -->
+<!-- - Element IDs & Classes: Use kebab-case (e.g., <div id="user-profile">) -->
+<!-- - Attributes: Follow HTML syntax conventions, using lowercase (e.g., <input type="text">) -->
+<!-- - Custom Attributes: Typically data-* (e.g., data-user-id) -->
+    
+<!DOCTYPE html>
+<html lang="en" class="footer-position-grid">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+
+    <link rel="stylesheet" href="project.css">
+    <link rel="stylesheet" href="global.css">
+
+    <script type="module" src="/globalLoginClient.mjs"></script>
+    <!-- <script type="module" src="/globalRoutes.mjs"></script> -->
+
+    <script type="module" src="globalClient.mjs"></script>
+    <script type="module" src="projectClient.mjs"></script>
+    
+    <script type="module" src="globalUIpopups.mjs"></script>
+
+    <script type="module" src="globalConfig_Client.mjs"></script>
+    <script type="module" src="projectConfig_Client.mjs"></script>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+</head>
+<body>
+    <header>
+        <h1>The Avenues Software Pilot Project</h1>
+    </header>
+    <main>
+        <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
+            <div id="sign-in-out-button" class="sign-in-button" tabindex="0" role="button">Sign In</div> 
+        <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
+        <!-- <form id="expense-form" class="std-frm-flex-wrapper">
+            <div class="std-frm-flex-item">
+                <label for="date0" >Date:</label>
+                <input type="text" id="date0" required />
+            </div>
+            <div class="std-frm-flex-item">
+                <label for="amount0" >Amount:</label>
+                <input type="number" id="amount0" required />
+            </div>
+            <div class="std-frm-flex-item">
+                <label for="category0" >Category:</label>
+                <input type="text" id="category0" required />
+            </div>
+            <div class="std-frm-flex-item">
+                <label for="description0" >Description:</label>
+                <input type="text" id="description0" required />
+            </div>
+            <div id="submitData0" class="std-btn" >Add Expense</div>
+        </form>
+        <form id="expense-form" class="std-frm-grid">
+            <label for="date" class="">Date:</label>
+                <input type="date" id="date" required />
+            <label for="amount" class="">Amount:</label>
+                <input type="number" id="amount" required />
+            <label for="category" class="">Category:</label>
+                <input type="text" id="category" required />
+            <label for="description" class="">Description:</label>
+                <input type="text" id="description" required />
+            <div id="submitData" class="std-btn" >Add Expense</div>
+        </form>
+        <section id="expense-list">
+            <h2>Expense List</h2>
+        </section>
+        <section id="expense-summary">
+            <h2>Summary</h2>
+        </section> -->
+    </main>
+    <footer>
+
+        <!-- project-footer -->
+            <!-- <div id="project-footer" class="project-footer">
+                <div class=global-footer-content>
+                    <p>&copy; ${moment.year} The Avenues Software. All rights reserved.</p>
+                    <nav>
+                        <ul>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div> -->
+
+        <!-- global-footer -->
+            <div id="global-footer" class="global-footer"></div>
+
+        <!-- session timer -->
+            <div id="session-timer"></div>
+
+    </footer>
+</body>
+</html>

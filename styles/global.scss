@@ -1,0 +1,397 @@
+// 1 navigate to the folder that contains global.scss
+// 2 open terminal
+// 3 npx sass --watch global.scss:global.css
+
+// - Class & ID Names: Use kebab-case (e.g., .main-container, #header-nav)
+// - Variables (SCSS): Use $kebab-case (e.g., $primary-color)
+// - Mixins & Functions: Often use camelCase or PascalCase (e.g., @mixin flexCenter)
+// - BEM Methodology (Block Element Modifier): Uses block__element--modifier (e.g., .button__icon--large)
+
+// @import "base/_reset";
+// @import "base/_typography";
+// @import "utils/_variables";
+// @import "utils/_mixins";
+// @use "base/_reset";
+// @use "base/_typography";
+// @use "utils/_variables";
+// @use "utils/_mixins";
+
+// header <<<--- scss scss scss scss scss scss scss scss scss scss
+header {
+    // // The namespace is automatically set to the file name without the underscore (_) and .scss extension. So _mixins.scss becomes mixins.
+    //     @include mixins.center-flex;
+    // // The namespace is automatically set to the file name without the underscore (_) and .scss extension. So _mixins.scss becomes mixins.
+    background-color: #f4f4f4;
+    padding: 1rem;
+}
+
+body{
+    user-select: none;
+    // background-color: #af1414;
+}
+  
+// footer position fixed <<<--- scss scss scss scss scss scss scss scss scss scss
+.footer-position-fixed {
+    footer{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #222;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+    }
+}
+// footer position flex <<<--- scss scss scss scss scss scss scss scss scss scss
+.footer-position-flex{
+    html, body {
+    height: 100%;
+    margin: 0;
+    }
+    // .wrapper {
+    main{
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    // .content {
+    main{
+        flex: 1; /* Pushes footer down */
+    }
+    footer {
+        background-color: #222;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+    }
+}
+// footer position grid <<<--- scss scss scss scss scss scss scss scss scss scss
+.footer-position-grid{
+    body {
+        display: grid;
+        grid-template-rows: auto 1fr auto; /* Header, Content, Footer */
+        min-height: 100vh;
+        margin: 0;
+    }
+    .footer {
+        background-color: #222;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+    }
+}
+
+// global footer content <<<--- scss scss scss scss scss scss scss scss scss scss
+.global-footer {
+    background-color: #222;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    .global-footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        p {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        nav {
+            ul {
+                list-style: none;
+                padding: 0;
+                display: flex;
+                gap: 15px;
+                li {
+                    a {
+                        color: #ccc;
+                        background-color: #007bff;
+                        padding: 0px 5px;
+                        border: 1px solid blue;
+                        border-radius: 5px;
+                        text-decoration: none;
+                        font-size: 16px;
+                        transition: color 0.3s ease;
+                        &:hover {
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// standard button <<<--- scss scss scss scss scss scss scss scss scss scss
+.std-btn{
+    display:inline-block;
+    padding: 0px 6px;
+    margin: 6px 0px;
+    background-color: #0073e6;
+    background: linear-gradient(135deg, #4A90E2, #1440AF);
+    color:#ffff;
+    text-align: center;
+    border:1px solid blue;
+    border-radius: 5px;
+    transition: all 0.5s ease-in-out;
+    &:hover{
+        transform:scale(1.05);
+        background: linear-gradient(135deg,  #1440AF,#4A90E2);
+    }
+}
+
+// standard form flex <<<--- scss scss scss scss scss scss scss scss scss scss
+.std-frm-flex-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Ensures vertical alignment */
+    // gap:10px;
+    .std-frm-flex-item{
+        display: flex;
+        flex-direction: row;
+        align-items: center; /* Ensures vertical alignment */
+        gap:10px;
+        label {
+            min-width: 120px; /* Adjust width based on longest label */
+            text-align: right;
+            width:120px;
+            // margin-bottom: 5px; /* Adds space below each label */
+            display:inline-block /* Ensures spacing applies properly */
+        }
+        input {
+            flex: 1; /* Takes up remaining space */
+            width:120px;
+        }
+    }
+}
+
+// standard form grid <<<--- scss scss scss scss scss scss scss scss scss scss
+.std-frm-grid {
+    display: grid;
+    grid-template-columns: 150px auto; /* First column for labels, second for inputs */
+    align-items: center;
+    label {
+        text-align: right; /* Align text properly */
+        padding-right: 10px;
+    }  
+    input {
+        // width: 100%;
+        width:120px;
+    }
+}
+
+/* Basic styles for the dialog and backdrop */
+.custom-alert{
+    #custom-alert-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    #custom-alert-dialog {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    #custom-alert-dialog button {
+        margin-top: 10px;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+    }
+
+    #custom-alert-dialog button:hover {
+        background-color: #0056b3;
+    }
+}
+
+#session-timer{
+    position:fixed;
+    bottom:5px;
+    right:5px;
+    height:1.5rem;
+    min-width:1.5rem;
+    width:fit-content;
+    color:#fff;
+    background-color: #007bff;
+    text-align: center;
+    // vertical-align: middle;
+    margin:auto;
+    border-radius: 5%;
+}
+
+.busy-animation{
+    /* Center the animation */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 1);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+    /* The animated dots */
+    .dot {
+        width: 12px;
+        height: 12px;
+        background-color: #3498db;
+        border-radius: 50%;
+        animation: bounce 1.5s infinite ease-in-out;
+    }
+    /* Use animation delay to stagger movement */
+    .dot:nth-child(1) { animation-delay: 0s; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    /* Keyframes for bounce effect */
+    @keyframes bounce {
+        0%, 80%, 100% { transform: scale(1); opacity: 0.6; }
+        40% { transform: scale(1.5); opacity: 1; }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+.fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+.login-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;        
+    // background-color: red;
+    .dialog{
+        background: rgba(255,255,255,1);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        // background-color: red;
+        input{
+            color:darkblue;
+            background-color: beige;
+            width: 100%;
+        }
+        button{
+            margin-top: 10px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: rgba(0, 123, 255, 1);
+            color: white;
+            cursor: pointer;
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        .normal-prompt{
+            max-width: 100%;
+        }
+        .error-prompt{
+            max-width: 100%;
+            color: red;
+        }
+    }
+}
+
+.sign-in-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #4A90E2, #1440AF);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    position:fixed;
+    top: 5px;
+    right: 5px;
+    height:25px;
+    width: 25px;
+    &:hover{
+        transform:scale(1.05);
+        background: linear-gradient(135deg,  #1440AF,#4A90E2);
+    }
+}
+.sign-out-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #d86b6b, #af1414);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    position:fixed;
+    top: 5px;
+    right: 5px;
+    height:25px;
+    width: 25px;
+    &:hover{
+        transform:scale(1.05);
+        background: linear-gradient(135deg,  #af1414,#d86b6b);
+    }
+}
