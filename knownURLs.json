@@ -6,6 +6,11 @@
     "startup_URLs": [
         "/globalRouter/getGlobalFooter",
         "/loginRouter/isLoginRequired",
-        "/session-check"
+        "/loginRouter/fileExists",
+        "/loginRouter/emailCode",
+        "/sessionsRouter/sessionRegen",
+        "/loginRouter/loginCodeSubmit",
+        "/session-check",
+        "/googleAPIsRouter/google-places-api-key"
     ]
 }

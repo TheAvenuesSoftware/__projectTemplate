@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
+    <title>__projectTemplate</title>
 
     <link rel="stylesheet" href="project.css">
     <link rel="stylesheet" href="global.css">
@@ -27,53 +27,138 @@
     <script type="module" src="globalConfig_Client.mjs"></script>
     <script type="module" src="projectConfig_Client.mjs"></script>
 
+    <script type="module" src="googleAPIs_ClientSide.mjs"></script>
+
     <link rel="icon" type="image/png" href="/favicon.png">
 
 </head>
 <body>
     <header>
-        <h1>The Avenues Software Pilot Project</h1>
+        <h1 style="text-align: center;">The Avenues Software</h1>
+        <h2 style="text-align: center;">__projectTemplate</h2>
+        <h3 id="user-email-address" style="text-align: center;"></h3>
     </header>
     <main>
         <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-            <div id="sign-in-out-button" class="sign-in-button" tabindex="0" role="button">Sign In</div> 
+            <div id="sign-in-out-button" class="sign-in-button" tabindex="0" role="button">Log In</div> 
         <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-        <!-- <form id="expense-form" class="std-frm-flex-wrapper">
-            <div class="std-frm-flex-item">
-                <label for="date0" >Date:</label>
-                <input type="text" id="date0" required />
-            </div>
-            <div class="std-frm-flex-item">
-                <label for="amount0" >Amount:</label>
-                <input type="number" id="amount0" required />
-            </div>
-            <div class="std-frm-flex-item">
-                <label for="category0" >Category:</label>
-                <input type="text" id="category0" required />
-            </div>
-            <div class="std-frm-flex-item">
-                <label for="description0" >Description:</label>
-                <input type="text" id="description0" required />
-            </div>
-            <div id="submitData0" class="std-btn" >Add Expense</div>
-        </form>
-        <form id="expense-form" class="std-frm-grid">
-            <label for="date" class="">Date:</label>
-                <input type="date" id="date" required />
-            <label for="amount" class="">Amount:</label>
-                <input type="number" id="amount" required />
-            <label for="category" class="">Category:</label>
-                <input type="text" id="category" required />
-            <label for="description" class="">Description:</label>
-                <input type="text" id="description" required />
-            <div id="submitData" class="std-btn" >Add Expense</div>
-        </form>
-        <section id="expense-list">
-            <h2>Expense List</h2>
-        </section>
-        <section id="expense-summary">
-            <h2>Summary</h2>
-        </section> -->
+
+        <!--  -->
+            <!--  login START -->
+                <div class="login-pages-container">
+                    <div class="login-page page1">
+                            <label for="loginEmailAddress">Please enter your login email address:</label>
+                            <input type="email" id="loginEmailAddress" name="loginEmailAddress" placeholder="Enter your email address..." aria-label="Enter your email address">
+                            <button class="button login-stepOne">Log in</button>
+                            <button class="button login-cancel">Cancel</button>
+                            <div class="button-container">
+                                <div id="back-btn1" class="btn back-btn" role="button">◀ Back</div>
+                                <div id="next-btn1" class="btn next-btn" role="button">Next ▶</div>
+                            </div>
+                    </div>
+                    <div class="login-page page2">
+                            <p>Email address is not correctly formatted, please try again.</p>
+                            <button class="button login-cancel">Cancel</button>
+                            <div class="button-container">
+                                <div id="back-btn2" class="btn back-btn" role="button">◀ Back</div>
+                                <div id="next-btn2" class="btn next-btn" role="button">Next ▶</div>
+                            </div>
+                    </div>
+                    <div class="login-page page3">
+                            <p>Email address is not valid, please try again.</p>
+                            <button class="button login-cancel">Cancel</button>
+                            <div class="button-container">
+                                <div id="back-btn3" class="btn back-btn" role="button">◀ Back</div>
+                                <div id="next-btn3" class="btn next-btn" role="button">Next ▶</div>
+                            </div>
+                    </div>
+                    <div class="login-page page4">
+                            <p>Account exists or not. DO NOT DISPLAY THIS PAGE</p>
+                            <div class="button-container">
+                                <div id="back-btn4" class="btn back-btn" role="button">◀ Back</div>
+                                <div id="next-btn4" class="btn next-btn" role="button">Next ▶</div>
+                            </div>
+                    </div>
+                    <div class="login-page page5">
+                            <p>Account for email address not found.  Create a new account?.</p>
+                            <button class="button login-stepFive">Yes</button>
+                            <button class="button login-cancel">Cancel</button>
+                            <div class="button-container">
+                                <div id="back-btn5" class="btn back-btn" role="button">◀ Back</div>
+                                <div id="next-btn5" class="btn next-btn" role="button">Next ▶</div>
+                            </div>
+                    </div>
+                    <div class="login-page page6">
+                            <p>generate login code; email login code; DO NOT DISPLAY THIS PAGE</p>
+                            <div class="button-container">
+                                <div id="back-btn6" class="btn back-btn" role="button">◀ Back</div>
+                                <div id="next-btn6" class="btn next-btn" role="button">Next ▶</div>
+                            </div>
+                    </div>
+                    <div class="login-page page7">
+                            <label for="loginCode">Please enter the login code that has been emailed to you:</label>
+                            <input type="text" id="loginCode" name="loginCode" placeholder="Enter your login code here..." aria-label="Enter your login code here">
+                            <button class="button login-stepSeven">Submit</button>
+                            <button class="button login-cancel">Cancel7</button>
+                            <p>regenerate the session</p>
+                            <p>if successful, ask user to submit loginCode</p>
+                            <p>if unsuccessful, display error and goto stepOne</p>
+                            <div class="button-container">
+                                <div id="back-btn7" class="btn back-btn" role="button">◀ Back</div>
+                                <div id="next-btn7" class="btn next-btn" role="button">Next ▶</div>
+                            </div>
+                    </div>
+                </div>
+            <!--  login END -->
+        <!--  -->
+
+        <!--  -->
+            <!-- Google Maps API START -->
+                <!-- <div id="googleMapsAPIautocomplete" class="autocomplete-address-input">
+                    <input type="text" placeholder="Enter address">
+                </div>
+                <div id="map-container" style="display:none;position: relative; width: 600px; height: 400px;">
+                    <button id="close-map" style="position: absolute; top: 10px; right: 10px; background: red; color: white; border: none; padding: 8px 12px; cursor: pointer;z-index: 10;">
+                        Close Map
+                    </button>
+                    <div id="map" style="width: 600px; height: 400px;">
+                    </div>
+                </div> -->
+            <!-- Google Maps API END -->
+        <!--  -->
+
+        <!--  -->
+            <!-- Google Places API START -->
+                <input id="googlePlacesAPIautocomplete" class="autocomplete-address-input" type="text" placeholder="Enter address">
+                <div id="map-container" style="display:none;position: relative; width: 600px; height: 400px;">
+                    <button id="close-map" style="position: absolute; top: 10px; right: 10px; background: red; color: white; border: none; padding: 8px 12px; cursor: pointer;z-index: 10;">
+                        Close Map
+                    </button>
+                    <div id="map" style="width: 600px; height: 400px;">
+                    </div>
+                </div>
+            <!-- Google Places API END -->
+        <!--  -->
+
+        <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
+                <!-- <video id="camera-stream" autoplay playsinline style="display: block;"></video> -->
+                <!-- <canvas id="photo-canvas" style="display: none;"></canvas> -->
+                <!-- <button id="capture-btn">Take Photo</button> -->
+                <!-- <button id="save-btn" style="display: none;">Save Photo</button><br> -->
+                <!-- <textarea id="notes-input" placeholder="Enter notes"></textarea> -->
+                <video id="camera-stream" autoplay playsinline></video>
+                <canvas id="photo-canvas" style="display: none;"></canvas><br>
+                <textarea id="notes-input" placeholder="Enter notes"></textarea><br>
+                <button id="capture-btn">Take Photo</button>
+                <button id="save-btn" style="display: none;">Save Photo</button>
+        <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
+
+        <!-- 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
+                <img id="photo-display" src="" alt="Saved photo">
+                <p id="address-display"></p>
+                <p id="notes-display"></p>
+                <button id="retrieve-btn" >Load Saved Photo & Details</button>
+        <!-- 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
     </main>
     <footer>
 
@@ -94,8 +179,8 @@
         <!-- global-footer -->
             <div id="global-footer" class="global-footer"></div>
 
-        <!-- session timer -->
-            <div id="session-timer"></div>
+        <!-- session timer
+            <div id="session-timer"></div> -->
 
     </footer>
 </body>

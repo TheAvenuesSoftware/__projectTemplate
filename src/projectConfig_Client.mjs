@@ -1,3 +1,6 @@
+// project settings for the client
+// 💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚
+
 const consoleLog = false
 
 if(consoleLog===true){console.log("LOADED:- projectConfig_Client.mjs is loaded");}
@@ -12,7 +15,7 @@ export function projectClientConfigJSisLoaded(){
 const clientSessionWarningDelay = (60 * 60 * 1000);
 const clientSessionExpiredDelay = (65 * 60 * 1000);
 export const clientConfigSettings = {
-    CLIENT_APP_NAME: "Personal Expense Tracker",
+    // CLIENT_APP_NAME: "Personal Expense Tracker",
     CLIENT_API_KEY: "your-key-here", // public key only!!!
     CLIENT_BASE_URL: "http://192.168.1.117:3000",
     CLIENT_DATES_ALLOW_FUTURE: false,

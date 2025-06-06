@@ -1,3 +1,6 @@
+// project settings for the server - also see project.env
+// 💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚
+
 const consoleLog = false
 
 function trace() {
@@ -23,7 +26,7 @@ export function projectServerConfigJSisLoaded(){
 // const sessionWarningDelay = (60 * 60 * 1000);
 // const sessionExpiredDelay = (65 * 60 * 1000);
 export const serverConfigSettings = {
-    SERVER_APP_NAME: "Personal Expense Tracker",
+    SERVER_APP_NAME: "__projectTemplate",
     SERVER_API_KEY: "your-key-here", // public key only!!!
     SERVER_BASE_URL: "http://192.168.1.117:3000",
     SERVER_DATES_ALLOW_FUTURE: false,

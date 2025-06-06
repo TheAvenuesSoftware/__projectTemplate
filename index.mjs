@@ -23,6 +23,8 @@ const consoleLog = false;
 
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 1️⃣ import statements
+    // // axios
+    //     import axios from 'axios';
     // OS - operatingSystem
         import os from 'os';
     // FS - fileSystem
@@ -53,8 +55,9 @@ const consoleLog = false;
         // CORS handling START
         import cors from 'cors';
         // SQLite
-        import sqlite3 from "sqlite3";
-        import { open } from "sqlite";
+            // async await environment
+                import sqlite3 from "sqlite3"; //The core Node.js SQLite package (handles database operations).
+                import { open } from "sqlite"; // The SQLite package that provides a promise-based API for database operations.
         // ROUTERS
         // import dbRouter, * as dbFunctions from "./src/SQLite_ServerSide.mjs";
         // import loginRouter, * as loginFunctions from './src/globalLoginServer.mjs';
@@ -66,6 +69,7 @@ const consoleLog = false;
         import globalRouter from './src/globalServer.mjs'; 
         import projectRouter from './src/projectServer.mjs';
         import sessionsRouter from './src/globalSessionsServer.mjs';
+        import googleAPIsRouter from './src/googleAPIs_ServerSide.mjs';
         // SQLite CRUD
         import { insertRecord, getRecord, updateRecord, deleteRecord } from "./src/SQLite_ServerSide.mjs";
         import { trace } from "./src/globalServer.mjs";
@@ -89,6 +93,7 @@ const consoleLog = false;
 
     // function checkImports(){
         try{
+            if(consoleLog===true){console.log("Imported axios:", axios ? "✅ " : "❌ Failed");}
             if(consoleLog===true){console.log("Imported os:", os ? "✅ " : "❌ Failed");}
             if(consoleLog===true){console.log("Imported fs:", fs ? "✅ " : "❌ Failed");}
             if(consoleLog===true){console.log("Imported path:", path ? "✅ " : "❌ Failed");}
@@ -108,6 +113,7 @@ const consoleLog = false;
             if(consoleLog===true){console.log("Imported globalRouter:", globalRouter ? "✅ " : "❌ Failed");}
             if(consoleLog===true){console.log("Imported projectRouter:", projectRouter ? "✅ " : "❌ Failed");}
             if(consoleLog===true){console.log("Imported sessionsRouter:", sessionsRouter ? "✅ " : "❌ Failed");}
+            if(consoleLog===true){console.log("Imported googleAPIsRouter:", googleAPIsRouter ? "✅ " : "❌ Failed");}
             if(consoleLog===true){console.log("Imported {insertRecord} from SQLite_ServerSide.mjs:", insertRecord ? "✅ " : "❌ Failed");}
             if(consoleLog===true){console.log("Imported {getRecord} from SQLite_ServerSide.mjs:", getRecord ? "✅ " : "❌ Failed");}
             if(consoleLog===true){console.log("Imported {updateRecord} from SQLite_ServerSide.mjs:", updateRecord ? "✅ " : "❌ Failed");}
@@ -176,7 +182,8 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
     app.use(express.json());
     app.disable('x-powered-by'); // Reduce fingerprinting by hiding that this is an ExpressJS app
     app.set('trust proxy', 1) // trust first proxy
-    app.use(express.json()); // Middleware to parse JSON data
+    app.use(express.json({ limit: "10mb" })); // Middleware to parse JSON data // Increase JSON request size limit
+    app.use(express.urlencoded({ limit: "10mb", extended: true }));
     app.use(cookieParser()); // Enables reading of cookies
     const staticFolders = ['config', 'db', 'media', 'public', 'src', 'styles'];
     try{
@@ -371,6 +378,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(trace());}
 if(consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+// 🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪
 // AUTHENTICATE USER
     console.log(`${trace()}🔒✅ Authentication setup START.`);
     // const safePaths = JSON.parse(fs.readFileSync("safe_paths.json", "utf8")).allowedPaths;
@@ -411,21 +419,25 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                 if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️cookie connect.sid:-              `,rawCookieSessionId);}
                 if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️req.headers.cookie:-`,req.headers.cookie);}
             const cookieSid = (req.cookies["connect.sid"] || "").replace(/^s:/, "");
-            const headerSid = (req.headers.cookie || "").match(/connect\.sid=s%3A([^;]+)/)?.[1];
+            const headerSid_raw = (req.headers.cookie || "").match(/connect\.sid=s%3A([^;]+)/)?.[1];
+            const headerSid_decoded = headerSid_raw ? decodeURIComponent(headerSid_raw) : "🔴...could not decode [headerSid_raw]";
                 if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️cookieSid:-`,cookieSid);}
-                if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️headerSid:-`,headerSid);}
-            if (cookieSid !== headerSid) {
-                console.warn(`🪣 ${trace()}🔒⚠️Session ID mismatch detected, cookieSid != headersDis:-\n🪣 ${cookieSid} v \n🪣 ${headerSid}`);
+                if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️headerSid_decoded:-`,headerSid_decoded);}
+            if (cookieSid !== headerSid_decoded) {
+                console.warn(`🪣 ${trace()}🔒⚠️Session ID mismatch detected, cookieSid != headersSid:-\n🪣 ${cookieSid} v \n🪣 ${headerSid_decoded}`);
                 console.warn(`🪣 ${trace()}🔒⚠️Session ID mismatch detected for ${req.url}`);
                 if (!safeURLs.includes(req.url)) {
-                    const allowedRouters = ["/dbRouter/", "/projectRouter/", "/globalRouter/", "/loginRouter/", "/sessionsRouter/"];
+                    const allowedRouters = ["/dbRouter/", "/projectRouter/", "/globalRouter/", "/loginRouter/", "/sessionsRouter/", "/googleAPIsRouter/"];
                     if (allowedRouters.some(prefix => req.url.startsWith(prefix))) {
                         // console.log("Request is allowed");
                         console.warn(`🪣 ${trace()}🔒⚠️🟢 Access allowed to router:- ${req.url}`);
                     } else {
                         // console.log("Access denied");
                         console.warn(`🪣 ${trace()}🔒⚠️🔴 Access denied due to session inconsistency:- ${req.url}`);
-                        return res.status(403).send("Access denied due to session inconsistency.");
+// console.log(trace(),"Cookie SID:", req.cookies.sid);
+// console.log(trace(),"Headers SID:", req.headers["sid"]);
+// console.log(trace(),"Session ID:", req.sessionID);
+                        return res.status(403).send({message:"Access denied due to session inconsistency.",status:false});
                     }
                 }else{
                     console.warn(`🪣 ${trace()}🔒⚠️🟢 Access allowed to safe path:- ${req.url}`);
@@ -461,6 +473,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
         console.log(("🔒").repeat(60));
     });
     console.log(`${trace()}🔒✅ Authentication setup END.`);
+//    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
 if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(trace());}
@@ -474,6 +487,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                 app.use("/globalRouter", globalRouter);
                 app.use("/projectRouter", projectRouter);
                 app.use("/sessionsRouter", sessionsRouter);
+                app.use("/googleAPIsRouter", googleAPIsRouter);
                 console.log(`${trace()}🟢 Routers mounted - must be done after Authentication is setup.`);
             }
             catch (error) {
@@ -561,8 +575,8 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
             }
 
         // set session creation timestamp
-        // console.log(`🪣 Session object before try/catch:`, req.session);
-        // console.log("🪣 Before try/catch—this should appear!");
+            // console.log(`🪣 Session object before try/catch:`, req.session);
+            // console.log("🪣 Before try/catch—this should appear!");
             try{
                 if (!req.session.createdAt) {
                     req.session.createdAt = Date.now(); // Store creation timestamp
@@ -572,7 +586,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                 console.log(`🪣 ${trace()}📫🔴 Session create time could not be set:`, error);
             }
             // Extract session ID from cookie
-                const rawSessionId = req.cookies["connect.sid"]; 
+            const rawSessionId = req.cookies["connect.sid"]; 
             console.log(`🪣 ${trace()}📫 cookie connect.sid:- `,rawSessionId);
             const createdAtMilliseconds = req.session.createdAt;
             console.log(`🪣 ${trace()}📫 req.session.createdAt:-`,new Date(createdAtMilliseconds).toLocaleDateString(),new Date(createdAtMilliseconds).toLocaleTimeString());

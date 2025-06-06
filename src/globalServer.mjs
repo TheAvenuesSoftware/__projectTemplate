@@ -31,6 +31,11 @@ export function globalServerMJSisLoaded(){
 
 // nodemailer sendMail START
     export async function sendMail(from="",to="",subject="",html="",text=""){
+        if(consoleLog===true){console.log(`${trace()}from:- ${from}`);}
+        if(consoleLog===true){console.log(`${trace()}to:-${to}`);}
+        if(consoleLog===true){console.log(`${trace()}subject:- ${subject}`);}
+        if(consoleLog===true){console.log(`${trace()}html:- ${html.replace(" ","")}`);}
+        if(consoleLog===true){console.log(`${trace()}text:- ${text}`);}
         // if(consoleLog===true){console.log(`${trace()}\nfrom:- ${from}\nto:-${to}\nsubject:- ${subject}\nhtml:- ${html.replace(" ","")}\ntext:- ${text}\n`);}
         // data validation START
                 if ([from, to, subject, html, text].some(val => !val)) {

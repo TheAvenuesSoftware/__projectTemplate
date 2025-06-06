@@ -19,9 +19,9 @@ const consoleLog = true;
                         // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
                         'Accept': 'application/json',        // Expect JSON response
                     },
-                    body: JSON.stringify({          // Converts object to JSON for request
+                    body: JSON.stringify({ 
                         logUserOut:true
-                    })
+                    })  // Converts object to JSON for request
                 }
             if(consoleLog===true){console.log(JSON.stringify(fetchOptions,null,2));}
             const response = await fetch(fetchUrl,fetchOptions);
@@ -38,7 +38,7 @@ const consoleLog = true;
                 });
                 alert("🟢 logout successful.");
                 console.log("🟢 logout successful.");
-                document.getElementById("sign-in-out-button").innerHTML = "Sign In";
+                document.getElementById("sign-in-out-button").innerHTML = "Log In";
                 document.getElementById("sign-in-out-button").classList.remove("sign-out-button");
                 document.getElementById("sign-in-out-button").classList.add("sign-in-button");
             }else{
@@ -49,7 +49,7 @@ const consoleLog = true;
                 });
                 alert("🔴 logout failed, please try again");
                 console.log("🔴 logout failed, please try again");
-                document.getElementById("sign-in-out-button").innerHTML = "Sign Out";
+                document.getElementById("sign-in-out-button").innerHTML = "Log Out";
                 document.getElementById("sign-in-out-button").classList.remove("sign-in-button");
                 document.getElementById("sign-in-out-button").classList.add("sign-out-button");
             }
