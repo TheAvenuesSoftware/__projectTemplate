@@ -14,13 +14,69 @@ export function globalLoginClientJSisLoaded(){
     import {postLoginActions_clientSide} from "./projectClient.mjs";
     // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
+const popupHTML = 
+    `<div id="popup-overlay" class="popup-overlay">
+        <div id="popup-container" class="popup-container">
+            <p id="popup-heading" class="popup-heading">This is a popup message.</p>
+            <p id="popup-message" class="popup-message"></p>
+            <input id="popup-input" class="popup-input" type="text" placeholder="Enter your input here...">
+            <button id="popup-button-1" class="popup-button">Button 1</button>
+            <button id="popup-button-2" class="popup-button">Button 2</button>
+            <button id="popup-button-3" class="popup-button">Button 3</button>
+            <p id="popup-error-message" class="popup-error-message"></p>
+            <input id="popup-focus-select-nodisplay" style="display:none" type="text" placeholder="Focus Select No Display">
+        </div>
+    </div>`
+
+const busyAnimationHTML = 
+    `<div id="busy-animation-overlay" class="busy-animation-overlay">
+        <div class="container">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </div>`
+
 function login_stepOne(){
     // get email address
     // goto login_stepTwo(loginEmailAddress);
-    const loginEmailAddress = document.getElementById("loginEmailAddress").value;
-    window.sessionStorage.setItem("loginEmailAddress", loginEmailAddress);
-    login_stepTwo(loginEmailAddress);
+    // const loginEmailAddress = document.getElementById("loginEmailAddress").value;
+    // window.sessionStorage.setItem("loginEmailAddress", loginEmailAddress);
+    document.body.insertAdjacentHTML("beforeend", popupHTML);
+    document.getElementById("popup-heading").textContent = "Login";
+    document.getElementById("popup-message").textContent = "Please enter your email address to log in.";
+    document.getElementById("popup-input").value = "";
+    document.getElementById("popup-input").placeholder = "Enter your email address here...";
+    document.getElementById("popup-input").focus();
+    document.getElementById("popup-input").select();
+    document.getElementById("popup-button-1").textContent = "Submit.";
+    document.getElementById("popup-button-2").textContent = "Cancel.";
+    document.getElementById("popup-button-3").textContent = "";
+    document.getElementById("popup-button-3").style.display = "none";
+    document.getElementById("popup-error-message").innerHTML = "&nbsp";
+
+    function popupButton1(){
+        document.body.insertAdjacentHTML("beforeend", busyAnimationHTML);
+        document.getElementById("popup-overlay").classList.add("fade-out");
+        document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
+        const loginEmailAddress = document.getElementById("popup-input").value;
+        window.sessionStorage.setItem("loginEmailAddress", loginEmailAddress);
+        login_stepTwo(loginEmailAddress);
+    }
+    document.getElementById("popup-button-1").addEventListener("click", popupButton1);
+
+    function popupButton2(){
+        document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
+        document.getElementById("popup-overlay").remove();
+    }
+    document.getElementById("popup-button-2").addEventListener("click", popupButton2);
+
+    function popupButton3(){
+        document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
+    }
+    document.getElementById("popup-button-3").addEventListener("click", popupButton3);
 }
+
 function login_stepTwo(loginEmailAddress){
     // verify email address format
         if(consoleLog===true){console.log(`isValidEmailFormat(${loginEmailAddress})`);}
@@ -34,6 +90,7 @@ function login_stepTwo(loginEmailAddress){
             login_cancel("Invalid email format. Please try again.");
         }
 }
+
 async function login_stepThree(loginEmailAddress) {
     // verify mx domain for the email address
         if(consoleLog===true){console.log(`isDomainValid(${loginEmailAddress})`);}
@@ -47,27 +104,27 @@ async function login_stepThree(loginEmailAddress) {
             if(consoleLog===true){console.log('data.Question:- ',data.Question);} // Checks if MX records exist, 15
             if(consoleLog===true){console.log('data.Question.type:- ',data.Question[0].type);} // Checks if MX records exist, 15
             if(consoleLog===true){console.log('data.Answer:- ',data.Answer);} //
+            let validDomain = true;
             if(data.Status!=0){
                 if(consoleLog===true){console.log('data.Status:- ',data.Status);}
                 // return false;
                 login_cancel("Domain does not exist. Please check the email address and try again.");
-                return;
+                validDomain = false;
             }
             if(data.Question[0].type!=15){
                 // return false;
                 // login_cancel("Domain does not have MX records. Please check the email address and try again.");
                 login_cancel("Domain does not support email. Please check the email address and try again.");
-                return;
+                validDomain = false;
             }
             if(typeof data.Answer === "undefined"){
                 // return false;
                 // login_cancel("Domain does not have MX records. Please check the email address and try again.");
                 login_cancel("Domain does not support email. Please check the email address and try again.");
-                return;
-            }else{
-                // return true;
+                validDomain = false;
+            }
+            if(validDomain===true){
                 login_stepFour(loginEmailAddress);
-                return;
             }
             // Common Response Keys
                 // | Key        | Example Value                 | Explanation | 
@@ -85,7 +142,7 @@ async function login_stepThree(loginEmailAddress) {
             // return false;
             // login_cancel("Error fetching DNS records. Please check your internet connection or try again later.");
             login_cancel("Error fetching email domain records. Please check your internet connection or try again later.");
-            return;
+            // return;
         }
     // if true; goto stepFour(loginEmailAddress);
     // if false; display error; goto stepOne
@@ -134,8 +191,8 @@ function login_stepFive(loginEmailAddress, accountExists){
     // else ask user if they wish to create a new account,
         // if yes,              set boolean for variable "createNewAccount": true = create new account, goto stepSix
         // if no,               cancel login process
+    const createNewAccount = false; // Account exists === true; createNewAccount === false
     if(accountExists===true){
-        const createNewAccount = false; // Account exists === true; createNewAccount === false
         window.sessionStorage.setItem("createNewAccount",false);
         login_stepSix(loginEmailAddress, accountExists, createNewAccount); // Account exists === true; createNewAccount === false 
         // document.querySelectorAll('.login-page').forEach(el => {
@@ -148,20 +205,59 @@ function login_stepFive(loginEmailAddress, accountExists){
         //     }
         // }); 
     }else{
-        // window.sessionStorage.setItem("loginEmailAddress", loginEmailAddress);
-        // window.sessionStorage.setItem("accountExists", false);
-        document.querySelectorAll('.login-page').forEach(el => {
-            const classList = el.classList;
-            if (classList.contains('page5')) {
-            }else{
-                el.style.transition = "opacity 0.5s";
-                el.style.opacity = "0";
-                setTimeout(() => el.remove(), 500);
-            }
-        }); 
+        // // window.sessionStorage.setItem("loginEmailAddress", loginEmailAddress);
+        // // window.sessionStorage.setItem("accountExists", false);
+        // document.querySelectorAll('.login-page').forEach(el => {
+        //     const classList = el.classList;
+        //     if (classList.contains('page5')) {
+        //     }else{
+        //         el.style.transition = "opacity 0.5s";
+        //         el.style.opacity = "0";
+        //         setTimeout(() => el.remove(), 500);
+        //     }
+        // }); 
+        document.getElementById("popup-overlay").classList.add("fade-in");
+        document.getElementById("popup-overlay").classList.remove("fade-out");
+        document.getElementById("busy-animation-overlay").remove();
+        document.getElementById("popup-heading").textContent = "Create New Account";
+        document.getElementById("popup-message").textContent = "Account for email address not found.  Create a new account?";
+        document.getElementById("popup-input").value = "";
+        document.getElementById("popup-input").style.display = "none";
+        document.getElementById("popup-input").focus();
+        document.getElementById("popup-input").select();
+        document.getElementById("popup-button-1").textContent = "Yes";
+        document.getElementById("popup-button-2").textContent = "Cancel.";
+        document.getElementById("popup-button-3").textContent = "";
+        document.getElementById("popup-button-3").style.display = "none";
+        document.getElementById("popup-error-message").innerHTML = "&nbsp";
+
+        function popupButton1(){
+            document.body.insertAdjacentHTML("beforeend", busyAnimationHTML);
+            document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
+            createNewAccount = true; // createNewAccount === true;
+            window.sessionStorage.setItem("createNewAccount",true);
+            document.getElementById("popup-overlay").classList.add("fade-out");
+            login_stepSix(
+                window.sessionStorage.getItem("loginEmailAddress"),
+                window.sessionStorage.getItem("accountExists"),
+                true // createNewAccount
+            );
+        }
+        document.getElementById("popup-button-1").addEventListener("click", popupButton1);
+
+        function popupButton2(){
+            document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
+            document.getElementById("popup-overlay").remove();
+        }
+        document.getElementById("popup-button-2").addEventListener("click", popupButton2);
+
+        function popupButton3(){
+            document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
+        }
+        document.getElementById("popup-button-3").addEventListener("click", popupButton3);
     }
 }
-async function login_stepSix(loginEmailAddress,accountExists, createNewAccount){
+async function login_stepSix(loginEmailAddress, accountExists, createNewAccount){
     // generate login code
     // regenerate the session
     // email code to loginEmailAddress
@@ -191,6 +287,7 @@ async function login_stepSix(loginEmailAddress,accountExists, createNewAccount){
             const jso = await response.json(); // Fetch JSON object
             if(consoleLog===true){console.log(`emailCode:- `,jso);} // Logs correctly? Great!
             if(jso.loginCodeEmailed===true){
+                window.sessionStorage.setItem("loginsDBinsertedID", jso.loginsDBinsertedID);
                 login_stepSeven(loginEmailAddress, accountExists,createNewAccount,jso.loginCodeEmailed,jso.loginsDBinsertedID);
             }else{
                 login_cancel(`Problem generating login code. ${jso.loginCodeEmailed}`);
@@ -229,17 +326,58 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
             const jso = await response.json(); // Fetch JSON object
             if(consoleLog===true){console.log(`sessionRegen:- `,jso);}
             if(jso.sessionRegenOK===true){
-                // login_stepEight(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed,loginsDBinsertedID);
-                window.sessionStorage.setItem("loginsDBinsertedID", loginsDBinsertedID);
-                document.querySelectorAll('.login-page').forEach(el => {
-                    const classList = el.classList;
-                    if (classList.contains('page7')) {
-                    }else{
-                        el.style.transition = "opacity 0.5s";
-                        el.style.opacity = "0";
-                        setTimeout(() => el.remove(), 500);
-                    }
-                }); 
+                // // login_stepEight(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed,loginsDBinsertedID);
+                // document.querySelectorAll('.login-page').forEach(el => {
+                //     const classList = el.classList;
+                //     if (classList.contains('page7')) {
+                //     }else{
+                //         el.style.transition = "opacity 0.5s";
+                //         el.style.opacity = "0";
+                //         setTimeout(() => el.remove(), 500);
+                //     }
+                // }); 
+                document.getElementById("popup-overlay").classList.add("fade-in");
+                document.getElementById("popup-overlay").classList.remove("fade-out");
+                document.getElementById("busy-animation-overlay").remove();
+                document.getElementById("popup-heading").textContent = "Submit Login Code";
+                document.getElementById("popup-message").textContent = "Please enter the login code that has been emailed to you.";
+                document.getElementById("popup-input").value = "";
+                document.getElementById("popup-input").placeholder = "Enter your login code here...";
+                document.getElementById("popup-input").focus();
+                document.getElementById("popup-input").select();
+                document.getElementById("popup-button-1").textContent = "Submit";
+                document.getElementById("popup-button-2").textContent = "Cancel.";
+                document.getElementById("popup-button-3").textContent = "";
+                document.getElementById("popup-button-3").style.display = "none";
+                document.getElementById("popup-error-message").innerHTML = "&nbsp";
+
+                function popupButton1(){
+                    document.body.insertAdjacentHTML("beforeend", busyAnimationHTML);
+                    document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
+                    const createNewAccount = true; // createNewAccount === true;
+                    window.sessionStorage.setItem("createNewAccount",true);
+                    document.getElementById("popup-overlay").classList.add("fade-out");
+                    login_stepEight(
+                        loginEmailAddress,
+                        accountExists,
+                        createNewAccount,
+                        loginCodeEmailed,
+                        loginsDBinsertedID
+                    );
+                }
+                document.getElementById("popup-button-1").addEventListener("click", popupButton1);
+
+                function popupButton2(){
+                    document.getElementById("popup-overlay").remove();
+                    document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
+                }
+                document.getElementById("popup-button-2").addEventListener("click", popupButton2);
+
+                function popupButton3(){
+                    document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
+                }
+                document.getElementById("popup-button-3").addEventListener("click", popupButton3);
+
             }else{
                 login_cancel(`Problem generating login code. ${jso.sessionRegenOK}`);
             }
@@ -268,7 +406,8 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
                 loginEmailAddress:loginEmailAddress,
                 accountExists:accountExists,
                 createNewAccount:createNewAccount,
-                loginCodeSubmit:document.getElementById("loginCode").value,
+                // loginCodeSubmit:document.getElementById("loginCode").value,
+                loginCodeSubmit:document.getElementById("popup-input").value,
                 loginsDBinsertedID:loginsDBinsertedID
             })
         }
@@ -281,10 +420,17 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
             if(consoleLog===true){console.log(`sessionRegen:- `,jso);}
             if(jso.loginApproved===true){
                 alert("🟢 Secure login is successful.");
-                // login_stepEight(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed,loginsDBinsertedID);
+                document.getElementById("busy-animation-overlay").remove();
+                document.getElementById("popup-overlay").remove();
+                document.getElementById("sign-in-out-button").innerHTML = "Log Out";
+                document.getElementById("sign-in-out-button").classList.add("sign-out-button");
+                document.getElementById("sign-in-out-button").classList.remove("sign-in-button");
+                postLoginActions_clientSide();
             }else{
                 alert("🔴 Secure login failed, incorrect login code submitted.");
-                // login_cancel(`Problem generating login code. ${jso.sessionRegenOK}`);
+                document.getElementById("sign-in-out-button").innerHTML = "Log In";
+                document.getElementById("sign-in-out-button").classList.add("sign-in-button");
+                document.getElementById("sign-in-out-button").classList.remove("sign-out-button");
             }
     } catch (error) {
         alert("🔴 Error checking login code submitted, please try again.");
@@ -296,11 +442,12 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
 function login_cancel(message=""){
     // cancel login process
     alert("Login process cancelled.\n" + message);
-    document.querySelectorAll('.login-pages-container').forEach(el => {
-        el.style.transition = "opacity 0.5s";
-        el.style.opacity = "0";
-        setTimeout(() => el.remove(), 500);
-    });
+    console.log("Login process cancelled.\n" + message);
+    // document.querySelectorAll('.login-pages-container').forEach(el => {
+    //     el.style.transition = "opacity 0.5s";
+    //     el.style.opacity = "0";
+    //     setTimeout(() => el.remove(), 500);
+    // });
 }
 
 // isLoginRequired
@@ -338,353 +485,6 @@ export async function isLoginRequired() {
         console.error("Error fetching HTML from:",error.message);
     }
 }
-async function login_step4(loginEmailAddressInputValue,createNewAccount,loginCodeEmailed,loginCodeInputValue){
-    alert("login_step4");
-    if(consoleLog===true){console.log('login_step4(✅)');}
-    try{
-        const fetchUrl = "/loginRouter/login_step4";
-        const fetchOptions = {
-                method: 'POST',
-                mode: 'cors',
-                cache: 'no-cache',             // Prevents caching issues
-                credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
-                headers: {
-                    'Content-Type': 'application/json',  // Sets content type
-                    // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
-                    // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
-                },
-                body: JSON.stringify({          // Converts object to JSON for request
-                    loginEmailAddressInputValue:loginEmailAddressInputValue,
-                    createNewAccount:createNewAccount,
-                    loginCodeEmailed:loginCodeEmailed,
-                    loginCodeInputValue:loginCodeInputValue
-                })
-            }
-        if(consoleLog===true){console.log(JSON.stringify(fetchOptions,null,2));}
-        // const data = await universalFetchII(fetchUrl,fetchOptions);
-        const response = await fetch(fetchUrl,fetchOptions);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const jso = await response.json(); // converts fetch response from JSON to a JSO
-        console.log('🟢 Request Success:', jso);
-
-        if(consoleLog===true){console.log(jso);}
-        if(consoleLog===true){console.log(jso.message,jso.loginApproved);}
-
-        if(jso.loginApproved===true){
-            document.querySelectorAll('.overlay').forEach(el => {
-                el.style.transition = "opacity 0.5s";
-                el.style.opacity = "0";
-                setTimeout(() => el.remove(), 500);
-            });
-            alert("🟢 Secure login is successful.");
-            document.getElementById("sign-in-out-button").innerHTML = "Log Out";
-            document.getElementById("sign-in-out-button").classList.add("sign-out-button");
-            document.getElementById("sign-in-out-button").classList.remove("sign-in-button");
-            document.getElementById("user-email-address").textContent = loginEmailAddressInputValue;
-            postLoginActions_clientSide();
-        }else{
-            document.querySelectorAll('.overlay').forEach(el => {
-                el.style.transition = "opacity 0.5s";
-                el.style.opacity = "0";
-                setTimeout(() => el.remove(), 500);
-            });
-            alert("🔴 Secure login failed, please try again");
-            document.getElementById("sign-in-out-button").innerHTML = "Log In";
-            document.getElementById("sign-in-out-button").classList.add("sign-in-button");
-            document.getElementById("sign-in-out-button").classList.remove("sign-out-button");
-        }
-    }
-    catch (error) {
-        console.error('🔴 Request Failed:', error);
-        return null;
-    }
-}
-async function login_step3(loginEmailAddressInputValue,createNewAccount,loginCodeEmailed){
-    alert("login_step3");
-    if(consoleLog===true){console.log('login_step3(✅)');}
-    if(consoleLog===true){console.log(loginEmailAddressInputValue,createNewAccount);}
-    try{
-        const fetchUrl = "/loginRouter/login_step3";
-        const fetchOptions = {
-                method: 'POST',                // Specifies a POST request
-                mode: 'cors',                  // Ensures cross-origin requests are handled
-                cache: 'no-cache',             // Prevents caching issues
-                credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
-                headers: {
-                    'Content-Type': 'application/json',  // Sets content type for req.
-                    // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
-                    // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
-                },
-                body: JSON.stringify({          // Converts js object to JSON for request
-                    loginEmailAddressInputValue:loginEmailAddressInputValue,
-                    createNewAccount:createNewAccount
-                })
-            }
-        if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
-        const response = await fetch(fetchUrl,fetchOptions);
-        const jso = await response.json(); // converts fetch response from JSON to a JSO
-        console.log('🟢 Request Success:', jso);
-        if(jso.loginCodeEmailed===true){
-            alert(jso.loginEmailAddressInputValue,jso.loginCodeEmailed);
-            login_step1(jso.loginEmailAddressInputValue,jso.createNewAccount,jso.loginCodeEmailed);
-        }
-    }
-    catch (error) {
-        console.error('🔴 Request Failed:', error);
-        return null;
-    }
-}
-async function login_step2(loginEmailAddressInputValue,createNewAccount){ // send loginEmailAddressInputValue to server; receive login code || create new user
-    alert("login_step2");
-    if(consoleLog===true){console.log('login_step2(✅)');}
-    if(consoleLog===true){console.log(loginEmailAddressInputValue);}
-    try{
-        const fetchUrl = `/loginRouter/login_step2`;
-        const fetchOptions = {
-                method: 'POST',                // Specifies a POST request
-                mode: 'cors',                  // Ensures cross-origin requests are handled
-                cache: 'no-cache',             // Prevents caching issues
-                credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
-                headers: {
-                    'Content-Type': 'application/json',  // Sets content type
-                    // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
-                    // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
-                },
-                body: JSON.stringify({          // Converts object to JSON for request
-                    loginEmailAddressInputValue:loginEmailAddressInputValue,
-                    createNewAccount:createNewAccount
-                })
-            }
-        if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
-        // const data = await universalFetchII(fetchUrl,fetchOptions);
-        const response = await fetch(fetchUrl,fetchOptions);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const jso = await response.json();
-        console.log('🟢 Request Success:', jso);
-
-        if(consoleLog===true){console.log(jso);}
-        if(consoleLog===true){console.log(jso.message);}
-        if(consoleLog===true){console.log(jso.createNewAccount);}
-        if(consoleLog===true){console.log(jso.loginCodeEmailed);}
-        login_step1(jso.loginEmailAddressInputValue,jso.createNewAccount);
-    }
-    catch (error) {
-        console.error('🔴 Request Failed:', error);
-        return null;
-    }
-}
-// ⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨
-function login_step1(
-    loginEmailAddressInputValue="",
-    createNewAccount=null,
-    loginCodeEmailed=false,
-    loginCodeInputValue="",
-    loginApproved=false){
-
-    if(consoleLog===true){console.log(`login_step1(✅ emailAddress: ${loginEmailAddressInputValue},createNewAccount:${createNewAccount},loginCodeEmailed:${loginCodeEmailed},loginApproved:${loginApproved})`);}
-
-    document.querySelectorAll('.overlay').forEach(el => {
-        el.style.transition = "opacity 0.5s";
-        el.style.opacity = "0";
-        setTimeout(() => el.remove(), 500);
-    });
-
-    const overlay = document.createElement("div");
-    const dialog = document.createElement("div");
-    const emailAddressInput = document.createElement("input");
-    const loginCodeInput = document.createElement("input");
-    const submitButton = document.createElement("button");
-    const cancelButton = document.createElement("button");
-    const p1 = document.createElement("p");
-    const p2 = document.createElement("p");
-    const br1 = document.createElement("br");
-    const br2 = document.createElement("br");
-    const br3 = document.createElement("br");
-    const br4 = document.createElement("br");
-    const focusOnMe = document.createElement("input")
-
-    focusOnMe.style.display = "none";
-    br1.style.display = "none";
-    br2.style.display = "none";
-
-    // 
-        overlay.id = "overlay";
-        overlay.classList.add("login-overlay", "overlay");
-    
-    // 
-        dialog.id = "dialog";
-        dialog.classList.add("dialog");
-
-    //
-        p1.classList.add("normal-prompt");
-        p1.innerHTML = "Please enter your login email address.";
-        if(createNewAccount===true && loginCodeEmailed===false){
-            p1.innerHTML = `No account exists for ${loginEmailAddressInputValue}<br>Create an account?`;
-        }
-        if(loginCodeEmailed===true){
-            p1.innerHTML = `Please check your email account ${loginEmailAddressInputValue}<br>and enter the login code below.`;
-        }
-
-    // EMAIL ADDRESS INPUT ⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨
-        emailAddressInput.id = "user-email-address";
-        if(createNewAccount===true || loginCodeEmailed===true){
-            if(consoleLog===true){console.log('createNewAccount:- ',createNewAccount,'loginCodeEmailed:- ',loginCodeEmailed);}
-            emailAddressInput.value = loginEmailAddressInputValue;
-            emailAddressInput.disabled = true;
-            emailAddressInput.readOnly = true;
-            emailAddressInput.style.background = "rgba(255,255,255,1)";
-            setTimeout(() => {
-                emailAddressInput.blur();
-                focusOnMe.focus();
-                focusOnMe.select();
-            }, 100); // 50ms delay
-        }
-
-    // LOGIN CODE INPUT ⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨⌨
-        loginCodeInput.id = "user-login-code";
-        loginCodeInput.style.display = "none";
-        if(loginCodeEmailed===true){
-            if(consoleLog===true){console.log('loginCodeEmailed:- ',loginCodeEmailed);}
-            setTimeout(() => {
-                loginCodeInput.style.display = "block";
-                // br1.style.display = "block";
-                // br2.style.display = "block";
-                emailAddressInput.style.display = "none";
-            }, 100); // 50ms delay
-        }
-
-    // Create login button
-        submitButton.textContent = "Log-in";
-        if(createNewAccount===true){
-            submitButton.textContent = "Create account";
-        }
-        if(loginCodeEmailed===true){
-            submitButton.textContent = "Submit code";
-        }
-        
-
-    // Create cancel button
-        cancelButton.textContent = "Cancel";
-
-    // 
-        p2.innerHTML = `&nbsp`;
-        p2.classList.add("error-prompt");
-
-    // Append elements together
-        dialog.appendChild(p1);
-        dialog.appendChild(emailAddressInput );
-        dialog.appendChild(br1);
-        dialog.appendChild(br2);
-        dialog.appendChild(loginCodeInput);
-        dialog.appendChild(br3);
-        dialog.appendChild(submitButton);
-        dialog.appendChild(cancelButton);
-        // dialog.appendChild(br4);
-        dialog.appendChild(p2);
-        dialog.appendChild(focusOnMe);
-        overlay.appendChild(dialog);
-        document.body.appendChild(overlay);
-        emailAddressInput.focus();
-        emailAddressInput.select();
-
-    // add event listeners
-        // emailAddressInput
-            emailAddressInput.addEventListener("focus", () => {
-                setTimeout(() => {
-                    // p2.innerHTML = "&nbsp";
-                    p2.classList.add("fade-out");
-                }, 500); // 500ms delay
-                emailAddressInput.select();
-                if(createNewAccount===true || loginCodeEmailed===true){
-                    emailAddressInput.blur();
-                    focusOnMe.focus();
-                    focusOnMe.select();
-                }
-            });
-        // SUBMIT BUTTON 🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️🖱️
-            submitButton.addEventListener("mouseover", () => {
-                submitButton.style.backgroundColor = "#0056b3";
-            });
-            submitButton.addEventListener("mouseout", () => {
-                submitButton.style.backgroundColor = "#007bff";
-            });
-            submitButton.addEventListener("click", async () => {
-                if(loginCodeInputValue.length > 0){
-                    alert("loginCodeEmailed===true:- "+loginCodeEmailed);
-                    setTimeout(() =>{
-                        login_step4(emailAddressInput.value,createNewAccount,loginCodeEmailed,loginCodeInput.value); // submite login code for validation at server
-                    },1000); // used in development to mimic delayed response from server, maybe not necessary in production
-                    popupBusyAnimation();
-                    document.body.removeChild(overlay);
-                    return;
-                }
-                if(createNewAccount != null){
-                    alert("typeof createNewAccount===null:- "+createNewAccount);
-                    setTimeout(() =>{
-                        login_step3(emailAddressInput.value,createNewAccount,loginCodeEmailed); // generate login code and email to user
-                    },1000); // used in development to mimic delayed response from server, maybe not necessary in production
-                    popupBusyAnimation();
-                    document.body.removeChild(overlay);
-                    return;
-                }
-                // if(createNewAccount===false){
-                //     setTimeout(() =>{
-                //         login_step3(emailAddressInput.value,createNewAccount,loginCodeEmailed); // generate login code and email to user
-                //     },1000); // used in development to mimic delayed response from server, maybe not necessary in production
-                //     popupBusyAnimation();
-                //     document.body.removeChild(overlay);
-                //     return;
-                // }
-                // VALIDATE EMAIL ADDRESS { x = a + bx} { x = a + bx} { x = a + bx} { x = a + bx} { x = a + bx}
-                    if(emailAddressInput.value.length > 0){
-                        const validEmailFormat = await isValidEmailFormat(emailAddressInput.value);
-                        if(validEmailFormat===true){
-                            if(consoleLog===true){console.log('validEmailFormat:- ',validEmailFormat);}
-                            const validDomain = await isDomainValid(emailAddressInput.value);
-                            if(consoleLog===true){console.log('validDomain:- ',validDomain);}
-                            if(validDomain===true){
-                                if(consoleLog===true){console.log(`emailAddressInput.value: ${emailAddressInput.value}`);}
-                                setTimeout(() =>{
-                                    alert("login_step2");
-                                    login_step2(emailAddressInput.value,createNewAccount); // send emailAddressInput to server; receive login code || create new user
-                                },1000); // used in development to mimic delayed response from server, maybe not necessary in production
-                                popupBusyAnimation();
-                                document.body.removeChild(overlay);
-                                // document.querySelectorAll('.overlay').forEach(el => {
-                                //     el.style.transition = "opacity 0.5s";
-                                //     el.style.opacity = "0";
-                                //     setTimeout(() => el.remove(), 500);
-                                // });
-                            }else{
-                                p2.textContent = "Email domain is not valid.  Please try again.";
-                                p2.classList.remove("fade-out");
-                                p2.classList.add("fade-in");
-                            }
-                        }else{
-                                p2.textContent = "Email address is not valid.  Please try again.";
-                                p2.classList.remove("fade-out");
-                                p2.classList.add("fade-in");
-                        }
-                    }else{
-                        document.body.removeChild(overlay);
-                    }
-            });
-        // cancelButton
-            cancelButton.addEventListener("mouseover", () => {
-                cancelButton.style.backgroundColor = "rgba(0, 86, 179, 1)";
-            });    
-            cancelButton.addEventListener("mouseout", () => {
-                cancelButton.style.backgroundColor = "rgba(0, 123, 255, 1)";
-            });    
-            cancelButton.addEventListener("click", () => {
-                document.body.removeChild(overlay);
-            });
-    
-}
 
 // popup busy animation
     function popupBusyAnimation(){
@@ -714,10 +514,9 @@ function login_step1(
 
     }
 
-
     export function doAfterDOMandWindowLoad_globalLoginClient(){
-        // 1️⃣🔹2️⃣ START // doAfterDOMandWindowLoad_globalLoginClient()
-        // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+        // 1️⃣🔹2️⃣ START // doAfterDOMandWindowLoad_globalLoginClient() START
+        // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 
             if(consoleLog===true){console.log('doAfterDOMandWindowLoad_globalLoginClient() launched.',Date.now());}
 
@@ -730,73 +529,74 @@ function login_step1(
                     console.log("sign-in-out-button clicked");
                     console.log(e.target.textContent);
                     if(e.target.textContent.toLowerCase()==="log in"){
-                        login_step1();
+                        // login_step1();
+                        login_stepOne();
                     }
                     if(e.target.textContent.toLowerCase()==="log out"){
                         sessionLogout();
                     }
                 });
-            // signin-out button START
+            // signin-out button END
 
-            // displayLoginPage(loginPageNumber) START
-                let loginPageNumber = 1; // initialise at 1
-                const loginPageNumberMax = 7; // initialise at total number of pages
-                document.querySelectorAll(".back-btn").forEach(button => {
-                    button.addEventListener("click", function() {
-                        console.log("BACK Button clicked:", this.textContent);
-                        loginPageNumber += -1
-                        if(loginPageNumber < 1){loginPageNumber = 1;}
-                        console.log("loginPageNumber:- ",loginPageNumber);
-                        const ee = document.querySelector(`.page${loginPageNumber}`);
-                        // ee.classList.remove("flip-page");
-                        ee.classList.remove("fade-in");
-                        ee.classList.remove("fade-out");
-                        ee.style.zIndex = 10; // show the previous page
-                        // document.querySelector(`.page${loginPageNumber}`).classList.remove("flip-page");
-                        // document.querySelector(`.page${loginPageNumber}`).classList.remove("flip-page");
-                    });
-                });
-                document.querySelectorAll(".next-btn").forEach(button => {
-                    button.addEventListener("click", function() {
-                        console.log("NEXT Button clicked:", this.textContent);
-                        loginPageNumber += 1
-                        if(loginPageNumber > loginPageNumberMax){loginPageNumber = loginPageNumberMax;}
-                        console.log("loginPageNumber:- ",loginPageNumber);
-                        const ee = document.querySelector(`.page${loginPageNumber*1-1}`);
-                        // ee.classList.add("flip-page");
-                        ee.classList.add("fade-out");
-                        ee.style.zIndex = -1; // hide the previous page
-                        // document.querySelector(`.page${loginPageNumber-1}`).classList.add("flip-page");
-                        // document.querySelector(`.page${loginPageNumber-1}`).classList.add("flip-page");
-                    });
-                });
-            // displayLoginPage(loginPageNumber) END
+            // // displayLoginPage(loginPageNumber) START
+            //     let loginPageNumber = 1; // initialise at 1
+            //     const loginPageNumberMax = 7; // initialise at total number of pages
+            //     document.querySelectorAll(".back-btn").forEach(button => {
+            //         button.addEventListener("click", function() {
+            //             console.log("BACK Button clicked:", this.textContent);
+            //             loginPageNumber += -1
+            //             if(loginPageNumber < 1){loginPageNumber = 1;}
+            //             console.log("loginPageNumber:- ",loginPageNumber);
+            //             const ee = document.querySelector(`.page${loginPageNumber}`);
+            //             // ee.classList.remove("flip-page");
+            //             ee.classList.remove("fade-in");
+            //             ee.classList.remove("fade-out");
+            //             ee.style.zIndex = 10; // show the previous page
+            //             // document.querySelector(`.page${loginPageNumber}`).classList.remove("flip-page");
+            //             // document.querySelector(`.page${loginPageNumber}`).classList.remove("flip-page");
+            //         });
+            //     });
+            //     document.querySelectorAll(".next-btn").forEach(button => {
+            //         button.addEventListener("click", function() {
+            //             console.log("NEXT Button clicked:", this.textContent);
+            //             loginPageNumber += 1
+            //             if(loginPageNumber > loginPageNumberMax){loginPageNumber = loginPageNumberMax;}
+            //             console.log("loginPageNumber:- ",loginPageNumber);
+            //             const ee = document.querySelector(`.page${loginPageNumber*1-1}`);
+            //             // ee.classList.add("flip-page");
+            //             ee.classList.add("fade-out");
+            //             ee.style.zIndex = -1; // hide the previous page
+            //             // document.querySelector(`.page${loginPageNumber-1}`).classList.add("flip-page");
+            //             // document.querySelector(`.page${loginPageNumber-1}`).classList.add("flip-page");
+            //         });
+            //     });
+            // // displayLoginPage(loginPageNumber) END
 
             // login event listeners START
-                document.querySelectorAll(".login-stepOne").forEach(button => {
-                    button.addEventListener("click", function() {
-                        console.log("login-stepOne Button clicked:", this.textContent);
-                        login_stepOne();
-                    });
-                });
-                document.querySelectorAll(".login-stepTwo").forEach(button => {
-                    button.addEventListener("click", function() {
-                        console.log("login-stepTwo Button clicked:", this.textContent);
-                        login_stepTwo();
-                    });
-                });
-                document.querySelectorAll(".login-stepThree").forEach(button => {
-                    button.addEventListener("click", function() {
-                        console.log("login-stepThree Button clicked:", this.textContent);
-                        login_stepThree();
-                    });
-                });
-                document.querySelectorAll(".login-stepFour").forEach(button => {
-                    button.addEventListener("click", function() {
-                        console.log("login-stepFour Button clicked:", this.textContent);
-                        login_stepFour();
-                    });
-                });
+                // document.querySelectorAll(".login-stepOne").forEach(button => {
+                //     button.addEventListener("click", function() {
+                //         console.log("login-stepOne Button clicked:", this.textContent);
+                //         login_stepOne();
+                //     });
+                // });
+                // document.querySelectorAll(".login-stepTwo").forEach(button => {
+                //     button.addEventListener("click", function() {
+                //         console.log("login-stepTwo Button clicked:", this.textContent);
+                //         login_stepTwo();
+                //     });
+                // });
+                // document.querySelectorAll(".login-stepThree").forEach(button => {
+                //     button.addEventListener("click", function() {
+                //         console.log("login-stepThree Button clicked:", this.textContent);
+                //         login_stepThree();
+                //     });
+                // });
+                // document.querySelectorAll(".login-stepFour").forEach(button => {
+                //     button.addEventListener("click", function() {
+                //         console.log("login-stepFour Button clicked:", this.textContent);
+                //         login_stepFour();
+                //     });
+                // });
                 document.querySelectorAll(".login-stepFive").forEach(button => {
                     button.addEventListener("click", function() {
                         console.log("login-stepFive Button clicked:", this.textContent);
@@ -809,12 +609,12 @@ function login_step1(
                         );
                     });
                 });
-                document.querySelectorAll(".login-stepSix").forEach(button => {
-                    button.addEventListener("click", function() {
-                        console.log("login-stepSix Button clicked:", this.textContent);
-                        login_stepSix();
-                    });
-                });
+                // document.querySelectorAll(".login-stepSix").forEach(button => {
+                //     button.addEventListener("click", function() {
+                //         console.log("login-stepSix Button clicked:", this.textContent);
+                //         login_stepSix();
+                //     });
+                // });
                 document.querySelectorAll(".login-stepSeven").forEach(button => {
                     button.addEventListener("click", function() {
                         console.log("login-stepSeven Button clicked:", this.textContent);
@@ -836,8 +636,6 @@ function login_step1(
                     });
                 });
 
-        // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
-        // 1️⃣🔹2️⃣ END // doAfterDOMandWindowLoad_globalLoginClient()
+        // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+        // 1️⃣🔹2️⃣ END // doAfterDOMandWindowLoad_globalLoginClient() END
     }
-
-    
