@@ -236,7 +236,7 @@ export function SQLite_ServerSideMJSisLoaded(){
         const { image, address, notes } = req.body;
         const buffer = Buffer.from(image, "base64");
         // const query = `INSERT INTO photos (image, address, notes) VALUES (${image}, ${address}, ${notes})`;
-        const query = "INSERT INTO photos (image, address, notes) VALUES (?, ?, ?)";
+        const query = "INSERT INTO photos (image, image_date, image_time, image_address, image_notes) VALUES (?, ?, ?, ?, ?)";
         console.log(trace(),query);
         const db = await getDB(`${req.body.userEmailAddress}`);
         console.log(trace(),"Connected Database:", db);
@@ -254,7 +254,7 @@ export function SQLite_ServerSideMJSisLoaded(){
 // Endpoint to get all photos
     dbRouter.post("/get-all-photos", async (req, res) => {
         const db = await getDB(`${req.body.userEmailAddress}`);
-        db.get("SELECT image, address, notes FROM photos WHERE id = *", [req.params.id], (err, row) => {
+        db.get("SELECT image, image_date, image_time, image_address, image_notes FROM photos WHERE id = *", [req.params.id], (err, row) => {
             if (err || !row) {
                 res.status(404).json({ message: "Photo not found." });
             } else {

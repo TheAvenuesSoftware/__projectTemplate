@@ -60,12 +60,15 @@
 
         <!--  -->
             <!-- Google Places API START -->
-                <input id="googlePlacesAPIautocomplete" class="autocomplete-address-input" type="text" placeholder="Enter address">
-                <div id="map-container" style="display:none;position: relative; width: 600px; height: 400px;">
+                <div class="autocomplete-address-container">
+                    <input id="googlePlacesAPIautocomplete" class="autocomplete-address-input" type="text" placeholder="Enter address">
+                </div>
+                <div id="map-container" class="map-container">
                     <button id="close-map" style="position: absolute; top: 10px; right: 10px; background: red; color: white; border: none; padding: 8px 12px; cursor: pointer;z-index: 10;">
                         Close Map
                     </button>
-                    <div id="map" style="width: 600px; height: 400px;">
+                    <!-- <div id="map" style="width: 600px; height: 400px;"> -->
+                    <div id="map" class="map">
                     </div>
                 </div>
             <!-- Google Places API END -->
@@ -77,11 +80,13 @@
                 <!-- <button id="capture-btn">Take Photo</button> -->
                 <!-- <button id="save-btn" style="display: none;">Save Photo</button><br> -->
                 <!-- <textarea id="notes-input" placeholder="Enter notes"></textarea> -->
-                <video id="camera-stream" autoplay playsinline></video>
-                <canvas id="photo-canvas" style="display: none;"></canvas><br>
-                <textarea id="notes-input" placeholder="Enter notes"></textarea><br>
-                <button id="capture-btn">Take Photo</button>
-                <button id="save-btn" style="display: none;">Save Photo</button>
+                <div class="camera-container">
+                    <video id="camera-stream" autoplay playsinline></video>
+                    <canvas id="photo-canvas" style="display: none;"></canvas><br>
+                    <textarea id="notes-input" placeholder="Enter notes"></textarea><br>
+                    <button id="capture-btn">Take Photo</button>
+                    <button id="save-btn" style="display: none;">Save Photo</button>
+                </div>
         <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
 
         <!-- 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->

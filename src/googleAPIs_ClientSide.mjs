@@ -50,7 +50,16 @@ function initAutocomplete() {
             // animation: google.maps.Animation.BOUNCE
         });
 
-        document.getElementById("map-container").style.display = "block";
+        // // document.getElementById("map-container").style.display = "flex";
+        // document.getElementById("map").style.maxWidth = "600px";
+        // document.getElementById("map").style.height = "auto";
+        const mapContainer = document.getElementById("map-container");
+        // Make the container visible
+            mapContainer.style.display = "block";
+        // Ensure the map resizes properly
+            google.maps.event.trigger(map, "resize");
+        // // Optionally, re-center the map
+        //     map.setCenter({ lat: -33.8688, lng: 151.2093 });
 
     });
 

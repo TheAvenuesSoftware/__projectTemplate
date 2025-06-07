@@ -7,11 +7,8 @@ export function globalLoginClientJSisLoaded(){
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
-//     // import * as globalClientMJS from './globalClient.mjs';
-    import {universalFetchII} from './globalClient.mjs';
-    import {sessionLogout} from './globalSessionsClient.mjs';
-    import {clientConfigSettings} from "./projectConfig_Client.mjs";
-    import {postLoginActions_clientSide} from "./projectClient.mjs";
+    import { sessionLogout } from './globalSessionsClient.mjs';
+    import { clientConfigSettings } from "./projectConfig_Client.mjs";
     // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 const popupHTML = 
@@ -38,10 +35,6 @@ const busyAnimationHTML =
     </div>`
 
 function login_stepOne(){
-    // get email address
-    // goto login_stepTwo(loginEmailAddress);
-    // const loginEmailAddress = document.getElementById("loginEmailAddress").value;
-    // window.sessionStorage.setItem("loginEmailAddress", loginEmailAddress);
     document.body.insertAdjacentHTML("beforeend", popupHTML);
     document.getElementById("popup-heading").textContent = "Login";
     document.getElementById("popup-message").textContent = "Please enter your email address to log in.";
@@ -59,6 +52,8 @@ function login_stepOne(){
         document.body.insertAdjacentHTML("beforeend", busyAnimationHTML);
         document.getElementById("popup-overlay").classList.add("fade-out");
         document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
+        document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
+        document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
         const loginEmailAddress = document.getElementById("popup-input").value;
         window.sessionStorage.setItem("loginEmailAddress", loginEmailAddress);
         login_stepTwo(loginEmailAddress);
@@ -66,12 +61,18 @@ function login_stepOne(){
     document.getElementById("popup-button-1").addEventListener("click", popupButton1);
 
     function popupButton2(){
+        document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
         document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
+        document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
         document.getElementById("popup-overlay").remove();
     }
     document.getElementById("popup-button-2").addEventListener("click", popupButton2);
 
     function popupButton3(){
+        document.body.insertAdjacentHTML("beforeend", busyAnimationHTML);
+        document.getElementById("popup-overlay").classList.add("fade-out");
+        document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
+        document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
         document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
     }
     document.getElementById("popup-button-3").addEventListener("click", popupButton3);
@@ -82,8 +83,6 @@ function login_stepTwo(loginEmailAddress){
         if(consoleLog===true){console.log(`isValidEmailFormat(${loginEmailAddress})`);}
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const validEmailFormat = emailRegex.test(loginEmailAddress);
-        // if true; goto stepThree
-        // if false; display error; cancel login process
         if(validEmailFormat===true){
             login_stepThree(loginEmailAddress);
         }else{
@@ -107,19 +106,14 @@ async function login_stepThree(loginEmailAddress) {
             let validDomain = true;
             if(data.Status!=0){
                 if(consoleLog===true){console.log('data.Status:- ',data.Status);}
-                // return false;
                 login_cancel("Domain does not exist. Please check the email address and try again.");
                 validDomain = false;
             }
             if(data.Question[0].type!=15){
-                // return false;
-                // login_cancel("Domain does not have MX records. Please check the email address and try again.");
                 login_cancel("Domain does not support email. Please check the email address and try again.");
                 validDomain = false;
             }
             if(typeof data.Answer === "undefined"){
-                // return false;
-                // login_cancel("Domain does not have MX records. Please check the email address and try again.");
                 login_cancel("Domain does not support email. Please check the email address and try again.");
                 validDomain = false;
             }
@@ -139,18 +133,10 @@ async function login_stepThree(loginEmailAddress) {
                 // | Authority  | [...] | Lists authoritative name servers for the domain. | 
                 // | Additional | [...] | Provides extra information, such as related DNS records. | 
         } catch {
-            // return false;
-            // login_cancel("Error fetching DNS records. Please check your internet connection or try again later.");
             login_cancel("Error fetching email domain records. Please check your internet connection or try again later.");
-            // return;
         }
-    // if true; goto stepFour(loginEmailAddress);
-    // if false; display error; goto stepOne
 }
 async function login_stepFour(loginEmailAddress){
-    // check if account exists for the loginEmailAddress: look for file named "<loginEmailAddress>.db"
-    // set boolean for variable accountExists: true = account exists, false = account does not exist
-    // goto login_stepFive(loginEmailAddress, accountExists);
     const fetchUrl = `/loginRouter/fileExists`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
@@ -187,40 +173,16 @@ async function login_stepFour(loginEmailAddress){
     }
 }
 function login_stepFive(loginEmailAddress, accountExists){
-    // if account exists,   set boolean for variable "createNewAccount": false = do not create new account, goto stepSix
-    // else ask user if they wish to create a new account,
-        // if yes,              set boolean for variable "createNewAccount": true = create new account, goto stepSix
-        // if no,               cancel login process
-    const createNewAccount = false; // Account exists === true; createNewAccount === false
+    let createNewAccount = false; // Account exists === true; createNewAccount === false
     if(accountExists===true){
         window.sessionStorage.setItem("createNewAccount",false);
         login_stepSix(loginEmailAddress, accountExists, createNewAccount); // Account exists === true; createNewAccount === false 
-        // document.querySelectorAll('.login-page').forEach(el => {
-        //     const classList = el.classList;
-        //     if (classList.contains('page7')) {
-        //     }else{
-        //         el.style.transition = "opacity 0.5s";
-        //         el.style.opacity = "0";
-        //         setTimeout(() => el.remove(), 500);
-        //     }
-        // }); 
     }else{
-        // // window.sessionStorage.setItem("loginEmailAddress", loginEmailAddress);
-        // // window.sessionStorage.setItem("accountExists", false);
-        // document.querySelectorAll('.login-page').forEach(el => {
-        //     const classList = el.classList;
-        //     if (classList.contains('page5')) {
-        //     }else{
-        //         el.style.transition = "opacity 0.5s";
-        //         el.style.opacity = "0";
-        //         setTimeout(() => el.remove(), 500);
-        //     }
-        // }); 
         document.getElementById("popup-overlay").classList.add("fade-in");
         document.getElementById("popup-overlay").classList.remove("fade-out");
         document.getElementById("busy-animation-overlay").remove();
         document.getElementById("popup-heading").textContent = "Create New Account";
-        document.getElementById("popup-message").textContent = "Account for email address not found.  Create a new account?";
+        document.getElementById("popup-message").textContent = `Account for email address ${loginEmailAddress} not found.  Create a new account?`;
         document.getElementById("popup-input").value = "";
         document.getElementById("popup-input").style.display = "none";
         document.getElementById("popup-input").focus();
@@ -233,10 +195,12 @@ function login_stepFive(loginEmailAddress, accountExists){
 
         function popupButton1(){
             document.body.insertAdjacentHTML("beforeend", busyAnimationHTML);
+            document.getElementById("popup-overlay").classList.add("fade-out");
             document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
+            document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
+            document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
             createNewAccount = true; // createNewAccount === true;
             window.sessionStorage.setItem("createNewAccount",true);
-            document.getElementById("popup-overlay").classList.add("fade-out");
             login_stepSix(
                 window.sessionStorage.getItem("loginEmailAddress"),
                 window.sessionStorage.getItem("accountExists"),
@@ -246,21 +210,24 @@ function login_stepFive(loginEmailAddress, accountExists){
         document.getElementById("popup-button-1").addEventListener("click", popupButton1);
 
         function popupButton2(){
+            document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
             document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
+            document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
             document.getElementById("popup-overlay").remove();
         }
         document.getElementById("popup-button-2").addEventListener("click", popupButton2);
 
         function popupButton3(){
+            document.body.insertAdjacentHTML("beforeend", busyAnimationHTML);
+            document.getElementById("popup-overlay").remove();
+            document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
+            document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
             document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
         }
         document.getElementById("popup-button-3").addEventListener("click", popupButton3);
     }
 }
 async function login_stepSix(loginEmailAddress, accountExists, createNewAccount){
-    // generate login code
-    // regenerate the session
-    // email code to loginEmailAddress
     const fetchUrl = `/loginRouter/emailCode`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
@@ -293,16 +260,12 @@ async function login_stepSix(loginEmailAddress, accountExists, createNewAccount)
                 login_cancel(`Problem generating login code. ${jso.loginCodeEmailed}`);
             }
     } catch (error) {
-        // console.error("Error fetching HTML from:",fetchUrl, error.message);
         console.error("Error sending email:",error.message);
         login_cancel(`${jso.loginCodeEmailed}`);
     }
 
 }
 async function login_stepSeven(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed,loginsDBinsertedID){
-    // if successful, ask user to submit loginCode
-    // if unsuccessful, display error and goto stepOne
-    // alert("working login_stepSeven");
     const fetchUrl = `/sessionsRouter/sessionRegen`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
@@ -326,16 +289,6 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
             const jso = await response.json(); // Fetch JSON object
             if(consoleLog===true){console.log(`sessionRegen:- `,jso);}
             if(jso.sessionRegenOK===true){
-                // // login_stepEight(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed,loginsDBinsertedID);
-                // document.querySelectorAll('.login-page').forEach(el => {
-                //     const classList = el.classList;
-                //     if (classList.contains('page7')) {
-                //     }else{
-                //         el.style.transition = "opacity 0.5s";
-                //         el.style.opacity = "0";
-                //         setTimeout(() => el.remove(), 500);
-                //     }
-                // }); 
                 document.getElementById("popup-overlay").classList.add("fade-in");
                 document.getElementById("popup-overlay").classList.remove("fade-out");
                 document.getElementById("busy-animation-overlay").remove();
@@ -343,6 +296,7 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
                 document.getElementById("popup-message").textContent = "Please enter the login code that has been emailed to you.";
                 document.getElementById("popup-input").value = "";
                 document.getElementById("popup-input").placeholder = "Enter your login code here...";
+                document.getElementById("popup-input").style.display = "block";
                 document.getElementById("popup-input").focus();
                 document.getElementById("popup-input").select();
                 document.getElementById("popup-button-1").textContent = "Submit";
@@ -353,10 +307,12 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
 
                 function popupButton1(){
                     document.body.insertAdjacentHTML("beforeend", busyAnimationHTML);
+                    document.getElementById("popup-overlay").classList.add("fade-out");
                     document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
+                    document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
+                    document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
                     const createNewAccount = true; // createNewAccount === true;
                     window.sessionStorage.setItem("createNewAccount",true);
-                    document.getElementById("popup-overlay").classList.add("fade-out");
                     login_stepEight(
                         loginEmailAddress,
                         accountExists,
@@ -368,12 +324,18 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
                 document.getElementById("popup-button-1").addEventListener("click", popupButton1);
 
                 function popupButton2(){
-                    document.getElementById("popup-overlay").remove();
+                    document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
                     document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
+                    document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
+                    document.getElementById("popup-overlay").remove();
                 }
                 document.getElementById("popup-button-2").addEventListener("click", popupButton2);
 
                 function popupButton3(){
+                    document.body.insertAdjacentHTML("beforeend", busyAnimationHTML);
+                    document.getElementById("popup-overlay").classList.add("fade-out");
+                    document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
+                    document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
                     document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
                 }
                 document.getElementById("popup-button-3").addEventListener("click", popupButton3);
@@ -388,9 +350,6 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
 
 }
 async function login_stepEight(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed,loginsDBinsertedID){
-    // verify loginCodeInputValue
-        // if successful, set boolean for variable "loginApproved": true = login approved, goto stepNine
-        // if unsuccessful, display error and goto stepOne
     const fetchUrl = `/loginRouter/loginCodeSubmit`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
@@ -406,7 +365,6 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
                 loginEmailAddress:loginEmailAddress,
                 accountExists:accountExists,
                 createNewAccount:createNewAccount,
-                // loginCodeSubmit:document.getElementById("loginCode").value,
                 loginCodeSubmit:document.getElementById("popup-input").value,
                 loginsDBinsertedID:loginsDBinsertedID
             })
@@ -425,9 +383,11 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
                 document.getElementById("sign-in-out-button").innerHTML = "Log Out";
                 document.getElementById("sign-in-out-button").classList.add("sign-out-button");
                 document.getElementById("sign-in-out-button").classList.remove("sign-in-button");
-                postLoginActions_clientSide();
+                postLoginActions({createNewAccount:createNewAccount,loginEmailAddress:loginEmailAddress});
             }else{
                 alert("🔴 Secure login failed, incorrect login code submitted.");
+                document.getElementById("busy-animation-overlay").remove();
+                document.getElementById("popup-overlay").remove();
                 document.getElementById("sign-in-out-button").innerHTML = "Log In";
                 document.getElementById("sign-in-out-button").classList.add("sign-in-button");
                 document.getElementById("sign-in-out-button").classList.remove("sign-out-button");
@@ -439,15 +399,11 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
     }
 
 }
+
 function login_cancel(message=""){
     // cancel login process
     alert("Login process cancelled.\n" + message);
     console.log("Login process cancelled.\n" + message);
-    // document.querySelectorAll('.login-pages-container').forEach(el => {
-    //     el.style.transition = "opacity 0.5s";
-    //     el.style.opacity = "0";
-    //     setTimeout(() => el.remove(), 500);
-    // });
 }
 
 // isLoginRequired
@@ -477,8 +433,7 @@ export async function isLoginRequired() {
             if(consoleLog===true){console.log(`isLoginRequired():- `,data);} // Logs correctly? Great!
             // if(consoleLog===true){console.log(`isLoginRequi red():- `,data.message);} // Logs correctly? Great!
             if(data.message===true){
-                // login_step1:- loginEmailAddressInputValue, createNewAccount, loginCodeEmailed, loginApproved
-                login_step1();
+                login_stepOne();
             }
     } catch (error) {
         // console.error("Error fetching HTML from:",fetchUrl, error.message);
@@ -528,114 +483,57 @@ export async function isLoginRequired() {
                 document.getElementById("sign-in-out-button").addEventListener("click", (e) => {
                     console.log("sign-in-out-button clicked");
                     console.log(e.target.textContent);
-                    if(e.target.textContent.toLowerCase()==="log in"){
-                        // login_step1();
+                    if(e.target.textContent.toLowerCase().trim().replace(" ","")==="login"){
                         login_stepOne();
                     }
-                    if(e.target.textContent.toLowerCase()==="log out"){
+                    if(e.target.textContent.toLowerCase().trim().replace(" ","")==="logout"){
                         sessionLogout();
                     }
                 });
             // signin-out button END
 
-            // // displayLoginPage(loginPageNumber) START
-            //     let loginPageNumber = 1; // initialise at 1
-            //     const loginPageNumberMax = 7; // initialise at total number of pages
-            //     document.querySelectorAll(".back-btn").forEach(button => {
-            //         button.addEventListener("click", function() {
-            //             console.log("BACK Button clicked:", this.textContent);
-            //             loginPageNumber += -1
-            //             if(loginPageNumber < 1){loginPageNumber = 1;}
-            //             console.log("loginPageNumber:- ",loginPageNumber);
-            //             const ee = document.querySelector(`.page${loginPageNumber}`);
-            //             // ee.classList.remove("flip-page");
-            //             ee.classList.remove("fade-in");
-            //             ee.classList.remove("fade-out");
-            //             ee.style.zIndex = 10; // show the previous page
-            //             // document.querySelector(`.page${loginPageNumber}`).classList.remove("flip-page");
-            //             // document.querySelector(`.page${loginPageNumber}`).classList.remove("flip-page");
-            //         });
-            //     });
-            //     document.querySelectorAll(".next-btn").forEach(button => {
-            //         button.addEventListener("click", function() {
-            //             console.log("NEXT Button clicked:", this.textContent);
-            //             loginPageNumber += 1
-            //             if(loginPageNumber > loginPageNumberMax){loginPageNumber = loginPageNumberMax;}
-            //             console.log("loginPageNumber:- ",loginPageNumber);
-            //             const ee = document.querySelector(`.page${loginPageNumber*1-1}`);
-            //             // ee.classList.add("flip-page");
-            //             ee.classList.add("fade-out");
-            //             ee.style.zIndex = -1; // hide the previous page
-            //             // document.querySelector(`.page${loginPageNumber-1}`).classList.add("flip-page");
-            //             // document.querySelector(`.page${loginPageNumber-1}`).classList.add("flip-page");
-            //         });
-            //     });
-            // // displayLoginPage(loginPageNumber) END
-
-            // login event listeners START
-                // document.querySelectorAll(".login-stepOne").forEach(button => {
-                //     button.addEventListener("click", function() {
-                //         console.log("login-stepOne Button clicked:", this.textContent);
-                //         login_stepOne();
-                //     });
-                // });
-                // document.querySelectorAll(".login-stepTwo").forEach(button => {
-                //     button.addEventListener("click", function() {
-                //         console.log("login-stepTwo Button clicked:", this.textContent);
-                //         login_stepTwo();
-                //     });
-                // });
-                // document.querySelectorAll(".login-stepThree").forEach(button => {
-                //     button.addEventListener("click", function() {
-                //         console.log("login-stepThree Button clicked:", this.textContent);
-                //         login_stepThree();
-                //     });
-                // });
-                // document.querySelectorAll(".login-stepFour").forEach(button => {
-                //     button.addEventListener("click", function() {
-                //         console.log("login-stepFour Button clicked:", this.textContent);
-                //         login_stepFour();
-                //     });
-                // });
-                document.querySelectorAll(".login-stepFive").forEach(button => {
-                    button.addEventListener("click", function() {
-                        console.log("login-stepFive Button clicked:", this.textContent);
-                        const createNewAccount = true; // createNewAccount === true;
-                        window.sessionStorage.setItem("createNewAccount",true);
-                        login_stepSix(
-                            window.sessionStorage.getItem("loginEmailAddress"),
-                            window.sessionStorage.getItem("accountExists"),
-                            true // createNewAccount
-                        );
-                    });
-                });
-                // document.querySelectorAll(".login-stepSix").forEach(button => {
-                //     button.addEventListener("click", function() {
-                //         console.log("login-stepSix Button clicked:", this.textContent);
-                //         login_stepSix();
-                //     });
-                // });
-                document.querySelectorAll(".login-stepSeven").forEach(button => {
-                    button.addEventListener("click", function() {
-                        console.log("login-stepSeven Button clicked:", this.textContent);
-                        // login_stepEight(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed,loginsDBinsertedID);
-                        login_stepEight(
-                            window.sessionStorage.getItem("loginEmailAddress"),
-                            window.sessionStorage.getItem("accountExists"),
-                            window.sessionStorage.getItem("createNewAccount"),
-                            document.getElementById("loginCode").value,
-                            window.sessionStorage.getItem("loginsDBinsertedID")
-                        );
-
-                    });
-                });
-                document.querySelectorAll(".login-cancel").forEach(button => {
-                    button.addEventListener("click", function() {
-                        console.log("login-cancel Button clicked:", this.textContent);
-                        login_cancel();
-                    });
-                });
-
         // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
         // 1️⃣🔹2️⃣ END // doAfterDOMandWindowLoad_globalLoginClient() END
     }
+
+    // postLoginActions
+        export async function postLoginActions(jso){
+            // place "PROJECT SPECIFIC" actions to take post secure login here
+            document.getElementById("user-email-address").textContent = jso.loginEmailAddress;
+            console.log("Create new account? ",jso.createNewAccount);
+            if(jso.createNewAccount===true){
+                    const fetchUrl = `/loginRouter/createNewAccount`;
+                    const fetchOptions = {
+                            method: 'POST',                // Specifies a POST request
+                            mode: 'cors',                  // Ensures cross-origin requests are handled
+                            cache: 'no-cache',             // Prevents caching issues
+                            credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+                            headers: {
+                                'Content-Type': 'application/json',  // Sets content type
+                                // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
+                                // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
+                            },
+                            body: JSON.stringify({          // Converts object to JSON for request
+                                filePath:"./db/",
+                                fileName:jso.loginEmailAddress // file extension is added server side + ".db"
+                            })
+                        }
+                    if(consoleLog===true){console.log(fetchUrl);}
+                    try {
+                        // fetch
+                            const response = await fetch(fetchUrl,fetchOptions);
+                            if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
+                            const data = await response.json(); // Fetch JSON object
+                            if(consoleLog===true){console.log(`/createNewAccount:- `,data);}
+                    } catch (error) {
+                        // console.error("Error fetching HTML from:",fetchUrl, error.message);
+                        console.error("Error creating new account:-",error.message);
+                    }
+            }
+        }
+
+    // postLogoutActions
+        export function postLogoutActions(){
+            if(consoleLog===true){console.log('postLogoutActions() launched.',Date.now().toLocaleString());}
+            // place "PROJECT SPECIFIC" actions to take post secure logout here
+        }

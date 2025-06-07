@@ -296,7 +296,14 @@ export function projectMJSisLoaded(){
                                 // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
                                 // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
                             },
-                            body:JSON.stringify({userEmailAddress:userEmailAddress, image:imageData, address:address, notes:notes })
+                            body: JSON.stringify({
+                                userEmailAddress:userEmailAddress, 
+                                image:imageData, 
+                                image_date: new Date().toLocaleDateString(),
+                                image_time: new Date().toLocaleTimeString(),
+                                image_address:address, 
+                                image_notes:notes 
+                            })
                         }
                     if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
                     const response = await fetch(fetchUrl, fetchOptions);
@@ -317,12 +324,12 @@ export function projectMJSisLoaded(){
 
         // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
 
-        // 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️
+// 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️
 async function loadPhoto() {
-const userEmailAddress = document.getElementById("user-email-address").textContent; // Get user email from element
-const address = document.getElementById("googlePlacesAPIautocomplete").value;
-const fetchUrl = "/dbRouter/get-all-photos";
-const fetchOptions = {
+    const userEmailAddress = document.getElementById("user-email-address").textContent; // Get user email from element
+    const address = document.getElementById("googlePlacesAPIautocomplete").value;
+    const fetchUrl = "/dbRouter/get-all-photos";
+    const fetchOptions = {
         method: 'POST',
         mode: 'cors',                  // Ensures cross-origin requests are handled
         cache: 'no-cache',             // Prevents caching issues
@@ -332,27 +339,15 @@ const fetchOptions = {
             // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
             // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
         },
-        body:JSON.stringify({userEmailAddress:userEmailAddress, address:address })
+        body:JSON.stringify({userEmailAddress:userEmailAddress, image_address:address })
     }
-if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
-const response = await fetch(fetchUrl, fetchOptions);
-const data = await response.json();
+    if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
+    const response = await fetch(fetchUrl, fetchOptions);
+    const data = await response.json();
 
-document.getElementById("photo-display").src = data.image;
-document.getElementById("address-display").textContent = data.address;
-document.getElementById("notes-display").textContent = data.notes;
+    document.getElementById("photo-display").src = data.image;
+    document.getElementById("address-display").textContent = data.address;
+    document.getElementById("notes-display").textContent = data.notes;
+    }
+    // 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️
 }
-        // 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️
-    }
-
-    // postLoginActions
-        export function postLoginActions_clientSide(){
-            if(consoleLog===true){console.log('postLoginActions_clientSide() launched.',Date.now().toLocaleString());}
-            // place "project specific" actions to take post secure login here
-        }
-
-    // postLogoutActions
-        export function postLogoutActions(){
-            if(consoleLog===true){console.log('postLogoutActions_clientSide() launched.',Date.now().toLocaleString());}
-            // place "project specific" actions to take post secure logout here
-        }
