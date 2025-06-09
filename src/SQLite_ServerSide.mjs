@@ -1,6 +1,6 @@
 const consoleLog = true;
 
-if(consoleLog===true){console.log("LOADED:- SQLite_ServerSide.mjs is loaded",new Date().toLocaleString());}
+console.log("LOADED:- SQLite_ServerSide.mjs is loaded",new Date().toLocaleString());
 export function SQLite_ServerSideMJSisLoaded(){
     return true;
 }
@@ -12,7 +12,7 @@ export function SQLite_ServerSideMJSisLoaded(){
     import sqlite3 from "sqlite3";
     import { open } from "sqlite";
     import { trace } from "./globalServer.mjs";
-    import { isValidJSONString } from "./globalClient.mjs";
+    import busboy from 'busboy';
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
             // 1. Initialize SQLite database based on a user's unique identifier: email address for example.
@@ -229,42 +229,159 @@ export function SQLite_ServerSideMJSisLoaded(){
 
 // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
 // Endpoint to save a photo
-    dbRouter.post("/save-photo", async (req, res) => {
-        console.log(`${trace()} req.body:- `,req.body);
-        console.log(`${trace()} req.body.userEmailAddress:- ${req.body.userEmailAddress}`);
+dbRouter.post("/save-photo", async (req, res) => {
 
-        const { image, address, notes } = req.body;
-        const buffer = Buffer.from(image, "base64");
-        // const query = `INSERT INTO photos (image, address, notes) VALUES (${image}, ${address}, ${notes})`;
-        const query = "INSERT INTO photos (image, image_date, image_time, image_address, image_notes) VALUES (?, ?, ?, ?, ?)";
-        console.log(trace(),query);
-        const db = await getDB(`${req.body.userEmailAddress}`);
-        console.log(trace(),"Connected Database:", db);
-        await db.run(query, [buffer, address, notes])
-        .then(() => {
-            res.json({ message: "Photo saved successfully!" });
-        })
-        .catch((err) => {
-            if(consoleLog===true){console.error(`${trace()} Error saving photo:`, err);}
-            res.status(500).json({ message: "Failed to save photo." });
+    console.log(trace(),'Received request with Content-Type:', req.headers['content-type']);
+    // const bb = busboy({ headers: req.headers });
+    const bb = busboy({ headers: req.headers, defParamCharset: 'utf8' });
+    const formData = {};
+
+    // Handle file upload (image_blob)
+        bb.on('file', (fieldname, file, filename, encoding, mimetype) => {
+            const buffers = [];
+            file.on('data', (data) => buffers.push(data));
+            file.on('end', () => {
+                // // if uploading a file:-
+                //     formData[fieldname] = {
+                //         buffer: Buffer.concat(buffers),
+                //         filename: filename || null, // ✅ Ensure filename is a string or nu
+                //         encoding: encoding || "binary",
+                //         mimetype: mimetype || "application/octet-stream"
+                //     };
+                //     console.log(trace(),`Received file: ${filename} (${mimetype})`);
+                // if NOT uploading a file:-
+                    formData[fieldname] = {
+                        buffer: Buffer.concat(buffers) // ✅ Just store the raw data
+                    };
+                    console.log(trace(), `Received blob: ${fieldname}, size: ${formData[fieldname].buffer.length} bytes`);
+            });
         });
 
+    // Handle text fields
+        bb.on('field', (fieldname, value) => {
+            formData[fieldname] = value;
+        });
+
+    bb.on('finish', async () => {
+        console.log(trace(),'Received form:', formData);
+        console.log(trace(),'formData:-\n',formData);
+        console.log(trace(),'formData.image_date:-\n',formData.image_date);
+        console.log(trace(),"Final parsed formData:");
+        Object.entries(formData).forEach(([key, value]) => {
+            console.log(trace(),`${key}:`, value);
+        });
+
+        // ✅ Store Blob & Metadata in SQLite
+        // const stmt = db.prepare(`
+        //                    INSERT INTO photos (image_blob, image_date, image_time, image_address, image_notes) VALUES (?, ?, ?, ?, ?)
+        // `);
+        const query = "INSERT INTO photos (image_blob, image_date, image_time, image_address, image_notes) VALUES (?, ?, ?, ?, ?)";
+
+        // stmt.run(userEmailAddress, imageBlob, image_date, image_time, image_address, image_notes);
+        console.log(trace(),query);
+        if (!formData.userEmailAddress) {
+            console.error(trace(), "❌ Missing userEmailAddress, cannot connect to database");
+            return res.status(400).json({ error: "Missing userEmailAddress" });
+        }
+        const db = await getDB(`${formData.userEmailAddress}`);
+        console.log(trace(),"Connected Database:", db);
+        await db.run(query, [
+            // formData.image_blob, 
+            formData.image_blob?.buffer, // ✅ Pass only the buffer
+            formData.image_date, 
+            formData.image_time, 
+            formData.image_address, 
+            formData.image_notes
+        ]);
+
+        // res.json({ status: "success", message: "Image stored in SQLite!" });
+        res.status(200).json({ message: 'Upload successful', data: formData });
     });
 
+    req.pipe(bb);
+
+});
+
+    // dbRouter.post("/save-photo", async (req, res) => {
+    //     console.log(`${trace()} req.body:- `,req.body);
+    //     console.log(`${trace()} req.body.userEmailAddress:- ${req.body.userEmailAddress}`);
+    // 
+    //     const { image, address, notes } = req.body;
+    //     const buffer = Buffer.from(image, "base64");
+    //     // const query = `INSERT INTO photos (image, address, notes) VALUES (${image}, ${address}, ${notes})`;
+    //     const query = "INSERT INTO photos (image, image_date, image_time, image_address, image_notes) VALUES (?, ?, ?, ?, ?)";
+    //     console.log(trace(),query);
+    //     const db = await getDB(`${req.body.userEmailAddress}`);
+    //     console.log(trace(),"Connected Database:", db);
+    //     await db.run(query, [buffer, address, notes])
+    //     .then(() => {
+    //         res.json({ message: "Photo saved successfully!" });
+    //     })
+    //     .catch((err) => {
+    //         if(consoleLog===true){console.error(`${trace()} Error saving photo:`, err);}
+    //         res.status(500).json({ message: "Failed to save photo." });
+    //     });
+    // 
+    // });
+
 // Endpoint to get all photos
+    // dbRouter.post("/get-all-photos", async (req, res) => {
+    //     console.log(trace(),'Received request with Content-Type:', req.headers['content-type']);
+    //     console.log(trace(),'Received request with "body":', req.body);
+    //     const db = await getDB(`${req.body.userEmailAddress}`);
+    //  // db.get("SELECT image_blob, image_date, image_time, image_address, image_notes FROM photos WHERE id = *", [req.params.id], (err, row) => {
+    //     db.get("SELECT image_blob, image_date, image_time, image_address, image_notes FROM photos", (err, rows) => {
+    //         if (err || !rows.length) {
+    //             console.log(trace(),"No photos found.",err);
+    //             res.status(404).json({ message: "No photos found." });
+    //         } else {
+    //             console.log(trace(),rows);
+    //             const formattedPhotos = rows.map(row => ({
+    //                 image_blob: `data:image/png;base64,${row.image_blob.toString("base64")}`,
+    //                 image_date: row.image_date,
+    //                 image_time: row.image_time,
+    //                 image_address: row.image_address,
+    //                 image_notes: row.image_notes
+    //             }));
+    //             console.log(trace(),formattedPhotos);
+    //             res.json(formattedPhotos);
+    //         }
+    //     });
+    // });
     dbRouter.post("/get-all-photos", async (req, res) => {
-        const db = await getDB(`${req.body.userEmailAddress}`);
-        db.get("SELECT image, image_date, image_time, image_address, image_notes FROM photos WHERE id = *", [req.params.id], (err, row) => {
-            if (err || !row) {
-                res.status(404).json({ message: "Photo not found." });
-            } else {
-                res.json({
-                    image: `data:image/png;base64,${row.image.toString("base64")}`,
-                    address: row.address,
-                    notes: row.notes
-                });
+        try {
+            console.log(trace(), 'Received request with Content-Type:', req.headers['content-type']);
+            console.log(trace(), 'Received request with "body":', req.body);
+
+            const db = await getDB(`${req.body.userEmailAddress}`);
+            
+            // ✅ Use `db.all()` with `await` instead of callback-based `db.get()`
+            const rows = await db.all("SELECT image_blob, image_date, image_time, image_address, image_notes FROM photos");
+
+            if (!rows.length) {
+                console.log(trace(), "No photos found.");
+                return res.status(404).json({ message: "No photos found." });
             }
-        });
+
+            console.log(trace(), rows);
+
+            const formattedPhotos = rows.map(row => ({
+                // image_blob: `data:image/png;base64,${row.image_blob.toString("base64")}`,
+                image_blob: row.image_blob 
+                    ? `data:image/png;base64,${row.image_blob.toString("base64")}` 
+                    : null, // ✅ If null, don't process
+                image_date: row.image_date,
+                image_time: row.image_time,
+                image_address: row.image_address,
+                image_notes: row.image_notes
+            }));
+
+            console.log(trace(), formattedPhotos);
+            res.json(formattedPhotos);
+        } catch (err) {
+            console.error(trace(), "Database query error:", err);
+            res.status(500).json({ message: "Server error", error: err.message });
+        }
     });
 // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
     

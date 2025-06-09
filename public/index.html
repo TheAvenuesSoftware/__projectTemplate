@@ -16,20 +16,21 @@
     <link rel="stylesheet" href="project.css">
     <link rel="stylesheet" href="global.css">
 
-    <script type="module" src="/globalLoginClient.mjs"></script>
-    <!-- <script type="module" src="/globalRoutes.mjs"></script> -->
+    <script type="module" src="./globalLoginClient.mjs"></script>
 
-    <script type="module" src="globalClient.mjs"></script>
-    <script type="module" src="projectClient.mjs"></script>
+    <script type="module" src="./globalSessionsClient.mjs"></script>
+
+    <script type="module" src="./globalClient.mjs"></script>
+    <script type="module" src="/src/projectClient.mjs"></script>
     
-    <script type="module" src="globalUIpopups.mjs"></script>
+    <script type="module" src="./globalUIpopups.mjs"></script>
 
-    <script type="module" src="globalConfig_Client.mjs"></script>
-    <script type="module" src="projectConfig_Client.mjs"></script>
+    <script type="module" src="./globalConfig_Client.mjs"></script>
+    <script type="module" src="./projectConfig_Client.mjs"></script>
 
     <script type="module" src="googleAPIs_ClientSide.mjs"></script>
 
-    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/png" href="./favicon.png">
 
 </head>
 <body>
@@ -43,9 +44,9 @@
             <div id="sign-in-out-button" class="sign-in-button" tabindex="0" role="button">Log In</div> 
         <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
 
-        <!--  -->
-            <!-- Google Maps API START -->
-                <!-- <div id="googleMapsAPIautocomplete" class="autocomplete-address-input">
+        <!-- DELETE -->
+            <!-- DELETE Google Maps API START -->
+                <!-- DELETE <div id="googleMapsAPIautocomplete" class="autocomplete-address-input">
                     <input type="text" placeholder="Enter address">
                 </div>
                 <div id="map-container" style="display:none;position: relative; width: 600px; height: 400px;">
@@ -54,9 +55,9 @@
                     </button>
                     <div id="map" style="width: 600px; height: 400px;">
                     </div>
-                </div> -->
-            <!-- Google Maps API END -->
-        <!--  -->
+                </div> DELETE -->
+            <!-- DELETE Google Maps API END -->
+        <!-- DELETE  -->
 
         <!--  -->
             <!-- Google Places API START -->
@@ -80,20 +81,22 @@
                 <!-- <button id="capture-btn">Take Photo</button> -->
                 <!-- <button id="save-btn" style="display: none;">Save Photo</button><br> -->
                 <!-- <textarea id="notes-input" placeholder="Enter notes"></textarea> -->
-                <div class="camera-container">
-                    <video id="camera-stream" autoplay playsinline></video>
+                <div id="camera-container" class="camera-container">
+                    <video id="camera-stream" class="camera-stream" autoplay playsinline style="background-color: red;"></video>
                     <canvas id="photo-canvas" style="display: none;"></canvas><br>
                     <textarea id="notes-input" placeholder="Enter notes"></textarea><br>
                     <button id="capture-btn">Take Photo</button>
-                    <button id="save-btn" style="display: none;">Save Photo</button>
+                    <button id="save-btn" style="visibility: hidden;">Save Photo</button>
                 </div>
         <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
 
         <!-- 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
-                <img id="photo-display" src="" alt="Saved photo">
+                <button id="retrieve-btn" >Load Saved Photos & Details</button>
+                <div id="photos-container">
+                </div>
+                <!-- <img id="photo-display" src="" alt="Saved photo">
                 <p id="address-display"></p>
-                <p id="notes-display"></p>
-                <button id="retrieve-btn" >Load Saved Photo & Details</button>
+                <p id="notes-display"></p> -->
         <!-- 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
     </main>
     <footer>

@@ -1,6 +1,6 @@
 const consoleLog = true;
 
-if(consoleLog===true){console.log("LOADED:- globalClient.mjs is loaded",new Date().toLocaleString());}
+console.log("LOADED:- globalClient.mjs is loaded",new Date().toLocaleString());
 export function globalClientJSisLoaded(){
     return true;
 }

@@ -309,6 +309,50 @@ body {
   max-width: 100%;
   color: red;
 }
+.login-overlay .passcodeForm form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.login-overlay .passcodeForm .code-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.login-overlay .passcodeForm .code-input input {
+  width: 50px;
+  height: 60px;
+  text-align: center;
+  font-size: 24px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+.login-overlay .passcodeForm .code-input input:focus {
+  border-color: #007BFF;
+}
+.login-overlay .passcodeForm button {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.login-overlay .passcodeForm button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+@media (max-width: 600px) {
+  .login-overlay .passcodeForm .code-input input {
+    width: 40px;
+    height: 50px;
+    font-size: 20px;
+  }
+}
 
 .sign-in-button {
   display: flex;
@@ -380,7 +424,6 @@ body {
   width: 500px;
   height: 400px;
   background: #1440AF;
-  border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
   padding: 2px;
   margin: 20px auto; /* Centers it within a parent container */
@@ -391,124 +434,27 @@ body {
 }
 
 .camera-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
 }
 
-.login-pages-container {
-  display: none;
-  position: relative;
-  margin: auto;
-  width: 300px;
-  height: 400px;
-  color: brown;
-  z-index: 1000;
-}
-.login-pages-container label {
-  text-align: center;
-}
-.login-pages-container input {
-  color: #1440AF;
-  background-color: burlywood;
-}
-.login-pages-container .login-page {
-  position: absolute;
+.camera-stream {
   width: 100%;
   height: 100%;
-  background-color: wheat;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid brown;
-  border-radius: 0px 10px 10px 0px;
-  transform-origin: left center; /* Keeps left edge fixed */
-  transition: transform 1s ease-in-out;
-}
-.login-pages-container .page1 {
-  border-left: 0px solid wheat;
-  z-index: 10;
-}
-.login-pages-container .page2 {
-  border-left: 3px solid wheat;
-  z-index: 9;
-}
-.login-pages-container .page3 {
-  border-left: 6px solid wheat;
-  z-index: 8;
-}
-.login-pages-container .page4 {
-  border-left: 6px solid wheat;
-  z-index: 7;
-}
-.login-pages-container .page5 {
-  border-left: 6px solid wheat;
-  z-index: 6;
-}
-.login-pages-container .page6 {
-  border-left: 6px solid wheat;
-  z-index: 5;
-}
-.login-pages-container .page7 {
-  border-left: 6px solid wheat;
-  z-index: 4;
-}
-.login-pages-container .flip-page {
-  transform: rotateY(-90deg); /* Moves right edge toward left */
-  transition: transform 1s ease-in-out, opacity 0.5s ease-in-out 1s; /* Delays opacity */
-  /* opacity: 0; /* Fades out only AFTER flipping */
-}
-.login-pages-container button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 6px 12px;
-  font-size: 16px;
-  color: inherit;
-  background-color: inherit;
-  border: none;
   border-radius: 5px;
-  cursor: pointer;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-  transition: all 0.3s ease-in-out;
-  height: 25px;
-  width: 85px;
 }
-.login-pages-container button:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, rgb(250, 140, 25), rgb(255, 160, 0));
-}
-.login-pages-container .button-container {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  display: flex;
-  gap: 10px;
-  z-index: 100;
-}
-.login-pages-container .button-container .back-btn {
-  margin-left: 3px;
-  margin-right: 3px;
+
+.photo-canvas {
+  width: 100%;
+  height: 100%;
   border-radius: 5px;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-  z-index: 100;
-}
-.login-pages-container .button-container .back-btn:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, #8f4707, #f4a405);
-}
-.login-pages-container .button-container .next-btn {
-  margin-left: 3px;
-  margin-right: 3px;
-  border-radius: 5px;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-  z-index: 100;
-}
-.login-pages-container .button-container .next-btn:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, #8f4707, #f4a405);
 }
 
 .popup-overlay {

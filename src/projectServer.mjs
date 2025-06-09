@@ -1,6 +1,6 @@
 const consoleLog = true
 
-if(consoleLog===true){console.log("LOADED:- projectRouter.mjs is loaded",new Date().toLocaleString());}
+console.log("LOADED:- projectServer.mjs is loaded",new Date().toLocaleString());
 export function projectRoutesMJSisLoaded(){
     return true;
 }
@@ -9,7 +9,7 @@ export function projectRoutesMJSisLoaded(){
 //  SERVER SIDE IMPORTS ONLY
     import { Router } from "express";
     const projectRouter = Router();
-    import {trace} from "./globalServer.mjs";
+    import { trace } from "./globalServer.mjs";
     import { initDB, getDB, setupSchema, insertUser } from "./SQLite_ServerSide.mjs"
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 

@@ -1,6 +1,6 @@
 const consoleLog = true;
 
-if(consoleLog===true){console.log("LOADED:- googleAPIs_ServerSide.mjs is loaded",new Date().toLocaleString());}
+console.log("LOADED:- googleAPIs_ServerSide.mjs is loaded",new Date().toLocaleString());
 export function googleAPIs_ServerSideMJSisLoaded(){
     return true;
 }

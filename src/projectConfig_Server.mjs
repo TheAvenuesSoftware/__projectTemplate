@@ -3,6 +3,8 @@
 
 const consoleLog = false
 
+console.log("LOADED:- projectConfig_Server.mjs is loaded",new Date().toLocaleString());
+
 function trace() {
     try {
         const stack = new Error().stack;
@@ -17,8 +19,7 @@ function trace() {
 //  SERVER SIDE IMPORTS ONLY
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log("LOADED:- projectServerConfig.mjs is loaded");}
+console.log("LOADED:- projectConfig_Server.mjs is loaded");
 export function projectServerConfigJSisLoaded(){
     return true;
 }

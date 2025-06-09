@@ -1,6 +1,6 @@
 const consoleLog = true;
 
-if(consoleLog===true){console.log("LOADED:- globalLoginClient.mjs is loaded",new Date().toLocaleString());}
+console.log("LOADED:- globalLoginClient.mjs is loaded",new Date().toLocaleString());
 export function globalLoginClientJSisLoaded(){
     return true;
 }
@@ -9,7 +9,7 @@ export function globalLoginClientJSisLoaded(){
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
     import { sessionLogout } from './globalSessionsClient.mjs';
     import { clientConfigSettings } from "./projectConfig_Client.mjs";
-    // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
+// ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 const popupHTML = 
     `<div id="popup-overlay" class="popup-overlay">
@@ -17,6 +17,17 @@ const popupHTML =
             <p id="popup-heading" class="popup-heading">This is a popup message.</p>
             <p id="popup-message" class="popup-message"></p>
             <input id="popup-input" class="popup-input" type="text" placeholder="Enter your input here...">
+            <form id="passcodeForm">
+                <div class="code-input">
+                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
+                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
+                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
+                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
+                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
+                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
+                </div>
+                <button class="passcodeSubmit" type="submit" disabled>Submit</button>
+            </form>
             <button id="popup-button-1" class="popup-button">Button 1</button>
             <button id="popup-button-2" class="popup-button">Button 2</button>
             <button id="popup-button-3" class="popup-button">Button 3</button>
@@ -55,7 +66,7 @@ function login_stepOne(){
         document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
         document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
         const loginEmailAddress = document.getElementById("popup-input").value;
-        window.sessionStorage.setItem("loginEmailAddress", loginEmailAddress);
+        window.localStorage.setItem("loginEmailAddress", loginEmailAddress);
         login_stepTwo(loginEmailAddress);
     }
     document.getElementById("popup-button-1").addEventListener("click", popupButton1);
@@ -161,10 +172,10 @@ async function login_stepFour(loginEmailAddress){
             const jso = await response.json(); // Fetch JSON object
             if(consoleLog===true){console.log(`fileExists?:- `,jso);} // Logs correctly? Great!
             if(jso.fileExists===true){
-                window.sessionStorage.setItem("accountExists",true);
+                window.localStorage.setItem("accountExists",true);
                 login_stepFive(loginEmailAddress, true); // Account exists
             }else{
-                window.sessionStorage.setItem("accountExists",false);
+                window.localStorage.setItem("accountExists",false);
                 login_stepFive(loginEmailAddress, false); // Account does not exist
             }
     } catch (error) {
@@ -175,9 +186,11 @@ async function login_stepFour(loginEmailAddress){
 function login_stepFive(loginEmailAddress, accountExists){
     let createNewAccount = false; // Account exists === true; createNewAccount === false
     if(accountExists===true){
-        window.sessionStorage.setItem("createNewAccount",false);
+        window.localStorage.setItem("createNewAccount",false);
         login_stepSix(loginEmailAddress, accountExists, createNewAccount); // Account exists === true; createNewAccount === false 
     }else{
+        createNewAccount = true; // Account exists === false; createNewAccount === true
+        window.localStorage.setItem("createNewAccount",true);
         document.getElementById("popup-overlay").classList.add("fade-in");
         document.getElementById("popup-overlay").classList.remove("fade-out");
         document.getElementById("busy-animation-overlay").remove();
@@ -200,11 +213,11 @@ function login_stepFive(loginEmailAddress, accountExists){
             document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
             document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
             createNewAccount = true; // createNewAccount === true;
-            window.sessionStorage.setItem("createNewAccount",true);
+            window.localStorage.setItem("createNewAccount",true);
             login_stepSix(
-                window.sessionStorage.getItem("loginEmailAddress"),
-                window.sessionStorage.getItem("accountExists"),
-                true // createNewAccount
+                window.localStorage.getItem("loginEmailAddress"),
+                window.localStorage.getItem("accountExists"),
+                window.localStorage.getItem("createNewAccount")
             );
         }
         document.getElementById("popup-button-1").addEventListener("click", popupButton1);
@@ -240,10 +253,10 @@ async function login_stepSix(loginEmailAddress, accountExists, createNewAccount)
                 // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
             },
             body: JSON.stringify({          // Converts object to JSON for request
-                loginEmailAddress:loginEmailAddress,
-                createNewAccount:createNewAccount,
-                filePath:"./db/",
-                fileName:loginEmailAddress + ".db"
+                loginEmailAddress:loginEmailAddress
+                // createNewAccount:createNewAccount,
+                // filePath:"./db/",
+                // fileName:loginEmailAddress + ".db"
             })
         }
     if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
@@ -254,7 +267,7 @@ async function login_stepSix(loginEmailAddress, accountExists, createNewAccount)
             const jso = await response.json(); // Fetch JSON object
             if(consoleLog===true){console.log(`emailCode:- `,jso);} // Logs correctly? Great!
             if(jso.loginCodeEmailed===true){
-                window.sessionStorage.setItem("loginsDBinsertedID", jso.loginsDBinsertedID);
+                window.localStorage.setItem("loginsDBinsertedID", jso.loginsDBinsertedID);
                 login_stepSeven(loginEmailAddress, accountExists,createNewAccount,jso.loginCodeEmailed,jso.loginsDBinsertedID);
             }else{
                 login_cancel(`Problem generating login code. ${jso.loginCodeEmailed}`);
@@ -265,6 +278,69 @@ async function login_stepSix(loginEmailAddress, accountExists, createNewAccount)
     }
 
 }
+
+function passcodeEntry() {
+    const form = document.getElementById('.passcodeForm');
+    const inputs = form.querySelectorAll('.passcodeInput');
+    const submitButton = form.querySelector('.passcodeSubmit');
+
+    const updateSubmitState = () => {
+      const allFilled = Array.from(inputs).every(input => input.value.match(/^\d$/));
+      submitButton.disabled = !allFilled;
+    };
+
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', () => {
+        if (/^\d$/.test(input.value) && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        } else if (!/^\d$/.test(input.value)) {
+          input.value = '';
+        }
+        updateSubmitState();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && input.value === '' && index > 0) {
+          inputs[index - 1].focus();
+        }
+      });
+
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const paste = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, inputs.length);
+        paste.split('').forEach((char, i) => {
+          inputs[i].value = char;
+        });
+        if (paste.length < inputs.length) {
+          inputs[paste.length].focus();
+        }
+        updateSubmitState();
+      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const code = Array.from(inputs).map(input => input.value).join('');
+      if (code.length === 6) {
+        // Example: send code to server or log
+        console.log('Passcode submitted:', code);
+
+        // Example fetch (replace with your API endpoint)
+        /*
+        fetch('/submit-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passcode: code })
+        }).then(res => {
+          // handle response
+        });
+        */
+        alert('Passcode submitted: ' + code);
+      }
+    });
+
+}
+
 async function login_stepSeven(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed,loginsDBinsertedID){
     const fetchUrl = `/sessionsRouter/sessionRegen`;
     const fetchOptions = {
@@ -311,8 +387,7 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
                     document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
                     document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
                     document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
-                    const createNewAccount = true; // createNewAccount === true;
-                    window.sessionStorage.setItem("createNewAccount",true);
+                    window.localStorage.setItem("createNewAccount",true);
                     login_stepEight(
                         loginEmailAddress,
                         accountExists,
@@ -475,9 +550,9 @@ export async function isLoginRequired() {
 
             if(consoleLog===true){console.log('doAfterDOMandWindowLoad_globalLoginClient() launched.',Date.now());}
 
-            // if LOGIN REQUIRED
-                isLoginRequired();
-            // if LOGIN REQUIRED
+            // // if LOGIN REQUIRED
+            //     isLoginRequired();
+            // // if LOGIN REQUIRED
 
             // signin-out button START
                 document.getElementById("sign-in-out-button").addEventListener("click", (e) => {

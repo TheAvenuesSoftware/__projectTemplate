@@ -52,73 +52,71 @@ const consoleLog = false;
         import { randomUUID } from 'crypto'; // randomUUID is a named export from crypto
     // SESSIONS
         import session from 'express-session';
-        // CORS handling START
-        import cors from 'cors';
-        // SQLite
-            // async await environment
-                import sqlite3 from "sqlite3"; //The core Node.js SQLite package (handles database operations).
-                import { open } from "sqlite"; // The SQLite package that provides a promise-based API for database operations.
-        // ROUTERS
-        // import dbRouter, * as dbFunctions from "./src/SQLite_ServerSide.mjs";
-        // import loginRouter, * as loginFunctions from './src/globalLoginServer.mjs';
-        // import globalRouter, * as globalFunctions from './src/globalServer.mjs'; 
-        // import projectRouter, * as projectFunctions from './src/projectServer.mjs';
-        // import sessionsRouter, * as sessionsFunctions from './src/globalSessionsServer.mjs';
+    // CORS handling START
+    import cors from 'cors';
+    // SQLite
+        // async await environment
+            import sqlite3 from "sqlite3"; //The core Node.js SQLite package (handles database operations).
+            import { open } from "sqlite"; // The SQLite package that provides a promise-based API for database operations.
+    // busboy
+        import busboy from 'busboy'; // For handling file uploads in Express.js
+    // RATE LIMITER
+        import { rateLimit } from 'express-rate-limit';         
+    // SANITIZE INPUTS
+        import sanitizeHtml from "sanitize-html";
+        const userInput = "<script>alert('Hacked!');</script><p>Hello</p>";
+        const cleanInput = sanitizeHtml(userInput);
+        console.log(`${trace()} 🟢 sanitizeHtml() functionality is in place:- ${cleanInput}`); // Output: "<p>Hello</p>";
+        // examples
+            // 1
+                // const cleanInput = sanitizeHtml(userInput, {
+                //     allowedTags: ["p", "strong", "a"],
+                //     allowedAttributes: {
+                //         "a": ["href"]
+                //     }
+                // });
+                // console.log(cleanInput); // Only keeps `<p>`, `<strong>`, and `<a>`
+    // ROUTERS
         import dbRouter from "./src/SQLite_ServerSide.mjs";
         import loginRouter from './src/globalLoginServer.mjs';
         import globalRouter from './src/globalServer.mjs'; 
         import projectRouter from './src/projectServer.mjs';
         import sessionsRouter from './src/globalSessionsServer.mjs';
         import googleAPIsRouter from './src/googleAPIs_ServerSide.mjs';
-        // SQLite CRUD
-        import { insertRecord, getRecord, updateRecord, deleteRecord } from "./src/SQLite_ServerSide.mjs";
+    // SQLite CRUD
+        // import { insertRecord, getRecord, updateRecord, deleteRecord } from "./src/SQLite_ServerSide.mjs";
+    // Trace()
         import { trace } from "./src/globalServer.mjs";
         
-        // RATE LIMITER
-            import { rateLimit } from 'express-rate-limit';         
-        // SANITIZE INPUTS
-            import sanitizeHtml from "sanitize-html";
-            const userInput = "<script>alert('Hacked!');</script><p>Hello</p>";
-            const cleanInput = sanitizeHtml(userInput);
-            console.log(`${trace()} 🟢 sanitizeHtml() functionality is in place:- ${cleanInput}`); // Output: "<p>Hello</p>";
-            // examples
-                // 1
-                    // const cleanInput = sanitizeHtml(userInput, {
-                    //     allowedTags: ["p", "strong", "a"],
-                    //     allowedAttributes: {
-                    //         "a": ["href"]
-                    //     }
-                    // });
-                    // console.log(cleanInput); // Only keeps `<p>`, `<strong>`, and `<a>`
-
     // function checkImports(){
         try{
-            if(consoleLog===true){console.log("Imported axios:", axios ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported os:", os ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported fs:", fs ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported path:", path ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported url { fileURLToPath }:", fileURLToPath ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported dotenv:", dotenv ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported express:", express ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported cookieParser / cookie-parser:", cookieParser ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported jwt / jsonwebtoken:", jwt ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported crypto:", crypto ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported crypto { randomUUID }:", randomUUID ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported session / express-session:", session ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported cors:", cors ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported sqlite3:", sqlite3 ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported sqlite { open }:", open ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported dbRouter:", dbRouter ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported loginRouter:", loginRouter ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported globalRouter:", globalRouter ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported projectRouter:", projectRouter ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported sessionsRouter:", sessionsRouter ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported googleAPIsRouter:", googleAPIsRouter ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported {insertRecord} from SQLite_ServerSide.mjs:", insertRecord ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported {getRecord} from SQLite_ServerSide.mjs:", getRecord ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported {updateRecord} from SQLite_ServerSide.mjs:", updateRecord ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported {deleteRecord} from SQLite_ServerSide.mjs:", deleteRecord ? "✅ " : "❌ Failed");}
-            if(consoleLog===true){console.log("Imported {trace} from globalServer.mjs:", trace ? "✅ " : "❌ Failed");}
+            // console.log("Imported axios:", axios ? "✅ " : "❌ Failed");
+            console.log("Imported os:", os ? "✅ " : "❌ Failed");
+            console.log("Imported fs:", fs ? "✅ " : "❌ Failed");
+            console.log("Imported path:", path ? "✅ " : "❌ Failed");
+            console.log("Imported url { fileURLToPath }:", fileURLToPath ? "✅ " : "❌ Failed");
+            console.log("Imported dotenv:", dotenv ? "✅ " : "❌ Failed");
+            console.log("Imported express:", express ? "✅ " : "❌ Failed");
+            console.log("Imported cookieParser / cookie-parser:", cookieParser ? "✅ " : "❌ Failed");
+            console.log("Imported jwt / jsonwebtoken:", jwt ? "✅ " : "❌ Failed");
+            console.log("Imported crypto:", crypto ? "✅ " : "❌ Failed");
+            console.log("Imported crypto { randomUUID }:", randomUUID ? "✅ " : "❌ Failed");
+            console.log("Imported session / express-session:", session ? "✅ " : "❌ Failed");
+            console.log("Imported cors:", cors ? "✅ " : "❌ Failed");
+            console.log("Imported sqlite3:", sqlite3 ? "✅ " : "❌ Failed");
+            console.log("Imported sqlite { open }:", open ? "✅ " : "❌ Failed");
+            console.log("Imported busboy:", busboy ? "✅ " : "❌ Failed");
+            console.log("Imported dbRouter:", dbRouter ? "✅ " : "❌ Failed");
+            console.log("Imported loginRouter:", loginRouter ? "✅ " : "❌ Failed");
+            console.log("Imported globalRouter:", globalRouter ? "✅ " : "❌ Failed");
+            console.log("Imported projectRouter:", projectRouter ? "✅ " : "❌ Failed");
+            console.log("Imported sessionsRouter:", sessionsRouter ? "✅ " : "❌ Failed");
+            console.log("Imported googleAPIsRouter:", googleAPIsRouter ? "✅ " : "❌ Failed");
+            // console.log("Imported {insertRecord} from SQLite_ServerSide.mjs:", insertRecord ? "✅ " : "❌ Failed");
+            // console.log("Imported {getRecord} from SQLite_ServerSide.mjs:", getRecord ? "✅ " : "❌ Failed");
+            // console.log("Imported {updateRecord} from SQLite_ServerSide.mjs:", updateRecord ? "✅ " : "❌ Failed");
+            // console.log("Imported {deleteRecord} from SQLite_ServerSide.mjs:", deleteRecord ? "✅ " : "❌ Failed");
+            console.log("Imported {trace} from globalServer.mjs:", trace ? "✅ " : "❌ Failed");
         }
         catch (error) {
             console.log("imports error:",error);
@@ -141,7 +139,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                     // if(consoleLog===true){console.log(trace(),`\n${envPath}:-\n`, result.parsed);}  
                     const envVar = result.parsed;
                     Object.keys(envVar).forEach(key => {
-                        // console.log(`key:- ${key} :- ${envVar[key]}`);
+                        // console.log(`key:- ${key} :- ${envVar[key]}`);  //  DO NOT LOG - SECRET INDO !!!
                         if(consoleLog===true){console.log(`      key:- ${key}`);}
                     }); 
                     console.log(`${trace()}🟢 Global environment variables loaded.`);
@@ -162,7 +160,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                     // if(consoleLog===true){console.log(trace(),`\n${envPath}:`, result);}                
                     const envVar = result.parsed;
                     Object.keys(envVar).forEach(key => {
-                        // console.log(`key:- ${key} :- ${envVar[key]}`);
+                        // console.log(`key:- ${key} :- ${envVar[key]}`);  //  DO NOT LOG - SECRET INDO !!!
                         if(consoleLog===true){console.log(`      key:- ${key}`);}
                     }); 
                     console.log(`${trace()}🟢 Project environment variables loaded.`);
@@ -183,20 +181,41 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
     app.disable('x-powered-by'); // Reduce fingerprinting by hiding that this is an ExpressJS app
     app.set('trust proxy', 1) // trust first proxy
     app.use(express.json({ limit: "10mb" })); // Middleware to parse JSON data // Increase JSON request size limit
-    app.use(express.urlencoded({ limit: "10mb", extended: true }));
+    app.use(express.urlencoded({ limit: "10mb", extended: true })); // ✅ Parses text fields from FormData
     app.use(cookieParser()); // Enables reading of cookies
+    app.use(express.raw({ type: "image/jpeg", limit: "10mb" })); // ✅ Captures Blob data
+
+    // const staticFolders = ['config', 'db', 'media', 'public', 'src', 'styles'];
+    // try{
+    //     staticFolders.forEach(folder => {
+    //         app.use(express.static(folder));
+    //         app.use(`./${folder}`,express.static(folder));
+    //         console.log(`mapped folder:- ${folder}`);
+    //     });
+    //     console.log(`${trace()}🟢 Project folders mapped.`);
+    // }
+    // catch{
+    //     console.log(`🔴 map to folder failed:- ${folder}`);
+    // }
     const staticFolders = ['config', 'db', 'media', 'public', 'src', 'styles'];
     try{
         staticFolders.forEach(folder => {
             app.use(express.static(folder));
-            app.use(`/${folder}`,express.static(folder));
-            if(consoleLog===true){console.log(`mapped folder:- ${folder}`);}
+            app.use(`/${folder}`, express.static(path.join(__dirname, folder), {
+                setHeaders: (res, filePath) => {
+                if (filePath.endsWith('.mjs')) {
+                    res.setHeader('Content-Type', 'application/javascript');
+                }
+                }
+            }));
+            console.log(`mapped folder:- ${path.join(__dirname,folder)}`);
         });
         console.log(`${trace()}🟢 Project folders mapped.`);
     }
     catch{
         console.log(`🔴 map to folder failed:- ${folder}`);
     }
+
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
     // RATE LIMITER
         const rateLimitNumber = 5
@@ -216,20 +235,6 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
         // app.use(limiter);
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
     // CORS handling
-        // app.use(
-        //         cors(
-        //         {
-        //             origin: '*',                         // ❌ ONLY for development only !!!!
-        //             // origin: 'https://yourdomain.com', // ✔️ USE THIS when in production !!!
-        //             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        //             allowedHeaders: ['Content-Type', 'Authorization'],
-        //             optionsSuccessStatus: 204, // Avoids extra response headers in preflight requests
-        //             credentials: true // true if your app requires authentication with cookies or Authorization headers
-        //         }
-        //     )
-        // );
-        // console.log(`${trace()}🟢 CORS headers are set.`);
-
         if (process.env.APP_SERVER_MODE_DEVELOPMENT === "true") {
             const PORT = process.env.APP_PORT; 
             const corsDevelopmentOrigin = `http://localhost:${PORT}`;
@@ -272,44 +277,6 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                 const sessionKey = process.env.APP_SESSION_KEY || crypto.randomBytes(32).toString("hex");
                 console.log(`${trace()}🔒✅ sessionKey created.`); // DON'T LOG THE KEY!!!  KEEP IT SECURE!!!
             // express-session - set up the Express session middleware
-                // console.log(`${trace()}🔒✅ Session management set up commenced.`);
-                // app.use(
-                //     session(
-                //         {
-                //             // store: redisStore, // redisStore seems to be unreliable, so let's not use it
-                //             // Generate a unique session ID
-                //                 genid: (req) => randomUUID(),
-                //             // START ensures a session is created even if no data is set, - anew session ID is issued when a user does not yet have a session cookie.
-                //                 secret: process.env.APP_SESSION_KEY || 'your-secret-key', // Replace with your secret or fallback value
-                //                 resave: false, // false:- ensures a session is created even if no data is set, - anew session ID is issued when a user does not yet have a session cookie.
-                //                 saveUninitialized: true, // true:- ensures a session is created even if no data is set, - anew session ID is issued when a user does not yet have a session cookie.
-                //             // END ensures a session is created even if no data is set, - anew session ID is issued when a user does not yet have a session cookie.
-                //             cookie: 
-                //                 {
-                //                     // domain
-                //                         // domain: process.env.APP_DEV_IP_ADDRESS,
-                //                     // secure
-                //                         // secure: true,    // Set to true for HTTPS in production, false for development
-                //                         // secure: false,    // Set to true for HTTPS in production, false for development
-                //                         secure: process.env.APP_NODE_ENV === "production",
-                //                     // httpOnly
-                //                         // httpOnly: true,   // Helps mitigate XSS - set to false for development, true for production
-                //                         httpOnly: false,   // Helps mitigate XSS - set to false for development, true for production
-                //                     // sameSite
-                //                         sameSite: "Strict", // Helps mitigate CSRF - "Strict" for development; "Lax" for standard; "None" for cross-origin requests with Secure true.
-                //                         // sameSite: "Lax", // Helps mitigate CSRF - "Strict" for development; "Lax" for standard; "None" for cross-origin requests with Secure true.
-                //                         // sameSite: "None", // Helps mitigate CSRF - "Strict" for development; "Lax" for standard; "None" for cross-origin requests with Secure true.
-                //                             // SameSite Options:
-                //                             //     - 'Strict' → Only sends the cookie for same-site requests (highest security).
-                //                             //     - 'Lax' → Sends the cookie for same-site requests + top-level navigation (default).
-                //                             //     - 'None' → Allows cross-site cookies but requires Secure: true (useful for APIs).
-                //                     // maxAge
-                //                         maxAge: 15 * 60 * 1000, // Session expires after 15 minutes
-                //                 },
-                //         }
-                //     )
-                // );
-                // console.log(`${trace()}🔒✅ Session management is set up.`);
 
                 if (process.env.APP_SERVER_MODE_DEVELOPMENT === "true") {
                     console.log(`${trace()}🔒✅ Session management set up for Development commenced.`);
@@ -333,11 +300,14 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                                 // httpOnly: true,   // Helps mitigate XSS - set to false for development, true for production
                                     httpOnly: true,
 
-                                //     - 'strict' → Only sends the cookie for same-site requests (highest security).
+                                //     - 'strict' → Only sends the cookie for same-site requests (highest security). Prevents cross-site cookie access for security.
                                 //     - 'lax' → Sends the cookie for same-site requests + top-level navigation (default).
                                 //     - 'none' → Allows cross-site cookies but requires Secure: true (useful for APIs).
                                     // if sameSite is set to none, secure must be set to true
-                                    sameSite: "lax"
+                                    sameSite: "lax",
+
+                                    maxAge: 60 * 60 * 1000 // 1-hour session expiration
+
                             }
                     }));
                     console.log(`${trace()}🔒✅ Session management set up for Development completed.`);
@@ -363,7 +333,11 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                                 // httpOnly: true,   // Helps mitigate XSS - set to false for development, true for production
                                     httpOnly: true,
 
-                                    sameSite: "strict", // Prevents cross-site cookie access for security
+                                    //     - 'strict' → Only sends the cookie for same-site requests (highest security). Prevents cross-site cookie access for security.
+                                    //     - 'lax' → Sends the cookie for same-site requests + top-level navigation (default).
+                                    //     - 'none' → Allows cross-site cookies but requires Secure: true (useful for APIs).
+                                        // if sameSite is set to none, secure must be set to true
+                                    sameSite: "strict",
 
                                     maxAge: 60 * 60 * 1000 // 1-hour session expiration
                             }
@@ -378,6 +352,11 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(trace());}
 if(consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+app.use((req, res, next) => {
+  console.log("Headers:", req.headers);
+  console.log("Body:", req.body);
+  next();
+});
 // 🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪
 // AUTHENTICATE USER
     console.log(`${trace()}🔒✅ Authentication setup START.`);

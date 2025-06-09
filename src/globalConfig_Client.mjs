@@ -2,7 +2,7 @@
 // 💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚
 const consoleLog = false
 
-if(consoleLog===true){console.log("LOADED:- globalClientConfig.mjs is loaded",new Date().toLocaleString());}
+console.log("LOADED:- globalConfig_Client.mjs is loaded",new Date().toLocaleString());
 export function globalClientConfigMJSisLoaded(){
     return true;
 }

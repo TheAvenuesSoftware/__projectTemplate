@@ -1,5 +1,7 @@
 const consoleLog = false;
 
+console.log("LOADED:- globalServer.mjs is loaded",new Date().toLocaleString());
+
 export function trace(whoCalled="") {
     try {
         const stack = new Error().stack;
@@ -23,6 +25,8 @@ export function globalServerMJSisLoaded(){
     import { Router } from "express";
     const globalRouter = Router();
     import nodemailer from 'nodemailer';
+    import fs from 'fs';
+    import path from 'path';
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 
@@ -93,8 +97,8 @@ export function globalServerMJSisLoaded(){
 
 // convert image data to image file START
     // Required modules
-        import fs from 'fs'; // MUST BE DONE IN Node.mjs environment
-        import path from 'path'; // MUST BE DONE IN Node.mjs environment
+        // import fs from 'fs'; // MUST BE DONE IN Node.mjs environment
+        // import path from 'path'; // MUST BE DONE IN Node.mjs environment
     // API endpoint to receive image data
         export function convertImageData(req, res){
             try {

@@ -3,7 +3,7 @@
 
 const consoleLog = false
 
-if(consoleLog===true){console.log("LOADED:- projectConfig_Client.mjs is loaded");}
+console.log("LOADED:- projectConfig_Client.mjs is loaded",new Date().toLocaleString());
 export function projectClientConfigJSisLoaded(){
     return true;
 }
@@ -30,6 +30,4 @@ export const clientConfigSettings = {
             // # - "same-origin" → Only sends credentials if the request is to the same origin.
             // # - "omit" → Does not send credentials at all (cookies and headers excluded).
 
-};
-if(consoleLog===true){console.log('Project client configuration variables, from projectClientConfig.mjs:-\n',clientConfigSettings);}
-if(consoleLog===true){console.log('Project client configuration variables, from projectClientConfig.mjs CLIENT_APP_NAME:-\n',clientConfigSettings.CLIENT_APP_NAME);}
+}

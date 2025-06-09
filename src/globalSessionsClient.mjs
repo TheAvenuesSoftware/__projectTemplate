@@ -1,8 +1,10 @@
 const consoleLog = true;
 
+console.log("LOADED:- globalSessionsClient.mjs is loaded",new Date().toLocaleString());
+
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
-    import {clientConfigSettings} from "./projectConfig_Client.mjs";
+    // import { clientConfigSettings } from "./projectConfig_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 // logout
