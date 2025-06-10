@@ -145,11 +145,18 @@ export function projectMJSisLoaded(){
             // ✅ Start Camera & Stream to <video>
             async function startCamera() {
                 console.log("Starting camera...");
+                const videoConstraints = {
+                    facingMode: "environment", // rear camera:- "environment"; front camera:- "user"
+                    // facingMode: "user", // rear camera:- "environment"; front camera:- "user"
+                    width: { ideal: 1280 },    // Ideal resolution width, will automatically scale back if necessary
+                    height: { ideal: 720 },    // Ideal resolution height, will automatically scale back if necessary
+                    frameRate: { ideal: 30 }   // Smooth video at 30fps, will automatically scale back if necessary
+                };
                 try {
                     const cameraContainer = document.getElementById("camera-container");
                     const video = document.getElementById("camera-stream");
-                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                               // document.getElementById("camera-stream").srcObject = stream;
+                    // const stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"} });                               
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: videoConstraints });
                     video.srcObject = stream;
                     video.addEventListener("loadedmetadata", () => {
                         console.log("Video dimensions:", video.videoWidth, "x", video.videoHeight);
@@ -252,7 +259,7 @@ export function projectMJSisLoaded(){
             // ✅ Event Listeners
                 document.getElementById("capture-btn").addEventListener("click", capturePhoto);
                 document.getElementById("save-btn").addEventListener("click", savePhotoToDB);
-                document.getElementById("retrieve-btn").addEventListener("click", loadPhoto);
+                document.getElementById("retrieve-btn").addEventListener("click", loadPhotos);
 
             // ✅ Start Camera on Page Load
                 startCamera();
@@ -285,7 +292,43 @@ export function projectMJSisLoaded(){
             //     document.getElementById("address-display").textContent = data.image_address;
             //     document.getElementById("notes-display").textContent = data.image_notes;
             // }
-async function loadPhoto() {
+async function deletePhoto(userEmailAddress,image_id) {
+    console.log(image_id);
+    console.log("Delete button clicked for image ID:", image_id);
+    try {
+                const fetchUrl = "/dbRouter/delete-photo-by-id";
+                const fetchOptions = {
+                    method: 'POST',
+                    mode: 'cors',                  // Ensures cross-origin requests are handled
+                    cache: 'no-cache',             // Prevents caching issues
+                    credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+                    headers: {
+                        'Content-Type': 'application/json',  // Sets content type
+                        // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
+                        // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
+                    },
+                    body:JSON.stringify({
+                        userEmailAddress:userEmailAddress, 
+                        image_id:image_id 
+                    })
+                }
+        const deleteResponse = await fetch(fetchUrl, fetchOptions);
+        if (!deleteResponse.ok) {
+            throw new Error(`HTTP error! status: ${deleteResponse.status}`);
+        }
+        const deleteResult = await deleteResponse.json();
+        console.log(deleteResult.message);
+        if (deleteResult.success) {
+            // Remove the photo card from the DOM
+            event.target.parentElement.remove();
+        } else {
+            console.error("Failed to delete photo:", deleteResult.message);
+        }
+    } catch (error) {
+        console.error("Error deleting photo:", error);
+    }
+}
+async function loadPhotos() {
     // document.getElementById("retrieve-btn").addEventListener("click", async () => {
     const photosContainer = document.getElementById("photos-container");
     try {
@@ -335,14 +378,23 @@ async function loadPhoto() {
                 const imageTime = photo.image_time || "Unknown Time";
                 const imageAddress = photo.image_address || "No Address Provided";
                 const imageNotes = photo.image_notes || "No Notes Available";
+                const imageID = photo.image_id;
             photoCard.innerHTML = `
                 <img src="${imageSrc}" alt="Photo" class="photo">
                 <p><strong>Date:</strong> ${imageDate}</p>
                 <p><strong>Time:</strong> ${imageTime}</p>
                 <p><strong>Address:</strong> ${imageAddress}</p>
                 <p><strong>Notes:</strong> ${imageNotes}</p>
+                <div id="image_id"><strong>ID:</strong> ${imageID}</div>
+                <button id="imageDelete" class="delImgBtn" data-image_id='${imageID}'>Delete Image # ${imageID}</button>
             `;
             photosContainer.appendChild(photoCard);
+        });
+        document.querySelectorAll(".delImgBtn").forEach(button => {
+            button.addEventListener("click", async (event) => {
+                const delID = event.target.getAttribute("data-image_id");
+                deletePhoto(userEmailAddress,delID * 1);
+            });
         });
     } catch (error) {
         console.error("Error fetching photos:", error);

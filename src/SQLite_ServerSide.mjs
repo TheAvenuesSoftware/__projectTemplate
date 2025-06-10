@@ -302,52 +302,6 @@ dbRouter.post("/save-photo", async (req, res) => {
 
 });
 
-    // dbRouter.post("/save-photo", async (req, res) => {
-    //     console.log(`${trace()} req.body:- `,req.body);
-    //     console.log(`${trace()} req.body.userEmailAddress:- ${req.body.userEmailAddress}`);
-    // 
-    //     const { image, address, notes } = req.body;
-    //     const buffer = Buffer.from(image, "base64");
-    //     // const query = `INSERT INTO photos (image, address, notes) VALUES (${image}, ${address}, ${notes})`;
-    //     const query = "INSERT INTO photos (image, image_date, image_time, image_address, image_notes) VALUES (?, ?, ?, ?, ?)";
-    //     console.log(trace(),query);
-    //     const db = await getDB(`${req.body.userEmailAddress}`);
-    //     console.log(trace(),"Connected Database:", db);
-    //     await db.run(query, [buffer, address, notes])
-    //     .then(() => {
-    //         res.json({ message: "Photo saved successfully!" });
-    //     })
-    //     .catch((err) => {
-    //         if(consoleLog===true){console.error(`${trace()} Error saving photo:`, err);}
-    //         res.status(500).json({ message: "Failed to save photo." });
-    //     });
-    // 
-    // });
-
-// Endpoint to get all photos
-    // dbRouter.post("/get-all-photos", async (req, res) => {
-    //     console.log(trace(),'Received request with Content-Type:', req.headers['content-type']);
-    //     console.log(trace(),'Received request with "body":', req.body);
-    //     const db = await getDB(`${req.body.userEmailAddress}`);
-    //  // db.get("SELECT image_blob, image_date, image_time, image_address, image_notes FROM photos WHERE id = *", [req.params.id], (err, row) => {
-    //     db.get("SELECT image_blob, image_date, image_time, image_address, image_notes FROM photos", (err, rows) => {
-    //         if (err || !rows.length) {
-    //             console.log(trace(),"No photos found.",err);
-    //             res.status(404).json({ message: "No photos found." });
-    //         } else {
-    //             console.log(trace(),rows);
-    //             const formattedPhotos = rows.map(row => ({
-    //                 image_blob: `data:image/png;base64,${row.image_blob.toString("base64")}`,
-    //                 image_date: row.image_date,
-    //                 image_time: row.image_time,
-    //                 image_address: row.image_address,
-    //                 image_notes: row.image_notes
-    //             }));
-    //             console.log(trace(),formattedPhotos);
-    //             res.json(formattedPhotos);
-    //         }
-    //     });
-    // });
     dbRouter.post("/get-all-photos", async (req, res) => {
         try {
             console.log(trace(), 'Received request with Content-Type:', req.headers['content-type']);
@@ -356,7 +310,7 @@ dbRouter.post("/save-photo", async (req, res) => {
             const db = await getDB(`${req.body.userEmailAddress}`);
             
             // ✅ Use `db.all()` with `await` instead of callback-based `db.get()`
-            const rows = await db.all("SELECT image_blob, image_date, image_time, image_address, image_notes FROM photos");
+            const rows = await db.all("SELECT id, image_blob, image_date, image_time, image_address, image_notes FROM photos");
 
             if (!rows.length) {
                 console.log(trace(), "No photos found.");
@@ -367,6 +321,7 @@ dbRouter.post("/save-photo", async (req, res) => {
 
             const formattedPhotos = rows.map(row => ({
                 // image_blob: `data:image/png;base64,${row.image_blob.toString("base64")}`,
+                image_id: row.id, 
                 image_blob: row.image_blob 
                     ? `data:image/png;base64,${row.image_blob.toString("base64")}` 
                     : null, // ✅ If null, don't process
@@ -381,6 +336,20 @@ dbRouter.post("/save-photo", async (req, res) => {
         } catch (err) {
             console.error(trace(), "Database query error:", err);
             res.status(500).json({ message: "Server error", error: err.message });
+        }
+    });
+
+    dbRouter.post("/delete-photo-by-id", async (req, res) => {
+        try {
+            const db = await getDB(`${req.body.userEmailAddress}`);
+            const result = await db.run("DELETE FROM photos WHERE id = ?", [req.body.image_id]);
+            if (result.changes === 0) {
+                return res.status(404).json({ message: "Photo not found" });
+            }
+            res.json({ message: "Photo deleted successfully" });
+        } catch (err) {
+            console.error("Database error:", err);
+            res.status(500).json({ message: "Failed to delete photo" });
         }
     });
 // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸

@@ -41,6 +41,8 @@ const consoleLog = false;
                 const __dirname = path.dirname(__filename);
     // ENVironment variables
         import dotenv from "dotenv";
+    // https
+        import https from 'https'; // For making HTTPS requests
     // EXPRESS
         import express from "express";
     // COOKIE PARSER
@@ -683,7 +685,12 @@ setInterval(() => {
     // Start the server
         const PORT = process.env.APP_PORT;
         const DEV_IP_ADDRESS = process.env.APP_DEV_IP_ADDRESS;
-        app.listen(PORT,'0.0.0.0', () => {
+        const options = {
+            key: fs.readFileSync("server.key"),
+            cert: fs.readFileSync("server.cert")
+        };
+        // app.listen(PORT,'0.0.0.0', () => {
+        https.createServer(options,app).listen(PORT, () => {
             console.log(("🎾").repeat(60));
             // console.log(`${trace()}\nServer is running on port:${PORT}\nAccessible on the server at either http://localhost:${PORT} or http://${DEV_IP_ADDRESS}:${PORT}.\nAccessible on the LAN at http://${DEV_IP_ADDRESS}:${PORT}.`);
             console.log(`🎾 ${trace()}${(" ").repeat(118-(`🎾 ${trace()}`).length)}🎾\n🎾 Server is running on port:${PORT}.${(" ").repeat(118-(`🎾 Server is running on port:${PORT}.`).length)}🎾`);
