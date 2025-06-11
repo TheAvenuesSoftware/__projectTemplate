@@ -324,7 +324,7 @@ body{
         // background-color: red;
         input{
             color:darkblue;
-            background-color: beige;
+            background-color: yellow;
             width: 100%;
         }
         button{
@@ -346,55 +346,60 @@ body{
             color: red;
         }
     }
-    // passcodeForm START
+}
+
+// passcodeForm START
     .passcodeForm{
-        form {
+        position:fixed;
+        left:-1000px;
+        .code-input-container {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: center;
             align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
         }
-        .code-input {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
+        .code-input-input {
+            display: flex;
+            flex-direction: row;
+            width: 20px !important;
+            height: 20px;
+            text-align: center;
+            // font-size: 24px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            background-color: palegoldenrod !important;
+            transition: border-color 0.2s;
         }
-        .code-input input {
-        width: 50px;
-        height: 60px;
-        text-align: center;
-        font-size: 24px;
-        border: 2px solid #ccc;
-        border-radius: 8px;
-        outline: none;
-        background: #fff;
-        transition: border-color 0.2s;
-        }
-        .code-input input:focus {
-        border-color: #007BFF;
+        .code-input-input:focus {
+            color: darkblue ;
+            border-color: #007BFF;
         }
         button {
-        padding: 10px 20px;
-        font-size: 18px;
-        background-color: #007BFF;
-        color: #fff;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
+            padding: 10px 20px;
+            // font-size: 18px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
         }
         button:disabled {
-        background-color: #aaa;
+            background-color: #aaa;
         cursor: not-allowed;
         }
         @media (max-width: 600px) {
-        .code-input input {
-            width: 40px;
-            height: 50px;
-            font-size: 20px;
-        }
+            .code-input input {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
         }
     }
-    // passcodeForm END
-}
+// passcodeForm END
+
 
 .sign-in-button{
     display: flex;
@@ -452,10 +457,10 @@ body{
     align-items: center;
     input{
         color:darkblue;
-        background-color: beige;
+        background-color: palegoldenrod ;
         width: 80%; 
         margin:auto;
-        padding:3px;
+        padding:5px;
     }
 }
 .map-container{
@@ -516,7 +521,7 @@ body{
     align-items: center;        
     // background-color: red;
     .popup-container{
-        background: rgba(255,255,255,1);
+        background-color: rgba(255,255,255,1);
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -524,7 +529,8 @@ body{
         // background-color: red;
         input{
             color:darkblue;
-            background-color: beige;
+            background-color: palegoldenrod;
+            padding: 5px;
             width: 100%;
         }
         button{
@@ -570,4 +576,24 @@ body{
         margin: 5px 0;
         font-size: 14px;
     }
+}
+
+#menu-button {
+    // position: absolute;
+    position: fixed; // Keeps it in view
+    top: 50px;
+    left: 50px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: grab;
+    border-radius: 5px;
+    font-size: 16px;
+    // touch-action: none; /* ✅ Stops screen movement during touch ✅ CSS touch-action: none prevents native touch scrolling */
+    z-index: 10000;
+}
+
+#menu-button:active {
+    cursor: grabbing;
 }

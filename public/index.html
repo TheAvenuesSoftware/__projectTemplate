@@ -10,7 +10,8 @@
 <html lang="en" class="footer-position-grid">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>__projectTemplate</title>
 
     <link rel="stylesheet" href="project.css">
@@ -38,8 +39,11 @@
         <h1 style="text-align: center;">The Avenues Software</h1>
         <h2 style="text-align: center;">__projectTemplate</h2>
         <h3 id="user-email-address" style="text-align: center;"></h3>
+        <p>iPhone > Settings > Apps > Safari > Camera > Allow</p>
+        <!-- <p>Android > Settings > Apps > Safari > Camera > Allow</p> -->
     </header>
     <main>
+        <button id="menu-button" class="menu-button">M</button>
         <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
             <div id="sign-in-out-button" class="sign-in-button" tabindex="0" role="button">Log In</div> 
         <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
@@ -84,14 +88,15 @@
                 <div id="camera-container" class="camera-container">
                     <video id="camera-stream" class="camera-stream" autoplay playsinline style="background-color: red;"></video>
                     <canvas id="photo-canvas" style="display: none;"></canvas><br>
-                    <textarea id="notes-input" placeholder="Enter notes"></textarea><br>
-                    <button id="capture-btn">Take Photo</button>
-                    <button id="save-btn" style="visibility: hidden;">Save Photo</button>
+                    <textarea id="notes-input" placeholder="Enter notes relevant to this photo here..."></textarea><br>
+                    <button id="capture-btn" class="std-btn">Take Photo</button>
+                    <button id="save-btn" class="std-btn" style="visibility: hidden;">Save Photo</button>
                 </div>
         <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
 
         <!-- 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
-                <button id="retrieve-btn" >Load Saved Photos & Details</button>
+                <button id="retrieve-btn" class="std-btn">Load Saved Photos & Details</button>
+                <div id="filter-text">Filter on:-<br><input id="filter-text" type="text" placeholder="Enter filter text here..."></div>
                 <div id="photos-container">
                 </div>
                 <!-- <img id="photo-display" src="" alt="Saved photo">

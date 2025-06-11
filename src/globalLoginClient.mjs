@@ -16,23 +16,23 @@ const popupHTML =
         <div id="popup-container" class="popup-container">
             <p id="popup-heading" class="popup-heading">This is a popup message.</p>
             <p id="popup-message" class="popup-message"></p>
-            <input id="popup-input" class="popup-input" type="text" placeholder="Enter your input here...">
-            <form id="passcodeForm">
-                <div class="code-input">
-                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
-                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
-                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
-                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
-                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
-                    <input class="passcodeInput" type="text" inputmode="numeric" pattern="\d*" maxlength="1" />
+            <input id="popup-input" class="popup-input" type="text" placeholder="Enter your input here..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+            <form id="passcodeForm" class="passcodeForm">
+                <div class="code-input-container">
+                    <input class="passcodeInput code-input-input" type="text" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                    <input class="passcodeInput code-input-input" type="text" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                    <input class="passcodeInput code-input-input" type="text" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                    <input class="passcodeInput code-input-input" type="text" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                    <input class="passcodeInput code-input-input" type="text" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                    <input class="passcodeInput code-input-input" type="text" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
                 </div>
-                <button class="passcodeSubmit" type="submit" disabled>Submit</button>
+                // <button class="passcodeSubmit" type="submit" disabled>Submit</button>
             </form>
             <button id="popup-button-1" class="popup-button">Button 1</button>
             <button id="popup-button-2" class="popup-button">Button 2</button>
             <button id="popup-button-3" class="popup-button">Button 3</button>
             <p id="popup-error-message" class="popup-error-message"></p>
-            <input id="popup-focus-select-nodisplay" style="display:none" type="text" placeholder="Focus Select No Display">
+            <input id="popup-focus-select-nodisplay" style="display:none" type="text" placeholder="Focus Select No Display" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         </div>
     </div>`
 
@@ -49,7 +49,7 @@ function login_stepOne(){
     document.body.insertAdjacentHTML("beforeend", popupHTML);
     document.getElementById("popup-heading").textContent = "Login";
     document.getElementById("popup-message").textContent = "Please enter your email address to log in.";
-    document.getElementById("popup-input").value = "";
+    document.getElementById("popup-input").value = window.localStorage.getItem("loginEmailAddress") || "";
     document.getElementById("popup-input").placeholder = "Enter your email address here...";
     document.getElementById("popup-input").focus();
     document.getElementById("popup-input").select();
@@ -87,6 +87,7 @@ function login_stepOne(){
         document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
     }
     document.getElementById("popup-button-3").addEventListener("click", popupButton3);
+
 }
 
 function login_stepTwo(loginEmailAddress){
@@ -187,6 +188,10 @@ function login_stepFive(loginEmailAddress, accountExists){
     let createNewAccount = false; // Account exists === true; createNewAccount === false
     if(accountExists===true){
         window.localStorage.setItem("createNewAccount",false);
+        document.getElementById("popup-input").value = "";
+        document.getElementById("popup-input").style.display = "none";
+        document.getElementById("popup-input").focus();
+        document.getElementById("popup-input").select();
         login_stepSix(loginEmailAddress, accountExists, createNewAccount); // Account exists === true; createNewAccount === false 
     }else{
         createNewAccount = true; // Account exists === false; createNewAccount === true
@@ -280,42 +285,65 @@ async function login_stepSix(loginEmailAddress, accountExists, createNewAccount)
 }
 
 function passcodeEntry() {
-    const form = document.getElementById('.passcodeForm');
+    const form = document.getElementById('passcodeForm');
+    form.style.position = 'unset'; // Show the form
     const inputs = form.querySelectorAll('.passcodeInput');
     const submitButton = form.querySelector('.passcodeSubmit');
 
     const updateSubmitState = () => {
-      const allFilled = Array.from(inputs).every(input => input.value.match(/^\d$/));
-      submitButton.disabled = !allFilled;
+        console.log("Updating submit button state...");
+        const allFilled = Array.from(inputs).every(input => input.value.match(/^\d$/)); // 0-9 required
+        console.log("Updating submit button state...", allFilled);
+        submitButton.disabled = !allFilled;
+        if (allFilled) {
+            const code = Array.from(inputs).map(input => input.value).join('');
+            console.log('Passcode entered:', code); 
+            document.getElementById("popup-input").value = code; // Update the popup input with the passcode
+            document.getElementById("popup-button-1").click();
+        } else {
+        }
     };
+    // const updateSubmitState = () => {
+    //     console.log("Updating submit button state...");
+    //     const allFilled = Array.from(inputs).every(input => input.value.trim() !== ""); // Check if all inputs are filled
+    //     submitButton.disabled = !allFilled;
+    // };
+
+    inputs[0].focus();
 
     inputs.forEach((input, index) => {
-      input.addEventListener('input', () => {
-        if (/^\d$/.test(input.value) && index < inputs.length - 1) {
-          inputs[index + 1].focus();
-        } else if (!/^\d$/.test(input.value)) {
-          input.value = '';
-        }
-        updateSubmitState();
-      });
-
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && input.value === '' && index > 0) {
-          inputs[index - 1].focus();
-        }
-      });
-
-      input.addEventListener('paste', (e) => {
-        e.preventDefault();
-        const paste = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, inputs.length);
-        paste.split('').forEach((char, i) => {
-          inputs[i].value = char;
+        console.log(`Input ${index} initialized.`);
+        input.addEventListener('input', () => {
+            if (/^\d$/.test(input.value) && index < inputs.length - 1) {
+                if(index <= 5){
+                    inputs[index + 1].focus();
+                    inputs[index + 1].select();
+                }else{
+                    console.log("Last input reached, no next input to focus.");
+                }
+            } else if (!/^\d$/.test(input.value)) {
+                  input.value = '';
+            }
+            updateSubmitState();
         });
-        if (paste.length < inputs.length) {
-          inputs[paste.length].focus();
-        }
-        updateSubmitState();
-      });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, inputs.length);
+            paste.split('').forEach((char, i) => {
+                inputs[i].value = char;
+            });
+            if (paste.length < inputs.length) {
+                inputs[paste.length].focus();
+            }
+            updateSubmitState();
+        });
     });
 
     form.addEventListener('submit', (e) => {
@@ -365,14 +393,15 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
             const jso = await response.json(); // Fetch JSON object
             if(consoleLog===true){console.log(`sessionRegen:- `,jso);}
             if(jso.sessionRegenOK===true){
+                passcodeEntry(); // Initialize passcode entry functionality
                 document.getElementById("popup-overlay").classList.add("fade-in");
                 document.getElementById("popup-overlay").classList.remove("fade-out");
                 document.getElementById("busy-animation-overlay").remove();
                 document.getElementById("popup-heading").textContent = "Submit Login Code";
                 document.getElementById("popup-message").textContent = "Please enter the login code that has been emailed to you.";
-                document.getElementById("popup-input").value = "";
-                document.getElementById("popup-input").placeholder = "Enter your login code here...";
-                document.getElementById("popup-input").style.display = "block";
+                // document.getElementById("popup-input").value = "";
+                // document.getElementById("popup-input").placeholder = "Enter your login code here...";
+                // document.getElementById("popup-input").style.display = "block";
                 document.getElementById("popup-input").focus();
                 document.getElementById("popup-input").select();
                 document.getElementById("popup-button-1").textContent = "Submit";

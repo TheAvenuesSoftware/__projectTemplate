@@ -352,6 +352,38 @@ dbRouter.post("/save-photo", async (req, res) => {
             res.status(500).json({ message: "Failed to delete photo" });
         }
     });
+
+    dbRouter.post("/filter-photos-by-address", async (req, res) => {
+        try{
+            const db = await getDB(`${req.body.userEmailAddress}`);
+            const rows = await db.all("SELECT image_blob, image_date, image_time, image_address, image_notes FROM photos WHERE image_address LIKE ?", [req.body.filterText]);
+            
+            if (!rows.length) {
+                console.log(trace(), "No photos found.");
+                return res.status(404).json({ message: "No photos found." });
+            }
+
+            console.log(trace(), rows);
+
+            const formattedPhotos = rows.map(row => ({
+                // image_blob: `data:image/png;base64,${row.image_blob.toString("base64")}`,
+                image_id: row.id, 
+                image_blob: row.image_blob 
+                    ? `data:image/png;base64,${row.image_blob.toString("base64")}` 
+                    : null, // ✅ If null, don't process
+                image_date: row.image_date,
+                image_time: row.image_time,
+                image_address: row.image_address,
+                image_notes: row.image_notes
+            }));
+
+            console.log(trace(), formattedPhotos);
+            res.json(formattedPhotos);
+        } catch (err) {
+            console.error("Database error:", err);
+            res.status(500).json({ message: "Failed to filter photos" });
+        }
+    });
 // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
     
 export default dbRouter;

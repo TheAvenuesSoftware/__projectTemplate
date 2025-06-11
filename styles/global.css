@@ -288,7 +288,7 @@ body {
 }
 .login-overlay .dialog input {
   color: darkblue;
-  background-color: beige;
+  background-color: yellow;
   width: 100%;
 }
 .login-overlay .dialog button {
@@ -309,47 +309,51 @@ body {
   max-width: 100%;
   color: red;
 }
-.login-overlay .passcodeForm form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+
+.passcodeForm {
+  position: fixed;
+  left: -1000px;
 }
-.login-overlay .passcodeForm .code-input {
+.passcodeForm .code-input-container {
   display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
   margin-bottom: 20px;
 }
-.login-overlay .passcodeForm .code-input input {
-  width: 50px;
-  height: 60px;
+.passcodeForm .code-input-input {
+  display: flex;
+  flex-direction: row;
+  width: 20px !important;
+  height: 20px;
   text-align: center;
-  font-size: 24px;
   border: 2px solid #ccc;
   border-radius: 8px;
   outline: none;
-  background: #fff;
+  background-color: palegoldenrod !important;
   transition: border-color 0.2s;
 }
-.login-overlay .passcodeForm .code-input input:focus {
+.passcodeForm .code-input-input:focus {
+  color: darkblue;
   border-color: #007BFF;
 }
-.login-overlay .passcodeForm button {
+.passcodeForm button {
   padding: 10px 20px;
-  font-size: 18px;
   background-color: #007BFF;
   color: #fff;
   border: none;
   border-radius: 6px;
   cursor: pointer;
 }
-.login-overlay .passcodeForm button:disabled {
+.passcodeForm button:disabled {
   background-color: #aaa;
   cursor: not-allowed;
 }
 @media (max-width: 600px) {
-  .login-overlay .passcodeForm .code-input input {
+  .passcodeForm .code-input input {
     width: 40px;
-    height: 50px;
+    height: 40px;
     font-size: 20px;
   }
 }
@@ -412,10 +416,10 @@ body {
 }
 .autocomplete-address-container input {
   color: darkblue;
-  background-color: beige;
+  background-color: palegoldenrod;
   width: 80%;
   margin: auto;
-  padding: 3px;
+  padding: 5px;
 }
 
 .map-container {
@@ -470,7 +474,7 @@ body {
   align-items: center;
 }
 .popup-overlay .popup-container {
-  background: rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -478,7 +482,8 @@ body {
 }
 .popup-overlay .popup-container input {
   color: darkblue;
-  background-color: beige;
+  background-color: palegoldenrod;
+  padding: 5px;
   width: 100%;
 }
 .popup-overlay .popup-container button {
@@ -498,6 +503,48 @@ body {
 .popup-overlay .popup-container .error-prompt {
   max-width: 100%;
   color: red;
+}
+
+#photos-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+#photos-container .photo-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 250px;
+  text-align: center;
+  background-color: #f9f9f9;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+#photos-container .photo {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px;
+}
+#photos-container p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+#menu-button {
+  position: fixed;
+  top: 50px;
+  left: 50px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: grab;
+  border-radius: 5px;
+  font-size: 16px;
+  z-index: 10000;
+}
+
+#menu-button:active {
+  cursor: grabbing;
 }
 
 /*# sourceMappingURL=global.css.map */
