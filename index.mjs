@@ -693,8 +693,13 @@ setInterval(() => {
         https.createServer(options,app).listen(PORT, () => {
             console.log(("🎾").repeat(60));
             // console.log(`${trace()}\nServer is running on port:${PORT}\nAccessible on the server at either http://localhost:${PORT} or http://${DEV_IP_ADDRESS}:${PORT}.\nAccessible on the LAN at http://${DEV_IP_ADDRESS}:${PORT}.`);
-            console.log(`🎾 ${trace()}${(" ").repeat(118-(`🎾 ${trace()}`).length)}🎾\n🎾 Server is running on port:${PORT}.${(" ").repeat(118-(`🎾 Server is running on port:${PORT}.`).length)}🎾`);
+            console.log(`🎾 ${trace()}${(" ").repeat(118-(`🎾 ${trace()}`).length)}🎾`);
             myDate = new Date();
             console.log(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}${(" ").repeat(118-(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`).length)}🎾`);
+            console.log(`🎾 Server is running on port:${PORT}.${(" ").repeat(118-(`🎾 Server is running on port:${PORT}.`).length)}🎾`);
+            console.log(process.env.APP_SERVER_MODE_PRODUCTION === "true" ?
+                `🎾 Server is running in Production mode. ${(" ").repeat(117-(`🎾 Server is running in Production mode.`).length)}🎾` : 
+                `🎾 Server is running in Development mode. ${(" ").repeat(117-(`🎾 Server is running in Development mode.`).length)}🎾`);
+            // console.log(`🎾 Server is running on port # ${process.env.APP_PORT}${(" ").repeat(118-(`🎾 Server is running on port # ${process.env.APP_PORT}`).length)}🎾`);
             console.log(("🎾").repeat(60));
         });

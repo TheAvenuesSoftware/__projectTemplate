@@ -1,0 +1,11 @@
+{
+    "name": "__projectTemplate",
+    "short_name": "PWA",
+    "start_url": "/public/",
+    "display": "fullscreen",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "icons": [
+        { "src": "/media/icon_192.png", "sizes": "192x192", "type": "image/png" }
+    ]
+}
