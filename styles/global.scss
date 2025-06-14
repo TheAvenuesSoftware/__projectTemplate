@@ -22,108 +22,23 @@ header {
     //     @include mixins.center-flex;
     // // The namespace is automatically set to the file name without the underscore (_) and .scss extension. So _mixins.scss becomes mixins.
     background-color: #f4f4f4;
-    padding: 1rem;
+    // padding: 1rem;
 }
 
+// * {
+//     outline: 1px solid red;
+// }
+
 body{
+    // * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    // }
     user-select: none;
     // background-color: #af1414;
 }
   
-// footer position fixed <<<--- scss scss scss scss scss scss scss scss scss scss
-.footer-position-fixed {
-    footer{
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #222;
-        color: #fff;
-        padding: 20px;
-        text-align: center;
-    }
-}
-// footer position flex <<<--- scss scss scss scss scss scss scss scss scss scss
-.footer-position-flex{
-    html, body {
-    height: 100%;
-    margin: 0;
-    }
-    // .wrapper {
-    main{
-        min-height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-    // .content {
-    main{
-        flex: 1; /* Pushes footer down */
-    }
-    footer {
-        background-color: #222;
-        color: #fff;
-        padding: 20px;
-        text-align: center;
-    }
-}
-// footer position grid <<<--- scss scss scss scss scss scss scss scss scss scss
-.footer-position-grid{
-    body {
-        display: grid;
-        grid-template-rows: auto 1fr auto; /* Header, Content, Footer */
-        min-height: 100vh;
-        margin: 0;
-    }
-    .footer {
-        background-color: #222;
-        color: #fff;
-        padding: 20px;
-        text-align: center;
-    }
-}
-
-// global footer content <<<--- scss scss scss scss scss scss scss scss scss scss
-.global-footer {
-    background-color: #222;
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-    .global-footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        p {
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        nav {
-            ul {
-                list-style: none;
-                padding: 0;
-                display: flex;
-                gap: 15px;
-                li {
-                    a {
-                        color: #ccc;
-                        background-color: #007bff;
-                        padding: 0px 5px;
-                        border: 1px solid blue;
-                        border-radius: 5px;
-                        text-decoration: none;
-                        font-size: 16px;
-                        transition: color 0.3s ease;
-                        &:hover {
-                            color: #fff;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 // standard button <<<--- scss scss scss scss scss scss scss scss scss scss
 .std-btn{
     display:inline-block;
@@ -402,48 +317,48 @@ body{
 
 
 .sign-in-button{
+    position:absolute;
     display: flex;
-    justify-content: center;
+    justify-content:center;
     align-items: center;
+    top: 2.5px;
+    right: 2.5px;
+    height:25px;
+    width: 65px;
     padding: 6px 12px;
     font-size: 16px;
     font-weight: bold;
     color: white;
     background: linear-gradient(135deg, #4A90E2, #1440AF);
-    border: none;
+    border: 1px solid white;
     border-radius: 8px;
     cursor: pointer;
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease-in-out;
-    position:fixed;
-    top: 5px;
-    right: 5px;
-    height:25px;
-    width: 65px;
     &:hover{
         transform:scale(1.05);
         background: linear-gradient(135deg,  #1440AF,#4A90E2);
     }
 }
 .sign-out-button{
+    position:absolute;
     display: flex;
-    justify-content: center;
+    justify-content:center;
     align-items: center;
+    top: 2.5px;
+    right: 2.5px;
+    height:25px;
+    width: 65px;
     padding: 6px 12px;
     font-size: 16px;
     font-weight: bold;
     color: white;
     background: linear-gradient(135deg, #d86b6b, #af1414);
-    border: none;
+    border: 1px solid white;
     border-radius: 8px;
     cursor: pointer;
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease-in-out;
-    position:fixed;
-    top: 5px;
-    right: 5px;
-    height:25px;
-    width: 65px;
     &:hover{
         transform:scale(1.05);
         background: linear-gradient(135deg,  #af1414,#d86b6b);
@@ -463,6 +378,7 @@ body{
         padding:5px;
     }
 }
+
 .map-container{
    display: none; /* Initially hidden */
     position: relative; /* Keeps it inside the document flow */
@@ -478,7 +394,8 @@ body{
         height: 100%;
     }
 }
-.camera-container{
+
+.camera-container-OLD{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -493,20 +410,33 @@ body{
     // box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
     // padding: 2px;
 }
-.camera-stream{
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
-    // border: 1px solid black;
-    // background: #1440AF;
+.camera-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    // Hidden by default
+        // display: block;
+        display: none;
+    // Hidden by default
+    .camera-stream{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 5px;
+        // border: 1px solid black;
+        // background: #1440AF;
+    }
+    .photo-canvas{
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+        // border: 1px solid black;
+        // background: #1440AF;
+    }   
 }
-.photo-canvas{
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
-    // border: 1px solid black;
-    // background: #1440AF;
-}   
 
 .popup-overlay{
     position: fixed;
@@ -576,24 +506,4 @@ body{
         margin: 5px 0;
         font-size: 14px;
     }
-}
-
-#menu-button {
-    // position: absolute;
-    position: fixed; // Keeps it in view
-    top: 50px;
-    left: 50px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: grab;
-    border-radius: 5px;
-    font-size: 16px;
-    // touch-action: none; /* ✅ Stops screen movement during touch ✅ CSS touch-action: none prevents native touch scrolling */
-    z-index: 10000;
-}
-
-#menu-button:active {
-    cursor: grabbing;
 }

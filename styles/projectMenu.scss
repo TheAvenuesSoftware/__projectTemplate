@@ -1,0 +1,110 @@
+// floating menu icon START
+    .m {
+        position: fixed; // Keeps it in view
+        top: 50px;
+        right: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 30px;
+        width: 30px;
+        border: 1px solid blue;
+        background-color: #f0f0f0;
+        padding:2px;
+        border-radius: 5px;
+        cursor: grab;
+        z-index: 1000;
+    }
+    .c {
+    height: 30px;
+    width: 30px;
+    }
+// floating menu icon END
+
+// project menu content START <<<--- scss scss scss scss scss scss scss scss scss scss
+    $primary-color: #007bff;
+    $hover-color: #e0e0e0;
+    $background-light: #f4f4f4;
+    $transition-speed: 0.3s;
+    .menu-container{
+        position:relative;
+        top: 0;
+        left: 0;
+        margin:0px;
+        box-sizing: border-box;
+    }
+    .nav-menu{
+        position:absolute;
+    }
+    .menu-btn {
+        background-color: $primary-color;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0px;
+        margin: 0px;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height $transition-speed ease-in-out, opacity $transition-speed ease-in-out;
+        &.expanded {
+            max-height: 500px;
+            opacity: 1;
+        }
+    }
+    .nav-L1 {
+        padding: 10px;
+        background: $background-light;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+        transition: background $transition-speed ease-in-out;
+        &:hover {
+            background: $hover-color;
+        }
+    }
+    .nav-L2 {
+        padding-left: 15px;
+        transition: padding-left $transition-speed ease-in-out;
+        &:hover {
+            background: darken($hover-color, 10%);
+        }
+    }
+    .nav-L3 {
+        padding-left: 25px;
+        transition: padding-left $transition-speed ease-in-out;
+        &:hover {
+            background: darken($hover-color, 20%);
+        }
+    }
+    // Responsive Styles START
+        @media screen and (max-width: 768px) {
+            .menu-btn {
+                font-size: 1.2rem;
+                width: 100%;
+            }
+            ul {
+                width: 100%;
+            }
+            .nav-L1, .nav-L2, .nav-L3 {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+        @media screen and (max-width: 414px) {  // iPhone-specific
+            .menu-btn {
+                font-size: 1rem;
+            }
+            ul {
+                .nav-L1, .nav-L2, .nav-L3 {
+                    padding: 15px;
+                    font-size: 1rem;
+                }
+            }
+        }
+    // Responsive Styles END
+// project menu content END <<<--- scss scss scss scss scss scss scss scss scss scss

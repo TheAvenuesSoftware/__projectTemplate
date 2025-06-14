@@ -1,4 +1,4 @@
-const consoleLog = true;
+const consoleLog = false
 
 console.log("LOADED:- globalLoginClient.mjs is loaded",new Date().toLocaleString());
 export function globalLoginClientJSisLoaded(){
@@ -7,7 +7,7 @@ export function globalLoginClientJSisLoaded(){
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
-    import { sessionLogout } from './globalSessionsClient.mjs';
+    import { sessionLogout } from './globalSessions_Client.mjs';
     import { clientConfigSettings } from "./projectConfig_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 

@@ -9,7 +9,7 @@ export function projectRoutesMJSisLoaded(){
 //  SERVER SIDE IMPORTS ONLY
     import { Router } from "express";
     const projectRouter = Router();
-    import { trace } from "./globalServer.mjs";
+    import { trace } from "./global_Server.mjs";
     import { initDB, getDB, setupSchema, insertUser } from "./SQLite_ServerSide.mjs"
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 

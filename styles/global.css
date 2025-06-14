@@ -1,90 +1,12 @@
 header {
   background-color: #f4f4f4;
-  padding: 1rem;
 }
 
 body {
-  user-select: none;
-}
-
-.footer-position-fixed footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #222;
-  color: #fff;
-  padding: 20px;
-  text-align: center;
-}
-
-.footer-position-flex html, .footer-position-flex body {
-  height: 100%;
   margin: 0;
-}
-.footer-position-flex main {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-.footer-position-flex main {
-  flex: 1; /* Pushes footer down */
-}
-.footer-position-flex footer {
-  background-color: #222;
-  color: #fff;
-  padding: 20px;
-  text-align: center;
-}
-
-.footer-position-grid body {
-  display: grid;
-  grid-template-rows: auto 1fr auto; /* Header, Content, Footer */
-  min-height: 100vh;
-  margin: 0;
-}
-.footer-position-grid .footer {
-  background-color: #222;
-  color: #fff;
-  padding: 20px;
-  text-align: center;
-}
-
-.global-footer {
-  background-color: #222;
-  color: #fff;
-  padding: 20px;
-  text-align: center;
-}
-.global-footer .global-footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.global-footer .global-footer-content p {
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-.global-footer .global-footer-content nav ul {
-  list-style: none;
   padding: 0;
-  display: flex;
-  gap: 15px;
-}
-.global-footer .global-footer-content nav ul li a {
-  color: #ccc;
-  background-color: #007bff;
-  padding: 0px 5px;
-  border: 1px solid blue;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 16px;
-  transition: color 0.3s ease;
-}
-.global-footer .global-footer-content nav ul li a:hover {
-  color: #fff;
+  box-sizing: border-box;
+  user-select: none;
 }
 
 .std-btn {
@@ -359,24 +281,24 @@ body {
 }
 
 .sign-in-button {
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
+  top: 2.5px;
+  right: 2.5px;
+  height: 25px;
+  width: 65px;
   padding: 6px 12px;
   font-size: 16px;
   font-weight: bold;
   color: white;
   background: linear-gradient(135deg, #4A90E2, #1440AF);
-  border: none;
+  border: 1px solid white;
   border-radius: 8px;
   cursor: pointer;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease-in-out;
-  position: fixed;
-  top: 5px;
-  right: 5px;
-  height: 25px;
-  width: 65px;
 }
 .sign-in-button:hover {
   transform: scale(1.05);
@@ -384,24 +306,24 @@ body {
 }
 
 .sign-out-button {
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
+  top: 2.5px;
+  right: 2.5px;
+  height: 25px;
+  width: 65px;
   padding: 6px 12px;
   font-size: 16px;
   font-weight: bold;
   color: white;
   background: linear-gradient(135deg, #d86b6b, #af1414);
-  border: none;
+  border: 1px solid white;
   border-radius: 8px;
   cursor: pointer;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease-in-out;
-  position: fixed;
-  top: 5px;
-  right: 5px;
-  height: 25px;
-  width: 65px;
 }
 .sign-out-button:hover {
   transform: scale(1.05);
@@ -437,7 +359,7 @@ body {
   height: 100%;
 }
 
-.camera-container {
+.camera-container-OLD {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -449,13 +371,22 @@ body {
   margin: 5px;
 }
 
-.camera-stream {
+.camera-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+}
+.camera-container .camera-stream {
   width: 100%;
   height: 100%;
+  object-fit: cover;
   border-radius: 5px;
 }
-
-.photo-canvas {
+.camera-container .photo-canvas {
   width: 100%;
   height: 100%;
   border-radius: 5px;
@@ -527,24 +458,6 @@ body {
 #photos-container p {
   margin: 5px 0;
   font-size: 14px;
-}
-
-#menu-button {
-  position: fixed;
-  top: 50px;
-  left: 50px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: grab;
-  border-radius: 5px;
-  font-size: 16px;
-  z-index: 10000;
-}
-
-#menu-button:active {
-  cursor: grabbing;
 }
 
 /*# sourceMappingURL=global.css.map */

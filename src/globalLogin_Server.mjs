@@ -13,12 +13,12 @@ export function globalLoginServerMJSisLoaded(){
     // import * as projectSQLite from './projectSQLite.mjs'
     // import {accessDb} from './SQLite_ServerSide.mjs'
     import { randomInt, randomBytes } from "crypto";
-    import { sendMail } from './globalServer.mjs'
+    import { sendMail } from './global_Server.mjs'
     import { loginEmailHtml } from './projectConfig_Server.mjs'
     import dotenv from "dotenv";
         dotenv.config({path:`./config/globalServer.env`});
         dotenv.config({path:`./config/projectServer.env`});
-    import { trace} from "./globalServer.mjs";
+    import { trace} from "./global_Server.mjs";
     // import { postLoginActions_serverSide } from "./projectServer.mjs";
     import { optPer, insertRecord, getRecord, initDB, setupSchema } from "./SQLite_ServerSide.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️

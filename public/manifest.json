@@ -1,7 +1,7 @@
 {
     "name": "__projectTemplate",
     "short_name": "PWA",
-    "start_url": "/public/",
+    "start_url": "index.html",
     "display": "fullscreen",
     "theme_color": "#ffffff",
     "background_color": "#ffffff",

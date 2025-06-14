@@ -7,10 +7,10 @@ export function projectMJSisLoaded(){
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
-    import { getGlobalFooter } from "./globalClient.mjs";
+    // import { showMenu } from "./projectMenu_Client.mjs";
     import { getGooglePlacesAPIkey } from "./googleAPIs_ClientSide.mjs";
-    import { doAfterDOMandWindowLoad_globalLoginClient } from "./globalLoginClient.mjs";
-    import { sessionLogout } from "./globalSessionsClient.mjs";
+    import { doAfterDOMandWindowLoad_globalLoginClient } from "./globalLogin_Client.mjs";
+    import { sessionLogout } from "./globalSessions_Client.mjs";
     import { clientConfigSettings } from "./projectConfig_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
@@ -80,114 +80,46 @@ export function projectMJSisLoaded(){
                 }
             // dynamically set fetch credentials mode END 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 
-            // set up draggable "M"enu button START 🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇
-                function showMenu(){
-                    const menu = document.getElementById("menu");
-                    console.log('🟢 showMenu() called');
-                    // document.getElementById("menu-button").focus(); // Give focus to an element
-                    // setTimeout(() => alert("d"), 100); // Slight delay avoids event conflicts
-                    alert("d");
-                }
-                const menuButton = document.getElementById("menu-button");
-                let offsetX, offsetY, isDragging = false;
-                // Start Dragging (Mouse & Touch)
-                    const startDrag = (e) => {
-                        isDragging = true;
-                        // Get initial position relative to mouse/touch point
-                            offsetX = e.clientX ? e.clientX - menuButton.offsetLeft : e.touches[0].clientX - menuButton.offsetLeft;
-                            offsetY = e.clientY ? e.clientY - menuButton.offsetTop : e.touches[0].clientY - menuButton.offsetTop;
-                        // Prevent default touch behavior (like scrolling) ✅ Calling e.preventDefault() stops unintended page movement
-                            e.preventDefault();
-                        document.addEventListener("mousemove", dragMove);
-                        document.addEventListener("mouseup", endDrag);
-                        document.addEventListener("touchmove", dragMove);
-                        document.addEventListener("touchend", endDrag);
-                    };
-                // Move Button (Mouse & Touch)
-                    const dragMove = (e) => {
-                        if (!isDragging) return;
-                        // Prevent scrolling when moving touch ✅ Calling e.preventDefault() stops unintended page movement
-                            e.preventDefault();
-                        const x = e.clientX ? e.clientX - offsetX : e.touches[0].clientX - offsetX;
-                        const y = e.clientY ? e.clientY - offsetY : e.touches[0].clientY - offsetY;
-                        menuButton.style.left = `${x}px`;
-                        menuButton.style.top = `${y}px`;
-                    };
-                // Stop Dragging (Mouse & Touch)
-                    const endDrag = () => {
-                        isDragging = false;
-                        document.removeEventListener("mousemove", dragMove);
-                        document.removeEventListener("mouseup", endDrag);
-                        document.removeEventListener("touchmove", dragMove);
-                        document.removeEventListener("touchend", endDrag);
-                    };
-                menuButton.addEventListener("mousedown", startDrag);
-                // Why add {passive: false}
-                    // - By default, browsers treat touch events as "passive", meaning they allow scrolling even if e.preventDefault() is called.
-                    // - Setting { passive: false } ensures that e.preventDefault() works correctly to stop unintended scrolling while dragging.
-                        menuButton.addEventListener("touchstart", startDrag);
-                        menuButton.addEventListener("touchstart", startDrag, { passive: false });
-                // Show menu on double-click || long press on mobile devices
-                    // laptop and desktop - double click
-                        menuButton.addEventListener("dblclick", showMenu);
-                    // mobile devices - long press
-                        // - touchstart → Starts a timer for 500ms (adjustable)
-                        // - touchend / touchmove / touchcancel → Cancels the timer if touch is released or moved
-                        // - Prevents accidental menu triggers from quick taps
-                        // - Works smoothly on iPhone & Android!
-                            let pressTimer;
-                            // Detect Long Press
-                                menuButton.addEventListener("touchstart", (e) => {
-                                    pressTimer = setTimeout(() => {
-                                        showMenu(); // Trigger menu display
-                                    }, 500); // Adjust time (500ms = half a second)
-                                }, { passive: false });
-                            // Cancel Long Press on Touch End or Move
-                            menuButton.addEventListener("touchend", () => clearTimeout(pressTimer));
-                            menuButton.addEventListener("touchmove", () => clearTimeout(pressTimer));
-                            menuButton.addEventListener("touchcancel", () => clearTimeout(pressTimer));
-            // set up draggable "M"enu button END 🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇
-
-            // idle tracking START 🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸
-                let lastActivity = Date.now();
-                // const updateActivity = () => {
-                function updateActivity(){
-                    lastActivity = Date.now();
-                    console.log('🟢 User activety detected.',(new Date()).toLocaleString());
-                };
-                // document.addEventListener("mousemove", updateActivity);
-                // document.addEventListener("keydown", updateActivity);
-                // document.addEventListener("click", updateActivity);
-                const heartBeatInterval = clientConfigSettings.CLIENT_SESSION_HEARTBEAT_INTERVAL;
-                const logoutAfter = clientConfigSettings.CLIENT_SESSION_IDLE_LOGOUT_AFTER;
-                console.log('heartBeatInterval:- ',heartBeatInterval,'logoutAfter:- ',logoutAfter)
-                const idleTracking_IntervalId = setInterval(async() => {
-                    if (Date.now() - lastActivity < logoutAfter * 60 * 1000) { // Active in last 15 min?
-                        try {
-                            await fetch('/heartbeat-session-extension', {
-                                    method: 'POST', 
-                                    credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
-                                    headers: { 'Content-Type': 'application/json' }
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    console.log('🟢 Heartbeat:', data)
-                                });
-                                // .catch(error => console.error('🔴 Heartbeat error:', error));
-                        } catch (error) {
-                            console.log(`/heartbeat-session-extension error:-`,error);
-                        }
-                    } else {
-                        console.log('🔴 User inactive, consider logging out.');
-                        // Trigger logout function here
-                            // document.removeEventListener("mousemove", updateActivity);
-                            // document.removeEventListener("keydown", updateActivity);
-                            // document.removeEventListener("click", updateActivity);
-                            clearInterval(idleTracking_IntervalId); 
-                            sessionLogout(); //in globalSessionsClient.mjs
-                    }
-                }, heartBeatInterval * 60 * 1000); // Runs every 5 min
-            // idle tracking END🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸
+            // // idle tracking START 🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸
+            //     let lastActivity = Date.now();
+            //     // const updateActivity = () => {
+            //     function updateActivity(){
+            //         lastActivity = Date.now();
+            //         console.log('🟢 User activety detected.',(new Date()).toLocaleString());
+            //     };
+            //     document.addEventListener("mousemove", updateActivity);
+            //     document.addEventListener("keydown", updateActivity);
+            //     document.addEventListener("click", updateActivity);
+            //     const heartBeatInterval = clientConfigSettings.CLIENT_SESSION_HEARTBEAT_INTERVAL;
+            //     const logoutAfter = clientConfigSettings.CLIENT_SESSION_IDLE_LOGOUT_AFTER;
+            //     console.log('heartBeatInterval:- ',heartBeatInterval,'logoutAfter:- ',logoutAfter)
+            //     const idleTracking_IntervalId = setInterval(async() => {
+            //         if (Date.now() - lastActivity < logoutAfter * 60 * 1000) { // Active in last 15 min?
+            //             try {
+            //                 await fetch('/heartbeat-session-extension', {
+            //                         method: 'POST', 
+            //                         credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+            //                         headers: { 'Content-Type': 'application/json' }
+            //                     })
+            //                     .then(response => response.json())
+            //                     .then(data => {
+            //                         console.log('🟢 Heartbeat:', data)
+            //                     });
+            //                     // .catch(error => console.error('🔴 Heartbeat error:', error));
+            //             } catch (error) {
+            //                 console.log(`/heartbeat-session-extension error:-`,error);
+            //             }
+            //         } else {
+            //             console.log('🔴 User inactive, consider logging out.');
+            //             // Trigger logout function here
+            //                 document.removeEventListener("mousemove", updateActivity);
+            //                 document.removeEventListener("keydown", updateActivity);
+            //                 document.removeEventListener("click", updateActivity);
+            //                 clearInterval(idleTracking_IntervalId); 
+            //                 sessionLogout(); //in globalSessionsClient.mjs
+            //         }
+            //     }, heartBeatInterval * 60 * 1000); // Runs every 5 min
+            // // idle tracking END🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸
         });
         // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ END
     });
@@ -201,7 +133,7 @@ export function projectMJSisLoaded(){
 
         // ###################################################################################################
             // globalClientJS.getGlobalFooter();
-            getGlobalFooter();
+            // getGlobalFooter();
 
             getGooglePlacesAPIkey();
             document.getElementById("close-map").addEventListener("click", function() {

@@ -80,15 +80,15 @@ const consoleLog = false;
                 // console.log(cleanInput); // Only keeps `<p>`, `<strong>`, and `<a>`
     // ROUTERS
         import dbRouter from "./src/SQLite_ServerSide.mjs";
-        import loginRouter from './src/globalLoginServer.mjs';
-        import globalRouter from './src/globalServer.mjs'; 
-        import projectRouter from './src/projectServer.mjs';
-        import sessionsRouter from './src/globalSessionsServer.mjs';
+        import loginRouter from './src/globalLogin_Server.mjs';
+        import globalRouter from './src/global_Server.mjs'; 
+        import projectRouter from './src/project_Server.mjs';
+        import sessionsRouter from './src/globalSessions_Server.mjs';
         import googleAPIsRouter from './src/googleAPIs_ServerSide.mjs';
     // SQLite CRUD
         // import { insertRecord, getRecord, updateRecord, deleteRecord } from "./src/SQLite_ServerSide.mjs";
     // Trace()
-        import { trace } from "./src/globalServer.mjs";
+        import { trace } from "./src/global_Server.mjs";
         
     // function checkImports(){
         try{

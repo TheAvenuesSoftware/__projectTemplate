@@ -1,0 +1,108 @@
+.m {
+  position: fixed;
+  top: 50px;
+  right: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  border: 1px solid blue;
+  background-color: #f0f0f0;
+  padding: 2px;
+  border-radius: 5px;
+  cursor: grab;
+  z-index: 1000;
+}
+
+.c {
+  height: 30px;
+  width: 30px;
+}
+
+.menu-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+.nav-menu {
+  position: absolute;
+}
+
+.menu-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+ul.expanded {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.nav-L1 {
+  padding: 10px;
+  background: #f4f4f4;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+.nav-L1:hover {
+  background: #e0e0e0;
+}
+
+.nav-L2 {
+  padding-left: 15px;
+  transition: padding-left 0.3s ease-in-out;
+}
+.nav-L2:hover {
+  background: rgb(198.5, 198.5, 198.5);
+}
+
+.nav-L3 {
+  padding-left: 25px;
+  transition: padding-left 0.3s ease-in-out;
+}
+.nav-L3:hover {
+  background: #adadad;
+}
+
+@media screen and (max-width: 768px) {
+  .menu-btn {
+    font-size: 1.2rem;
+    width: 100%;
+  }
+  ul {
+    width: 100%;
+  }
+  .nav-L1, .nav-L2, .nav-L3 {
+    padding: 12px;
+    font-size: 1rem;
+  }
+}
+@media screen and (max-width: 414px) {
+  .menu-btn {
+    font-size: 1rem;
+  }
+  ul .nav-L1, ul .nav-L2, ul .nav-L3 {
+    padding: 15px;
+    font-size: 1rem;
+  }
+}
+
+/*# sourceMappingURL=projectMenu.css.map */

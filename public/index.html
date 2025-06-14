@@ -10,19 +10,20 @@
 <html lang="en" class="footer-position-grid">
 <head>
     <meta charset="UTF-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"> -->
     <title>__projectTemplate</title>
 
     <link rel="stylesheet" href="project.css">
+    <link rel="stylesheet" href="projectMenu.css">
     <link rel="stylesheet" href="global.css">
 
-    <script type="module" src="./globalLoginClient.mjs"></script>
+    <script type="module" src="./globalLogin_Client.mjs"></script>
+    <script type="module" src="./globalSessions_Client.mjs"></script>
 
-    <script type="module" src="./globalSessionsClient.mjs"></script>
-
-    <script type="module" src="./globalClient.mjs"></script>
-    <script type="module" src="/src/projectClient.mjs"></script>
+    <script type="module" src="./projectFloatingMenuIcon_Client.mjs"></script>
+    <script type="module" src="./global_Client.mjs"></script>
+    <script type="module" src="./project_Client.mjs"></script>
     
     <script type="module" src="./globalUIpopups.mjs"></script>
 
@@ -33,25 +34,53 @@
 
     <link rel="icon" type="image/png" href="./favicon.png">
 
-    <link rel="manifest" href="/public/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 </head>
 <body>
     <header>
-        <h1 style="text-align: center;">The Avenues Software</h1>
-        <h2 style="text-align: center;">__projectTemplate</h2>
-        <h3 id="user-email-address" style="text-align: center;"></h3>
-        <p>iPhone > Settings > Apps > Safari > Camera > Allow</p>
-        <!-- <p>Android > Settings > Apps > Safari > Camera > Allow</p> -->
+        <!-- <h3 id="user-email-address" style="text-align: center;"></h3> -->
+        <div id="m" class="m">
+            <img id="c" class="c" src="./camera_icon_square_765x765_coloured.png" alt="Camera Icon" data-note="floating camera menu div.">
+        </div>
+        <div id="menu-container" class="menu-container">
+            <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
+                <div id="sign-in-out-button" class="sign-in-button" tabindex="0" role="button">Log In</div> 
+            <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
+            <button class="menu-btn" onclick="toggleMenu()">Menu</button>
+            <ul id="navMenu" class="nav-menu collapsed">
+                <!-- <li class="nav-L1">Log In</li> -->
+                <li class="nav-L1">1. Check Address</li>
+                <li class="nav-L1">2. Take Photo</li>
+                <li class="nav-L1">3. Add Notes</li>
+                <li class="nav-L1" onclick="saveToDB()">Save</li>
+                <li class="nav-L1" onclick="toggleSubMenu('retrieveMenu')">Retrieve</li>
+                <ul id="retrieveMenu" class="collapsed">
+                    <li class="nav-L2">Filter by Address</li>
+                    <!-- <li class="nav-L2" onclick="toggleSubMenu('filterByAddress')">Filter by Address</li>
+                        <ul id="filterByAddress" class="collapsed">
+                            <li class="nav-L3">Full or Partial</li>
+                        </ul> -->
+                    <li class="nav-L2">Filter by Notes</li>
+                    <!-- <li class="nav-L2" onclick="toggleSubMenu('filterByNotes')">Filter by Notes</li>
+                        <ul id="filterByNotes" class="collapsed">
+                            <li class="nav-L3">Full or Partial</li>
+                        </ul> -->
+                    <li class="nav-L2" onclick="toggleSubMenu('filterByDate')">Filter by Date</li>
+                        <ul id="filterByDate" class="collapsed">
+                            <li class="nav-L3">Day</li>
+                            <li class="nav-L3">Week</li>
+                            <li class="nav-L3">Month</li>
+                        </ul>
+                    </ul>
+                </ul>
+        </div>
+        <div id="user-email-address" class="user-email-address" style="text-align: center;">...</div>        
     </header>
     <main>
-        <button id="menu-button" class="menu-button">M</button>
-        <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-            <div id="sign-in-out-button" class="sign-in-button" tabindex="0" role="button">Log In</div> 
-        <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-
+        
         <!-- DELETE -->
             <!-- DELETE Google Maps API START -->
                 <!-- DELETE <div id="googleMapsAPIautocomplete" class="autocomplete-address-input">
@@ -84,11 +113,6 @@
         <!--  -->
 
         <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
-                <!-- <video id="camera-stream" autoplay playsinline style="display: block;"></video> -->
-                <!-- <canvas id="photo-canvas" style="display: none;"></canvas> -->
-                <!-- <button id="capture-btn">Take Photo</button> -->
-                <!-- <button id="save-btn" style="display: none;">Save Photo</button><br> -->
-                <!-- <textarea id="notes-input" placeholder="Enter notes"></textarea> -->
                 <div id="camera-container" class="camera-container">
                     <video id="camera-stream" class="camera-stream" autoplay playsinline style="background-color: red;"></video>
                     <canvas id="photo-canvas" style="display: none;"></canvas><br>
@@ -109,27 +133,22 @@
         <!-- 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
     </main>
     <footer>
-
-        <!-- project-footer -->
-            <!-- <div id="project-footer" class="project-footer">
-                <div class=global-footer-content>
-                    <p>&copy; ${moment.year} The Avenues Software. All rights reserved.</p>
-                    <nav>
-                        <ul>
-                            <li><a href="/about">About Us</a></li>
-                            <li><a href="/privacy">Privacy Policy</a></li>
-                            <li><a href="/contact">Contact</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div> -->
-
-        <!-- global-footer -->
-            <div id="global-footer" class="global-footer"></div>
-
-        <!-- session timer
-            <div id="session-timer"></div> -->
-
     </footer>
+    <script>
+        // classic menu START 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
+                function toggleMenu() {
+                    document.getElementById("navMenu").classList.toggle("expanded");
+                }
+
+                function toggleSubMenu(id) {
+                    document.getElementById(id).classList.toggle("expanded");
+                }
+
+                function saveToDB() {
+                    alert("Saving to the database...");
+                }
+
+        // classic menu END 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
+    </script>
 </body>
 </html>

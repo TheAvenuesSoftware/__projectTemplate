@@ -1,0 +1,82 @@
+const consoleLog = true;
+
+console.log("LOADED:- projectMenu_Client.mjs is loaded",new Date().toLocaleString());
+export function projectMenuClientJSisLoaded(){
+    return true;
+}
+
+// ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
+//  ONLY IMPORT CLIENT SIDE MODULES TO HERE
+
+// ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
+
+// set up draggable "M"enu button START 🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇
+    // function showMenu(){
+    //     const menu = document.getElementById("menu");
+    //     console.log('🟢 showMenu() called');
+    //     // document.getElementById("menu-button").focus(); // Give focus to an element
+    //     // setTimeout(() => alert("d"), 100); // Slight delay avoids event conflicts
+    //     alert("d");
+    // }
+    const menuButton = document.getElementById("m");
+    let offsetX, offsetY, isDragging = false;
+    // Start Dragging (Mouse & Touch)
+        const startDrag = (e) => {
+            isDragging = true;
+            // Get initial position relative to mouse/touch point
+                offsetX = e.clientX ? e.clientX - menuButton.offsetLeft : e.touches[0].clientX - menuButton.offsetLeft;
+                offsetY = e.clientY ? e.clientY - menuButton.offsetTop : e.touches[0].clientY - menuButton.offsetTop;
+            // Prevent default touch behavior (like scrolling) ✅ Calling e.preventDefault() stops unintended page movement
+                e.preventDefault();
+            document.addEventListener("mousemove", dragMove);
+            document.addEventListener("mouseup", endDrag);
+            document.addEventListener("touchmove", dragMove);
+            document.addEventListener("touchend", endDrag);
+        };
+    // Move Button (Mouse & Touch)
+        const dragMove = (e) => {
+            if (!isDragging) return;
+            // Prevent scrolling when moving touch ✅ Calling e.preventDefault() stops unintended page movement
+                e.preventDefault();
+            const x = e.clientX ? e.clientX - offsetX : e.touches[0].clientX - offsetX;
+            const y = e.clientY ? e.clientY - offsetY : e.touches[0].clientY - offsetY;
+            menuButton.style.left = `${x}px`;
+            menuButton.style.top = `${y}px`;
+        };
+    // Stop Dragging (Mouse & Touch)
+        const endDrag = () => {
+            isDragging = false;
+            document.removeEventListener("mousemove", dragMove);
+            document.removeEventListener("mouseup", endDrag);
+            document.removeEventListener("touchmove", dragMove);
+            document.removeEventListener("touchend", endDrag);
+        };
+    menuButton.addEventListener("mousedown", startDrag);
+    // Why add {passive: false}
+        // - By default, browsers treat touch events as "passive", meaning they allow scrolling even if e.preventDefault() is called.
+        // - Setting { passive: false } ensures that e.preventDefault() works correctly to stop unintended scrolling while dragging.
+            menuButton.addEventListener("touchstart", startDrag);
+            menuButton.addEventListener("touchstart", startDrag, { passive: false });
+    // Show menu on double-click || long press on mobile devices
+        // laptop and desktop - double click
+            // menuButton.addEventListener("dblclick", showMenu);
+            menuButton.addEventListener("dblclick", toggleMenu);
+        // mobile devices - long press
+            // - touchstart → Starts a timer for 500ms (adjustable)
+            // - touchend / touchmove / touchcancel → Cancels the timer if touch is released or moved
+            // - Prevents accidental menu triggers from quick taps
+            // - Works smoothly on iPhone & Android!
+                let pressTimer;
+                // Detect Long Press
+                    menuButton.addEventListener("touchstart", (e) => {
+                        pressTimer = setTimeout(() => {
+                            // showMenu(); // Trigger menu display
+                            toggleMenu(); // Trigger menu display
+                        }, 500); // Adjust time (500ms = half a second)
+                    }, { passive: false });
+                // Cancel Long Press on Touch End or Move
+                menuButton.addEventListener("touchend", () => clearTimeout(pressTimer));
+                menuButton.addEventListener("touchmove", () => clearTimeout(pressTimer));
+                menuButton.addEventListener("touchcancel", () => clearTimeout(pressTimer));
+// set up draggable "M"enu button END 🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇
+

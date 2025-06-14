@@ -11,7 +11,7 @@ export function SQLite_ServerSideMJSisLoaded(){
     const dbRouter = Router();
     import sqlite3 from "sqlite3";
     import { open } from "sqlite";
-    import { trace } from "./globalServer.mjs";
+    import { trace } from "./global_Server.mjs";
     import busboy from 'busboy';
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
