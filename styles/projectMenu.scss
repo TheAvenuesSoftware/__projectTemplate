@@ -22,6 +22,17 @@
 // floating menu icon END
 
 // project menu content START <<<--- scss scss scss scss scss scss scss scss scss scss
+// .menu-header::after {
+//   content: "▶"; /* Right arrow */
+// //   display: inline-block;
+//   margin-left: 8px;
+// //   transition: transform 0.3s ease;
+// }
+
+// .menu-header.expanded::after {
+//   content: "◀"; /* Left arrow */
+// }
+
     $primary-color: #007bff;
     $hover-color: #e0e0e0;
     $background-light: #f4f4f4;
@@ -36,14 +47,36 @@
     .nav-menu{
         position:absolute;
     }
-    .menu-btn {
+    .menu-button, .menu-header{
+        list-style-type: none;
         background-color: $primary-color;
         color: white;
         padding: 10px;
         border: none;
         cursor: pointer;
         font-size: 1rem;
+        &::after{
+            content: "▶"; /* Right arrow */
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        &.expanded::after {
+            content: "◀"; /* Left arrow */
+            // transform: rotate(180deg);
+        }
     }
+    li > .menu-header{
+        &::after{
+            content: "▶"; /* Right arrow */
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        &.expanded::after {
+            content: "◀"; /* Left arrow */
+            // transform: rotate(180deg);
+        }
+    }
+
     ul {
         list-style-type: none;
         padding: 0px;
@@ -83,7 +116,7 @@
     }
     // Responsive Styles START
         @media screen and (max-width: 768px) {
-            .menu-btn {
+            .menu-button {
                 font-size: 1.2rem;
                 width: 100%;
             }
@@ -96,7 +129,7 @@
             }
         }
         @media screen and (max-width: 414px) {  // iPhone-specific
-            .menu-btn {
+            .menu-button {
                 font-size: 1rem;
             }
             ul {

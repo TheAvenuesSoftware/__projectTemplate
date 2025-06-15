@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .m {
   position: fixed;
   top: 50px;
@@ -32,13 +33,31 @@
   position: absolute;
 }
 
-.menu-btn {
+.menu-button, .menu-header {
+  list-style-type: none;
   background-color: #007bff;
   color: white;
   padding: 10px;
   border: none;
   cursor: pointer;
   font-size: 1rem;
+}
+.menu-button::after, .menu-header::after {
+  content: "▶"; /* Right arrow */
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+.menu-button.expanded::after, .menu-header.expanded::after {
+  content: "◀"; /* Left arrow */
+}
+
+li > .menu-header::after {
+  content: "▶"; /* Right arrow */
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+li > .menu-header.expanded::after {
+  content: "◀"; /* Left arrow */
 }
 
 ul {
@@ -83,7 +102,7 @@ ul.expanded {
 }
 
 @media screen and (max-width: 768px) {
-  .menu-btn {
+  .menu-button {
     font-size: 1.2rem;
     width: 100%;
   }
@@ -96,7 +115,7 @@ ul.expanded {
   }
 }
 @media screen and (max-width: 414px) {
-  .menu-btn {
+  .menu-button {
     font-size: 1rem;
   }
   ul .nav-L1, ul .nav-L2, ul .nav-L3 {

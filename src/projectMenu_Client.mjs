@@ -80,3 +80,53 @@ export function projectMenuClientJSisLoaded(){
                 menuButton.addEventListener("touchcancel", () => clearTimeout(pressTimer));
 // set up draggable "M"enu button END 🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇
 
+// export function toggleMenu() {
+//     document.getElementById("navMenu").classList.toggle("expanded");
+// }
+// export function toggleSubMenu(id) {
+//     document.getElementById(id).classList.toggle("expanded");
+// }
+
+        // classic menu START 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
+            document.getElementById("menu-container").addEventListener("click", (event) => {
+                const actions = {
+                    showAddress: showAddress,
+                    showNotes: showNotes
+                };
+                if (event.target.classList.contains("menu-item")) {
+                    console.log(event.target.getAttribute("data-action"));
+                    if (actions[event.target.getAttribute("data-action")]) {
+                        actions[event.target.getAttribute("data-action")](event);  // Executes the function
+                    } else {
+                        console.warn(`No action defined for ${event.target.getAttribute("data-action")}`);
+                    }
+                    // Close the menu after clicking an item
+                        document.getElementById("navMenu").classList.remove("expanded");
+                } else if (event.target.classList.contains("menu-header")) {
+                    const parent = event.target;
+                    const el = event.target.nextElementSibling;
+                    parent.classList.toggle("expanded");
+                    el.classList.toggle("expanded");
+                } else {
+                    console.warn("Clicked element is not a menu item or container.");
+                }
+            });
+        // classic menu END 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
+
+export function saveToDB() {
+    alert("Saving to the database...");
+}
+
+export function showAddress(event) {
+    event.preventDefault();
+    console.log("Address function executed!",event);
+    // Implement the logic to show address
+    document.getElementById("googlePlacesAPIautocomplete").focus();
+}
+
+export function showNotes(event) {
+    event.preventDefault();
+    console.log("Notes function executed!",event);
+    // Implement the logic to show notes
+    document.getElementById("notesTextArea").focus();
+}

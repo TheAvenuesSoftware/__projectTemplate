@@ -26,7 +26,6 @@ const popupHTML =
                     <input class="passcodeInput code-input-input" type="text" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
                     <input class="passcodeInput code-input-input" type="text" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
                 </div>
-                // <button class="passcodeSubmit" type="submit" disabled>Submit</button>
             </form>
             <button id="popup-button-1" class="popup-button">Button 1</button>
             <button id="popup-button-2" class="popup-button">Button 2</button>
@@ -288,7 +287,8 @@ function passcodeEntry() {
     const form = document.getElementById('passcodeForm');
     form.style.position = 'unset'; // Show the form
     const inputs = form.querySelectorAll('.passcodeInput');
-    const submitButton = form.querySelector('.passcodeSubmit');
+    // const submitButton = form.querySelector('.passcodeSubmit'); // button with class .passcodeSubmit has been removed
+    const submitButton = document.getElementById('popup-button-1'); // button with class .passcodeSubmit has been replace with popup-button-1
 
     const updateSubmitState = () => {
         console.log("Updating submit button state...");

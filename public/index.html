@@ -21,7 +21,7 @@
     <script type="module" src="./globalLogin_Client.mjs"></script>
     <script type="module" src="./globalSessions_Client.mjs"></script>
 
-    <script type="module" src="./projectFloatingMenuIcon_Client.mjs"></script>
+    <script type="module" src="./projectMenu_Client.mjs"></script>
     <script type="module" src="./global_Client.mjs"></script>
     <script type="module" src="./project_Client.mjs"></script>
     
@@ -46,36 +46,33 @@
             <img id="c" class="c" src="./camera_icon_square_765x765_coloured.png" alt="Camera Icon" data-note="floating camera menu div.">
         </div>
         <div id="menu-container" class="menu-container">
-            <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-                <div id="sign-in-out-button" class="sign-in-button" tabindex="0" role="button">Log In</div> 
-            <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-            <button class="menu-btn" onclick="toggleMenu()">Menu</button>
-            <ul id="navMenu" class="nav-menu collapsed">
-                <!-- <li class="nav-L1">Log In</li> -->
-                <li class="nav-L1">1. Check Address</li>
-                <li class="nav-L1">2. Take Photo</li>
-                <li class="nav-L1">3. Add Notes</li>
-                <li class="nav-L1" onclick="saveToDB()">Save</li>
-                <li class="nav-L1" onclick="toggleSubMenu('retrieveMenu')">Retrieve</li>
-                <ul id="retrieveMenu" class="collapsed">
-                    <li class="nav-L2">Filter by Address</li>
-                    <!-- <li class="nav-L2" onclick="toggleSubMenu('filterByAddress')">Filter by Address</li>
-                        <ul id="filterByAddress" class="collapsed">
-                            <li class="nav-L3">Full or Partial</li>
-                        </ul> -->
-                    <li class="nav-L2">Filter by Notes</li>
-                    <!-- <li class="nav-L2" onclick="toggleSubMenu('filterByNotes')">Filter by Notes</li>
-                        <ul id="filterByNotes" class="collapsed">
-                            <li class="nav-L3">Full or Partial</li>
-                        </ul> -->
-                    <li class="nav-L2" onclick="toggleSubMenu('filterByDate')">Filter by Date</li>
-                        <ul id="filterByDate" class="collapsed">
-                            <li class="nav-L3">Day</li>
-                            <li class="nav-L3">Week</li>
-                            <li class="nav-L3">Month</li>
-                        </ul>
+            <!--  -->
+                <!-- sign-in-out-button START -->
+                    <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
+                        <div id="sign-in-out-button" class="sign-in-button" tabindex="0" role="button">Log In</div> 
+                    <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
+                <!-- sign-in-out-button END -->
+            <!--  -->
+            <!-- collapsable menu START -->
+                <li id="menu-button" class="menu-header menu-button" data-querySelectorClass="menu-button">Menu</li>
+                <ul id="navMenu" class="nav-menu collapsed">
+                    <li class="nav-L1 menu-item" data-action="showAddress">1. Check Address</li>
+                    <li class="nav-L1 menu-item" data-action="showCamera">2. Take Photo</li>
+                    <li class="nav-L1 menu-item" data-action="showNotes">3. Add Notes</li>
+                    <li class="nav-L1 menu-item" data-action="saveToDB">Save</li>
+                    <li class="menu-header" >Retrieve</li>
+                    <ul id="retrieveMenu" class="collapsed">
+                        <li class="nav-L2 menu-item" data-action="showAddressFilter">Filter by Address</li>
+                        <li class="nav-L2 menu-item" data-action="showNotesFilter">Filter by Notes</li>
+                        <li class="menu-header" >Filter by Date</li>
+                            <ul id="filterByDate" class="collapsed">
+                                <li class="nav-L3 menu-item" data-action="showDateFilter">Date</li>
+                                <li class="nav-L3 menu-item" data-action="showWeekFilter">Week</li>
+                                <li class="nav-L3 menu-item" data-action="showMonthFilter">Month</li>
+                            </ul>
                     </ul>
                 </ul>
+            <!-- collapsable menu END -->
         </div>
         <div id="user-email-address" class="user-email-address" style="text-align: center;">...</div>        
     </header>
@@ -136,18 +133,12 @@
     </footer>
     <script>
         // classic menu START 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
-                function toggleMenu() {
-                    document.getElementById("navMenu").classList.toggle("expanded");
-                }
-
-                function toggleSubMenu(id) {
-                    document.getElementById(id).classList.toggle("expanded");
-                }
-
-                function saveToDB() {
-                    alert("Saving to the database...");
-                }
-
+            function toggleMenu() {
+                document.getElementById("navMenu").classList.toggle("expanded");
+            }
+            function toggleSubMenu(id) {
+                document.getElementById(id).classList.toggle("expanded");
+            }
         // classic menu END 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
     </script>
 </body>
