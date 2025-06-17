@@ -23,6 +23,7 @@
 
     <script type="module" src="./projectMenu_Client.mjs"></script>
     <script type="module" src="./global_Client.mjs"></script>
+    <script type="module" src="./global_Client_Dimensions.mjs"></script>
     <script type="module" src="./project_Client.mjs"></script>
     
     <script type="module" src="./globalUIpopups.mjs"></script>
@@ -41,42 +42,65 @@
 </head>
 <body>
     <header>
-        <!-- <h3 id="user-email-address" style="text-align: center;"></h3> -->
-        <div id="m" class="m">
-            <img id="c" class="c" src="./camera_icon_square_765x765_coloured.png" alt="Camera Icon" data-note="floating camera menu div.">
-        </div>
-        <div id="menu-container" class="menu-container">
-            <!--  -->
-                <!-- sign-in-out-button START -->
-                    <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-                        <div id="sign-in-out-button" class="sign-in-button" tabindex="0" role="button">Log In</div> 
-                    <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-                <!-- sign-in-out-button END -->
-            <!--  -->
+        <!--  -->
+            <div class="classic-menu-icon-container">
+                <img src="_MenuIcon.png" height="20px">
+            </div>
+        <!--  -->
+        <!--  -->
+            <div>
+                <p class="app-name">Tradie Photo Catalogue</p>
+                <div id="user-email-address" class="user-email-address" style="text-align: center;">...</div>        
+            </div>
+        <!--  -->
+        <!--  -->
+            <!-- sign-in-out-button START -->
+                <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
+                    <div id="sign-in-out-container" class="x_sign-in-button" data-status="signed-out" tabindex="0" role="button">
+                        &nbspSign&nbsp<img id="sign-in-out-icon" src="_padlock_locked.png" class="signed-out">&nbspIn&nbsp
+                    </div> 
+                <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
+            <!-- sign-in-out-button END -->
+        <!--  -->
+    </header>
+    <main>
+<!--  -->
+<!-- classic menu START 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒 -->
+    <div id="classic-menu-overlay" class="classic-menu-overlay">
+        <div id="classic-menu-container" class="classic-menu-container">
             <!-- collapsable menu START -->
-                <li id="menu-button" class="menu-header menu-button" data-querySelectorClass="menu-button">Menu</li>
-                <ul id="navMenu" class="nav-menu collapsed">
-                    <li class="nav-L1 menu-item" data-action="showAddress">1. Check Address</li>
-                    <li class="nav-L1 menu-item" data-action="showCamera">2. Take Photo</li>
-                    <li class="nav-L1 menu-item" data-action="showNotes">3. Add Notes</li>
-                    <li class="nav-L1 menu-item" data-action="saveToDB">Save</li>
-                    <li class="menu-header" >Retrieve</li>
-                    <ul id="retrieveMenu" class="collapsed">
-                        <li class="nav-L2 menu-item" data-action="showAddressFilter">Filter by Address</li>
-                        <li class="nav-L2 menu-item" data-action="showNotesFilter">Filter by Notes</li>
-                        <li class="menu-header" >Filter by Date</li>
-                            <ul id="filterByDate" class="collapsed">
-                                <li class="nav-L3 menu-item" data-action="showDateFilter">Date</li>
-                                <li class="nav-L3 menu-item" data-action="showWeekFilter">Week</li>
-                                <li class="nav-L3 menu-item" data-action="showMonthFilter">Month</li>
-                            </ul>
-                    </ul>
+                <li class="header-item">Menu</li>
+                    <ul class="collapsed">
+                        <li class="nav-L1 menu-item" data-action="showAddress">1. Check Address</li>
+                        <li class="nav-L1 menu-item" data-action="showCamera">2. Take Photo</li>
+                        <li class="nav-L1 menu-item" data-action="showNotes">3. Add Notes</li>
+                        <li class="nav-L1 menu-item" data-action="saveToDB">Save</li>
+                        <li class="header-item" >Retrieve</li>
+                        <ul class="collapsed">
+                            <li class="nav-L2 menu-item" data-action="showAddressFilter">Filter by Address</li>
+                            <li class="nav-L2 menu-item" data-action="showNotesFilter">Filter by Notes</li>
+                            <li class="header-item" >Filter by Date</li>
+                                <ul class="collapsed">
+                                    <li class="nav-L3 menu-item" data-action="showDateFilter">Date</li>
+                                    <li class="nav-L3 menu-item" data-action="showWeekFilter">Week</li>
+                                    <li class="nav-L3 menu-item" data-action="showMonthFilter">Month</li>
+                                </ul>
+                        </ul>
                 </ul>
             <!-- collapsable menu END -->
         </div>
-        <div id="user-email-address" class="user-email-address" style="text-align: center;">...</div>        
-    </header>
-    <main>
+    </div>
+<!-- classic menu END 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒 -->
+<!--  -->
+
+        <!--  -->
+            <!-- floating camera menu div START -->
+                <div id="m" class="m">
+                    <!-- <img id="c" class="c" src="./camera_icon_square_765x765_coloured.png" alt="Camera Icon" data-note="floating camera menu div."> -->
+                    <img id="c" class="c" src="./_camera.png" alt="Camera Icon" data-note="floating camera menu div.">
+                </div>
+            <!-- floating camera menu div END -->
+        <!--  -->
         
         <!-- DELETE -->
             <!-- DELETE Google Maps API START -->
@@ -95,21 +119,24 @@
 
         <!--  -->
             <!-- Google Places API START -->
-                <div class="autocomplete-address-container">
-                    <input id="googlePlacesAPIautocomplete" class="autocomplete-address-input" type="text" placeholder="Enter address">
-                </div>
-                <div id="map-container" class="map-container">
-                    <button id="close-map" style="position: absolute; top: 10px; right: 10px; background: red; color: white; border: none; padding: 8px 12px; cursor: pointer;z-index: 10;">
-                        Close Map
-                    </button>
-                    <!-- <div id="map" style="width: 600px; height: 400px;"> -->
-                    <div id="map" class="map">
+                <section id="googlePlacesAPIsection" class="google-places-api-section">
+                    <div class="autocomplete-address-container">
+                        <input id="googlePlacesAPIautocomplete" class="autocomplete-address-input" type="text" placeholder="Enter address">
                     </div>
-                </div>
+                    <div id="map-container" class="map-container">
+                        <button id="close-map" style="position: absolute; top: 10px; right: 10px; background: red; color: white; border: none; padding: 8px 12px; cursor: pointer;z-index: 10;">
+                            Close Map
+                        </button>
+                        <!-- <div id="map" style="width: 600px; height: 400px;"> -->
+                        <div id="map" class="map">
+                        </div>
+                    </div>
+                <!-- </section> -->
             <!-- Google Places API END -->
         <!--  -->
 
         <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
+            <section id="camera-section" class="camera-section">
                 <div id="camera-container" class="camera-container">
                     <video id="camera-stream" class="camera-stream" autoplay playsinline style="background-color: red;"></video>
                     <canvas id="photo-canvas" style="display: none;"></canvas><br>
@@ -117,9 +144,18 @@
                     <button id="capture-btn" class="std-btn">Take Photo</button>
                     <button id="save-btn" class="std-btn" style="visibility: hidden;">Save Photo</button>
                 </div>
+            </section>
         <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
 
+        <!-- 🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️ -->
+            <section id="notes-section" class="notes-section">
+                <textarea id="notes-textarea" class="notes-textarea" placeholder="Enter notes here..."></textarea>
+                <button id="save-notes-btn" class="std-btn">Save Notes</button> 
+            </section>
+        <!-- 🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️ -->
+
         <!-- 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
+            <section id="retrieve-section" class="retrieve-section">
                 <button id="retrieve-btn" class="std-btn">Load Saved Photos & Details</button>
                 <div id="filter-text">Filter on:-<br><input id="filter-text" type="text" placeholder="Enter filter text here..."></div>
                 <div id="photos-container">
@@ -127,11 +163,69 @@
                 <!-- <img id="photo-display" src="" alt="Saved photo">
                 <p id="address-display"></p>
                 <p id="notes-display"></p> -->
+            </section>
         <!-- 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
+
+        <!-- ❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓ -->
+        <section id="filter-section" class="filter-section">
+            <div id="filter-by-address" class="filter-by-address">
+                <h3>Filter by Address</h3>
+                <input type="text" id="address-filter-input" placeholder="Enter address to filter...">
+                <button id="apply-address-filter-btn" class="std-btn">Apply Filter</button>
+            </div>
+            <div id="filter-by-notes" class="filter-by-notes">
+                <h3>Filter by Notes</h3>
+                <input type="text" id="notes-filter-input" placeholder="Enter notes to filter...">
+                <button id="apply-notes-filter-btn" class="std-btn">Apply Filter</button>
+            </div>
+            <div id="filter-by-date" class="filter-by-date">
+                <h3>Filter by Date</h3>
+                <input type="date" id="date-filter-input">
+                <button id="apply-date-filter-btn" class="std-btn">Apply Filter</button>
+        </div>
+            <div id="filter-by-week" class="filter-by-week">
+                <h3>Filter by Week</h3>
+                <input type="week" id="week-filter-input">
+                <button id="apply-week-filter-btn" class="std-btn">Apply Filter</button>
+            </div>
+            <div id="filter-by-month" class="filter-by-month">
+                <h3>Filter by Month</h3>
+                <input type="month" id="month-filter-input">
+                <button id="apply-month-filter-btn" class="std-btn">Apply Filter</button>
+            </div>
+        <!-- ❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓ -->
+
+        <!-- ⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️ -->
+            <section id="mobile-device-footer-menu" class="mobile-device-footer-menu">
+                <div id="footer-menu" class="footer-menu">
+                    <button id="footer-home" class="footer-button" data-action="showHome">
+                        <img src="/_Home.png" height="20px">
+                        <br>Home
+                    </button>
+                    <button id="footer-address" class="footer-button" data-action="showAddress">
+                        <img src="/_Address.png" height="20px">
+                        <br>Check address
+                    </button>
+                    <button id="footer-camera" class="footer-button" data-action="showCamera">
+                        <img src="/_Camera.png" height="20px">
+                        <br>Take photo
+                    </button>
+                    <button id="footer-notes" class="footer-button" data-action="showNotes">
+                        <img src="/_Note.png" height="20px">
+                        <br>Add notes
+                    </button>
+                    <button id="footer-retrieve" class="footer-button" data-action="showRetrieve">
+                        <img src="/_Search.png" height="20px">
+                        <br>Search
+                    </button>
+                </div>
+        <!-- ⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️ -->
+        
     </main>
+
     <footer>
     </footer>
-    <script>
+    <!-- <script>
         // classic menu START 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
             function toggleMenu() {
                 document.getElementById("navMenu").classList.toggle("expanded");
@@ -140,6 +234,6 @@
                 document.getElementById(id).classList.toggle("expanded");
             }
         // classic menu END 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
-    </script>
+    </script> -->
 </body>
 </html>

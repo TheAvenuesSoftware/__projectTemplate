@@ -7,121 +7,131 @@
   justify-content: center;
   align-items: center;
   height: 30px;
-  width: 30px;
-  border: 1px solid blue;
+  width: 40px;
   background-color: #f0f0f0;
   padding: 2px;
-  border-radius: 5px;
   cursor: grab;
   z-index: 1000;
 }
 
 .c {
   height: 30px;
-  width: 30px;
+  width: 40px;
+  border: 2px solid black;
+  border-radius: 5px;
 }
 
-.menu-container {
-  position: relative;
-  top: 0;
-  left: 0;
-  margin: 0px;
-  box-sizing: border-box;
-}
-
-.nav-menu {
-  position: absolute;
-}
-
-.menu-button, .menu-header {
-  list-style-type: none;
-  background-color: #007bff;
-  color: white;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-}
-.menu-button::after, .menu-header::after {
-  content: "▶"; /* Right arrow */
-  margin-left: 8px;
-  transition: transform 0.3s ease;
-}
-.menu-button.expanded::after, .menu-header.expanded::after {
-  content: "◀"; /* Left arrow */
-}
-
-li > .menu-header::after {
-  content: "▶"; /* Right arrow */
-  margin-left: 8px;
-  transition: transform 0.3s ease;
-}
-li > .menu-header.expanded::after {
-  content: "◀"; /* Left arrow */
-}
-
-ul {
-  list-style-type: none;
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
   padding: 0px;
-  margin: 0px;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+header .app-name {
+  text-align: center;
+  font-weight: 900;
+}
+header .user-email-address {
+  text-align: center;
+  font-weight: 900;
+}
+header .classic-menu-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 3px;
+  cursor: pointer;
+}
+header .classic-menu-icon-container img, header .classic-menu-icon-container .sign-in-out-icon {
+  height: 25px;
+}
+
+.classic-menu-overlay {
+  background-color: gold;
+  border-top: 2px solid black;
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
+  list-style-type: none;
+}
+.classic-menu-overlay .collapsed {
+  background-color: white;
+}
+.classic-menu-overlay .header-item {
+  font-weight: 900;
+}
+.classic-menu-overlay .header-item::after {
+  content: "▶";
+  margin-left: 1rem;
+  font-size: 1rem;
+  opacity: 1;
+}
+.classic-menu-overlay .header-item::before {
+  content: "◀";
+  margin-right: 1em;
+  font-size: 1rem;
+  opacity: 0;
+}
+.classic-menu-overlay .header-item.expanded::after {
+  content: "▶";
+  margin-left: 1rem;
+  font-size: 1rem;
+  opacity: 0;
+}
+.classic-menu-overlay .header-item.expanded::before {
+  content: "◀";
+  margin-right: 1rem;
+  font-size: 1rem;
+  opacity: 1;
+}
+.classic-menu-overlay .header-item:hover {
+  background-color: paleturquoise;
+}
+.classic-menu-overlay .menu-item {
+  padding: 5px;
+  margin-left: 40px !important;
+}
+.classic-menu-overlay .menu-item:hover {
+  background-color: paleturquoise;
+}
+.classic-menu-overlay .collapsed {
+  list-style-type: none;
   max-height: 0;
   overflow: hidden;
   opacity: 0;
   transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
-ul.expanded {
+.classic-menu-overlay .collapsed.expanded {
   max-height: 500px;
   opacity: 1;
 }
 
-.nav-L1 {
+.mobile-device-footer-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: silver;
+  border-top: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px;
-  background: #f4f4f4;
-  border-bottom: 1px solid #ddd;
+  z-index: 1000;
+}
+.mobile-device-footer-menu .footer-button {
+  padding: 5px;
+  text-align: center;
+  flex-grow: 1;
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
 }
-.nav-L1:hover {
-  background: #e0e0e0;
-}
-
-.nav-L2 {
-  padding-left: 15px;
-  transition: padding-left 0.3s ease-in-out;
-}
-.nav-L2:hover {
-  background: rgb(198.5, 198.5, 198.5);
-}
-
-.nav-L3 {
-  padding-left: 25px;
-  transition: padding-left 0.3s ease-in-out;
-}
-.nav-L3:hover {
-  background: #adadad;
-}
-
-@media screen and (max-width: 768px) {
-  .menu-button {
-    font-size: 1.2rem;
-    width: 100%;
-  }
-  ul {
-    width: 100%;
-  }
-  .nav-L1, .nav-L2, .nav-L3 {
-    padding: 12px;
-    font-size: 1rem;
-  }
-}
-@media screen and (max-width: 414px) {
-  .menu-button {
-    font-size: 1rem;
-  }
-  ul .nav-L1, ul .nav-L2, ul .nav-L3 {
-    padding: 15px;
-    font-size: 1rem;
-  }
+.mobile-device-footer-menu .footer-button:hover {
+  border: 2px solid black;
 }
 
 /*# sourceMappingURL=projectMenu.css.map */

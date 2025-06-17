@@ -1,12 +1,13 @@
-header {
-  background-color: #f4f4f4;
-}
-
-body {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   user-select: none;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
 }
 
 .std-btn {
@@ -94,20 +95,6 @@ body {
 }
 .custom-alert #custom-alert-dialog button:hover {
   background-color: #0056b3;
-}
-
-#session-timer {
-  position: fixed;
-  bottom: 5px;
-  right: 5px;
-  height: 1.5rem;
-  min-width: 1.5rem;
-  width: fit-content;
-  color: #fff;
-  background-color: #007bff;
-  text-align: center;
-  margin: auto;
-  border-radius: 5%;
 }
 
 .busy-animation-overlay {
@@ -280,54 +267,24 @@ body {
   }
 }
 
-.sign-in-button {
-  position: absolute;
+#sign-in-out-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  top: 2.5px;
-  right: 2.5px;
-  height: 25px;
-  width: 65px;
-  padding: 6px 12px;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  background: linear-gradient(135deg, #4A90E2, #1440AF);
-  border: 1px solid white;
-  border-radius: 8px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 3px;
   cursor: pointer;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease-in-out;
 }
-.sign-in-button:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, #1440AF, #4A90E2);
-}
-
-.sign-out-button {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: 2.5px;
-  right: 2.5px;
+#sign-in-out-container img, #sign-in-out-container .sign-in-out-icon {
+  border-radius: 5px;
   height: 25px;
-  width: 65px;
-  padding: 6px 12px;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  background: linear-gradient(135deg, #d86b6b, #af1414);
-  border: 1px solid white;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease-in-out;
 }
-.sign-out-button:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, #af1414, #d86b6b);
+#sign-in-out-container .signed-out {
+  border: 2px solid red;
+}
+#sign-in-out-container .signed-in {
+  border: 2px solid green;
 }
 
 .autocomplete-address-container {

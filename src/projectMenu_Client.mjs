@@ -7,7 +7,7 @@ export function projectMenuClientJSisLoaded(){
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
-
+    import { setCSSvariable, getCSSvariable, getTextWidth, showDimensions } from "./global_Client_Dimensions.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 // set up draggable "M"enu button START 🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇
@@ -59,8 +59,9 @@ export function projectMenuClientJSisLoaded(){
             menuButton.addEventListener("touchstart", startDrag, { passive: false });
     // Show menu on double-click || long press on mobile devices
         // laptop and desktop - double click
+// executes here!!!
             // menuButton.addEventListener("dblclick", showMenu);
-            menuButton.addEventListener("dblclick", toggleMenu);
+            // menuButton.addEventListener("dblclick", toggleMenu);
         // mobile devices - long press
             // - touchstart → Starts a timer for 500ms (adjustable)
             // - touchend / touchmove / touchcancel → Cancels the timer if touch is released or moved
@@ -70,8 +71,9 @@ export function projectMenuClientJSisLoaded(){
                 // Detect Long Press
                     menuButton.addEventListener("touchstart", (e) => {
                         pressTimer = setTimeout(() => {
+// executes here!!!
                             // showMenu(); // Trigger menu display
-                            toggleMenu(); // Trigger menu display
+                            // toggleMenu(); // Trigger menu display
                         }, 500); // Adjust time (500ms = half a second)
                     }, { passive: false });
                 // Cancel Long Press on Touch End or Move
@@ -88,7 +90,7 @@ export function projectMenuClientJSisLoaded(){
 // }
 
         // classic menu START 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
-            document.getElementById("menu-container").addEventListener("click", (event) => {
+            document.getElementById("classic-menu-container").addEventListener("click", (event) => {
                 const actions = {
                     showAddress: showAddress,
                     showNotes: showNotes
@@ -100,9 +102,10 @@ export function projectMenuClientJSisLoaded(){
                     } else {
                         console.warn(`No action defined for ${event.target.getAttribute("data-action")}`);
                     }
-                    // Close the menu after clicking an item
-                        document.getElementById("navMenu").classList.remove("expanded");
-                } else if (event.target.classList.contains("menu-header")) {
+                    // // Close the menu after clicking an item
+                    //     document.getElementById("navMenu").classList.remove("expanded");
+                } else if (event.target.classList.contains("header-item")) {
+                    console.log(event.target.textContent);
                     const parent = event.target;
                     const el = event.target.nextElementSibling;
                     parent.classList.toggle("expanded");
@@ -112,6 +115,59 @@ export function projectMenuClientJSisLoaded(){
                 }
             });
         // classic menu END 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
+
+export function getRequiredMenuWidth(){
+    const menuContainer = document.getElementById("classic-menu-container")
+    const headerItems = document.querySelectorAll(".header-item");
+    console.log(headerItems[0]);
+    let maxWidth = 0;
+    headerItems.forEach((item, index) => {
+        const itemText = item.textContent;
+        const itemFont = getComputedStyle(item).fontFamily;
+        if(getTextWidth(itemText, itemFont) > maxWidth) {
+            maxWidth = getTextWidth(itemText, itemFont);
+        }
+        console.log(item.textContent);
+        const elRectangle = item.getBoundingClientRect();
+        console.log(elRectangle.top);
+        console.log(elRectangle.right);
+        console.log(elRectangle.bottom);
+        console.log(elRectangle.left);
+        console.log(elRectangle.height);
+        console.log(elRectangle.width);
+        console.log(item.textContent.length);
+        console.log(maxWidth);
+    });
+    const menuItems = document.querySelectorAll(".menu-item");
+    console.log(menuItems[0]);
+    menuItems.forEach((item, index) => {
+        const itemText = item.textContent;
+        const itemFont = getComputedStyle(item).fontFamily;
+        if(getTextWidth(itemText, itemFont) > maxWidth) {
+            maxWidth = getTextWidth(itemText, itemFont);
+        }
+        console.log(item.textContent);
+        const elRectangle = item.getBoundingClientRect();
+        console.log(elRectangle.top);
+        console.log(elRectangle.right);
+        console.log(elRectangle.bottom);
+        console.log(elRectangle.left);
+        console.log(elRectangle.height);
+        console.log(elRectangle.width);
+        console.log(item.textContent.length);
+        console.log(maxWidth);
+    });
+    console.log(maxWidth);
+    const varName = "--menuItemsMaxWidth"; 
+    setCSSvariable(varName,`${maxWidth.toFixed(0)}px`);
+    const x = getCSSvariable(varName);
+    console.log(getCSSvariable(varName));
+}
+getRequiredMenuWidth();
+
+const el = document.getElementById("mobile-device-footer-menu");
+console.log(el);
+showDimensions(el);
 
 export function saveToDB() {
     alert("Saving to the database...");

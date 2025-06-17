@@ -16,29 +16,27 @@
 // @use "utils/_variables";
 // @use "utils/_mixins";
 
-// header <<<--- scss scss scss scss scss scss scss scss scss scss
-header {
-    // // The namespace is automatically set to the file name without the underscore (_) and .scss extension. So _mixins.scss becomes mixins.
-    //     @include mixins.center-flex;
-    // // The namespace is automatically set to the file name without the underscore (_) and .scss extension. So _mixins.scss becomes mixins.
-    background-color: #f4f4f4;
-    // padding: 1rem;
-}
-
-// * {
-//     outline: 1px solid red;
+// // header <<<--- scss scss scss scss scss scss scss scss scss scss
+// header {
+//     // // The namespace is automatically set to the file name without the underscore (_) and .scss extension. So _mixins.scss becomes mixins.
+//     //     @include mixins.center-flex;
+//     // // The namespace is automatically set to the file name without the underscore (_) and .scss extension. So _mixins.scss becomes mixins.
+//     background-color: #f4f4f4;
+//     // padding: 1rem;
 // }
 
-body{
-    // * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    // }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     user-select: none;
-    // background-color: #af1414;
 }
-  
+
+body{
+    height:100vh;
+    overflow: hidden;
+}
+
 // standard button <<<--- scss scss scss scss scss scss scss scss scss scss
 .std-btn{
     display:inline-block;
@@ -135,21 +133,6 @@ body{
     #custom-alert-dialog button:hover {
         background-color: #0056b3;
     }
-}
-
-#session-timer{
-    position:fixed;
-    bottom:5px;
-    right:5px;
-    height:1.5rem;
-    min-width:1.5rem;
-    width:fit-content;
-    color:#fff;
-    background-color: #007bff;
-    text-align: center;
-    // vertical-align: middle;
-    margin:auto;
-    border-radius: 5%;
 }
 
 .busy-animation-overlay{
@@ -316,54 +299,73 @@ body{
 // passcodeForm END
 
 
-.sign-in-button{
-    position:absolute;
-    display: flex;
-    justify-content:center;
+#sign-in-out-container{
+    display:flex;
+    justify-content: center;
     align-items: center;
-    top: 2.5px;
-    right: 2.5px;
-    height:25px;
-    width: 65px;
-    padding: 6px 12px;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    background: linear-gradient(135deg, #4A90E2, #1440AF);
-    border: 1px solid white;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease-in-out;
-    &:hover{
-        transform:scale(1.05);
-        background: linear-gradient(135deg,  #1440AF,#4A90E2);
+    border:1px solid black;
+    border-radius: 5px;
+    padding:3px;
+    img, .sign-in-out-icon{
+        border-radius: 5px;
+        height:25px;
     }
-}
-.sign-out-button{
-    position:absolute;
-    display: flex;
-    justify-content:center;
-    align-items: center;
-    top: 2.5px;
-    right: 2.5px;
-    height:25px;
-    width: 65px;
-    padding: 6px 12px;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    background: linear-gradient(135deg, #d86b6b, #af1414);
-    border: 1px solid white;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease-in-out;
-    &:hover{
-        transform:scale(1.05);
-        background: linear-gradient(135deg,  #af1414,#d86b6b);
+    .signed-out{
+        border:2px solid red;
     }
+    .signed-in{
+        border:2px solid green;
+    }
+    cursor:pointer;
 }
+// .sign-in-button{
+//     position:fixed;
+//     display: flex;
+//     justify-content:center;
+//     align-items: center;
+//     top: 2.5px;
+//     right: 2.5px;
+//     height:25px;
+//     width: 65px;
+//     padding: 6px 12px;
+//     font-size: 16px;
+//     font-weight: bold;
+//     color: white;
+//     background: linear-gradient(135deg, #4A90E2, #1440AF);
+//     border: 1px solid white;
+//     border-radius: 8px;
+//     cursor: pointer;
+//     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+//     transition: all 0.3s ease-in-out;
+//     &:hover{
+//         transform:scale(1.05);
+//         background: linear-gradient(135deg,  #1440AF,#4A90E2);
+//     }
+// }
+// .sign-out-button{
+//     position:fixed;
+//     display: flex;
+//     justify-content:center;
+//     align-items: center;
+//     top: 2.5px;
+//     right: 2.5px;
+//     height:25px;
+//     width: 65px;
+//     padding: 6px 12px;
+//     font-size: 16px;
+//     font-weight: bold;
+//     color: white;
+//     background: linear-gradient(135deg, #d86b6b, #af1414);
+//     border: 1px solid white;
+//     border-radius: 8px;
+//     cursor: pointer;
+//     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+//     transition: all 0.3s ease-in-out;
+//     &:hover{
+//         transform:scale(1.05);
+//         background: linear-gradient(135deg,  #af1414,#d86b6b);
+//     }
+// }
 
 .autocomplete-address-container{
     display: flex;

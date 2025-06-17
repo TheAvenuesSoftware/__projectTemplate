@@ -14,6 +14,11 @@ export function projectMJSisLoaded(){
     import { clientConfigSettings } from "./projectConfig_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
+const aDayNamesShort = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const aDayNamesLong = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const aMonthNamesShort = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const aMonthNamesLong = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
 // const clientConfigSettings = {
 //     // CLIENT_APP_NAME: "Personal Expense Tracker",
 //     CLIENT_API_KEY: "your-key-here", // public key only!!!

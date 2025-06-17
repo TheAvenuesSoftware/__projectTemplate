@@ -584,16 +584,28 @@ export async function isLoginRequired() {
             // // if LOGIN REQUIRED
 
             // signin-out button START
-                document.getElementById("sign-in-out-button").addEventListener("click", (e) => {
-                    console.log("sign-in-out-button clicked");
-                    console.log(e.target.textContent);
-                    if(e.target.textContent.toLowerCase().trim().replace(" ","")==="login"){
+                document.getElementById("sign-in-out-container").addEventListener("click", (ev) => {
+                    console.log("sign-in-out-container clicked");
+                    console.log(ev.target.getAttribute("data-status"));
+                    if(ev.target.getAttribute("data-status")==="signed-out"){
                         login_stepOne();
                     }
-                    if(e.target.textContent.toLowerCase().trim().replace(" ","")==="logout"){
+                    if(ev.target.getAttribute("data-status")==="signed-in"){
                         sessionLogout();
                     }
                 });
+                // Ensure clicking the image triggers the container’s click event START
+                    // ❗THIS
+                        // document.getElementById("sign-in-out-icon").addEventListener("click", function(ev) {
+                        //     ev.stopPropagation(); // Prevent event bubbling issues
+                        //     this.closest("#sign-in-out-container").click();
+                        // });
+                    // ❗OR THIS works
+                        document.getElementById("sign-in-out-icon").addEventListener("click", (ev) => {
+                            ev.stopPropagation(); // Prevent event bubbling issues
+                            document.getElementById("sign-in-out-container").click();
+                        });
+                // Ensure clicking the image triggers the container’s click event END
             // signin-out button END
 
         // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
