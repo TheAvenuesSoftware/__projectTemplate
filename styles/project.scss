@@ -15,3 +15,20 @@ input{
     color:darkblue;
     background-color: palegoldenrod;
 }
+.ui-page{
+    // 
+        // variables
+            $transition-speed: 0.5s;
+            $transition-speed-slower: 0.75s;
+        // variables
+    // 
+    position: fixed;
+    left:-1000px;
+    width:100vw;
+    height:100vh;
+    z-index: 500;
+    &.ui-page-in-view{
+        left:0px;
+        transition: left $transition-speed ease-in-out;
+    }
+}

@@ -19,6 +19,10 @@ const aDayNamesLong = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Frida
 const aMonthNamesShort = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const aMonthNamesLong = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
+// document.addEventListener("click"){
+//     // must place < event.stopPropagation(); > in DOM element event listeners if you don't want this to fire
+// }
+
 // const clientConfigSettings = {
 //     // CLIENT_APP_NAME: "Personal Expense Tracker",
 //     CLIENT_API_KEY: "your-key-here", // public key only!!!
@@ -261,10 +265,10 @@ const aMonthNamesLong = ["January","February","March","April","May","June","July
                 }
             }
 
-            // ✅ Event Listeners
-                document.getElementById("capture-btn").addEventListener("click", capturePhoto);
-                document.getElementById("save-btn").addEventListener("click", savePhotoToDB);
-                document.getElementById("retrieve-btn").addEventListener("click", loadPhotos);
+            // // ✅ Event Listeners
+            //     document.getElementById("capture-btn").addEventListener("click", capturePhoto);
+            //     document.getElementById("save-btn").addEventListener("click", savePhotoToDB);
+            //     document.getElementById("search-btn").addEventListener("click", loadPhotos);
 
             // ✅ Start Camera on Page Load
                 startCamera();

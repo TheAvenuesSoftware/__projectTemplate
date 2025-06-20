@@ -85,9 +85,9 @@ export async function getGooglePlacesAPIkey() {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const jso = await response.json();
-        console.log(`https://maps.googleapis.com/maps/api/js?key=${jso.apiKey}&loading=async&libraries=places&callback=initMap`);
-        console.log(jso);
-        console.log(jso.apiKey);
+        // DON'T LOG THE API KEY!!! console.log(`https://maps.googleapis.com/maps/api/js?key=${jso.apiKey}&loading=async&libraries=places&callback=initMap`);
+        // DON'T LOG THE API KEY!!! console.log(jso);
+        // DON'T LOG THE API KEY!!! console.log(jso.apiKey);
 
         await loadScript(`https://maps.googleapis.com/maps/api/js?key=${jso.apiKey}&libraries=places`)
         // await loadScript(`https://maps.googleapis.com/maps/api/js?key=${jso.apiKey}&libraries=places&callback=initMap`)

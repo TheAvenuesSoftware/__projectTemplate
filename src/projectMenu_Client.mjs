@@ -7,7 +7,7 @@ export function projectMenuClientJSisLoaded(){
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
-    import { setCSSvariable, getCSSvariable, getTextWidth, showDimensions } from "./global_Client_Dimensions.mjs";
+    import { setCSSvariable, getCSSvariable, getTextWidth, getDims } from "./global_Client_Dimensions.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 // set up draggable "M"enu button START 🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇
@@ -58,10 +58,10 @@ export function projectMenuClientJSisLoaded(){
             menuButton.addEventListener("touchstart", startDrag);
             menuButton.addEventListener("touchstart", startDrag, { passive: false });
     // Show menu on double-click || long press on mobile devices
-        // laptop and desktop - double click
+        // laptop and desktop - double click 
 // executes here!!!
-            // menuButton.addEventListener("dblclick", showMenu);
-            // menuButton.addEventListener("dblclick", toggleMenu);
+            // menuButton.addEventListener("dblclick", showMenu); // 🖱️
+            // menuButton.addEventListener("dblclick", toggleMenu); // 🖱️
         // mobile devices - long press
             // - touchstart → Starts a timer for 500ms (adjustable)
             // - touchend / touchmove / touchcancel → Cancels the timer if touch is released or moved
@@ -72,8 +72,8 @@ export function projectMenuClientJSisLoaded(){
                     menuButton.addEventListener("touchstart", (e) => {
                         pressTimer = setTimeout(() => {
 // executes here!!!
-                            // showMenu(); // Trigger menu display
-                            // toggleMenu(); // Trigger menu display
+                            // showMenu(); // Trigger menu display // ☝️
+                            // toggleMenu(); // Trigger menu display // ☝️
                         }, 500); // Adjust time (500ms = half a second)
                     }, { passive: false });
                 // Cancel Long Press on Touch End or Move
@@ -90,6 +90,11 @@ export function projectMenuClientJSisLoaded(){
 // }
 
         // classic menu START 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
+        
+        document.getElementById("classic-menu-icon-container").addEventListener("click", (event) => {
+            document.getElementById("classic-menu-overlay").classList.toggle("in-view");
+            document.getElementById("classic-menu-overlay").classList.toggle("out-of-view");
+        });
             document.getElementById("classic-menu-container").addEventListener("click", (event) => {
                 const actions = {
                     showAddress: showAddress,
@@ -114,60 +119,145 @@ export function projectMenuClientJSisLoaded(){
                     console.warn("Clicked element is not a menu item or container.");
                 }
             });
+            document.getElementById("classic-menu-container").addEventListener("mouseleave", (event) => {
+                document.getElementById("classic-menu-overlay").classList.toggle("in-view");
+                document.getElementById("classic-menu-overlay").classList.toggle("out-of-view");
+            });
+            // 
+                // HOVER FOR TOUCHSCREENS start
+                    let tappedOnce = false;
+                    document.querySelectorAll(".tooltip").forEach(button => {
+                        button.addEventListener("touchstart", (e) => {
+                            if (!tappedOnce) {
+                                tappedOnce = true;
+                                // Show tooltip here (e.g., add a class)
+                                e.preventDefault();
+                                setTimeout(() => tappedOnce = false, 1000); // reset after 1s
+                            } else {
+                                // Proceed with actual click action
+                                tappedOnce = false;
+                            }
+                        });
+                    });
+                // HOVER FOR TOUCHSCREENS end
+            // 
         // classic menu END 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
 
-export function getRequiredMenuWidth(){
+        // footer menu START 🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶
+            document.addEventListener("DOMContentLoaded",async () => {
+                //1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ START
+                    if(consoleLog===true){console.log('projectClient DOMContentLoaded successsful.',Date.now());}
+
+                    window.addEventListener("load",async () => {
+                    // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
+                        if(consoleLog===true){console.log('projectClient window load successsful.',Date.now());}
+
+                        function closeUiPages(){
+                            const uiPages = document.querySelectorAll(".ui-page");
+                            console.log(uiPages);
+                            uiPages.forEach((item, index) => {
+                                console.log(item.id);
+                                document.getElementById(item.id).classList.remove("ui-page-in-view");
+                            });
+                        }
+
+                        document.getElementById("footer-camera").addEventListener("click",(ev) => {
+                            closeUiPages();
+                            console.log(ev.target.id);
+                            document.getElementById("camera-section").classList.toggle("ui-page-in-view");
+                            console.log(document.getElementById("camera-section").classList);
+                        });
+                        document.getElementById("footer-address").addEventListener("click",(ev) => {
+                            closeUiPages();
+                            console.log(ev.target.id);
+                            document.getElementById("address-section").classList.toggle("ui-page-in-view");
+                            console.log(document.getElementById("address-section").classList);
+                        });
+                        document.getElementById("footer-notes").addEventListener("click",(ev) => {
+                            closeUiPages();
+                            console.log(ev.target.id);
+                            document.getElementById("notes-section").classList.toggle("ui-page-in-view");
+                            console.log(document.getElementById("notes-section").classList);
+                        });
+                        document.getElementById("footer-save").addEventListener("click",(ev) => {
+                            closeUiPages();
+                            console.log(ev.target.id);
+                            document.getElementById("save-section").classList.toggle("ui-page-in-view");
+                            console.log(document.getElementById("save-section").classList);
+                        });
+                        document.getElementById("footer-search").addEventListener("click",(ev) => {
+                            closeUiPages();
+                            console.log(ev.target.id);
+                            document.getElementById("search-section").classList.toggle("ui-page-in-view");
+                            console.log(document.getElementById("search-section").classList);
+                        });
+
+                    });
+            });
+            // footer menu END 🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶
+
+export function setRequiredMenuWidth(){
     const menuContainer = document.getElementById("classic-menu-container")
     const headerItems = document.querySelectorAll(".header-item");
-    console.log(headerItems[0]);
+    let itemMargin = 16 + 16; // px
+    let itemLeftMarginOffset = 16; // px
+    let itemPadding = 0; // px
+    let itemBuffer = 16; // px, an extra buffer width
     let maxWidth = 0;
     headerItems.forEach((item, index) => {
         const itemText = item.textContent;
-        const itemFont = getComputedStyle(item).fontFamily;
-        if(getTextWidth(itemText, itemFont) > maxWidth) {
-            maxWidth = getTextWidth(itemText, itemFont);
+        // const itemFont = getComputedStyle(item).fontFamily;
+            const style = getComputedStyle(item);
+            const itemFont = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+        let itemWidth = getTextWidth(itemText, itemFont);
+        itemWidth = itemWidth + itemMargin + itemLeftMarginOffset + itemPadding + itemBuffer;
+        console.log(itemWidth,maxWidth);
+        if((itemWidth * 1) > (maxWidth * 1)) {
+            maxWidth = itemWidth;
         }
-        console.log(item.textContent);
+        // console.log(item.textContent);
         const elRectangle = item.getBoundingClientRect();
-        console.log(elRectangle.top);
-        console.log(elRectangle.right);
-        console.log(elRectangle.bottom);
-        console.log(elRectangle.left);
-        console.log(elRectangle.height);
-        console.log(elRectangle.width);
-        console.log(item.textContent.length);
-        console.log(maxWidth);
+        // console.log(maxWidth);
     });
     const menuItems = document.querySelectorAll(".menu-item");
+    itemMargin = 40; // px
+    itemLeftMarginOffset = 16; // px
+    itemPadding = 5 + 5; // px
+    itemBuffer = 16; // px, an extra buffer width
     console.log(menuItems[0]);
     menuItems.forEach((item, index) => {
         const itemText = item.textContent;
-        const itemFont = getComputedStyle(item).fontFamily;
-        if(getTextWidth(itemText, itemFont) > maxWidth) {
-            maxWidth = getTextWidth(itemText, itemFont);
+        // const itemFont = getComputedStyle(item).fontFamily;
+            const style = getComputedStyle(item);
+            const itemFont = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+        let itemWidth = getTextWidth(itemText, itemFont);
+        itemWidth = itemWidth + itemMargin + itemLeftMarginOffset  + itemPadding + itemBuffer;
+        console.log(itemWidth,maxWidth);
+        if((itemWidth * 1) > (maxWidth * 1)) {
+            maxWidth = itemWidth;
         }
-        console.log(item.textContent);
+        // console.log(item.textContent);
         const elRectangle = item.getBoundingClientRect();
-        console.log(elRectangle.top);
-        console.log(elRectangle.right);
-        console.log(elRectangle.bottom);
-        console.log(elRectangle.left);
-        console.log(elRectangle.height);
-        console.log(elRectangle.width);
-        console.log(item.textContent.length);
-        console.log(maxWidth);
+        // console.log(maxWidth);
     });
     console.log(maxWidth);
     const varName = "--menuItemsMaxWidth"; 
+    maxWidth += 15;
     setCSSvariable(varName,`${maxWidth.toFixed(0)}px`);
     const x = getCSSvariable(varName);
-    console.log(getCSSvariable(varName));
+    console.log(`${varName} = ${x}`);
+    menuContainer.style.width = x;
 }
-getRequiredMenuWidth();
-
+setRequiredMenuWidth();
+export function setRequiredMenuHeight(){
+    const requiredMenuHeight = window.innerHeight;
+    console.log(requiredMenuHeight);
+    document.getElementById("classic-menu-container").style.maxHeight = requiredMenuHeight + "px";
+}
 const el = document.getElementById("mobile-device-footer-menu");
 console.log(el);
-showDimensions(el);
+const dims = getDims(el);
+console.log(dims);
 
 export function saveToDB() {
     alert("Saving to the database...");

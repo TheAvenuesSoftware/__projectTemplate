@@ -37,10 +37,12 @@ export function getCSSvariable(varName){
 // CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS
 
 export function getTextWidth(text, font = '16px monospace') {
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
-  context.font = font;
-  return context.measureText(text).width;
+    console.log('text:- ',text);
+    console.log('font:-',font);
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = font;
+    return context.measureText(text).width;
 }
 
 // CHECK SCREEN SIZE start
@@ -50,26 +52,39 @@ export function getTextWidth(text, font = '16px monospace') {
     // console.log (ih,iw);
 // CHECK SCREEN SIZE end
 
-export function getDims(el){
-    console.log(el.innerWidth,el.innerHeight);
-}
+// export function getDims(el){
+//     console.log(el.innerWidth,el.innerHeight);
+// }
 
-export function showDimensions(el="") {
+export function getDims(el="",dim) {
     console.log(el);
 
     const winHeight = window.innerHeight;
     const winWidth = window.innerWidth;
+    console.log(`Window inner: width ${winWidth}px × height ${winHeight}px`);
 
     const bodyRect = document.body.getBoundingClientRect();
+    const bodyWidth = bodyRect.width;
+    const bodyHeight = bodyRect.height;
+    console.log(`Body: width ${bodyWidth.toFixed(0)}px × height ${bodyHeight.toFixed(0)}px`);
 
+    
     const elRect = el.getBoundingClientRect();
-    // const someElementRect = document.getElementById("someElement").getBoundingClientRect();
+    const elWidth = elRect.width;
+    const elHeight = elRect.height;
+    console.log(`${el.id}: width ${elWidth.toFixed(0)}px × height ${elHeight.toFixed(0)}px`);
+    console.log(`${el.id}: Top - ${elRect.top.toFixed(0)}px, Right - ${elRect.right.toFixed(0)}px`);
+    console.log(`${el.id}: Bottom - ${elRect.bottom.toFixed(0)}px, Left - ${elRect.left.toFixed(0)}px`);
 
-    console.log(`Window inner: ${winWidth}px × ${winHeight}px`);
-    console.log(`Body: ${bodyRect.width}px × ${bodyRect.height}px`);
-    console.log(`${el}: ${elRect.width}px × ${elRect.height}px`);
-    // console.log(`Element Position: Top - ${someElementRect.top}px, Left - ${someElementRect.left}px`);
-    // console.log(`Element Size: ${someElementRect.width}px × ${someElementRect.height}px`);
+    return({
+        width:elWidth.toFixed(0),
+        height:elHeight.toFixed(0),
+        top:elRect.top.toFixed(0),
+        right:elRect.right.toFixed(0),
+        bottom:elRect.bottom.toFixed(0),
+        left:elRect.left.toFixed(0)
+    });
+
 }
 
 // window.onload = showDimensions;

@@ -7,4 +7,16 @@ input {
   background-color: palegoldenrod;
 }
 
+.ui-page {
+  position: fixed;
+  left: -1000px;
+  width: 100vw;
+  height: 100vh;
+  z-index: 500;
+}
+.ui-page.ui-page-in-view {
+  left: 0px;
+  transition: left 0.5s ease-in-out;
+}
+
 /*# sourceMappingURL=project.css.map */
