@@ -14,7 +14,7 @@
         background-color: #f0f0f0;
         padding:2px;
         cursor: grab;
-        z-index: 1000;
+        // z-index: 1000;
     }
     .c {
         height: 30px;
@@ -318,12 +318,12 @@
         display: flex;
         justify-content:center;
         align-items: center;
-        z-index: 1000;
+        // z-index: 1000;
         .footer-menu {
             position: relative;
             background-color: silver;
             display: flex;
-            z-index: 1000;
+            // z-index: 1000;
             .footer-button {
                 position: absolute;
                 text-align: left;
@@ -333,7 +333,7 @@
                 width:44px; // Width: 440 / Height: 305 = 1.442623 > 65 / 45 = 1.444444
                 flex-grow: 1;
                 cursor: pointer;
-                z-index: 1000;
+                // z-index: 1000;
                 &:hover {
                     background-color: red;
                     border: 2px solid black;
@@ -343,7 +343,7 @@
                 position: absolute;
                 height:100%;
                 width:100%;
-                z-index: 0;
+                // z-index: 0;
             }
             .tooltip {
                 position: relative;
@@ -363,7 +363,7 @@
                 opacity: 0;
                 pointer-events: none;
                 transition: opacity 0.2s ease-in-out;
-                z-index: 999;
+                // z-index: 999;
             }
             .tooltip:hover::after {
                 opacity: 1;
@@ -408,7 +408,7 @@
                             opacity: 0;
                             pointer-events: none;
                             transition: opacity 0.2s ease-in-out;
-                            z-index: 999;
+                            // z-index: 999;
                         }
                         .tooltip:hover::after {
                             opacity: 1;
@@ -454,7 +454,7 @@
                             opacity: 0;
                             pointer-events: none;
                             transition: opacity 0.2s ease-in-out;
-                            z-index: 999;
+                            // z-index: 999;
                         }
                         .tooltip:hover::after {
                             opacity: 1;

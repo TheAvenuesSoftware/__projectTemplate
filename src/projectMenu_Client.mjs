@@ -152,44 +152,54 @@ export function projectMenuClientJSisLoaded(){
                     // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
                         if(consoleLog===true){console.log('projectClient window load successsful.',Date.now());}
 
-                        function closeUiPages(){
+                        function displayUiPage(displaySection){
                             const uiPages = document.querySelectorAll(".ui-page");
-                            console.log(uiPages);
+                            // console.log(uiPages);
+                            uiPages.forEach((pageItem, index) => {
+                                let removeClass = false;
+                                const itemClassList = document.getElementById(pageItem.id).classList;
+                                // console.log(itemClassList)
+                                itemClassList.forEach((classItem, index) => {
+                                    if(classItem==="ui-page-in-view"){
+                                        // console.log(itemClassList);
+                                        if(pageItem.id===displaySection.id){
+                                        }else{
+                                            removeClass = true;
+                                        }
+                                    }
+                                });
+                                if(removeClass===true){
+                                    document.getElementById(pageItem.id).classList.remove("ui-page-in-view");
+                                }
+                            });
                             uiPages.forEach((item, index) => {
-                                console.log(item.id);
-                                document.getElementById(item.id).classList.remove("ui-page-in-view");
+                                // console.log(item.id,displaySection.id);
+                                // console.log(item.id,document.getElementById(item.id).classList);
+                                if(item.id===displaySection.id){
+                                    document.getElementById(item.id).classList.toggle("ui-page-in-view");
+                                }
                             });
                         }
 
                         document.getElementById("footer-camera").addEventListener("click",(ev) => {
-                            closeUiPages();
                             console.log(ev.target.id);
-                            document.getElementById("camera-section").classList.toggle("ui-page-in-view");
-                            console.log(document.getElementById("camera-section").classList);
+                            displayUiPage(document.getElementById("camera-section"));
                         });
                         document.getElementById("footer-address").addEventListener("click",(ev) => {
-                            closeUiPages();
                             console.log(ev.target.id);
-                            document.getElementById("address-section").classList.toggle("ui-page-in-view");
-                            console.log(document.getElementById("address-section").classList);
+                            displayUiPage(document.getElementById("address-section"));
                         });
                         document.getElementById("footer-notes").addEventListener("click",(ev) => {
-                            closeUiPages();
                             console.log(ev.target.id);
-                            document.getElementById("notes-section").classList.toggle("ui-page-in-view");
-                            console.log(document.getElementById("notes-section").classList);
+                            displayUiPage(document.getElementById("notes-section"));
                         });
                         document.getElementById("footer-save").addEventListener("click",(ev) => {
-                            closeUiPages();
                             console.log(ev.target.id);
-                            document.getElementById("save-section").classList.toggle("ui-page-in-view");
-                            console.log(document.getElementById("save-section").classList);
+                            displayUiPage(document.getElementById("save-section"));
                         });
                         document.getElementById("footer-search").addEventListener("click",(ev) => {
-                            closeUiPages();
                             console.log(ev.target.id);
-                            document.getElementById("search-section").classList.toggle("ui-page-in-view");
-                            console.log(document.getElementById("search-section").classList);
+                            displayUiPage(document.getElementById("search-section"));
                         });
 
                     });

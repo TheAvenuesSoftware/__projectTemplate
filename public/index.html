@@ -110,7 +110,7 @@
                         <input id="googlePlacesAPIautocomplete" class="autocomplete-address-input" type="text" placeholder="Enter address">
                     </div>
                     <div id="map-container" class="map-container">
-                        <button id="close-map" style="position: absolute; top: 10px; right: 10px; background: red; color: white; border: none; padding: 8px 12px; cursor: pointer;z-index: 10;">
+                        <button id="close-map" class="close-map-btn" >
                             Close Map
                         </button>
                         <!-- <div id="map" style="width: 600px; height: 400px;"> -->
@@ -124,17 +124,17 @@
         <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
             <section id="camera-section" class="camera-section  ui-page">
                 <div id="camera-container" class="camera-container">
-                    <video id="camera-stream" class="camera-stream" autoplay playsinline style="background-color: red;"></video>
-                    <canvas id="photo-canvas" style="display: none;"></canvas><br>
-                    <textarea id="notes-input" placeholder="Enter notes relevant to this photo here..."></textarea><br>
+                    <video id="camera-stream" class="camera-stream" autoplay playsinline></video>
+                    <canvas id="photo-canvas" class="photo-canvas"></canvas><br>
                     <button id="capture-btn" class="std-btn">Take Photo</button>
-                    <button id="save-btn" class="std-btn" style="visibility: hidden;">Save Photo</button>
+                    <button id="save-btn" class="std-btn ui-page" style="visibility: hidden;">Save Photo</button>
                 </div>
             </section>
-        <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
-
-        <!-- 🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️ -->
+            <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
+            
+            <!-- 🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️ -->
             <section id="notes-section" class="notes-section  ui-page"">
+                <!-- <textarea id="notes-input" placeholder="Enter notes relevant to this photo here..."></textarea><br> -->
                 <textarea id="notes-textarea" class="notes-textarea" placeholder="Enter notes here..."></textarea>
                 <button id="save-notes-btn" class="std-btn">Save Notes</button> 
             </section>

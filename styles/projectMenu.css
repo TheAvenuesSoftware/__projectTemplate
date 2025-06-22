@@ -1,5 +1,5 @@
 .offscreen {
-  left: -1000px;
+  left: -5000px;
 }
 
 .m {
@@ -14,7 +14,6 @@
   background-color: #f0f0f0;
   padding: 2px;
   cursor: grab;
-  z-index: 1000;
 }
 
 .c {
@@ -132,13 +131,11 @@ header .classic-menu-icon-container img, header .classic-menu-icon-container .si
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
 }
 .mobile-device-footer-menu .footer-menu {
   position: relative;
   background-color: silver;
   display: flex;
-  z-index: 1000;
 }
 .mobile-device-footer-menu .footer-menu .footer-button {
   position: absolute;
@@ -149,7 +146,6 @@ header .classic-menu-icon-container img, header .classic-menu-icon-container .si
   width: 44px;
   flex-grow: 1;
   cursor: pointer;
-  z-index: 1000;
 }
 .mobile-device-footer-menu .footer-menu .footer-button:hover {
   background-color: red;
@@ -159,7 +155,6 @@ header .classic-menu-icon-container img, header .classic-menu-icon-container .si
   position: absolute;
   height: 100%;
   width: 100%;
-  z-index: 0;
 }
 .mobile-device-footer-menu .footer-menu .tooltip {
   position: relative;
@@ -179,7 +174,6 @@ header .classic-menu-icon-container img, header .classic-menu-icon-container .si
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease-in-out;
-  z-index: 999;
 }
 .mobile-device-footer-menu .footer-menu .tooltip:hover::after {
   opacity: 1;
@@ -219,7 +213,6 @@ header .classic-menu-icon-container img, header .classic-menu-icon-container .si
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease-in-out;
-    z-index: 999;
   }
   .mobile-device-footer-menu .footer-menu .footer-menu .tooltip:hover::after {
     opacity: 1;
@@ -260,7 +253,6 @@ header .classic-menu-icon-container img, header .classic-menu-icon-container .si
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease-in-out;
-    z-index: 999;
   }
   .mobile-device-footer-menu .footer-menu .footer-menu .tooltip:hover::after {
     opacity: 1;

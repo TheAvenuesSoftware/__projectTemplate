@@ -37,8 +37,8 @@ export function getCSSvariable(varName){
 // CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS CSS
 
 export function getTextWidth(text, font = '16px monospace') {
-    console.log('text:- ',text);
-    console.log('font:-',font);
+    // console.log('text:- ',text);
+    // console.log('font:-',font);
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     context.font = font;

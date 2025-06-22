@@ -71,7 +71,6 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
 }
 .custom-alert #custom-alert-dialog {
   position: fixed;
@@ -105,11 +104,9 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.25);
-  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1001;
   /* The animated dots */
   /* Use animation delay to stagger movement */
   /* Keyframes for bounce effect */
@@ -183,7 +180,6 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.25);
-  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -315,6 +311,17 @@ body {
   width: 100%;
   height: 100%;
 }
+.map-container .close-map-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: red;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  z-index: 10;
+}
 
 .camera-container-OLD {
   position: relative;
@@ -335,18 +342,25 @@ body {
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.8);
-  display: none;
 }
 .camera-container .camera-stream {
+  position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 5px;
+  border: 1px solid black;
+  background: #1440AF;
+  background-color: red;
 }
 .camera-container .photo-canvas {
+  position: absolute;
   width: 100%;
   height: 100%;
+  object-fit: cover;
   border-radius: 5px;
+  border: 1px solid black;
+  background: #1440AF;
 }
 
 .popup-overlay {
@@ -356,7 +370,6 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.25);
-  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
