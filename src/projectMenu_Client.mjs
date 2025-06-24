@@ -91,11 +91,12 @@ export function projectMenuClientJSisLoaded(){
 
         // classic menu START 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒
         
-        document.getElementById("classic-menu-icon-container").addEventListener("click", (event) => {
-            document.getElementById("classic-menu-overlay").classList.toggle("in-view");
-            document.getElementById("classic-menu-overlay").classList.toggle("out-of-view");
-        });
-            document.getElementById("classic-menu-container").addEventListener("click", (event) => {
+        // document.getElementById("classic-menu-icon-container").addEventListener("click", (event) => {
+        //     document.getElementById("menu-section").classList.toggle("in-view");
+        //     document.getElementById("menu-section").classList.toggle("out-of-view");
+        // });
+            // document.getElementById("classic-menu-container").addEventListener("click", (event) => {
+            document.getElementById("menu-section").addEventListener("click", (event) => {
                 const actions = {
                     showAddress: showAddress,
                     showNotes: showNotes
@@ -119,9 +120,10 @@ export function projectMenuClientJSisLoaded(){
                     console.warn("Clicked element is not a menu item or container.");
                 }
             });
-            document.getElementById("classic-menu-container").addEventListener("mouseleave", (event) => {
-                document.getElementById("classic-menu-overlay").classList.toggle("in-view");
-                document.getElementById("classic-menu-overlay").classList.toggle("out-of-view");
+            // document.getElementById("classic-menu-container").addEventListener("mouseleave", (event) => {
+            document.getElementById("menu-section").addEventListener("mouseleave", (event) => {
+                document.getElementById("menu-section").classList.toggle("in-view");
+                document.getElementById("menu-section").classList.toggle("out-of-view");
             });
             // 
                 // HOVER FOR TOUCHSCREENS start
@@ -181,6 +183,10 @@ export function projectMenuClientJSisLoaded(){
                             });
                         }
 
+                        document.getElementById("footer-menu-menu").addEventListener("click",(ev) => {
+                            console.log(ev.target.id);
+                            displayUiPage(document.getElementById("menu-section"));
+                        });
                         document.getElementById("footer-camera").addEventListener("click",(ev) => {
                             console.log(ev.target.id);
                             displayUiPage(document.getElementById("camera-section"));
@@ -207,7 +213,8 @@ export function projectMenuClientJSisLoaded(){
             // footer menu END 🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶
 
 export function setRequiredMenuWidth(){
-    const menuContainer = document.getElementById("classic-menu-container")
+    // const menuContainer = document.getElementById("classic-menu-container")
+    const menuContainer = document.getElementById("menu-section")
     const headerItems = document.querySelectorAll(".header-item");
     let itemMargin = 16 + 16; // px
     let itemLeftMarginOffset = 16; // px

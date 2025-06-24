@@ -1,5 +1,5 @@
 .offscreen{
-    left:-1000px;
+    left:var(--off-screen-left);
 }
 // floating menu icon START
     .m {
@@ -11,7 +11,8 @@
         align-items: center;
         height: 30px;
         width: 40px;
-        background-color: #f0f0f0;
+        // background-color: #f0f0f0;
+        background: var(--std-bckgrnd);
         padding:2px;
         cursor: grab;
         // z-index: 1000;
@@ -66,12 +67,12 @@
 // header bar START
 
 // classic menu START
-    .classic-menu-overlay{
+    .menu-section{
         // 
             // variables
                 $transition-speed: 0.5s;
                 $transition-speed-slower: 0.75s;
-                $hover-background-color:paleturquoise;
+                // $hover-background-color:paleturquoise;
                 $height:var(--screen_innerHeight_100);
             // variables
         // 
@@ -79,8 +80,10 @@
         width:110vw;
         height:100vh;
         position: fixed;
-        left:-1000px;
-        background-color: white;
+        top:0;
+        left:var(--off-screen-left);
+        // background-color: white;
+        background: var(--std-bckgrnd);
         // border-top:2px solid black;
         // border-right:2px solid black;
         // border-bottom:2px solid black;
@@ -90,10 +93,11 @@
             transition: left $transition-speed ease-in-out;
         }
         &.out-of-view{
-            left:-1000px;
+            left:var(--off-screen-left);
             transition: left $transition-speed ease-in-out;
         }
         .classic-menu-container{
+            // position: relative;
             border-top:2px solid black;
             border-right:2px solid black;
             border-bottom:2px solid black;
@@ -109,14 +113,16 @@
                 padding-left:0px;
                 margin-left:16px; // the default standard font size is 16px
                 &:hover{
-                    background-color: $hover-background-color;
+                    // background-color: $hover-background-color;
+                    background: var(----std-bckgrnd-hover);
                 }
             }
             .menu-item{
                 padding:5px;
                 margin-left:40px !important;
                 &:hover{
-                    background-color: $hover-background-color;
+                    // background-color: $hover-background-color;
+                    background: var(----std-bckgrnd-hover);
                 }
             }
             .collapsed{
@@ -175,7 +181,7 @@
 // classic menu END
 
 // // project classic menu content START <<<--- scss scss scss scss scss scss scss scss scss scss
-//     .classic-menu-overlay{
+//     .menu-section{
 //         position: fixed;
 //         top: 0;
 //         left: 0;
@@ -313,7 +319,8 @@
         bottom: 0;
         left: 0;
         width:100%;
-        background-color: silver;
+        // background-color: silver;
+        background: var(--std-bckgrnd);
         border-top: 1px solid black;
         display: flex;
         justify-content:center;
@@ -321,7 +328,8 @@
         // z-index: 1000;
         .footer-menu {
             position: relative;
-            background-color: silver;
+            // background-color: silver;
+            background: var(--std-bckgrnd);
             display: flex;
             // z-index: 1000;
             .footer-button {
@@ -335,7 +343,8 @@
                 cursor: pointer;
                 // z-index: 1000;
                 &:hover {
-                    background-color: red;
+                    // background-color: red;
+                    background: var(--std-bckgrnd);
                     border: 2px solid black;
                 }
             }

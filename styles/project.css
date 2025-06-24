@@ -1,15 +1,731 @@
-* {
-  font-family: "Consolas", "Courier New", monospace;
+:root {
+  --primary-color: #007bff;
+  --font-stack: "Roboto", sans-serif;
+  --spacing-unit: 16px;
+  --std-bckgrnd: rgba(#007bff,.5);
+  --std-btn-bckgrnd:linear-gradient(135deg, #4A90E2, #1440AF);
+  --std-btn-bckgrnd-hover:linear-gradient(135deg, #1440AF, #4A90E2);
+  --off-screen-left:-5000px;
+  color: rgba(8, 200, 8, 0.4);
+  color: rgba(67, 248, 67, 0);
 }
 
-input {
+body {
+  color: var(--primary-color);
+  font-family: var(--font-stack);
+  padding: var(--spacing-unit);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.std-btn {
+  display: inline-block;
+  padding: 0px 6px;
+  margin: 6px 0px;
+  background: var(--std-btn-bckgrnd);
+  color: white;
+  text-align: center;
+  border: 1px solid blue;
+  border-radius: 5px;
+  transition: all 0.5s ease-in-out;
+}
+.std-btn:hover {
+  transform: scale(1.05);
+  background: var(--std-btn-bckgrnd-hover);
+}
+
+.std-frm-flex-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Ensures vertical alignment */
+}
+.std-frm-flex-wrapper .std-frm-flex-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Ensures vertical alignment */
+  gap: 10px;
+}
+.std-frm-flex-wrapper .std-frm-flex-item label {
+  min-width: 120px; /* Adjust width based on longest label */
+  text-align: right;
+  width: 120px;
+  display: inline-block;
+}
+.std-frm-flex-wrapper .std-frm-flex-item input {
+  flex: 1; /* Takes up remaining space */
+  width: 120px;
+}
+
+.std-frm-grid {
+  display: grid;
+  grid-template-columns: 150px auto; /* First column for labels, second for inputs */
+  align-items: center;
+}
+.std-frm-grid label {
+  text-align: right; /* Align text properly */
+  padding-right: 10px;
+}
+.std-frm-grid input {
+  width: 120px;
+}
+
+/* Basic styles for the dialog and backdrop */
+.custom-alert #custom-alert-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  background: var(--std-bckgrnd);
+}
+.custom-alert #custom-alert-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  background: var(--std-bckgrnd);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+.custom-alert #custom-alert-dialog button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: var(--std-bckgrnd);
+  color: white;
+  cursor: pointer;
+}
+.custom-alert #custom-alert-dialog button:hover {
+  background: var(--std-bckgrnd);
+}
+
+.busy-animation-overlay {
+  /* Center the animation */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  background: var(--std-bckgrnd);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* The animated dots */
+  /* Use animation delay to stagger movement */
+  /* Keyframes for bounce effect */
+}
+.busy-animation-overlay .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  background: rgb(255, 255, 255);
+  background: var(--std-bckgrnd);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+.busy-animation-overlay .dot {
+  width: 12px;
+  height: 12px;
+  background: var(--std-bckgrnd);
+  border-radius: 50%;
+  animation: bounce 1.5s infinite ease-in-out;
+}
+.busy-animation-overlay .dot:nth-child(1) {
+  animation-delay: 0s;
+}
+.busy-animation-overlay .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.busy-animation-overlay .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  40% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.fade-out {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+.login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  background: var(--std-bckgrnd);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-overlay .dialog {
+  background: rgb(255, 255, 255);
+  background: var(--std-bckgrnd);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+.login-overlay .dialog input {
   color: darkblue;
-  background-color: palegoldenrod;
+  background: var(--std-bckgrnd);
+  width: 100%;
+}
+.login-overlay .dialog button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: var(--std-bckgrnd);
+  color: white;
+  cursor: pointer;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.login-overlay .dialog .normal-prompt {
+  max-width: 100%;
+}
+.login-overlay .dialog .error-prompt {
+  max-width: 100%;
+  color: red;
+}
+
+.passcodeForm {
+  position: fixed;
+  left: var(--off-screen-left);
+}
+.passcodeForm .code-input-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.passcodeForm .code-input-input {
+  display: flex;
+  flex-direction: row;
+  width: 20px !important;
+  height: 20px;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  background: var(--std-bckgrnd);
+  transition: border-color 0.2s;
+}
+.passcodeForm .code-input-input:focus {
+  color: darkblue;
+  border-color: #007BFF;
+}
+.passcodeForm button {
+  padding: 10px 20px;
+  background: var(--std-bckgrnd);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.passcodeForm button:disabled {
+  background: var(--std-bckgrnd);
+  cursor: not-allowed;
+}
+@media (max-width: 600px) {
+  .passcodeForm .code-input input {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+}
+
+#sign-in-out-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 3px;
+  cursor: pointer;
+}
+#sign-in-out-container img, #sign-in-out-container .sign-in-out-icon {
+  border-radius: 5px;
+  height: 25px;
+}
+#sign-in-out-container .signed-out {
+  border: 2px solid red;
+}
+#sign-in-out-container .signed-in {
+  border: 2px solid green;
+}
+
+.autocomplete-address-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.autocomplete-address-container input {
+  color: darkblue;
+  background: var(--std-bckgrnd);
+  width: 80%;
+  margin: auto;
+  padding: 5px;
+}
+
+.map-container {
+  display: none; /* Initially hidden */
+  position: relative; /* Keeps it inside the document flow */
+  width: 500px;
+  height: 400px;
+  background: var(--std-bckgrnd);
+  padding: 2px;
+  margin: 20px auto; /* Centers it within a parent container */
+}
+.map-container .map {
+  width: 100%;
+  height: 100%;
+}
+.map-container .close-map-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--std-bckgrnd);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.camera-section-OLD {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--std-bckgrnd);
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+}
+
+.camera-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  max-width: 702px;
+  margin: 0px auto;
+  height: auto;
+  background: rgba(0, 0, 0, 0.8);
+  background: var(--std-bckgrnd);
+  z-index: -5000;
+}
+.camera-section .camera-stream {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 5px solid red;
+  background: #1440AF;
+  background: var(--std-bckgrnd);
+  z-index: -5000;
+}
+.camera-section .photo-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 5px solid blue;
+  background: #1440AF;
+  background: var(--std-bckgrnd);
+  z-index: -5000;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  background: var(--std-bckgrnd);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.popup-overlay .popup-container {
+  background: var(--std-bckgrnd);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+.popup-overlay .popup-container input {
+  color: darkblue;
+  background: var(--std-bckgrnd);
+  padding: 5px;
+  width: 100%;
+}
+.popup-overlay .popup-container button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: var(--std-bckgrnd);
+  color: white;
+  cursor: pointer;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.popup-overlay .popup-container .normal-prompt {
+  max-width: 100%;
+}
+.popup-overlay .popup-container .error-prompt {
+  max-width: 100%;
+  color: red;
+}
+
+#photos-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+#photos-container .photo-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 250px;
+  text-align: center;
+  background: var(--std-bckgrnd);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+#photos-container .photo {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px;
+}
+#photos-container p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.offscreen {
+  left: var(--off-screen-left);
+}
+
+.m {
+  position: fixed;
+  top: 50px;
+  right: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 40px;
+  background: var(--std-bckgrnd);
+  padding: 2px;
+  cursor: grab;
+}
+
+.c {
+  height: 30px;
+  width: 40px;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  padding: 0px;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+header .app-name {
+  text-align: center;
+  font-weight: 900;
+}
+header .user-email-address {
+  text-align: center;
+  font-weight: 900;
+}
+header .classic-menu-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 3px;
+  cursor: pointer;
+}
+header .classic-menu-icon-container img, header .classic-menu-icon-container .sign-in-out-icon {
+  height: 25px;
+}
+
+.menu-section {
+  width: 110vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: var(--off-screen-left);
+  background: var(--std-bckgrnd);
+  list-style-type: none;
+}
+.menu-section.in-view {
+  left: -10px;
+  transition: left 0.5s ease-in-out;
+}
+.menu-section.out-of-view {
+  left: var(--off-screen-left);
+  transition: left 0.5s ease-in-out;
+}
+.menu-section .classic-menu-container {
+  border-top: 2px solid black;
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
+  border-radius: 10px;
+}
+.menu-section .classic-menu-container .header-item {
+  font-weight: 900;
+  padding-top: 5px;
+  padding-right: 0px;
+  padding-bottom: 5px;
+  padding-left: 0px;
+  margin-left: 16px;
+}
+.menu-section .classic-menu-container .header-item:hover {
+  background: var(----std-bckgrnd-hover);
+}
+.menu-section .classic-menu-container .menu-item {
+  padding: 5px;
+  margin-left: 40px !important;
+}
+.menu-section .classic-menu-container .menu-item:hover {
+  background: var(----std-bckgrnd-hover);
+}
+.menu-section .classic-menu-container .collapsed {
+  list-style-type: none;
+  overflow: hidden;
+  opacity: 1;
+  transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+@media screen and (max-width: 768px) {
+  .classic-menu-container ul {
+    width: 100%;
+    padding: 10px;
+  }
+  .classic-menu-container li {
+    width: 100%;
+    padding: 10px;
+  }
+}
+@media screen and (max-width: 414px) {
+  .classic-menu-container ul {
+    width: 100%;
+    padding: 10px;
+  }
+  .classic-menu-container li {
+    width: 100%;
+    padding: 10px;
+  }
+}
+.mobile-device-footer-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--std-bckgrnd);
+  border-top: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mobile-device-footer-menu .footer-menu {
+  position: relative;
+  background: var(--std-bckgrnd);
+  display: flex;
+}
+.mobile-device-footer-menu .footer-menu .footer-button {
+  position: absolute;
+  text-align: left;
+  padding: 0px;
+  margin: 10px;
+  height: 30px;
+  width: 44px;
+  flex-grow: 1;
+  cursor: pointer;
+}
+.mobile-device-footer-menu .footer-menu .footer-button:hover {
+  background: var(--std-bckgrnd);
+  border: 2px solid black;
+}
+.mobile-device-footer-menu .footer-menu img {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+.mobile-device-footer-menu .footer-menu .tooltip {
+  position: relative;
+  cursor: pointer;
+}
+.mobile-device-footer-menu .footer-menu .tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+.mobile-device-footer-menu .footer-menu .tooltip:hover::after {
+  opacity: 1;
+}
+@media screen and (max-width: 768px) {
+  .mobile-device-footer-menu .footer-menu .footer-menu .footer-button {
+    touch-action: manipulation; /* Helps suppress iOS delay */
+    -webkit-tap-highlight-color: transparent; /* Removes blue flash on iOS */
+    position: relative;
+    padding: 0px;
+    height: 40px;
+    width: 55px;
+  }
+  .mobile-device-footer-menu .footer-menu .footer-menu img {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none; /* Prevents iOS image preview */
+  }
+  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip {
+    position: relative;
+    cursor: pointer;
+  }
+  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+  }
+  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip:hover::after {
+    opacity: 1;
+  }
+}
+@media screen and (max-width: 414px) {
+  .mobile-device-footer-menu .footer-menu .footer-menu .footer-button {
+    touch-action: manipulation; /* Helps suppress iOS delay */
+    -webkit-tap-highlight-color: transparent; /* Removes blue flash on iOS */
+    position: relative;
+    padding: 0px;
+    height: 40px;
+    width: 55px;
+  }
+  .mobile-device-footer-menu .footer-menu .footer-menu img {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none; /* Prevents iOS image preview */
+  }
+  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip {
+    position: relative;
+    cursor: pointer;
+  }
+  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+  }
+  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip:hover::after {
+    opacity: 1;
+  }
 }
 
 .ui-page {
   position: fixed;
-  left: -5000px;
+  left: var(--off-screen-left);
   width: 100vw;
   height: 100vh;
 }

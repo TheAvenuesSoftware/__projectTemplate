@@ -145,9 +145,9 @@ const aMonthNamesLong = ["January","February","March","April","May","June","July
             // getGlobalFooter();
 
             getGooglePlacesAPIkey();
-            document.getElementById("close-map").addEventListener("click", function() {
-                document.getElementById("map-container").style.display = "none";
-            });
+            // document.getElementById("close-map").addEventListener("click", function() {
+            //     document.getElementById("map-container").style.display = "none";
+            // });
 
         // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
 
@@ -162,7 +162,7 @@ const aMonthNamesLong = ["January","February","March","April","May","June","July
                     frameRate: { ideal: 30 }   // Smooth video at 30fps, will automatically scale back if necessary
                 };
                 try {
-                    const cameraContainer = document.getElementById("camera-container");
+                    const cameraContainer = document.getElementById("camera-section");
                     const video = document.getElementById("camera-stream");
                     // const stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"} });                               
                     const stream = await navigator.mediaDevices.getUserMedia({ video: videoConstraints });
@@ -173,12 +173,13 @@ const aMonthNamesLong = ["January","February","March","April","May","June","July
                         cameraContainer.style.maxWidth = video.offsetWidth + "px";
                         cameraContainer.style.margin = "0 auto"; // top and bottom margin zero; left and right auto
                         cameraContainer.style.height = "auto";
+                        cameraContainer.classList.add("ui-page");
                         // - videoWidth and videoHeight → Original video file dimensions.
                         // - offsetWidth and offsetHeight → Size of the <video> element on the page (can be resized via CSS).
                         // - loadedmetadata → Ensures dimensions are available before accessing them.
                     });
                 } catch (error) {
-                    console.error("Error accessing camera:", error);
+                    // console.error("Error accessing camera:", error);
                 }
             }
 

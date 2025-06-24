@@ -7,14 +7,19 @@
 // - Mixins & Functions: Often use camelCase or PascalCase (e.g., @mixin flexCenter)
 // - BEM Methodology (Block Element Modifier): Uses block__element--modifier (e.g., .button__icon--large)
 
-* {
-    font-family: "Consolas", "Courier New", monospace;
-}
+@import "global";
+@import "projectMenu";
 
-input{
-    color:darkblue;
-    background-color: palegoldenrod;
-}
+// * {
+//     // font-family: "Consolas", "Courier New", monospace;
+//     font-family: 'Roboto', sans-serif;
+// }
+
+// input{
+//     color:darkblue;
+//     // background-color: palegoldenrod;
+//     background: var(--std-bckgrnd);
+// }
 .ui-page{
     // 
         // variables
@@ -23,7 +28,7 @@ input{
         // variables
     // 
     position: fixed;
-    left:-5000px;
+    left:var(--off-screen-left);
     width:100vw;
     height:100vh;
     // z-index: 500;

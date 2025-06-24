@@ -1,5 +1,5 @@
 .offscreen {
-  left: -5000px;
+  left: var(--off-screen-left);
 }
 
 .m {
@@ -11,7 +11,7 @@
   align-items: center;
   height: 30px;
   width: 40px;
-  background-color: #f0f0f0;
+  background: var(--std-bckgrnd);
   padding: 2px;
   cursor: grab;
 }
@@ -54,29 +54,30 @@ header .classic-menu-icon-container img, header .classic-menu-icon-container .si
   height: 25px;
 }
 
-.classic-menu-overlay {
+.menu-section {
   width: 110vw;
   height: 100vh;
   position: fixed;
-  left: -1000px;
-  background-color: white;
+  top: 0;
+  left: var(--off-screen-left);
+  background: var(--std-bckgrnd);
   list-style-type: none;
 }
-.classic-menu-overlay.in-view {
+.menu-section.in-view {
   left: -10px;
   transition: left 0.5s ease-in-out;
 }
-.classic-menu-overlay.out-of-view {
-  left: -1000px;
+.menu-section.out-of-view {
+  left: var(--off-screen-left);
   transition: left 0.5s ease-in-out;
 }
-.classic-menu-overlay .classic-menu-container {
+.menu-section .classic-menu-container {
   border-top: 2px solid black;
   border-right: 2px solid black;
   border-bottom: 2px solid black;
   border-radius: 10px;
 }
-.classic-menu-overlay .classic-menu-container .header-item {
+.menu-section .classic-menu-container .header-item {
   font-weight: 900;
   padding-top: 5px;
   padding-right: 0px;
@@ -84,17 +85,17 @@ header .classic-menu-icon-container img, header .classic-menu-icon-container .si
   padding-left: 0px;
   margin-left: 16px;
 }
-.classic-menu-overlay .classic-menu-container .header-item:hover {
-  background-color: paleturquoise;
+.menu-section .classic-menu-container .header-item:hover {
+  background: var(----std-bckgrnd-hover);
 }
-.classic-menu-overlay .classic-menu-container .menu-item {
+.menu-section .classic-menu-container .menu-item {
   padding: 5px;
   margin-left: 40px !important;
 }
-.classic-menu-overlay .classic-menu-container .menu-item:hover {
-  background-color: paleturquoise;
+.menu-section .classic-menu-container .menu-item:hover {
+  background: var(----std-bckgrnd-hover);
 }
-.classic-menu-overlay .classic-menu-container .collapsed {
+.menu-section .classic-menu-container .collapsed {
   list-style-type: none;
   overflow: hidden;
   opacity: 1;
@@ -126,7 +127,7 @@ header .classic-menu-icon-container img, header .classic-menu-icon-container .si
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: silver;
+  background: var(--std-bckgrnd);
   border-top: 1px solid black;
   display: flex;
   justify-content: center;
@@ -134,7 +135,7 @@ header .classic-menu-icon-container img, header .classic-menu-icon-container .si
 }
 .mobile-device-footer-menu .footer-menu {
   position: relative;
-  background-color: silver;
+  background: var(--std-bckgrnd);
   display: flex;
 }
 .mobile-device-footer-menu .footer-menu .footer-button {
@@ -148,7 +149,7 @@ header .classic-menu-icon-container img, header .classic-menu-icon-container .si
   cursor: pointer;
 }
 .mobile-device-footer-menu .footer-menu .footer-button:hover {
-  background-color: red;
+  background: var(--std-bckgrnd);
   border: 2px solid black;
 }
 .mobile-device-footer-menu .footer-menu img {

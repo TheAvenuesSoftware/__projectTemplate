@@ -1,8 +1,27 @@
+:root {
+  --primary-color: #007bff;
+  --font-stack: "Roboto", sans-serif;
+  --spacing-unit: 16px;
+  --std-bckgrnd: rgba(#007bff,.5);
+  --std-btn-bckgrnd:linear-gradient(135deg, #4A90E2, #1440AF);
+  --std-btn-bckgrnd-hover:linear-gradient(135deg, #1440AF, #4A90E2);
+  --off-screen-left:-5000px;
+  color: rgba(8, 200, 8, 0.4);
+  color: rgba(67, 248, 67, 0);
+}
+
+body {
+  color: var(--primary-color);
+  font-family: var(--font-stack);
+  padding: var(--spacing-unit);
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   user-select: none;
+  font-family: "Roboto", sans-serif;
 }
 
 body {
@@ -14,8 +33,7 @@ body {
   display: inline-block;
   padding: 0px 6px;
   margin: 6px 0px;
-  background-color: #0073e6;
-  background: linear-gradient(135deg, #4A90E2, #1440AF);
+  background: var(--std-btn-bckgrnd);
   color: white;
   text-align: center;
   border: 1px solid blue;
@@ -24,7 +42,7 @@ body {
 }
 .std-btn:hover {
   transform: scale(1.05);
-  background: linear-gradient(135deg, #1440AF, #4A90E2);
+  background: var(--std-btn-bckgrnd-hover);
 }
 
 .std-frm-flex-wrapper {
@@ -71,6 +89,7 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
+  background: var(--std-bckgrnd);
 }
 .custom-alert #custom-alert-dialog {
   position: fixed;
@@ -78,6 +97,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   background: #ffffff;
+  background: var(--std-bckgrnd);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -88,12 +108,12 @@ body {
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
+  background: var(--std-bckgrnd);
   color: white;
   cursor: pointer;
 }
 .custom-alert #custom-alert-dialog button:hover {
-  background-color: #0056b3;
+  background: var(--std-bckgrnd);
 }
 
 .busy-animation-overlay {
@@ -104,6 +124,7 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.25);
+  background: var(--std-bckgrnd);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -117,6 +138,7 @@ body {
   align-items: center;
   gap: 8px;
   background: rgb(255, 255, 255);
+  background: var(--std-bckgrnd);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -125,7 +147,7 @@ body {
 .busy-animation-overlay .dot {
   width: 12px;
   height: 12px;
-  background-color: #3498db;
+  background: var(--std-bckgrnd);
   border-radius: 50%;
   animation: bounce 1.5s infinite ease-in-out;
 }
@@ -180,12 +202,14 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.25);
+  background: var(--std-bckgrnd);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .login-overlay .dialog {
   background: rgb(255, 255, 255);
+  background: var(--std-bckgrnd);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -193,7 +217,7 @@ body {
 }
 .login-overlay .dialog input {
   color: darkblue;
-  background-color: yellow;
+  background: var(--std-bckgrnd);
   width: 100%;
 }
 .login-overlay .dialog button {
@@ -201,7 +225,7 @@ body {
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
-  background-color: rgb(0, 123, 255);
+  background: var(--std-bckgrnd);
   color: white;
   cursor: pointer;
   margin-left: 15px;
@@ -217,7 +241,7 @@ body {
 
 .passcodeForm {
   position: fixed;
-  left: -1000px;
+  left: var(--off-screen-left);
 }
 .passcodeForm .code-input-container {
   display: flex;
@@ -236,7 +260,7 @@ body {
   border: 2px solid #ccc;
   border-radius: 8px;
   outline: none;
-  background-color: palegoldenrod !important;
+  background: var(--std-bckgrnd);
   transition: border-color 0.2s;
 }
 .passcodeForm .code-input-input:focus {
@@ -245,14 +269,14 @@ body {
 }
 .passcodeForm button {
   padding: 10px 20px;
-  background-color: #007BFF;
+  background: var(--std-bckgrnd);
   color: #fff;
   border: none;
   border-radius: 6px;
   cursor: pointer;
 }
 .passcodeForm button:disabled {
-  background-color: #aaa;
+  background: var(--std-bckgrnd);
   cursor: not-allowed;
 }
 @media (max-width: 600px) {
@@ -291,7 +315,7 @@ body {
 }
 .autocomplete-address-container input {
   color: darkblue;
-  background-color: palegoldenrod;
+  background: var(--std-bckgrnd);
   width: 80%;
   margin: auto;
   padding: 5px;
@@ -302,8 +326,7 @@ body {
   position: relative; /* Keeps it inside the document flow */
   width: 500px;
   height: 400px;
-  background: #1440AF;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  background: var(--std-bckgrnd);
   padding: 2px;
   margin: 20px auto; /* Centers it within a parent container */
 }
@@ -315,7 +338,7 @@ body {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: red;
+  background: var(--std-bckgrnd);
   color: white;
   border: none;
   padding: 8px 12px;
@@ -323,44 +346,51 @@ body {
   z-index: 10;
 }
 
-.camera-container-OLD {
+.camera-section-OLD {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: var(--std-bckgrnd);
   border: 1px solid black;
   border-radius: 5px;
   padding: 5px;
   margin: 5px;
 }
 
-.camera-container {
+.camera-section {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  max-width: 702px;
+  margin: 0px auto;
+  height: auto;
   background: rgba(0, 0, 0, 0.8);
+  background: var(--std-bckgrnd);
+  z-index: -5000;
 }
-.camera-container .camera-stream {
-  position: absolute;
+.camera-section .camera-stream {
+  position: relative;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 5px;
-  border: 1px solid black;
+  border: 5px solid red;
   background: #1440AF;
-  background-color: red;
+  background: var(--std-bckgrnd);
+  z-index: -5000;
 }
-.camera-container .photo-canvas {
-  position: absolute;
+.camera-section .photo-canvas {
+  position: relative;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 5px;
-  border: 1px solid black;
+  border: 5px solid blue;
   background: #1440AF;
+  background: var(--std-bckgrnd);
+  z-index: -5000;
 }
 
 .popup-overlay {
@@ -370,12 +400,13 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.25);
+  background: var(--std-bckgrnd);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .popup-overlay .popup-container {
-  background-color: rgb(255, 255, 255);
+  background: var(--std-bckgrnd);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -383,7 +414,7 @@ body {
 }
 .popup-overlay .popup-container input {
   color: darkblue;
-  background-color: palegoldenrod;
+  background: var(--std-bckgrnd);
   padding: 5px;
   width: 100%;
 }
@@ -392,7 +423,7 @@ body {
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
-  background-color: rgb(0, 123, 255);
+  background: var(--std-bckgrnd);
   color: white;
   cursor: pointer;
   margin-left: 15px;
@@ -416,7 +447,7 @@ body {
   padding: 10px;
   width: 250px;
   text-align: center;
-  background-color: #f9f9f9;
+  background: var(--std-bckgrnd);
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 #photos-container .photo {
