@@ -7,7 +7,7 @@
 <!-- - Custom Attributes: Typically data-* (e.g., data-user-id) -->
     
 <!DOCTYPE html>
-<html lang="en" class="footer-position-grid">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
@@ -59,6 +59,62 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <!-- PWA setup END -->
 
+    <style>
+        *{
+            border:1px solid red;
+        }
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header, footer {
+            background-color: rgba(25, 255, 25,.5);
+            color: rgba(0, 55, 0,1);
+            font-weight: 900;
+            text-align: center;
+            padding: 2.5px;
+            flex-shrink: 0;
+        }
+        main {
+            position: relative;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        section {
+            position: absolute;
+            top: 0; left: -5000px; right: 0; bottom: 0;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            padding: 1rem;
+            /* background: #f1f1f1; */
+            /* background: aqua; */
+        }
+        section.active {
+            top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 1;
+            z-index: 1;
+        }
+        .section-heading{
+            font-weight: 900;
+        }
+        .footer-controls {
+            /* margin-top: 1rem; */
+            text-align: center;
+        }
+        .footer-control {
+            margin: 0 5px;
+            cursor: pointer;
+            height:30px;
+            width:44px;
+        }
+        .footer-control:hover {
+            border: 2px solid black;
+        }
+    </style>
 
 </head>
 <body>
@@ -69,173 +125,196 @@
             </div> -->
         <!--  -->
         <!--  -->
-            <div>
-                <p class="app-name">Tradie Photo Catalogue</p>
+            <!-- <div> -->
+                <div class="app-name">Tradie Photo Catalogue</div>
                 <div id="user-email-address" class="user-email-address" style="text-align: center;">...</div>        
-            </div>
+            <!-- </div> -->
         <!--  -->
         <!--  -->
             <!-- sign-in-out-button START -->
                 <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-                    <div id="sign-in-out-container" class="x_sign-in-button" data-status="signed-out" tabindex="0" role="button">
+                    <div id="sign-in-out-container" class="sign-in-button" data-status="signed-out" tabindex="0" role="button">
                         &nbspSign&nbsp<img id="sign-in-out-icon" src="__padlock_locked.png" class="signed-out">&nbspIn&nbsp
                     </div> 
                 <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
             <!-- sign-in-out-button END -->
         <!--  -->
-        <!--  -->
-            <!-- floating camera menu div START -->
-                <div id="m" class="m">
-                    <!-- <img id="c" class="c" src="./camera_icon_square_765x765_coloured.png" alt="Camera Icon" data-note="floating camera menu div."> -->
-                    <img id="c" class="c" src="./_camera.png" alt="Camera Icon" data-note="floating camera menu div.">
-                </div>
-            <!-- floating camera menu div END -->
-        <!--  -->
     </header>
     <main>
 
-        <!--  -->
-            <!-- classic menu START 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒 -->
-                <!-- <section id="menu-section" class="menu-section out-of-view"> -->
-                <section id="menu-section" class="menu-section ui-page">
-                    <!-- <div id="classic-menu-container" class="classic-menu-container ui-page"> -->
+                <section id="section0" class="section0 section-home">
+                    <!-- 🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡 -->
+                    <!-- home -->
+                    <input id="section0-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
+                    <p class="section-heading">Home</p>
+                    <p>No more lost photos</p>
+                    <p>Store them by address</p>
+                    <p>Add notes to each photo</p>
+                    <p>Easy find by searching:</p>
+                    <ul>
+                        <li>Part of an address</li>
+                        <li>Part of a note</li>
+                        <li>Date, week, month.</li>
+                    </ul>
+                    <!-- 🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡 -->
+                </section>
+                <section id="section1" class="section1 section-menu">
+                    <!-- 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒 -->
+                    <!-- menu -->
+                    <input id="section1-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
+                    <!-- <p class="section-heading">Menu</p> -->
+                    <div id="classic-menu-container" class="classic-menu-container">
                         <!-- collapsable menu START -->
-                            <li class="header-item">Menu</li>
+                        <ul>
+                            <li class="header-item section-heading">Menu</li>
+                            <ul class="collapsed">
+                                <li class="nav-L1 menu-item" data-action="showAddress">1. Check Address</li>
+                                <li class="nav-L1 menu-item" data-action="showCamera">2. Take Photo</li>
+                                <li class="nav-L1 menu-item" data-action="showNotes">3. Add Notes</li>
+                                <li class="nav-L1 menu-item" data-action="saveToDB">Save</li>
+                                <li class="header-item" >Retrieve</li>
                                 <ul class="collapsed">
-                                    <li class="nav-L1 menu-item" data-action="showAddress">1. Check Address</li>
-                                    <li class="nav-L1 menu-item" data-action="showCamera">2. Take Photo</li>
-                                    <li class="nav-L1 menu-item" data-action="showNotes">3. Add Notes</li>
-                                    <li class="nav-L1 menu-item" data-action="saveToDB">Save</li>
-                                    <li class="header-item" >Retrieve</li>
+                                    <li class="nav-L2 menu-item" data-action="showAddressFilter">Filter by Address</li>
+                                    <li class="nav-L2 menu-item" data-action="showNotesFilter">Filter by Notes</li>
+                                    <li class="header-item" >Filter by Date</li>
                                     <ul class="collapsed">
-                                        <li class="nav-L2 menu-item" data-action="showAddressFilter">Filter by Address</li>
-                                        <li class="nav-L2 menu-item" data-action="showNotesFilter">Filter by Notes</li>
-                                        <li class="header-item" >Filter by Date</li>
-                                            <ul class="collapsed">
-                                                <li class="nav-L3 menu-item" data-action="showDateFilter">Date</li>
-                                                <li class="nav-L3 menu-item" data-action="showWeekFilter">Week</li>
-                                                <li class="nav-L3 menu-item" data-action="showMonthFilter">Month</li>
-                                            </ul>
+                                        <li class="nav-L3 menu-item" data-action="showDateFilter">Date</li>
+                                        <li class="nav-L3 menu-item" data-action="showWeekFilter">Week</li>
+                                        <li class="nav-L3 menu-item" data-action="showMonthFilter">Month</li>
                                     </ul>
+                                </ul>
                             </ul>
+                        </ul>
                         <!-- collapsable menu END -->
-                    <!-- </div> -->
-                </setion>
-            <!-- classic menu END 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒 -->
-        <!--  -->
-
-        <!--  -->
-            <!-- Google Places API START -->
-                <section id="address-section" class="google-places-api-section address-section ui-page">
+                    </div>
+                    <!-- 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒 -->
+                </section>
+                <section id="section2" class="section2 section-camera">
+                    <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
+                    <!-- camera -->
+                    <input id="section2-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
+                    <!-- FULL SCREEN start -->
+                    <div id="camera-container" class="camera-container">
+                        <!--  -->
+                            <!-- floating camera menu div START -->
+                                <div id="m" class="m">
+                                    <!-- <img id="c" class="c" src="./camera_icon_square_765x765_coloured.png" alt="Camera Icon" data-note="floating camera menu div."> -->
+                                    <img id="c" class="c" src="./_camera.png" alt="Camera Icon" data-note="floating camera menu div.">
+                                </div>
+                            <!-- floating camera menu div END -->
+                        <!--  -->
+                        <video id="camera-stream" class="camera-stream" autoplay playsinline></video>
+                        <canvas id="photo-canvas" class="photo-canvas"></canvas><br>
+                        <button id="capture-btn" class="std-btn">Take Photo</button>
+                        <button id="save-btn" class="std-btn" style="visibility: hidden;">Save Photo</button>
+                    </div>
+                    <!-- FULL SCREEN end -->
+                    <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
+                </section>
+                <section id="section3" class="section3 section-googleAPIs">
+                    <!-- 📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌 -->
+                    <!-- address -->
+                    <input id="section3-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
+                    <p class="section-heading">Address</p>
                     <div class="autocomplete-address-container">
-                        Address:-
-                        <input id="googlePlacesAPIautocomplete" class="autocomplete-address-input" type="text" placeholder="Enter address">
+                        <input id="googlePlacesAPIautocomplete" class="autocomplete-address-input" type="text" placeholder="Enter address here...">
                     </div>
                     <div id="map-container" class="map-container">
-                        <button id="close-map" class="close-map-btn" >
-                            Close Map
-                        </button>
-                        <div id="map" class="map">
-                        </div>
+                        <button id="close-map" class="close-map-btn" >Close Map</button>
+                        <div id="map" class="map"></div>
                     </div>
+                    <!-- 📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌 -->
                 </section>
-            <!-- Google Places API END -->
-        <!--  -->
+                <section id="section4" class="section4 section-note">
+                    <!-- 📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️ -->
+                    <!-- note -->
+                    <input id="section4-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
+                    <p class="section-heading">Note</p>
+                    <textarea id="notes-textarea" class="notes-textarea" placeholder="Enter note here..."></textarea>
+                    <!-- 📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️ -->
+                </section>
+                <section id="section5" class="section5 section-save">
+                    <!-- 💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾 -->
+                    <!-- save -->
+                    <input id="section5-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
+                    <p class="section-heading">Section 5</p>
+                    <!-- 💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾 -->
+                </section>
+                <section id="section6" class="section6 section-search">
+                    <!-- 🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍 -->
+                    <!-- search -->
+                    <input id="section6-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
+                    <p class="section-heading">Section 6</p>
+                    <!-- 🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍 -->
+                </section>
 
-        <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
-            <section id="camera-section" class="camera-section ui-page">
-                <!-- <div id="camera-section" class="camera-section ui-page"> -->
-                    <video id="camera-stream" class="camera-stream" autoplay playsinline></video>
-                    <canvas id="photo-canvas" class="photo-canvas"></canvas><br>
-                    <button id="capture-btn" class="std-btn">Take Photo</button>
-                    <button id="save-btn" class="std-btn ui-page" style="visibility: hidden;">Save Photo</button>
-                <!-- </div> -->
-            </section>
-            <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
-            
-            <!-- 🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️ -->
-            <section id="notes-section" class="notes-section  ui-page"">
-                <!-- <textarea id="notes-input" placeholder="Enter notes relevant to this photo here..."></textarea><br> -->
-                <textarea id="notes-textarea" class="notes-textarea" placeholder="Enter notes here..."></textarea>
-                <button id="save-notes-btn" class="std-btn">Save Notes</button> 
-            </section>
-        <!-- 🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️🖋️ -->
 
-        <!-- 💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾 -->
-            <section id="save-section" class="save-section ui-page">
-                <h1>save me!</h1>
-            </section>
-        <!-- 💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾 -->
-
-        <!-- 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
-            <section id="search-section" class="search-section  ui-page">
-                <button id="search-btn" class="std-btn">Load Saved Photos & Details</button>
-                <div id="filter-text">Filter on:-<br>
-                    <input id="filter-text" type="text" placeholder="Enter filter text here...">
-                </div>
-                <div id="photos-container">
-                </div>
-            </section>
-        <!-- 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
-
-        <!-- ❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓ -->
-            <section id="filter-section" class="filter-section  ui-page">
-                <div id="filter-by-address" class="filter-by-address">
-                    <h4>Filter by Address</h4>
-                    <input type="text" id="address-filter-input" placeholder="Enter address to filter...">
-                    <button id="apply-address-filter-btn" class="std-btn">Apply Filter</button>
-                </div>
-                <div id="filter-by-notes" class="filter-by-notes">
-                    <h4>Filter by Notes</h4>
-                    <input type="text" id="notes-filter-input" placeholder="Enter notes to filter...">
-                    <button id="apply-notes-filter-btn" class="std-btn">Apply Filter</button>
-                </div>
-                <div id="filter-by-date" class="filter-by-date">
-                    <h4>Filter by Date</h4>
-                    <input type="date" id="date-filter-input">
-                    <button id="apply-date-filter-btn" class="std-btn">Apply Filter</button>
-                </div>
-                <div id="filter-by-week" class="filter-by-week">
-                    <h4>Filter by Week</h4>
-                    <input type="week" id="week-filter-input">
-                    <button id="apply-week-filter-btn" class="std-btn">Apply Filter</button>
-                </div>
-                <div id="filter-by-month" class="filter-by-month">
-                    <h4>Filter by Month</h4>
-                    <input type="month" id="month-filter-input">
-                    <button id="apply-month-filter-btn" class="std-btn">Apply Filter</button>
-                </div>
-            </section>
-        <!-- ❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓❓ -->
-
-        <!-- ⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️ -->
-            <section id="mobile-device-footer-menu" class="mobile-device-footer-menu">
-                <div id="footer-menu" class="footer-menu">
-                    <div id="footer-menu-menu" class="footer-button tooltip" role="button" tabindex="0" data-action="showMenu" data-tooltip="Menu.">
-                        <img id="footer-menu-menu-img" src="/_Menu.png">
-                    </div>
-                    <div id="footer-camera" class="footer-button tooltip" role="button" tabindex="0" data-action="showCamera" data-tooltip="Take a photo.">
-                        <img id="footer-camera-img" src="/_Camera.png">
-                    </div>
-                    <div id="footer-address" class="footer-button tooltip" role="button" tabindex="0" data-action="showAddress" data-tooltip="Photo location.">
-                        <img id="footer-address-img" src="/_Address.png">
-                    </div>
-                    <div id="footer-notes" class="footer-button tooltip" role="button" tabindex="0" data-action="showNotes" data-tooltip="Photo notes.">
-                        <img id="footer-notes-img" src="/_Note.png">
-                    </div>
-                    <div id="footer-save" class="footer-button tooltip" role="button" tabindex="0" data-action="saveToDB" data-tooltip="Save Photo.">
-                        <img id="footer-save-img" src="/_Save.png">
-                    </div>
-                    <div id="footer-search" class="footer-button tooltip" role="button" tabindex="0" data-action="showSearch" data-tooltip="Search for Photos.">
-                        <img id="footer-search-img" src="/_Search.png">
-                    </div>
-                </div>
-            </section>
-        <!-- ⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️ -->
-        
     </main>
 
     <footer>
+        <div id="footer-controls" class="footer-controls">
+            <img id="footer-control-home" src="/_Home.png" class="footer-control" data-section-number="0">
+            <img id="footer-control-menu" src="/_Menu.png" class="footer-control" data-section-number="1">
+            <img id="footer-control-camera" src="/_Camera.png" class="footer-control" data-section-number="2">
+            <img id="footer-control-address" src="/_Address.png" class="footer-control" data-section-number="3">
+            <img id="footer-control-notes" src="/_Note.png" class="footer-control" data-section-number="4">
+            <img id="footer-control-save" src="/_Save.png" class="footer-control" data-section-number="5">
+            <img id="footer-control-search" src="/_Search.png" class="footer-control" data-section-number="6">
+        </div>
     </footer>
+    <script>
+        // async function getModule(fileName) {
+        //     const response = await fetch(fileName);
+        //     if (!response.ok) {
+        //         throw new Error(`Failed to load module: ${fileName}`);
+        //     }
+        //     const html = await response.text();
+        //     return html;
+        // }
+        // async function loadScript(fileName, sectionId) {
+        //     const html = await getModule(fileName); // get HTML string from module
+        //     const section = document.getElementById(sectionId);
+        //     if (section) {
+        //         section.innerHTML = html;
+        //     }
+        // }
+        // loadScript("./src/sectionModules/googlePlacesAPI.mjs","section3");
+        function focusInput(sectionId) {
+            const input = document.querySelector(`#section${sectionId}-focus-on-activation`);
+            input?.focus();
+        }
+        function switchSection(index) {
+            console.log(current,index);
+            if (index === current) return;
+            const currentSection = document.getElementById(`section${current}`);
+            console.log(currentSection);
+            const nextSection = document.getElementById(`section${index}`);
+            currentSection.classList.remove('active');
+            setTimeout(() => {
+                nextSection.classList.add('active');
+                console.log(nextSection);
+                current = index;
+                focusInput(index);
+                localStorage.setItem("tas_sectionNumber",index);
+            }, 500); // Matches the CSS transition duration
+        }
+        document.getElementById("footer-controls").addEventListener("click",(ev) => {
+            // console.log(ev.target.id);
+            // console.log(ev.target.getAttribute("data-section-number"));
+            const sectionNumber = ev.target.getAttribute("data-section-number");
+            switchSection(sectionNumber);
+        });
+        // set current section = last active section START
+            let current = localStorage.getItem("tas_sectionNumber")? localStorage.getItem("tas_sectionNumber") : 0; // start-up at last active section
+            const el = document.getElementById(`section${current}`);
+            el.classList.add("active");
+            switchSection(current); // ensure last active section is viewable
+            focusInput(current); // set focus to active section
+        // set current section = last active section END
+        // set last session values START
+            const address = localStorage.getItem("tas_address")? localStorage.getItem("tas_address") : "";
+            document.getElementById("googlePlacesAPIautocomplete").value = address;
+            console.log(address);
+    </script>
 </body>
 </html>

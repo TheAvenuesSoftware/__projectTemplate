@@ -12,6 +12,7 @@ export function projectMJSisLoaded(){
     import { doAfterDOMandWindowLoad_globalLoginClient } from "./globalLogin_Client.mjs";
     import { sessionLogout } from "./globalSessions_Client.mjs";
     import { clientConfigSettings } from "./projectConfig_Client.mjs";
+    import { showCustomMessage } from "./globalUIpopups.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 const aDayNamesShort = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
@@ -162,7 +163,8 @@ const aMonthNamesLong = ["January","February","March","April","May","June","July
                     frameRate: { ideal: 30 }   // Smooth video at 30fps, will automatically scale back if necessary
                 };
                 try {
-                    const cameraContainer = document.getElementById("camera-section");
+                    // const cameraContainer = document.getElementById("camera-section");
+                    const cameraContainer = document.getElementById("section2");
                     const video = document.getElementById("camera-stream");
                     // const stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"} });                               
                     const stream = await navigator.mediaDevices.getUserMedia({ video: videoConstraints });
@@ -183,24 +185,26 @@ const aMonthNamesLong = ["January","February","March","April","May","June","July
                 }
             }
 
-            // ✅ Capture Photo & Draw to Canvas
-            function capturePhoto() {
-                const video = document.getElementById("camera-stream");
-                const canvas = document.getElementById("photo-canvas");
-                const context = canvas.getContext("2d");
+            // // ✅ Capture Photo & Draw to Canvas
+            // function capturePhoto() {
+            //     const video = document.getElementById("camera-stream");
+            //     const canvas = document.getElementById("photo-canvas");
+            //     const context = canvas.getContext("2d");
 
-                // canvas.width = video.videoWidth;
-                // canvas.height = video.videoHeight;
-                canvas.width = video.offsetWidth;
-                canvas.height = video.offsetHeight;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            //     // canvas.width = video.videoWidth;
+            //     // canvas.height = video.videoHeight;
+            //     canvas.width = video.offsetWidth;
+            //     canvas.height = video.offsetHeight;
+            //     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                // Hide camera, show canvas & save button
-                video.style.display = "none";
-                canvas.style.display = "block";
-                // document.getElementById("save-btn").style.display = "inline";
-                document.getElementById("save-btn").style.visibility = "visible";
-            }
+            //     // // Hide camera, show canvas & save button
+            //     // video.style.display = "none";
+            //     // canvas.style.display = "block";
+
+            //     // document.getElementById("save-btn").style.display = "inline";
+            //     document.getElementById("save-btn").style.visibility = "visible";
+
+            // }
 
             const imageCompression = 1; // imageCompression level for JPEG (0.1 = 10% quality, 1 = no imageCompression)
             // ✅ Compress Image Before Sending to Backend >>> Blob
@@ -266,10 +270,10 @@ const aMonthNamesLong = ["January","February","March","April","May","June","July
                 }
             }
 
-            // // ✅ Event Listeners
-            //     document.getElementById("capture-btn").addEventListener("click", capturePhoto);
-            //     document.getElementById("save-btn").addEventListener("click", savePhotoToDB);
-            //     document.getElementById("search-btn").addEventListener("click", loadPhotos);
+            // ✅ Event Listeners
+                document.getElementById("capture-btn").addEventListener("click", capturePhoto);
+                document.getElementById("save-btn").addEventListener("click", savePhotoToDB);
+                // document.getElementById("search-btn").addEventListener("click", loadPhotos);
 
             // ✅ Start Camera on Page Load
                 startCamera();
@@ -418,5 +422,26 @@ const aMonthNamesLong = ["January","February","March","April","May","June","July
                 }
             }
         // 🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️
+    }
+
+// ✅ Capture Photo & Draw to Canvas
+export function capturePhoto() {
+    const video = document.getElementById("camera-stream");
+    const canvas = document.getElementById("photo-canvas");
+    const context = canvas.getContext("2d");
+
+    // canvas.width = video.videoWidth;
+    // canvas.height = video.videoHeight;
+    canvas.width = video.offsetWidth;
+    canvas.height = video.offsetHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // // Hide camera, show canvas & save button
+    // video.style.display = "none";
+    // canvas.style.display = "block";
+
+    // document.getElementById("save-btn").style.display = "inline";
+    document.getElementById("save-btn").style.visibility = "visible";
+    showCustomMessage("Photo captured.");
 
 }

@@ -394,3 +394,95 @@ export async function getGlobalFooter() {
         resStatusHandler(response);
     }
 }
+
+function logAllEvents(target = document.body) {
+    const allEvents = [
+        "click", "dblclick", "mousedown", "mouseup", // "mousemove", "mouseenter", "mouseleave",
+        "keydown", "keyup", "keypress",
+        "input", "change", "focus", "blur", "submit", "reset",
+        "touchstart", "touchmove", "touchend",
+        "pointerdown", "pointerup", // "pointermove", 
+        "drag", "dragstart", "dragenter", "dragover", "dragleave", "drop", "dragend",
+        "animationstart", "animationend", "animationiteration",
+        "transitionend",
+        "copy", "cut", "paste",
+        "wheel", "scroll",
+        "contextmenu", "resize", "error", "load",
+        "compositionstart", "compositionupdate", "compositionend"
+    ];
+
+    allEvents.forEach(eventType => {
+        target.addEventListener(eventType, e => {
+            console.log(`EVENT:-\n[${eventType}] event fired on:\n`, e.target);
+        }, true); // useCapture: true to catch in capturing phase too
+    });
+
+    console.log("🎧 Event logging activated. Interact with the page to see event logs.");
+}
+// logAllEvents();
+
+// TEXTAREA CUSTOMISATIONS start
+    const textAreas = document.getElementsByTagName("textarea");
+    Array.from(textAreas).forEach((item, index) => {
+        item.addEventListener("input", () => {
+            item.style.height = "auto";
+            item.style.height = ( item.scrollHeight + 16 ) + "px";
+        });
+    });
+    // Array.from(textAreas).forEach((item, index) => {
+    //     item.addEventListener("keydown", (e) => {
+    //         if (e.key === "Tab") {
+    //             e.preventDefault();
+    //             const start = item.selectionStart;
+    //             const end = item.selectionEnd;
+    //             item.setRangeText("    ", start, end, "end");
+    //         }
+    //     });
+    // });
+    const SPACES = "    "; // Customize indentation width
+    Array.from(textAreas).forEach((textarea, index) => {
+        textarea.addEventListener("keydown", (e) => {
+            if (e.key === "Tab") {
+                e.preventDefault();
+
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const value = textarea.value;
+
+                // Get selected text
+                const selected = value.slice(start, end);
+                const before = value.slice(0, start);
+                const after = value.slice(end);
+
+                if (e.shiftKey) {
+                    // Outdent
+                    const pattern = new RegExp("^" + SPACES);
+                    const lines = selected.split("\n").map(line => line.replace(pattern, ""));
+                    const newText = lines.join("\n");
+
+                    textarea.value = before + newText + after;
+                    textarea.setSelectionRange(start, start + newText.length);
+                } else {
+                    // Indent
+                    if (start === end) {
+                        // No selection, insert SPACES
+                        textarea.setRangeText(SPACES, start, end, "end");
+                    } else {
+                        // Multiple lines
+                        const lines = selected.split("\n").map(line => SPACES + line);
+                        const newText = lines.join("\n");
+
+                        textarea.value = before + newText + after;
+                        textarea.setSelectionRange(start, start + newText.length);
+                    }
+                }
+            }
+        });
+        textarea.addEventListener("focus", (e) => {
+            textarea.value = localStorage.getItem("tas_note");
+        });
+        textarea.addEventListener("blur", (e) => {
+            localStorage.setItem("tas_note",textarea.value);
+        });
+    });
+// TEXTAREA CUSTOMISATIONS start

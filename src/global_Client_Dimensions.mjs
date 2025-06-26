@@ -68,7 +68,8 @@ export function getDims(el="",dim) {
     const bodyHeight = bodyRect.height;
     console.log(`Body: width ${bodyWidth.toFixed(0)}px × height ${bodyHeight.toFixed(0)}px`);
 
-    
+    return;
+        
     const elRect = el.getBoundingClientRect();
     const elWidth = elRect.width;
     const elHeight = elRect.height;

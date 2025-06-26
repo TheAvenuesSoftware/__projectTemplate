@@ -5,7 +5,11 @@
   --std-bckgrnd: rgba(#007bff,.5);
   --std-btn-bckgrnd:linear-gradient(135deg, #4A90E2, #1440AF);
   --std-btn-bckgrnd-hover:linear-gradient(135deg, #1440AF, #4A90E2);
+  --std-input-color:darkblue;
+  --std-input-bckgrnd-color:palegoldenrod;
   --off-screen-left:-5000px;
+  --off-screen-left:0px;
+  color: goldenrod;
   color: rgba(8, 200, 8, 0.4);
   color: rgba(67, 248, 67, 0);
 }
@@ -307,43 +311,46 @@ body {
   border: 2px solid green;
 }
 
-.autocomplete-address-container {
+.section-googleAPIs .autocomplete-address-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.autocomplete-address-container input {
-  color: darkblue;
-  background: var(--std-bckgrnd);
+.section-googleAPIs .autocomplete-address-container input {
+  color: var(--std-input-color);
+  background: var(--std-input-bckgrnd-color);
   width: 80%;
   margin: auto;
   padding: 5px;
 }
-
-.map-container {
-  display: none; /* Initially hidden */
+.section-googleAPIs .autocomplete-address-input {
+  background-color: red;
+}
+.section-googleAPIs .map-container {
   position: relative; /* Keeps it inside the document flow */
   width: 500px;
   height: 400px;
-  background: var(--std-bckgrnd);
-  padding: 2px;
+  background-color: black;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.75);
   margin: 20px auto; /* Centers it within a parent container */
 }
-.map-container .map {
+.section-googleAPIs .map-container .map {
   width: 100%;
   height: 100%;
+  background-color: palegoldenrod;
+  border-radius: 10px;
 }
-.map-container .close-map-btn {
+.section-googleAPIs .map-container .close-map-btn {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: var(--std-bckgrnd);
   color: white;
+  background-color: red;
   border: none;
   padding: 8px 12px;
   cursor: pointer;
-  z-index: 10;
 }
 
 .camera-section-OLD {
@@ -359,8 +366,7 @@ body {
   margin: 5px;
 }
 
-.camera-section {
-  position: fixed;
+.camera-container {
   top: 0;
   left: 0;
   max-width: 702px;
@@ -368,10 +374,8 @@ body {
   height: auto;
   background: rgba(0, 0, 0, 0.8);
   background: var(--std-bckgrnd);
-  z-index: -5000;
 }
-.camera-section .camera-stream {
-  position: relative;
+.camera-container .camera-stream {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -379,10 +383,8 @@ body {
   border: 5px solid red;
   background: #1440AF;
   background: var(--std-bckgrnd);
-  z-index: -5000;
 }
-.camera-section .photo-canvas {
-  position: relative;
+.camera-container .photo-canvas {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -390,7 +392,6 @@ body {
   border: 5px solid blue;
   background: #1440AF;
   background: var(--std-bckgrnd);
-  z-index: -5000;
 }
 
 .popup-overlay {
@@ -437,12 +438,12 @@ body {
   color: red;
 }
 
-#photos-container {
+.section-search #photos-container {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
 }
-#photos-container .photo-card {
+.section-search #photos-container .photo-card {
   border: 1px solid #ccc;
   padding: 10px;
   width: 250px;
@@ -450,13 +451,13 @@ body {
   background: var(--std-bckgrnd);
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
-#photos-container .photo {
+.section-search #photos-container .photo {
   max-width: 100%;
   height: auto;
   object-fit: cover;
   border-radius: 5px;
 }
-#photos-container p {
+.section-search #photos-container p {
   margin: 5px 0;
   font-size: 14px;
 }

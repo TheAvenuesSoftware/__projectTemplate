@@ -3,7 +3,7 @@
 }
 // floating menu icon START
     .m {
-        position: fixed; // Keeps it in view
+        position: absolute; // Keeps it in view
         top: 50px;
         right: 50px;
         display: flex;
@@ -15,7 +15,12 @@
         background: var(--std-bckgrnd);
         padding:2px;
         cursor: grab;
-        // z-index: 1000;
+        // iPhone specific START
+            -webkit-touch-callout: none; /* disables callout (like Save Image) */
+            -webkit-user-select: none;   /* prevents text/image selection */
+        // iPhone specific END
+        user-select: none;
+        z-index: 2;
     }
     .c {
         height: 30px;
@@ -66,119 +71,119 @@
     }
 // header bar START
 
-// classic menu START
-    .menu-section{
-        // 
-            // variables
-                $transition-speed: 0.5s;
-                $transition-speed-slower: 0.75s;
-                // $hover-background-color:paleturquoise;
-                $height:var(--screen_innerHeight_100);
-            // variables
-        // 
-        // height:$height;
-        width:110vw;
-        height:100vh;
-        position: fixed;
-        top:0;
-        left:var(--off-screen-left);
-        // background-color: white;
-        background: var(--std-bckgrnd);
-        // border-top:2px solid black;
-        // border-right:2px solid black;
-        // border-bottom:2px solid black;
-        list-style-type: none;
-        &.in-view{
-            left:-10px;
-            transition: left $transition-speed ease-in-out;
-        }
-        &.out-of-view{
-            left:var(--off-screen-left);
-            transition: left $transition-speed ease-in-out;
-        }
-        .classic-menu-container{
-            // position: relative;
-            border-top:2px solid black;
-            border-right:2px solid black;
-            border-bottom:2px solid black;
-            border-radius: 10px;
-            // .collapsed{
-            //     // background-color: white; // commented out
-            // }
-            .header-item{
-                font-weight: 900;
-                padding-top:5px;
-                padding-right:0px;
-                padding-bottom:5px;
-                padding-left:0px;
-                margin-left:16px; // the default standard font size is 16px
-                &:hover{
-                    // background-color: $hover-background-color;
-                    background: var(----std-bckgrnd-hover);
-                }
-            }
-            .menu-item{
-                padding:5px;
-                margin-left:40px !important;
-                &:hover{
-                    // background-color: $hover-background-color;
-                    background: var(----std-bckgrnd-hover);
-                }
-            }
-            .collapsed{
-                list-style-type: none;
-                // max-height: 0; // commented out
-                overflow: hidden;
-                opacity: 1; // changed from 0 to 1
-                transition: max-height $transition-speed ease-in-out, opacity $transition-speed ease-in-out;
-                // &.expanded {
-                //     // max-height: 500px; // commented out
-                //     // opacity: 1; // commented out
-                // }
-            }
-        }
-    }
-    // Responsive Styles START
-        @media screen and (max-width: 768px) {
-            // .menu-button {
-            //     font-size: 1.2rem;
-            //     // width: 100%;
-            // }
-            .classic-menu-container ul {
-                width: 100%;
-                padding: 10px;
-                // .nav-L1, .nav-L2, .nav-L3 {
-                //     // width: 100%;
-                //     padding: 12px;
-                //     font-size: 1rem;
-                // }
-            }
-            .classic-menu-container li {
-                width: 100%;
-                padding: 10px;
-            }
-        }
-        @media screen and (max-width: 414px) {  // iPhone-specific
-            // .menu-button {
-            //     font-size: 1rem;
-            //     // width: 100%;
-            // }
-            .classic-menu-container ul {
-                width: 100%;
-                padding: 10px;
-                // .nav-L1, .nav-L2, .nav-L3 {
-                //     // width: 100%;
-                //     padding: 15px;
-                //     font-size: 1rem;
-                // }
-            }
-            .classic-menu-container li {
-                width: 100%;
-                padding: 10px;
-            }
-        }
-    // Responsive Styles END
-// classic menu END
+// // classic menu START
+//     .menu-section{
+//         // 
+//             // variables
+//                 $transition-speed: 0.5s;
+//                 $transition-speed-slower: 0.75s;
+//                 // $hover-background-color:paleturquoise;
+//                 $height:var(--screen_innerHeight_100);
+//             // variables
+//         // 
+//         // height:$height;
+//         // width:110vw;
+//         // height:100vh;
+//         // position: fixed;
+//         // top:0;
+//         left:var(--off-screen-left);
+//         // background-color: white;
+//         // background: var(--std-bckgrnd);
+//         // border-top:2px solid black;
+//         // border-right:2px solid black;
+//         // border-bottom:2px solid black;
+//         list-style-type: none;
+//         &.in-view{
+//             left:-10px;
+//             transition: left $transition-speed ease-in-out;
+//         }
+//         &.out-of-view{
+//             left:var(--off-screen-left);
+//             transition: left $transition-speed ease-in-out;
+//         }
+//         .classic-menu-container{
+//             // position: relative;
+//             border-top:2px solid black;
+//             border-right:2px solid black;
+//             border-bottom:2px solid black;
+//             border-radius: 10px;
+//             // .collapsed{
+//             //     // background-color: white; // commented out
+//             // }
+//             .header-item{
+//                 font-weight: 900;
+//                 padding-top:5px;
+//                 padding-right:0px;
+//                 padding-bottom:5px;
+//                 padding-left:0px;
+//                 margin-left:16px; // the default standard font size is 16px
+//                 &:hover{
+//                     // background-color: $hover-background-color;
+//                     background: var(----std-bckgrnd-hover);
+//                 }
+//             }
+//             .menu-item{
+//                 padding:5px;
+//                 margin-left:40px !important;
+//                 &:hover{
+//                     // background-color: $hover-background-color;
+//                     background: var(----std-bckgrnd-hover);
+//                 }
+//             }
+//             .collapsed{
+//                 list-style-type: none;
+//                 // max-height: 0; // commented out
+//                 overflow: hidden;
+//                 opacity: 1; // changed from 0 to 1
+//                 transition: max-height $transition-speed ease-in-out, opacity $transition-speed ease-in-out;
+//                 // &.expanded {
+//                 //     // max-height: 500px; // commented out
+//                 //     // opacity: 1; // commented out
+//                 // }
+//             }
+//         }
+//     }
+//     // Responsive Styles START
+//         @media screen and (max-width: 768px) {
+//             // .menu-button {
+//             //     font-size: 1.2rem;
+//             //     // width: 100%;
+//             // }
+//             .classic-menu-container ul {
+//                 width: 100%;
+//                 padding: 10px;
+//                 // .nav-L1, .nav-L2, .nav-L3 {
+//                 //     // width: 100%;
+//                 //     padding: 12px;
+//                 //     font-size: 1rem;
+//                 // }
+//             }
+//             .classic-menu-container li {
+//                 width: 100%;
+//                 padding: 10px;
+//             }
+//         }
+//         @media screen and (max-width: 414px) {  // iPhone-specific
+//             // .menu-button {
+//             //     font-size: 1rem;
+//             //     // width: 100%;
+//             // }
+//             .classic-menu-container ul {
+//                 width: 100%;
+//                 padding: 10px;
+//                 // .nav-L1, .nav-L2, .nav-L3 {
+//                 //     // width: 100%;
+//                 //     padding: 15px;
+//                 //     font-size: 1rem;
+//                 // }
+//             }
+//             .classic-menu-container li {
+//                 width: 100%;
+//                 padding: 10px;
+//             }
+//         }
+//     // Responsive Styles END
+// // classic menu END
 
 // // project classic menu content START <<<--- scss scss scss scss scss scss scss scss scss scss
 //     .menu-section{

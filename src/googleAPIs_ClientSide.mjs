@@ -29,6 +29,14 @@ function initAutocomplete() {
     };
     var autocomplete = new google.maps.places.Autocomplete(addressInput, addressOptions);
 
+    // added by Donald START
+        addressInput.addEventListener("click",(ev) => {
+            setTimeout(()=>{
+                addressInput.setSelectionRange(0, addressInput.value.length);
+            },5)
+        })
+    // added by Donald END
+
     autocomplete.addListener("place_changed", function() {
         var place = autocomplete.getPlace();
         if (!place.geometry) {
@@ -38,8 +46,14 @@ function initAutocomplete() {
 
         var map = new google.maps.Map(document.getElementById("map"), {
             center: place.geometry.location,
-            zoom: 14
+            // ZOOM changed by Donald START
+                // zoom: 14
+                zoom: 16
+            // ZOOM changed by Donald END
         });
+        // added by Donald START
+            localStorage.setItem("tas_address",addressInput.value);
+        // added by Donald END
 
         new google.maps.Marker({
             position: place.geometry.location,
@@ -57,11 +71,15 @@ function initAutocomplete() {
         // // document.getElementById("map-container").style.display = "flex";
         // document.getElementById("map").style.maxWidth = "600px";
         // document.getElementById("map").style.height = "auto";
-        const mapContainer = document.getElementById("map-container");
-        // Make the container visible
-            mapContainer.style.display = "block";
-        // Ensure the map resizes properly
-            google.maps.event.trigger(map, "resize");
+
+        
+        // // Make the container visible
+        //     const mapContainer = document.getElementById("map-container");
+        //     mapContainer.style.display = "block";
+
+        // // Ensure the map resizes properly
+        //     google.maps.event.trigger(map, "resize");
+
         // // Optionally, re-center the map
         //     map.setCenter({ lat: -33.8688, lng: 151.2093 });
 
@@ -76,7 +94,6 @@ function initMap() {
         zoom: 12
     });
 };
-
 
 export async function getGooglePlacesAPIkey() {
     try {
