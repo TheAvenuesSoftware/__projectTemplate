@@ -353,20 +353,7 @@ body {
   cursor: pointer;
 }
 
-.camera-section-OLD {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: var(--std-bckgrnd);
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 5px;
-}
-
-.camera-container {
+.camera-container_OLD {
   top: 0;
   left: 0;
   max-width: 702px;
@@ -375,7 +362,7 @@ body {
   background: rgba(0, 0, 0, 0.8);
   background: var(--std-bckgrnd);
 }
-.camera-container .camera-stream {
+.camera-container_OLD .camera-stream_OLD {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -384,7 +371,7 @@ body {
   background: #1440AF;
   background: var(--std-bckgrnd);
 }
-.camera-container .photo-canvas {
+.camera-container_OLD .photo-canvas_OLD {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -392,6 +379,61 @@ body {
   border: 5px solid blue;
   background: #1440AF;
   background: var(--std-bckgrnd);
+}
+
+.video-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 300px;
+  width: 100%;
+  height: 200px;
+  height: 100%;
+  overflow: hidden;
+  border: 2px solid blue;
+  touch-action: none; /* prevent native gestures, enables custom touch handling */
+}
+.video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  user-select: none;
+  pointer-events: none;
+  border: 5px solid green;
+  background-color: #007BFF;
+  width: 100%;
+  height: 100%;
+  overflow: contain;
+}
+
+.controls-wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 400px;
+  margin-top: 10px;
+  z-index: 2;
+}
+.controls-wrapper label {
+  text-align: center;
+  font-size: 14px;
+}
+.controls-wrapper input {
+  text-align: center;
+  width: 90%;
+  max-width: 390px;
+}
+
+canvas {
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border: 1px solid blue;
 }
 
 .popup-overlay {

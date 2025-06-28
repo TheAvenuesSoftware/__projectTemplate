@@ -2,7 +2,7 @@
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
-console.log("LOADED:- googleAPIs_ClientSide.mjs is loaded",new Date().toLocaleString());
+console.log("LOADED:- projectGoogleAPIs_Client.mjs is loaded",new Date().toLocaleString());
 
 async function loadScript(src) {
     return new Promise((resolve, reject) => {

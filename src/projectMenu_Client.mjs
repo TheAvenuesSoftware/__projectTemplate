@@ -8,7 +8,7 @@ export function projectMenuClientJSisLoaded(){
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
     import { setCSSvariable, getCSSvariable, getTextWidth, getDims } from "./global_Client_Dimensions.mjs";
-    import { capturePhoto } from "./project_Client.mjs";
+    import { capturePhoto } from "./projectCamera_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 // set up draggable "M"enu button START 🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇🍇

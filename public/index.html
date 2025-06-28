@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>__projectTemplate</title>
 
-    <link rel="stylesheet" href="project.css">
+    <link rel="stylesheet" href="./project.css">
     <!-- <link rel="stylesheet" href="projectMenu.css"> -->
     <!-- <link rel="stylesheet" href="global.css"> -->
 
@@ -22,16 +22,17 @@
     <script type="module" src="./globalSessions_Client.mjs"></script>
 
     <script type="module" src="./global_Client.mjs"></script>
-    <script type="module" src="./global_Client_Dimensions.mjs"></script>
     <script type="module" src="./project_Client.mjs"></script>
+    <script type="module" src="./projectCamera_Client.mjs"></script>
     <script type="module" src="./projectMenu_Client.mjs"></script>
+    <script type="module" src="./globalUIpopups_Client.mjs"></script>
+    <script type="module" src="./projectGoogleAPIs_Client.mjs"></script>
     
-    <script type="module" src="./globalUIpopups.mjs"></script>
+    <script type="module" src="./global_Client_Dimensions.mjs"></script>
 
     <script type="module" src="./globalConfig_Client.mjs"></script>
     <script type="module" src="./projectConfig_Client.mjs"></script>
 
-    <script type="module" src="googleAPIs_ClientSide.mjs"></script>
 
     <!-- <script
     src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&v=weekly&region=AU"
@@ -190,11 +191,60 @@
                     <!-- 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒 -->
                 </section>
                 <section id="section2" class="section2 section-camera">
-                    <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
+                    <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
                     <!-- camera -->
                     <input id="section2-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
+<div id="video-container" class="video-container">
+    <video id="camera-stream" autoplay muted playsinline></video>
+    <!-- Controls UI -->
+    <div class="controls-wrapper">
+        <label>Zoom:<br>
+            <!-- <input type="range" id="zoom" min="0.2" max="4" step="0.05"> -->
+            <input type="range" id="zoom" min="0.0" max="4" step="0.025">
+        </label>
+        <button id="capture-still">Capture Image</button>
+    </div>
+</div>
+<div id="canvas-container" class="canvas-container" style="flex-direction: column; align-items: center;">
+    <canvas id="canvas"></canvas>
+    <button id="save-png" style="margin-top: 10px;">Save as PNG</button>
+</div>
+                    <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
+                </section>
+                <section id="section2_ChatGPT1" class="section2_ChatGPT1 section-camera_ChatGPT1">
+                    <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
+                    <!-- camera -->
+                    <input id="section2-focus-on-activation_ChatGPT1" style="position:fixed;left:-5000px;" tabindex="-1">
+                    <div class="video-container-wrapper_ChatGPT1">
+                        <div class="vertical-slider-container_ChatGPT1">
+                            <label for="panY_ChatGPT1">Pan Y
+                            </label>
+                            <input type="range" id="panY_ChatGPT1" min="0" max="100" step="1" value="50">
+                        </div>
+                        <div id="video-container_ChatGPT1" class="video-container_ChatGPT1">
+                            <!-- <video id="video" src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay muted playsinline loop></video> -->
+                            <video id="camera-stream_ChatGPT1" class="camera-stream_ChatGPT1" autoplay playsinline></video>
+                        </div>
+                    </div>
+                    <div class="controls-wrapper_ChatGPT1">
+                        <label for="zoom_ChatGPT1">Zoom:
+                            <!-- <input type="range" id="zoom" min="1" max="4" step="0.1" value="1"> -->
+                            <input type="range" id="zoom_ChatGPT1" min="0.2" max="4" step="0.05" value="1">
+                        </label>
+                        <label for="panX_ChatGPT1">Pan X
+                            <input type="range" id="panX_ChatGPT1" min="0" max="100" step="1" value="50">
+                        </label>
+                        <button id="capture-still_ChatGPT1">Capture View</button>
+                    </div>
+                    <canvas id="photo-canvas_ChatGPT1" class="photo-canvas_ChatGPT1" width="300" height="200"></canvas>
+                    <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
+                </section>
+                <section id="section2_OLD" class="section2_OLD section-camera_OLD">
+                    <!-- ❌📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
+                    <!-- camera -->
+                    <input id="section2-focus-on-activation_OLD" style="position:fixed;left:-5000px;" tabindex="-1">
                     <!-- FULL SCREEN start -->
-                    <div id="camera-container" class="camera-container">
+                    <div id="camera-container_OLD" class="camera-container_OLD">
                         <!--  -->
                             <!-- floating camera menu div START -->
                                 <div id="m" class="m">
@@ -203,13 +253,13 @@
                                 </div>
                             <!-- floating camera menu div END -->
                         <!--  -->
-                        <video id="camera-stream" class="camera-stream" autoplay playsinline></video>
-                        <canvas id="photo-canvas" class="photo-canvas"></canvas><br>
-                        <button id="capture-btn" class="std-btn">Take Photo</button>
-                        <button id="save-btn" class="std-btn" style="visibility: hidden;">Save Photo</button>
+                        <video id="camera-stream_OLD" class="camera-stream_OLD" autoplay playsinline></video>
+                        <canvas id="photo-canvas_OLD" class="photo-canvas_OLD"></canvas><br>
+                        <button id="capture-btn_OLD" class="std-btn">Take Photo</button>
+                        <button id="save-btn_OLD" class="std-btn" style="visibility: hidden;">Save Photo</button>
                     </div>
                     <!-- FULL SCREEN end -->
-                    <!-- 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
+                    <!-- ❌📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
                 </section>
                 <section id="section3" class="section3 section-googleAPIs">
                     <!-- 📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌 -->

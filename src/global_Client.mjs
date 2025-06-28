@@ -7,7 +7,7 @@ export function globalClientJSisLoaded(){
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
-    import {clientConfigSettings} from "./projectConfig_Client.mjs";
+    import { clientConfigSettings } from "./projectConfig_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 // fetch responseHandler
