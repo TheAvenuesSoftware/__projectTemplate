@@ -147,4 +147,14 @@ globalRouter.post("/getGlobalFooter", (req, res) => {
     // res.send(myHtml);
 });
 
+// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+    globalRouter.post("/getProjectFunctionsMap", (req, res) => {
+        console.log(`${trace()} globalRouter.post("/getProjectFunctionsMap") called.`);
+        const projFunc = JSON.parse(fs.readFileSync("src/global_Client__projectFunctions.JSON", "utf8")).actions;
+        console.log(`🪣 ${trace()} 📖 Project functions:-\n`,projFunc);
+        res.send({message:`Project Functions Map retrieved successfully.`,actions:projFunc});
+    });
+//    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
+
+
 export default globalRouter;

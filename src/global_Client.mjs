@@ -1,14 +1,80 @@
 const consoleLog = true;
 
-console.log("LOADED:- globalClient.mjs is loaded",new Date().toLocaleString());
+console.log("LOADED:- global_Client.mjs is loaded",new Date().toLocaleString());
 export function globalClientJSisLoaded(){
     return true;
 }
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
+    import { getGooglePlacesAPIkey } from "./projectGoogleAPIs_Client.mjs";
+    import { doAfterDOMandWindowLoad__globalLogin_ClientMJS } from "./globalLogin_Client.mjs";
+    // import { sessionLogout } from "./globalSessions_Client.mjs";
     import { clientConfigSettings } from "./projectConfig_Client.mjs";
+    // import { showCustomMessage } from "./globalUIpopups_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
+
+    // console.log(actions);
+    // const proAct = actions;
+
+    document.addEventListener("DOMContentLoaded",async () => {
+    //1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ START
+        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ global_Client.',Date.now());}
+
+        window.addEventListener("load",async () => {
+        // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
+            if(consoleLog===true){console.log('Window load successsful ~ global_Client.',Date.now());}
+            
+            await new Promise(resolve => setTimeout(resolve, 500)); // Simulated async process
+            await doAfterDOMandWindowLoad__globalLogin_ClientMJS();
+
+            await new Promise(resolve => setTimeout(resolve, 500)); // Simulated async process
+            await doAfterDOMandWindowLoad__global_ClientMJS();
+
+        });
+        // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ END
+    });
+    // 1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ END
+
+// doAfterDOMandWindowLoad_projectClient()
+// 1️⃣🔹1️⃣ START
+    async function doAfterDOMandWindowLoad__global_ClientMJS(){
+
+        if(consoleLog===true){console.log('doAfterDOMandWindowLoad__project_ClientMJS() launched.',Date.now());}
+
+        getGooglePlacesAPIkey();
+
+    }
+// 1️⃣🔹1️⃣ END
+
+// async function getProjectFunctionsMap(){
+//     try {
+//         const response = await fetch('/globalRouter/getProjectFunctionsMap', {
+//             method: 'POST',                // Specifies a POST request
+//             mode: 'cors',                  // Ensures cross-origin requests are handled
+//             cache: 'no-cache',             // Prevents caching issues
+//             credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+//             headers: {
+//                 'Content-Type': 'application/json',  // Sets content type
+//                 // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
+//                 // 'Accept': 'application/json',        // Expect JSON response
+//             },
+//             body: JSON.stringify({          // Converts object to JSON for request
+//                 POSTrequest: "getProjectFunctionsMap"
+//             })
+//         });
+//         console.log(response);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+//         const result = await response.json();
+//         console.log('🟢 Request Success:', result);
+//         return result;  // Return response data
+//     } catch (error) {
+//         console.error('🔴 Request Failed:', error);
+//         return null;
+//     }
+// }
 
 // fetch responseHandler
     export function fetchResponseHandler(res) {
@@ -366,7 +432,7 @@ export async function getGlobalFooter() {
             method: 'POST',                // Specifies a POST request
             mode: 'cors',                  // Ensures cross-origin requests are handled
             cache: 'no-cache',             // Prevents caching issues
-            credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+            // credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
             headers: {
                 'Content-Type': 'application/json',  // Sets content type
                 // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)

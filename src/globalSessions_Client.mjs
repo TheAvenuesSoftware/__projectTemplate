@@ -1,11 +1,99 @@
 const consoleLog = true;
 
-console.log("LOADED:- globalSessionsClient.mjs is loaded",new Date().toLocaleString());
+console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleString());
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
-    // import { clientConfigSettings } from "./projectConfig_Client.mjs";
+    import { clientConfigSettings } from "./projectConfig_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
+
+    document.addEventListener("DOMContentLoaded",async () => {
+    //1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ START
+        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ globalSessions_Client.',Date.now());}
+
+        window.addEventListener("load",async () => {
+        // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
+            if(consoleLog===true){console.log('Window load successsful ~ globalSessions_Client.',Date.now());}
+
+            // dynamically set fetch "credentials mode" START 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+                const fetchUrl = "/establish-session";
+                const fetchOptions = {
+                        method: 'POST',
+                        mode: 'cors',                  // Ensures cross-origin requests are handled
+                        cache: 'no-cache',             // Prevents caching issues
+                        credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+                        headers: {
+                            'Content-Type': 'application/json',  // Sets content type
+                            // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
+                            // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
+                        },
+                        body: JSON.stringify({          // Converts object to JSON for request
+                            sessionCheck:"retrieve 'fetch() credentials:' mode from server"
+                        })
+                    }
+                // if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
+                try {
+                    const response = await fetch(fetchUrl, fetchOptions);                
+                    // if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
+                    // const data = await response.json();
+                    const jso = await response.json(); // converts fetch response from JSON to a JSO
+                    console.log('🟢 Response received:-\n', JSON.stringify(jso,null,2));
+                    if(jso.sessionEstablished===true){
+                        clientConfigSettings.CLIENT_SESSION_CREDENTIALS = "include";
+                        console.log("Session active?", jso.sessionEstablished,"  Session user name:", jso.sessionName,"  Credentials mode:",clientConfigSettings.CLIENT_SESSION_CREDENTIALS);
+                    }else{
+                        clientConfigSettings.CLIENT_SESSION_CREDENTIALS = "omit";
+                        console.log("Session active?", jso.sessionEstablished,"  Session user name:", jso.sessionName,"  Credentials mode:",clientConfigSettings.CLIENT_SESSION_CREDENTIALS);
+                    }
+                } catch (error) {
+                    if(consoleLog===true){console.error("Error sending POST request:", error.message);}
+                }
+            // dynamically set fetch credentials mode END 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+
+            // // idle tracking START 🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸
+            //     let lastActivity = Date.now();
+            //     // const updateActivity = () => {
+            //     function updateActivity(){
+            //         lastActivity = Date.now();
+            //         console.log('🟢 User activety detected.',(new Date()).toLocaleString());
+            //     };
+            //     document.addEventListener("mousemove", updateActivity);
+            //     document.addEventListener("keydown", updateActivity);
+            //     document.addEventListener("click", updateActivity);
+            //     const heartBeatInterval = clientConfigSettings.CLIENT_SESSION_HEARTBEAT_INTERVAL;
+            //     const logoutAfter = clientConfigSettings.CLIENT_SESSION_IDLE_LOGOUT_AFTER;
+            //     console.log('heartBeatInterval:- ',heartBeatInterval,'logoutAfter:- ',logoutAfter)
+            //     const idleTracking_IntervalId = setInterval(async() => {
+            //         if (Date.now() - lastActivity < logoutAfter * 60 * 1000) { // Active in last 15 min?
+            //             try {
+            //                 await fetch('/heartbeat-session-extension', {
+            //                         method: 'POST', 
+            //                         credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+            //                         headers: { 'Content-Type': 'application/json' }
+            //                     })
+            //                     .then(response => response.json())
+            //                     .then(data => {
+            //                         console.log('🟢 Heartbeat:', data)
+            //                     });
+            //                     // .catch(error => console.error('🔴 Heartbeat error:', error));
+            //             } catch (error) {
+            //                 console.log(`/heartbeat-session-extension error:-`,error);
+            //             }
+            //         } else {
+            //             console.log('🔴 User inactive, consider logging out.');
+            //             // Trigger logout function here
+            //                 document.removeEventListener("mousemove", updateActivity);
+            //                 document.removeEventListener("keydown", updateActivity);
+            //                 document.removeEventListener("click", updateActivity);
+            //                 clearInterval(idleTracking_IntervalId); 
+            //                 sessionLogout(); //in globalSessionsClient.mjs
+            //         }
+            //     }, heartBeatInterval * 60 * 1000); // Runs every 5 min
+            // // idle tracking END🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸
+        });
+        // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ END
+    });
+    // 1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ END
 
 // logout
     export async function sessionLogout(){
@@ -38,11 +126,15 @@ console.log("LOADED:- globalSessionsClient.mjs is loaded",new Date().toLocaleStr
                     el.style.opacity = "0";
                     setTimeout(() => el.remove(), 500);
                 });
-                alert("🟢 logout successful.");
                 console.log("🟢 logout successful.");
-                document.getElementById("sign-in-out-button").innerHTML = "Log In";
-                document.getElementById("sign-in-out-button").classList.remove("sign-out-button");
-                document.getElementById("sign-in-out-button").classList.add("sign-in-button");
+                document.getElementById("padlock-icon").src="__padlock_locked.png";
+                document.getElementById("sign-in-out-container").setAttribute("data-status","signed-out");
+                document.getElementById("sign-in-out-container").title = "Click to sign in.";
+                alert("🟢 logout successful.");
+
+                // document.getElementById("sign-in-out-button").innerHTML = "Log In";
+                // document.getElementById("sign-in-out-button").classList.remove("sign-out-button");
+                // document.getElementById("sign-in-out-button").classList.add("sign-in-button");
             }else{
                 document.querySelectorAll('.overlay').forEach(el => {
                     el.style.transition = "opacity 0.5s";
@@ -51,9 +143,9 @@ console.log("LOADED:- globalSessionsClient.mjs is loaded",new Date().toLocaleStr
                 });
                 alert("🔴 logout failed, please try again");
                 console.log("🔴 logout failed, please try again");
-                document.getElementById("sign-in-out-button").innerHTML = "Log Out";
-                document.getElementById("sign-in-out-button").classList.remove("sign-in-button");
-                document.getElementById("sign-in-out-button").classList.add("sign-out-button");
+                // document.getElementById("sign-in-out-button").innerHTML = "Log Out";
+                // document.getElementById("sign-in-out-button").classList.remove("sign-in-button");
+                // document.getElementById("sign-in-out-button").classList.add("sign-out-button");
             }
         }catch (error){
             alert("🔴 Fatal error logging out!");

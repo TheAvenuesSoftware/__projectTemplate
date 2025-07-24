@@ -1,3 +1,5 @@
+const consoleLog = true;
+
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
@@ -53,6 +55,7 @@ function initAutocomplete() {
         });
         // added by Donald START
             localStorage.setItem("tas_address",addressInput.value);
+            document.getElementById("save_address").textContent = addressInput.value;
         // added by Donald END
 
         new google.maps.Marker({
@@ -96,8 +99,26 @@ function initMap() {
 };
 
 export async function getGooglePlacesAPIkey() {
+
     try {
-        const response = await fetch('/googleAPIsRouter/google-places-api-key');
+        const fetchUrl = "/googleAPIsRouter/google-places-api-key";
+        const fetchOptions = {
+            method: 'POST',
+            mode: 'cors',                  // Ensures cross-origin requests are handled
+            cache: 'no-cache',             // Prevents caching issues
+            // NOT YET SET >>> credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+            headers: {
+                'Content-Type': 'application/json',  // Sets content type
+                // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
+                // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
+            },
+            body:JSON.stringify({
+                getGoogleAPIkey:'Get Google API key'
+            })
+        }
+        if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
+        const response = await fetch(fetchUrl, fetchOptions);
+        // const response = await fetch('/googleAPIsRouter/google-places-api-key');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }

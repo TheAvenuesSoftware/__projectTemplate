@@ -2,12 +2,12 @@
 // <!-- expand all       Ctrl + k + j -->
 // <!-- format           Alt + Shift + F (USE WITH CAUTION)-->
 // <!-- word wrap toggle Alt + z -->
-// - Variables & Functions: Use camelCase (e.g., getUserName(), totalAmount)
-// - Classes & Constructors: Use PascalCase (e.g., UserModel, DataProcessor)
-// - Constants: Use UPPER_CASE_SNAKE_CASE (e.g., API_KEY, MAX_LIMIT)
-// - Modules: Often kebab-case for filenames (e.g., user-profile.mjs)
-// - Event & Callback Handlers: Prefix with on (e.g., onClick, onDataReceived)
-// - Private Variables: Some use leading _ to indicate private properties (_hiddenProperty)
+// ~ Variables & Functions: Use camelCase (e.g., getUserName(), totalAmount)
+// ~ Classes & Constructors: Use PascalCase (e.g., UserModel, DataProcessor)
+// ~ Constants: Use UPPER_CASE_SNAKE_CASE (e.g., API_KEY, MAX_LIMIT)
+// ~ Modules: Often kebab-case for filenames (e.g., user-profile.mjs)
+// ~ Event & Callback Handlers: Prefix with on (e.g., onClick, onDataReceived)
+// ~ Private Variables: Some use leading _ to indicate private properties (_hiddenProperty)
 
 let myDate;
 myDate = new Date();
@@ -21,17 +21,17 @@ console.log(("🔰").repeat(60));
 
 const consoleLog = false;
 
-// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 1️⃣ import statements
     // // axios
     //     import axios from 'axios';
-    // OS - operatingSystem
+    // OS ~ operatingSystem
         import os from 'os';
-    // FS - fileSystem
+    // FS ~ fileSystem
         import fs from 'fs';
         // import fs from 'fs/promises';
-            // - fs.writeFile from 'fs' expects a callback (cb), which is why you're getting the "cb argument must be of type function" error.
-            // - The 'fs/promises' version works natively with async/await, so no callback is needed.
+            // ~ fs.writeFile from 'fs' expects a callback (cb), which is why you're getting the "cb argument must be of type function" error.
+            // ~ The 'fs/promises' version works natively with async/await, so no callback is needed.
     // PATH
         import path from 'path';
         import { fileURLToPath } from 'url';
@@ -79,7 +79,7 @@ const consoleLog = false;
                 // });
                 // console.log(cleanInput); // Only keeps `<p>`, `<strong>`, and `<a>`
     // ROUTERS
-        import dbRouter from "./src/SQLite_ServerSide.mjs";
+        import dbRouter from "./src/projectSQLite_Server.mjs";
         import loginRouter from './src/globalLogin_Server.mjs';
         import globalRouter from './src/global_Server.mjs'; 
         import projectRouter from './src/project_Server.mjs';
@@ -125,10 +125,11 @@ const consoleLog = false;
         }     
     // }
     // checkImports();
+
 if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(trace());}
 if(consoleLog===true){console.log(("<>").repeat(60));}
-// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 2️⃣ environment configuration
     // .ENV;  .MJS
         // globalServer.env
@@ -141,7 +142,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                     // if(consoleLog===true){console.log(trace(),`\n${envPath}:-\n`, result.parsed);}  
                     const envVar = result.parsed;
                     Object.keys(envVar).forEach(key => {
-                        // console.log(`key:- ${key} :- ${envVar[key]}`);  //  DO NOT LOG - SECRET INDO !!!
+                        // console.log(`key:- ${key} :- ${envVar[key]}`);  //  DO NOT LOG ~ SECRET INDO !!!
                         if(consoleLog===true){console.log(`      key:- ${key}`);}
                     }); 
                     console.log(`${trace()}🟢 Global environment variables loaded.`);
@@ -162,7 +163,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                     // if(consoleLog===true){console.log(trace(),`\n${envPath}:`, result);}                
                     const envVar = result.parsed;
                     Object.keys(envVar).forEach(key => {
-                        // console.log(`key:- ${key} :- ${envVar[key]}`);  //  DO NOT LOG - SECRET INDO !!!
+                        // console.log(`key:- ${key} :- ${envVar[key]}`);  //  DO NOT LOG ~ SECRET INDO !!!
                         if(consoleLog===true){console.log(`      key:- ${key}`);}
                     }); 
                     console.log(`${trace()}🟢 Project environment variables loaded.`);
@@ -176,7 +177,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(trace());}
 if(consoleLog===true){console.log(("<>").repeat(60));}
-// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 3️⃣ create express app AND middleware
     const app = express();
     app.use(express.json());
@@ -186,6 +187,8 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
     app.use(express.urlencoded({ limit: "10mb", extended: true })); // ✅ Parses text fields from FormData
     app.use(cookieParser()); // Enables reading of cookies
     app.use(express.raw({ type: "image/jpeg", limit: "10mb" })); // ✅ Captures Blob data
+
+    app.use('/tinymce', express.static(__dirname + '/node_modules/tinymce'));
 
     // const staticFolders = ['config', 'db', 'media', 'public', 'src', 'styles'];
     // try{
@@ -278,7 +281,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                 // const sessionKey = crypto.randomBytes(32).toString("hex");
                 const sessionKey = process.env.APP_SESSION_KEY || crypto.randomBytes(32).toString("hex");
                 console.log(`${trace()}🔒✅ sessionKey created.`); // DON'T LOG THE KEY!!!  KEEP IT SECURE!!!
-            // express-session - set up the Express session middleware
+            // express-session ~ set up the Express session middleware
 
                 if (process.env.APP_SERVER_MODE_DEVELOPMENT === "true") {
                     console.log(`${trace()}🔒✅ Session management set up for Development commenced.`);
@@ -299,12 +302,12 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 
                                     secure: false, // Allow HTTP in development
 
-                                // httpOnly: true,   // Helps mitigate XSS - set to false for development, true for production
+                                // httpOnly: true,   // Helps mitigate XSS ~ set to false for development, true for production
                                     httpOnly: true,
 
-                                //     - 'strict' → Only sends the cookie for same-site requests (highest security). Prevents cross-site cookie access for security.
-                                //     - 'lax' → Sends the cookie for same-site requests + top-level navigation (default).
-                                //     - 'none' → Allows cross-site cookies but requires Secure: true (useful for APIs).
+                                //     ~ 'strict' → Only sends the cookie for same-site requests (highest security). Prevents cross-site cookie access for security.
+                                //     ~ 'lax' → Sends the cookie for same-site requests + top-level navigation (default).
+                                //     ~ 'none' → Allows cross-site cookies but requires Secure: true (useful for APIs).
                                     // if sameSite is set to none, secure must be set to true
                                     sameSite: "lax",
 
@@ -332,12 +335,12 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 
                                     secure: true, // Requires HTTPS in production
 
-                                // httpOnly: true,   // Helps mitigate XSS - set to false for development, true for production
+                                // httpOnly: true,   // Helps mitigate XSS ~ set to false for development, true for production
                                     httpOnly: true,
 
-                                    //     - 'strict' → Only sends the cookie for same-site requests (highest security). Prevents cross-site cookie access for security.
-                                    //     - 'lax' → Sends the cookie for same-site requests + top-level navigation (default).
-                                    //     - 'none' → Allows cross-site cookies but requires Secure: true (useful for APIs).
+                                    //     ~ 'strict' → Only sends the cookie for same-site requests (highest security). Prevents cross-site cookie access for security.
+                                    //     ~ 'lax' → Sends the cookie for same-site requests + top-level navigation (default).
+                                    //     ~ 'none' → Allows cross-site cookies but requires Secure: true (useful for APIs).
                                         // if sameSite is set to none, secure must be set to true
                                     sameSite: "strict",
 
@@ -353,11 +356,12 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(trace());}
 if(consoleLog===true){console.log(("<>").repeat(60));}
-// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 app.use((req, res, next) => {
-  console.log("Headers:", req.headers);
-  console.log("Body:", req.body);
-  next();
+    console.log("Headers:-\n", req.headers);
+    console.log(`URL:-\n`, req.url);
+    console.log("Body:-\n", req.body);
+    next();
 });
 // 🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪
 // AUTHENTICATE USER
@@ -448,7 +452,7 @@ app.use((req, res, next) => {
                 console.log(`🪣 ${trace()}🔒🔴 Missing user details — authentication denied!`);
                 // console.log(`🪣 ${trace()}🔒🔴 req.headers.cookie:-`,req.headers.cookie);
                 // res.status(401).send("Unauthorized");
-                res.send({message:`Missing user details — authentication denied!`,status:false});
+                res.send({message:`Missing user details ~ authentication denied!`,status:false});
                 res.end();
             }
         console.log(("🔒").repeat(60));
@@ -459,7 +463,7 @@ app.use((req, res, next) => {
 if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(trace());}
 if(consoleLog===true){console.log(("<>").repeat(60));}
-// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 5️⃣ MOUNT EXTERNAL ROUTERS
         // function mountRouters() {
             try{
@@ -469,7 +473,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                 app.use("/projectRouter", projectRouter);
                 app.use("/sessionsRouter", sessionsRouter);
                 app.use("/googleAPIsRouter", googleAPIsRouter);
-                console.log(`${trace()}🟢 Routers mounted - must be done after Authentication is setup.`);
+                console.log(`${trace()}🟢 Routers mounted ~ must be done after Authentication is setup.`);
             }
             catch (error) {
                 console.log(error);
@@ -480,7 +484,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(trace());}
 if(consoleLog===true){console.log(("<>").repeat(60));}
-// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 6️⃣ routes AND business logic
     // log REQuest START
         async function logREQuest(req){
@@ -580,7 +584,8 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(trace());}
 if(consoleLog===true){console.log(("<>").repeat(60));}
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-app.get("/session-check", (req, res) => {
+app.post("/establish-session", (req, res) => {
+// app.get("/establish-session", (req, res) => {
 if (req.session) {
     console.log(`🪣 ${trace()}🔒🟢 req.session:-\n`,req.session);
     // update session with authenticated user details
@@ -594,15 +599,15 @@ if (req.session) {
     req.session.save(err => {
         if (err) {
             console.error(`${trace()}🔒🔴 Failed to save session:`, err);
-            res.json({ sessionExists: true, sessionUpdated: false });
+            res.json({ sessionEstablished: true, sessionName: "error saving req.session.user"});
         } else {
             console.log(`${trace()}🔒🟢 Session saved successfully.${JSON.stringify(req.session,null,2)}`);
-            res.json({ sessionExists: true, sessionUpdated: true });
+            res.json({ sessionEstablished: true, sessionName: req.session.user.name});
         }
     });
 } else {
     console.log(`🪣 ${trace()}🔒🔴 req.session:-\n`,req.session);
-    res.json({ sessionExists: false });
+    res.json({ sessionEstablished: false,sessionName: "error creating session" });
   }
 });
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -680,8 +685,8 @@ setInterval(() => {
     // if(consoleLog===true){console.log(`Heap Used:  ${formatMemoryBar(memory.heapUsed, 100000000)} ${memory.heapUsed / 1024 / 1024} MB`);}
     console.log(("~~").repeat(55));
 }, 1000 * 60 * 60);
-// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
-// 7️⃣ start server
+// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+// 7️⃣ start server START
     // Start the server
         const PORT = process.env.APP_PORT;
         const DEV_IP_ADDRESS = process.env.APP_DEV_IP_ADDRESS;
@@ -703,3 +708,5 @@ setInterval(() => {
             // console.log(`🎾 Server is running on port # ${process.env.APP_PORT}${(" ").repeat(118-(`🎾 Server is running on port # ${process.env.APP_PORT}`).length)}🎾`);
             console.log(("🎾").repeat(60));
         });
+// 7️⃣ start server END
+//    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹

@@ -12,7 +12,7 @@ export function globalSessionsServerMJSisLoaded(){
     import { trace } from "./global_Server.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
-    // LOGOUT
+    // LOGOUT 🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️
         sessionsRouter.post("/sessionLogout", (req, res) => {
             req.session.destroy((err) => {
                 if (err){
@@ -26,7 +26,7 @@ export function globalSessionsServerMJSisLoaded(){
             });
         });
 
-    // SESSION REGENERATION
+    // SESSION REGENERATION ®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️
         sessionsRouter.post("/sessionRegen", async (req, res) => {
             // regenerate session & add security code to regenerated session START
                 const sessionID_preRegen = req.sessionID;

@@ -4,13 +4,16 @@
         "/heartbeat-session-extension"
     ],
     "startup_URLs": [
+        "/establish-session",
+        "/dbRouter/filter-by",
+        "/dbRouter/add-new-record",
+        "/globalRouter/getProjectFunctionsMap",
         "/globalRouter/getGlobalFooter",
         "/loginRouter/isLoginRequired",
         "/loginRouter/fileExists",
         "/loginRouter/emailCode",
-        "/sessionsRouter/sessionRegen",
         "/loginRouter/loginCodeSubmit",
-        "/session-check",
+        "/sessionsRouter/sessionRegen",
         "/googleAPIsRouter/google-places-api-key"
     ]
 }

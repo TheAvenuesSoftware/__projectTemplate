@@ -1,9 +1,12 @@
   const video = document.getElementById('camera-stream');
   const zoomInput = document.getElementById('zoom');
   const canvas = document.getElementById('canvas');
+  const canvasII = document.getElementById('canvasII');
   const ctx = canvas.getContext('2d');
+  const ctxII = canvasII.getContext('2d');
   const container = document.getElementById('video-container');
   const canvasContainer = document.getElementById('canvas-container');
+  const canvasContainerII = document.getElementById('canvas-container-II');
 
   let zoom = 1;
   let minZoom = 1;
@@ -83,7 +86,18 @@
     canvas.width = cw;
     canvas.height = ch;
 
+    canvasII.width = cw;
+    canvasII.height = ch;
+
     ctx.drawImage(
+      video,
+      offsetX, offsetY,
+      cropWidth, cropHeight,
+      0, 0,
+      cw, ch
+    );
+
+    ctxII.drawImage(
       video,
       offsetX, offsetY,
       cropWidth, cropHeight,
@@ -93,6 +107,9 @@
 
     canvasContainer.style.display = 'flex';
     canvasContainer.scrollIntoView({ behavior: 'smooth' });
+
+    canvasContainerII.style.display = 'flex';
+    canvasContainerII.scrollIntoView({ behavior: 'smooth' });
   });
 
   container.addEventListener("touchstart", e => {
@@ -185,3 +202,15 @@
   });
 
   startCamera();
+
+  function stopCamera() {
+    // - getTracks() returns all media tracks (like audio and video).
+    // - Calling .stop() on each track halts the hardware capture (i.e. stops the webcam).
+    // - stream = null helps you clear the reference.
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+      console.log("Camera stopped.");
+    }
+  }
+  // stopCamera();

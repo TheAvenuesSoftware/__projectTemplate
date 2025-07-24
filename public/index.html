@@ -9,10 +9,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>__projectTemplate</title>
+
+    <!-- BEST PRACTICE SECTION of <head></head> ELEMENT start -->
+    <!-- 🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕 -->
+        <!-- ✅ Basic Setup -->
+            <!--  -->
+                <meta charset="UTF-8">
+            <!--  -->
+                <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+            <!--  -->
+                <title>__projectTemplate</title>
+            <!--  -->
+                <!-- <meta name="description" content="Your concise, compelling page summary goes here."> -->
+                <meta name="description" content="Safe travelling, information for Australian Ride Share riders and drivers.">
+            <!--  -->
+                <link rel="canonical" href="https://yourdomain.com/current-page">
+
+        <!-- 🌐 SEO & Social Sharing -->
+            <!--  -->
+                <!-- Use meta robots tags only when you want to restrict the way GOOGLE crawls a page; -->
+                <meta name="robots" content="index, follow">
+            <!--  -->
+                <meta property="og:title" content="__projectTemplate">
+                <meta property="og:description" content="Your compelling Open Graph summary.">
+                <meta property="og:image" content="https://yourdomain.com/images/preview.jpg">
+                <meta property="og:url" content="https://yourdomain.com/current-page">
+            <!--  -->
+                <meta name="twitter:card" content="summary_large_image">
+
+        <!-- 🔧 PWA Setup -->
+            <link rel="manifest" href="/manifest.json">
+            <meta name="mobile-web-app-capable" content="yes">
+            <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+            <!-- Optional for iOS -->
+                <meta name="apple-mobile-web-app-capable" content="yes">
+            <!-- This is recognized by Chrome on Android and aligns better with current PWA standards. -->
+                <meta name="mobile-web-app-capable" content="yes">
+            <!--  -->
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+        <!-- 🧠 Favicons & Icons -->
+            <!-- <link rel="icon" href="/favicon.ico"> -->
+            <link rel="icon" type="image/png" href="./favicon.png">
+            <link rel="apple-touch-icon" href="./favicon.png">
+
+        <!-- ✨ Structured Data (JSON-LD) -->
+            <script type="application/ld+json">
+                {
+                    "@context": "https://schema.org",
+                    "@type": "WebPage",
+                    "name": "Your Page Title",
+                    "description": "Your page description",
+                    "url": "https://yourdomain.com/current-page"
+                }
+            </script>
+
+        <!-- 📦 Preconnect/Preload/Font Optimization -->
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+
+    <!-- 🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕 -->
+    <!-- BEST PRACTICE SECTION of <head></head> ELEMENT end -->
 
     <link rel="stylesheet" href="./project.css">
     <!-- <link rel="stylesheet" href="projectMenu.css"> -->
@@ -24,6 +84,11 @@
     <script type="module" src="./global_Client.mjs"></script>
     <script type="module" src="./project_Client.mjs"></script>
     <script type="module" src="./projectCamera_Client.mjs"></script>
+    <!-- <script type="module" src="./projectFormattedTextArea_Client.mjs"></script> -->
+    <!-- <script type="module" src="./projectLexical_Client.mjs"></script> -->
+    <!-- <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> -->
+    <script src="/tinymce/tinymce.min.js"></script>
+    <script type="module" src="./projectTinyMCE_Client.mjs"></script>
     <script type="module" src="./projectMenu_Client.mjs"></script>
     <script type="module" src="./globalUIpopups_Client.mjs"></script>
     <script type="module" src="./projectGoogleAPIs_Client.mjs"></script>
@@ -49,21 +114,11 @@
 
     <link rel="icon" type="image/png" href="./favicon.png">
 
-    <!-- PWA setup START -->
-        <link rel="manifest" href="manifest.json">
-        <!--  -->
-            <!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
-                <!-- This is recognized by Chrome on Android and aligns better with current PWA standards. -->
-                    <meta name="mobile-web-app-capable" content="yes">
-                <!-- This is recognized by Chrome on Android and aligns better with current PWA standards. -->
-        <!--  -->
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- PWA setup END -->
 
     <style>
-        *{
+        /* *{
             border:1px solid red;
-        }
+        } */
         body {
             margin: 0;
             font-family: sans-serif;
@@ -134,8 +189,9 @@
         <!--  -->
             <!-- sign-in-out-button START -->
                 <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-                    <div id="sign-in-out-container" class="sign-in-button" data-status="signed-out" tabindex="0" role="button">
-                        &nbspSign&nbsp<img id="sign-in-out-icon" src="__padlock_locked.png" class="signed-out">&nbspIn&nbsp
+                    <div id="sign-in-out-container" class="sign-in-out-container" data-status="signed-out" tabindex="-1" role="button" title="Click to sign in.">
+                        <img id="padlock-icon" src="__padlock_locked.png" class="icon">
+                        <!-- <img id="padlock-unlocked-icon" src="__padlock_unlocked.png" class="icon icon-hidden"> -->
                     </div> 
                 <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
             <!-- sign-in-out-button END -->
@@ -148,118 +204,42 @@
                     <!-- home -->
                     <input id="section0-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
                     <p class="section-heading">Home</p>
-                    <p>No more lost photos</p>
-                    <p>Store them by address</p>
-                    <p>Add notes to each photo</p>
-                    <p>Easy find by searching:</p>
-                    <ul>
-                        <li>Part of an address</li>
-                        <li>Part of a note</li>
-                        <li>Date, week, month.</li>
-                    </ul>
+                    <p>No more lost photos.</p>
+                    <p>Store them by address.</p>
+                    <p>Add notes to each photo.</p>
+                    <p>Easy find photos by searching by:-</p>
+                    <ol>
+                        <li style="margin-left:20px;">address, or any part of an address.</li>
+                        <li style="margin-left:20px;">note, or any part of a note.</li>
+                        <li style="margin-left:20px;">date.</li>
+                    </ol>
                     <!-- 🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡 -->
                 </section>
                 <section id="section1" class="section1 section-menu">
                     <!-- 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒 -->
                     <!-- menu -->
-                    <input id="section1-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
-                    <!-- <p class="section-heading">Menu</p> -->
-                    <div id="classic-menu-container" class="classic-menu-container">
-                        <!-- collapsable menu START -->
-                        <ul>
-                            <li class="header-item section-heading">Menu</li>
-                            <ul class="collapsed">
-                                <li class="nav-L1 menu-item" data-action="showAddress">1. Check Address</li>
-                                <li class="nav-L1 menu-item" data-action="showCamera">2. Take Photo</li>
-                                <li class="nav-L1 menu-item" data-action="showNotes">3. Add Notes</li>
-                                <li class="nav-L1 menu-item" data-action="saveToDB">Save</li>
-                                <li class="header-item" >Retrieve</li>
-                                <ul class="collapsed">
-                                    <li class="nav-L2 menu-item" data-action="showAddressFilter">Filter by Address</li>
-                                    <li class="nav-L2 menu-item" data-action="showNotesFilter">Filter by Notes</li>
-                                    <li class="header-item" >Filter by Date</li>
-                                    <ul class="collapsed">
-                                        <li class="nav-L3 menu-item" data-action="showDateFilter">Date</li>
-                                        <li class="nav-L3 menu-item" data-action="showWeekFilter">Week</li>
-                                        <li class="nav-L3 menu-item" data-action="showMonthFilter">Month</li>
-                                    </ul>
-                                </ul>
-                            </ul>
-                        </ul>
-                        <!-- collapsable menu END -->
-                    </div>
                     <!-- 🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒🍒 -->
                 </section>
                 <section id="section2" class="section2 section-camera">
                     <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
                     <!-- camera -->
                     <input id="section2-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
-<div id="video-container" class="video-container">
-    <video id="camera-stream" autoplay muted playsinline></video>
-    <!-- Controls UI -->
-    <div class="controls-wrapper">
-        <label>Zoom:<br>
-            <!-- <input type="range" id="zoom" min="0.2" max="4" step="0.05"> -->
-            <input type="range" id="zoom" min="0.0" max="4" step="0.025">
-        </label>
-        <button id="capture-still">Capture Image</button>
-    </div>
-</div>
-<div id="canvas-container" class="canvas-container" style="flex-direction: column; align-items: center;">
-    <canvas id="canvas"></canvas>
-    <button id="save-png" style="margin-top: 10px;">Save as PNG</button>
-</div>
-                    <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
-                </section>
-                <section id="section2_ChatGPT1" class="section2_ChatGPT1 section-camera_ChatGPT1">
-                    <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
-                    <!-- camera -->
-                    <input id="section2-focus-on-activation_ChatGPT1" style="position:fixed;left:-5000px;" tabindex="-1">
-                    <div class="video-container-wrapper_ChatGPT1">
-                        <div class="vertical-slider-container_ChatGPT1">
-                            <label for="panY_ChatGPT1">Pan Y
-                            </label>
-                            <input type="range" id="panY_ChatGPT1" min="0" max="100" step="1" value="50">
+                        <div id="video-container" class="video-container">
+                            <video id="camera-stream" autoplay muted playsinline></video>
+                            <!-- Controls UI -->
+                            <div class="controls-wrapper">
+                                <label>Zoom:<br>
+                                    <!-- <input type="range" id="zoom" min="0.2" max="4" step="0.05"> -->
+                                    <input type="range" id="zoom" min="0.0" max="4" step="0.025">
+                                </label>
+                                <button id="capture-still">Capture Image</button>
+                            </div>
                         </div>
-                        <div id="video-container_ChatGPT1" class="video-container_ChatGPT1">
-                            <!-- <video id="video" src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay muted playsinline loop></video> -->
-                            <video id="camera-stream_ChatGPT1" class="camera-stream_ChatGPT1" autoplay playsinline></video>
+                        <div id="canvas-container" class="canvas-container" style="flex-direction: column; align-items: center;">
+                            <canvas id="canvas"></canvas>
+                            <button id="save-png" style="margin-top: 10px;">Save as PNG</button>
                         </div>
-                    </div>
-                    <div class="controls-wrapper_ChatGPT1">
-                        <label for="zoom_ChatGPT1">Zoom:
-                            <!-- <input type="range" id="zoom" min="1" max="4" step="0.1" value="1"> -->
-                            <input type="range" id="zoom_ChatGPT1" min="0.2" max="4" step="0.05" value="1">
-                        </label>
-                        <label for="panX_ChatGPT1">Pan X
-                            <input type="range" id="panX_ChatGPT1" min="0" max="100" step="1" value="50">
-                        </label>
-                        <button id="capture-still_ChatGPT1">Capture View</button>
-                    </div>
-                    <canvas id="photo-canvas_ChatGPT1" class="photo-canvas_ChatGPT1" width="300" height="200"></canvas>
                     <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
-                </section>
-                <section id="section2_OLD" class="section2_OLD section-camera_OLD">
-                    <!-- ❌📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
-                    <!-- camera -->
-                    <input id="section2-focus-on-activation_OLD" style="position:fixed;left:-5000px;" tabindex="-1">
-                    <!-- FULL SCREEN start -->
-                    <div id="camera-container_OLD" class="camera-container_OLD">
-                        <!--  -->
-                            <!-- floating camera menu div START -->
-                                <div id="m" class="m">
-                                    <!-- <img id="c" class="c" src="./camera_icon_square_765x765_coloured.png" alt="Camera Icon" data-note="floating camera menu div."> -->
-                                    <img id="c" class="c" src="./_camera.png" alt="Camera Icon" data-note="floating camera menu div.">
-                                </div>
-                            <!-- floating camera menu div END -->
-                        <!--  -->
-                        <video id="camera-stream_OLD" class="camera-stream_OLD" autoplay playsinline></video>
-                        <canvas id="photo-canvas_OLD" class="photo-canvas_OLD"></canvas><br>
-                        <button id="capture-btn_OLD" class="std-btn">Take Photo</button>
-                        <button id="save-btn_OLD" class="std-btn" style="visibility: hidden;">Save Photo</button>
-                    </div>
-                    <!-- FULL SCREEN end -->
-                    <!-- ❌📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸 -->
                 </section>
                 <section id="section3" class="section3 section-googleAPIs">
                     <!-- 📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌 -->
@@ -280,31 +260,72 @@
                     <!-- note -->
                     <input id="section4-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
                     <p class="section-heading">Note</p>
-                    <textarea id="notes-textarea" class="notes-textarea" placeholder="Enter note here..."></textarea>
+                    <p id="note-date-time">&nbsp</p>
+                    <p id="note-address">&nbsp</p>
+                    <textarea id="note-editor" class="tinymce-editor"></textarea>
+                    <div class="toolbar">
+                        <!-- <button id="saveNoteBtn" class="std-btn">💾 Save Note</button> -->
+                        <!-- <button id="loadBtn">📥 Load</button> -->
+                    </div>
                     <!-- 📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️ -->
                 </section>
                 <section id="section5" class="section5 section-save">
                     <!-- 💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾 -->
                     <!-- save -->
                     <input id="section5-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
-                    <p class="section-heading">Section 5</p>
+                    <p class="section-heading">Review and Save</p>
+                    <p><b><u>Address:-</u></b></p>
+                    <div id="save_address" class="save-address"></div>
+                    <br>
+                    <p><b><u>Note:-</u></b></p>
+                    <div id="save_note" class="save-note"></div>
+                    <br>
+                    <p><b><u>Photo:-</u></b></p>
+                    <div id="canvas-container-II" class="canvas-container" style="flex-direction: column; align-items: center;">
+                        <canvas id="canvasII"></canvas>
+                    </div>
+                    <button class="std-btn mapped-event" data-action="addNewRecord">ADD NEW: Photo, Address & Note.</button>
                     <!-- 💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾 -->
                 </section>
                 <section id="section6" class="section6 section-search">
                     <!-- 🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍 -->
                     <!-- search -->
                     <input id="section6-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
-                    <p class="section-heading">Section 6</p>
+                    <p class="section-heading">Search</p>
+                    <form>
+                        <p>Search by:</p>
+                        <label>
+                            <input type="radio" name="searchOption" data-action="searchByAddress" value="address" />
+                            Part of an address
+                        </label><br>
+                        <label>
+                            <input type="radio" name="searchOption" data-action="searchByNote" value="note" />
+                            Part of a note
+                        </label><br>
+                        <label>
+                            <input type="radio" name="searchOption" data-action="searchByDate" value="date" />
+                            Date
+                        </label><br>
+                    </form>
+                    <div class="search-container">
+                        <input id="search-input" type="text" placeholder="Enter search term...">
+                        <button id="search-button">Search</button>
+                    </div>
+                    <div id="search-results" class="search-results">
+                        <p class="section-heading">Search Results</p>
+                        <ul id="filteredList-container">
+                            <!-- Search results will be dynamically populated here -->
+                        </ul>
+                    </div>
                     <!-- 🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍 -->
                 </section>
-
 
     </main>
 
     <footer>
         <div id="footer-controls" class="footer-controls">
             <img id="footer-control-home" src="/_Home.png" class="footer-control" data-section-number="0">
-            <img id="footer-control-menu" src="/_Menu.png" class="footer-control" data-section-number="1">
+            <!-- <img id="footer-control-menu" src="/_Menu.png" class="footer-control" data-section-number="1"> -->
             <img id="footer-control-camera" src="/_Camera.png" class="footer-control" data-section-number="2">
             <img id="footer-control-address" src="/_Address.png" class="footer-control" data-section-number="3">
             <img id="footer-control-notes" src="/_Note.png" class="footer-control" data-section-number="4">
@@ -366,5 +387,12 @@
             document.getElementById("googlePlacesAPIautocomplete").value = address;
             console.log(address);
     </script>
+    <!-- <style>
+.tox .tox-tbtn[data-toolbar="italic"] {
+    background-color: #e1bee7;
+    background-color:red !important;
+    color: #4a148c !important;
+}
+    </style> -->
 </body>
 </html>

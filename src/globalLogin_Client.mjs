@@ -1,6 +1,6 @@
-const consoleLog = false
+const consoleLog = true
 
-console.log("LOADED:- globalLoginClient.mjs is loaded",new Date().toLocaleString());
+console.log("LOADED:- globalLogin_Client.mjs is loaded",new Date().toLocaleString());
 export function globalLoginClientJSisLoaded(){
     return true;
 }
@@ -479,22 +479,22 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
             const response = await fetch(fetchUrl,fetchOptions);
             if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
             const jso = await response.json(); // Fetch JSON object
-            if(consoleLog===true){console.log(`sessionRegen:- `,jso);}
+            if(consoleLog===true){console.log(`/loginRouter/loginCodeSubmit response:- `,jso);}
             if(jso.loginApproved===true){
-                alert("🟢 Secure login is successful.");
                 document.getElementById("busy-animation-overlay").remove();
                 document.getElementById("popup-overlay").remove();
-                document.getElementById("sign-in-out-button").innerHTML = "Log Out";
-                document.getElementById("sign-in-out-button").classList.add("sign-out-button");
-                document.getElementById("sign-in-out-button").classList.remove("sign-in-button");
+                document.getElementById("padlock-icon").src="__padlock_unlocked.png";
+                document.getElementById("sign-in-out-container").setAttribute("data-status","signed-in");
+                document.getElementById("sign-in-out-container").title = "Click to sign out.";
                 postLoginActions({createNewAccount:createNewAccount,loginEmailAddress:loginEmailAddress});
+                alert("🟢 Secure login is successful."); // best to leave this to the end so that it doesn't interrupt execution?
             }else{
-                alert("🔴 Secure login failed, incorrect login code submitted.");
                 document.getElementById("busy-animation-overlay").remove();
                 document.getElementById("popup-overlay").remove();
-                document.getElementById("sign-in-out-button").innerHTML = "Log In";
-                document.getElementById("sign-in-out-button").classList.add("sign-in-button");
-                document.getElementById("sign-in-out-button").classList.remove("sign-out-button");
+                document.getElementById("padlock-icon").src="__padlock_locked.png";
+                document.getElementById("sign-in-out-container").setAttribute("data-status","signed-out");
+                document.getElementById("sign-in-out-container").title = "Click to sign in.";
+                alert("🔴 Secure login failed, incorrect login code submitted."); // best to leave this to the end so that it doesn't interrupt execution?
             }
     } catch (error) {
         alert("🔴 Error checking login code submitted, please try again.");
@@ -545,44 +545,44 @@ export async function isLoginRequired() {
     }
 }
 
-// popup busy animation
-    function popupBusyAnimation(){
+// // popup busy animation
+//     function popupBusyAnimation(){
+// 
+//         const overlay= document.createElement("div");
+//         const animation = document.createElement("div");
+//         const span1 = document.createElement("span");
+//         const span2 = document.createElement("span");
+//         const span3 = document.createElement("span");
+// 
+//         overlay.id = "overlay";
+//         overlay.classList.add("busy-animation", "overlay");
+// 
+//         // animation.id = "busy-animation-container";
+//             animation.classList.add("container");
+// 
+//         span1.classList.add("dot");
+//         span2.classList.add("dot");
+//         span3.classList.add("dot");
+// 
+//         overlay.appendChild(animation);
+//         animation.appendChild(span1);
+//         animation.appendChild(span2);
+//         animation.appendChild(span3);
+//         // animation.appendChild(overlay);
+//             document.body.appendChild(overlay);
+// 
+//     }
 
-        const overlay= document.createElement("div");
-        const animation = document.createElement("div");
-        const span1 = document.createElement("span");
-        const span2 = document.createElement("span");
-        const span3 = document.createElement("span");
-
-        overlay.id = "overlay";
-        overlay.classList.add("busy-animation", "overlay");
-
-        // animation.id = "busy-animation-container";
-            animation.classList.add("container");
-
-        span1.classList.add("dot");
-        span2.classList.add("dot");
-        span3.classList.add("dot");
-
-        overlay.appendChild(animation);
-        animation.appendChild(span1);
-        animation.appendChild(span2);
-        animation.appendChild(span3);
-        // animation.appendChild(overlay);
-            document.body.appendChild(overlay);
-
-    }
-
-    export function doAfterDOMandWindowLoad_globalLoginClient(){
+    export function doAfterDOMandWindowLoad__globalLogin_ClientMJS(){
         // 1️⃣🔹2️⃣ START // doAfterDOMandWindowLoad_globalLoginClient() START
         // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
-
+    
             if(consoleLog===true){console.log('doAfterDOMandWindowLoad_globalLoginClient() launched.',Date.now());}
-
+    
             // // if LOGIN REQUIRED
             //     isLoginRequired();
             // // if LOGIN REQUIRED
-
+    
             // signin-out button START
                 document.getElementById("sign-in-out-container").addEventListener("click", (ev) => {
                     console.log("sign-in-out-container clicked");
@@ -595,24 +595,24 @@ export async function isLoginRequired() {
                     }
                 });
                 // Ensure clicking the image triggers the container’s click event START
-                    // ❗THIS
-                        // document.getElementById("sign-in-out-icon").addEventListener("click", function(ev) {
-                        //     ev.stopPropagation(); // Prevent event bubbling issues
-                        //     this.closest("#sign-in-out-container").click();
-                        // });
-                    // ❗OR THIS works
-                        document.getElementById("sign-in-out-icon").addEventListener("click", (ev) => {
+                //     ❗THIS
+                //         document.getElementById("sign-in-out-icon").addEventListener("click", function(ev) {
+                //             ev.stopPropagation(); // Prevent event bubbling issues
+                //             this.closest("#sign-in-out-container").click();
+                //         });
+                //     ❗OR THIS works
+                        document.getElementById("padlock-icon").addEventListener("click", (ev) => {
                             ev.stopPropagation(); // Prevent event bubbling issues
                             document.getElementById("sign-in-out-container").click();
                         });
                 // Ensure clicking the image triggers the container’s click event END
             // signin-out button END
-
+    
         // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
         // 1️⃣🔹2️⃣ END // doAfterDOMandWindowLoad_globalLoginClient() END
     }
 
-    // postLoginActions
+    // postLoginActions START
         export async function postLoginActions(jso){
             // place "PROJECT SPECIFIC" actions to take post secure login here
             document.getElementById("user-email-address").textContent = jso.loginEmailAddress;
@@ -647,9 +647,11 @@ export async function isLoginRequired() {
                     }
             }
         }
+    // postLoginActions END
 
-    // postLogoutActions
+    // postLogoutActions START
         export function postLogoutActions(){
             if(consoleLog===true){console.log('postLogoutActions() launched.',Date.now().toLocaleString());}
             // place "PROJECT SPECIFIC" actions to take post secure logout here
         }
+    // postLogoutActions END

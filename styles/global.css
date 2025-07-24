@@ -1,23 +1,27 @@
 :root {
-  --primary-color: #007bff;
+  --primary-color: rgb(0, 123, 255);
   --font-stack: "Roboto", sans-serif;
-  --spacing-unit: 16px;
-  --std-bckgrnd: rgba(#007bff,.5);
-  --std-btn-bckgrnd:linear-gradient(135deg, #4A90E2, #1440AF);
-  --std-btn-bckgrnd-hover:linear-gradient(135deg, #1440AF, #4A90E2);
+  --one-spacing-unit: 16px;
+  --std-bckgrnd: rgba(0, 123, 255,0.5);
+  --std-bckgrnd: rgba(255, 255, 255,1);
+  --std-btn-color: rgba(255, 255, 255,1);
+  --std-btn-bckgrnd: linear-gradient(135deg, rgb(74, 144, 226), rgb(20, 64, 175));
+  --std-btn-bckgrnd-hover: linear-gradient(135deg, rgb(20, 64, 175), rgb(74, 144, 226));
+  --std-btn-red-color: rgba(255, 255, 255,1);
+  --std-btn-red-bckgrnd: linear-gradient(135deg, rgb(226, 74, 74), rgb(253, 8, 8));
+  --std-btn-red-bckgrnd-hover: linear-gradient(135deg, rgb(253, 8, 8), rgb(226, 74, 74));
   --std-input-color:darkblue;
-  --std-input-bckgrnd-color:palegoldenrod;
+  --std-input-bckgrnd:palegoldenrod;
   --off-screen-left:-5000px;
-  --off-screen-left:0px;
   color: goldenrod;
   color: rgba(8, 200, 8, 0.4);
-  color: rgba(67, 248, 67, 0);
+  color: rgb(67, 248, 67);
 }
 
 body {
   color: var(--primary-color);
   font-family: var(--font-stack);
-  padding: var(--spacing-unit);
+  padding: var(--one-spacing-unit);
 }
 
 * {
@@ -33,12 +37,17 @@ body {
   overflow: hidden;
 }
 
+.section-heading {
+  font-size: 1.1rem;
+  text-align: center;
+}
+
 .std-btn {
   display: inline-block;
   padding: 0px 6px;
   margin: 6px 0px;
   background: var(--std-btn-bckgrnd);
-  color: white;
+  color: var(--std-btn-color);
   text-align: center;
   border: 1px solid blue;
   border-radius: 5px;
@@ -47,6 +56,22 @@ body {
 .std-btn:hover {
   transform: scale(1.05);
   background: var(--std-btn-bckgrnd-hover);
+}
+
+.std-btn-red {
+  display: inline-block;
+  padding: 0px 6px;
+  margin: 6px 0px;
+  background: var(--std-btn-red-bckgrnd);
+  color: var(--std-btn-red-color);
+  text-align: center;
+  border: 1px solid red;
+  border-radius: 5px;
+  transition: all 0.5s ease-in-out;
+}
+.std-btn-red:hover {
+  transform: scale(1.05);
+  background: var(--std-btn-red-bckgrnd-hover);
 }
 
 .std-frm-flex-wrapper {
@@ -120,6 +145,53 @@ body {
   background: var(--std-bckgrnd);
 }
 
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: black;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.popup-overlay .popup-container {
+  background: var(--std-bckgrnd);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 4;
+}
+.popup-overlay .popup-container input {
+  color: darkblue;
+  color: var(--std-input-color);
+  background: var(--std-input-bckgrnd);
+  padding: 5px;
+  width: 100%;
+}
+.popup-overlay .popup-container button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: rgb(0, 123, 255);
+  color: white;
+  cursor: pointer;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.popup-overlay .popup-container .normal-prompt {
+  max-width: 100%;
+}
+.popup-overlay .popup-container .error-prompt {
+  max-width: 100%;
+  color: red;
+}
+
 .busy-animation-overlay {
   /* Center the animation */
   position: fixed;
@@ -127,11 +199,11 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.25);
-  background: var(--std-bckgrnd);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 4;
   /* The animated dots */
   /* Use animation delay to stagger movement */
   /* Keyframes for bounce effect */
@@ -147,13 +219,15 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
+  z-index: 5;
 }
 .busy-animation-overlay .dot {
   width: 12px;
   height: 12px;
-  background: var(--std-bckgrnd);
+  background-color: #3498db;
   border-radius: 50%;
   animation: bounce 1.5s infinite ease-in-out;
+  z-index: 5;
 }
 .busy-animation-overlay .dot:nth-child(1) {
   animation-delay: 0s;
@@ -199,50 +273,6 @@ body {
   animation: fadeOut 0.5s ease-out forwards;
 }
 
-.login-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.25);
-  background: var(--std-bckgrnd);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.login-overlay .dialog {
-  background: rgb(255, 255, 255);
-  background: var(--std-bckgrnd);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
-}
-.login-overlay .dialog input {
-  color: darkblue;
-  background: var(--std-bckgrnd);
-  width: 100%;
-}
-.login-overlay .dialog button {
-  margin-top: 10px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  background: var(--std-bckgrnd);
-  color: white;
-  cursor: pointer;
-  margin-left: 15px;
-  margin-right: 15px;
-}
-.login-overlay .dialog .normal-prompt {
-  max-width: 100%;
-}
-.login-overlay .dialog .error-prompt {
-  max-width: 100%;
-  color: red;
-}
-
 .passcodeForm {
   position: fixed;
   left: var(--off-screen-left);
@@ -258,8 +288,8 @@ body {
 .passcodeForm .code-input-input {
   display: flex;
   flex-direction: row;
-  width: 20px !important;
-  height: 20px;
+  width: 30px !important;
+  height: 30px;
   text-align: center;
   border: 2px solid #ccc;
   border-radius: 8px;
@@ -291,24 +321,22 @@ body {
   }
 }
 
-#sign-in-out-container {
+.sign-in-out-container {
   display: flex;
   justify-content: center;
   align-items: center;
   border: 1px solid black;
   border-radius: 5px;
-  padding: 3px;
   cursor: pointer;
 }
-#sign-in-out-container img, #sign-in-out-container .sign-in-out-icon {
+.sign-in-out-container .icon {
   border-radius: 5px;
+  width: 30px;
   height: 25px;
+  display: flex;
 }
-#sign-in-out-container .signed-out {
-  border: 2px solid red;
-}
-#sign-in-out-container .signed-in {
-  border: 2px solid green;
+.sign-in-out-container .icon-hidden {
+  display: none;
 }
 
 .section-googleAPIs .autocomplete-address-container {
@@ -319,7 +347,7 @@ body {
 }
 .section-googleAPIs .autocomplete-address-container input {
   color: var(--std-input-color);
-  background: var(--std-input-bckgrnd-color);
+  background: var(--std-input-bckgrnd);
   width: 80%;
   margin: auto;
   padding: 5px;
@@ -436,56 +464,12 @@ canvas {
   border: 1px solid blue;
 }
 
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.25);
-  background: var(--std-bckgrnd);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.popup-overlay .popup-container {
-  background: var(--std-bckgrnd);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
-}
-.popup-overlay .popup-container input {
-  color: darkblue;
-  background: var(--std-bckgrnd);
-  padding: 5px;
-  width: 100%;
-}
-.popup-overlay .popup-container button {
-  margin-top: 10px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  background: var(--std-bckgrnd);
-  color: white;
-  cursor: pointer;
-  margin-left: 15px;
-  margin-right: 15px;
-}
-.popup-overlay .popup-container .normal-prompt {
-  max-width: 100%;
-}
-.popup-overlay .popup-container .error-prompt {
-  max-width: 100%;
-  color: red;
-}
-
 .section-search #photos-container {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
 }
-.section-search #photos-container .photo-card {
+.section-search #photos-container .record-card {
   border: 1px solid #ccc;
   padding: 10px;
   width: 250px;
@@ -502,6 +486,87 @@ canvas {
 .section-search #photos-container p {
   margin: 5px 0;
   font-size: 14px;
+}
+
+.section-note .toolbar, .record-card-edit-note .toolbar {
+  margin-top: 10px;
+}
+.section-note .tox-editor-header, .record-card-edit-note .tox-editor-header {
+  border: 1px solid black !important;
+  border-radius: 6px !important;
+  margin: 5px !important;
+  background: lightgrey !important;
+}
+.section-note .tox-toolbar__primary, .record-card-edit-note .tox-toolbar__primary {
+  background: lightgrey !important;
+}
+.section-note .tox-menubar, .record-card-edit-note .tox-menubar {
+  background: lightgrey !important;
+}
+.section-note .tox-promotion, .record-card-edit-note .tox-promotion {
+  display: none !important;
+}
+.section-note .tox-toolbar__group, .record-card-edit-note .tox-toolbar__group {
+  background: lightgrey !important;
+}
+.section-note .tox-toolbar__group button, .record-card-edit-note .tox-toolbar__group button {
+  background: var(--std-btn-bckgrnd) !important;
+  margin-right: 5px !important;
+}
+.section-note .tox-toolbar__group button span svg, .record-card-edit-note .tox-toolbar__group button span svg {
+  fill: white !important;
+}
+.section-note .tox-toolbar__group button span svg path, .record-card-edit-note .tox-toolbar__group button span svg path {
+  border: 2px solid red !important;
+}
+.section-note .tox-toolbar__group button:hover, .record-card-edit-note .tox-toolbar__group button:hover {
+  background: var(--std-btn-bckgrnd-hover) !important;
+  transform: scale(1.05);
+}
+.section-note .tox-toolbar__group .tox-tbtn--enabled, .record-card-edit-note .tox-toolbar__group .tox-tbtn--enabled {
+  background: white !important;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+}
+.section-note .tox-toolbar__group .tox-tbtn--enabled span svg, .record-card-edit-note .tox-toolbar__group .tox-tbtn--enabled span svg {
+  fill: navy !important;
+}
+
+.tiny-mce-arrow-left {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 6px;
+  background-color: #007BFF;
+  padding: 2px;
+  border-radius: 4px;
+  color: red;
+  fill: black;
+}
+.tiny-mce-arrow-left .arrow-svg {
+  width: 16px;
+  height: 16px;
+  fill: blue;
+  transition: fill 0.2s ease;
+}
+
+.tiny-mce-arrow-left::before {
+  content: "" !important;
+}
+
+.section-save .save-address {
+  border: 1px solid black;
+  border-radius: 6px;
+  padding: 10px;
+}
+.section-save .save-note {
+  border: 1px solid black;
+  border-radius: 6px;
+  padding-left: 48px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.section-save .save-canvas {
+  border: 1px solid black;
+  border-radius: 6px;
 }
 
 /*# sourceMappingURL=global.css.map */
