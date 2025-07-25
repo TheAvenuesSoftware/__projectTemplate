@@ -38,11 +38,14 @@ export function projectMJSisLoaded(){
                 filterByDate: () => filterBy("date"),
             // find search retrieve get END
             // edit update START
-                editRecordAddress: (event) => editRecordAddress(event),
-                saveEditedAddress: (event) => saveEditedAddress(event),
-                editRecordNote: (event) => editRecordNote(event),
-                saveEditedNote: (event) => saveEditedNote(event),
-                deleteRecord: async (event) => await deleteRecord(event)
+                // address
+                    editRecordAddress: (event) => editRecordAddress(event),
+                    saveEditedAddress: (event) => saveEditedAddress(event),
+                // note
+                    editRecordNote: (event) => editRecordNote(event),
+                    saveEditedNote: (event) => saveEditedNote(event),
+                // record
+                    deleteRecord: async (event) => await deleteRecord(event)
             // edit update END
         };
     // functions mapping END
@@ -53,35 +56,81 @@ export function projectMJSisLoaded(){
         let filteredRecords = {}; // Store filtered records globally
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export function editRecordNote(event){
-                console.log(`editRecord() called with:`, event);
                 console.log(`filteredRecords:-\n`,filteredRecords);
                 const filteredRecordID = event.target.dataset.imageId;
                 console.log(`filteredRecordID:- `,filteredRecordID);
                 console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
                 const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
                 console.log(`filteredRecord imageID:- `,imageID);
-                document.getElementById("googlePlacesAPIautocomplete").value = filteredRecords[`${filteredRecordID}`].image_address || '';
-                document.getElementById("note-date-time").textContent = filteredRecords[`${filteredRecordID}`].image_date + ' ' + filteredRecords[`${filteredRecordID}`].image_time || '';
-                document.getElementById("note-address").textContent = filteredRecords[`${filteredRecordID}`].image_address || '';
-                // document.getElementById("googlePlacesAPIautocomplete").select;
-                // document.getElementById("googlePlacesAPIautocomplete").focus;
-                // document.getElementById("googlePlacesAPIautocomplete").blur;
-                const noteHTML = filteredRecords[`${filteredRecordID}`].image_notes || '';
-                const recordCard_EditNote = document.createElement("div");
-                recordCard_EditNote.className = "record-card-edit-note";
-                const filteredListContainer = document.getElementById("filteredList-container");
-                recordCard_EditNote.innerHTML = 
-                `
-                    <textarea id="selected-record-note-editor" class="tinymce-editor"></textarea>
-                    <button id='saveEditedNote${imageID}' class="std-btn" data-action="saveEditedNote" data-image-id='image_${imageID}'>Save note # ${imageID}</button>
-                `
-                const anchor = document.getElementById(event.target.id);
-                console.log(event.target.id);
-                console.log(anchor);
-                // anchor.append(recordCard_EditNote); // appends to the anchor element
-                anchor.after(recordCard_EditNote); // append after the anchor element
-                // filteredListContainer.appendChild(recordCard_EditNote);
-                initTinyMCE(`selected-record-editor`); // the parameter passed is information only, initTinyMCE() applies to all elements with class .tinymce-editor
+                // insert DOM element textarea START
+                    const editNoteDiv = document.createElement("div");
+                    editNoteDiv.className = "record-card-edit-note";
+                    const noteHTML = filteredRecords[`${filteredRecordID}`].image_notes || '';
+                    console.log(noteHTML);
+                    localStorage.setItem('tas_note_toEdit', noteHTML);
+                    editNoteDiv.innerHTML = `<textarea id='tinymce_${imageID}' class='tinymce-editor'>${noteHTML}</textarea>`;
+                    const anchorElement = document.getElementById(event.target.id);
+                    // console.log(event.target.id);
+                    // console.log(anchorElement);
+                    anchorElement.after(editNoteDiv); // append after the anchor element.  append; prepend; before; after
+                // insert DOM element textarea END
+                // initialise TinyMCE START
+                    const tinymceEditor = document.getElementById(`tinymce_${imageID}`);
+                    console.log(tinymceEditor); // textarea, now style="display: none;"
+                    initTinyMCE(tinymceEditor); // Call this to initialize TinyMCE editor
+                // initialise TinyMCE END
+                // insert save button START
+                    const editNoteDivSaveBtn = document.createElement("div");
+                    editNoteDivSaveBtn.innerHTML = 
+                    `
+                        <button id='saveEditedNote${imageID}' class="std-btn" data-action="saveEditedNote" data-record-id='${imageID}'>Save changes to note # ${imageID}</button>
+                    `
+                    const anchorIIElement = document.getElementById(`deleteRecord${imageID}`);
+                    console.log(event.target.id);
+                    console.log(anchorIIElement);
+                    anchorIIElement.before(editNoteDivSaveBtn); // append after the anchorII element.  append; prepend; before; after
+                // insert save button END
+            }
+        // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
+            export async function saveEditedNote(event){
+                console.log('saveEditedNote:-\n',event);
+                const noteToSave = localStorage.getItem("tas_note_edited");
+                const recordIdToUpdate = event.target.dataset.recordId;
+                console.log('noteToSave:-\n',noteToSave);
+                console.log('recordIdToUpdate:-',recordIdToUpdate);
+                try {
+                    // const userEmailAddress = document.getElementById("user-email-address").textContent;
+                    const userEmailAddress = "donald.garton@outlook.com";
+                    console.log(userEmailAddress);
+                    const fetchUrl = "/dbRouter/update-record";
+                    const fetchOptions = {
+                            method: 'POST',
+                            mode: 'cors',                  // Ensures cross-origin requests are handled
+                            cache: 'no-cache',             // Prevents caching issues
+                            credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+                            headers: {
+                                'Content-Type': 'application/json',  // Sets content type
+                                // - POTENTIAL Content-Type header issue:
+                                //     - IF you're using FormData, you shouldn't manually set "Content-Type": "multipart/form-data".
+                                //     - The browser automatically sets the correct boundary for multipart/form-data. Manually setting it could lead to an error because the boundary isn’t included. You should remove that header.
+                                // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
+                                // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
+                            },
+                            body: JSON.stringify({
+                                fileName: userEmailAddress,
+                                tableName: "photos",
+                                fieldName: "image_notes",
+                                noteToSave: noteToSave,
+                                recordIdToUpdate: recordIdToUpdate
+                            })
+                        }
+                    if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
+                    const response = await fetch(fetchUrl, fetchOptions);
+                    const jso = await response.json(); // Fetch JSON 
+                    console.log(jso);
+                } catch (error) {
+                    console.error(`Error updating record # ${recordIdToUpdate} image_notes in photos :`, error);
+                }
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export function editRecordAddress(event){
@@ -97,20 +146,20 @@ export function projectMJSisLoaded(){
                 // document.getElementById("googlePlacesAPIautocomplete").focus;
                 // document.getElementById("googlePlacesAPIautocomplete").blur;
                 const addressHTML = filteredRecords[`${filteredRecordID}`].image_address || '';
-                const recordCard_EditAddress = document.createElement("div");
-                recordCard_EditAddress.className = "record-card-edit-address";
+                const editAddressDiv = document.createElement("div");
+                editAddressDiv.className = "record-card-edit-address";
                 const filteredListContainer = document.getElementById("filteredList-container");
-                recordCard_EditAddress.innerHTML = 
+                editAddressDiv.innerHTML = 
                 `
                     <textarea id="selected-record-address-editor" class="tinymce-editor"></textarea>
                     <button id='saveEditedAddress${imageID}' class="std-btn" data-action="saveEditedAddress" data-image-id='image_${imageID}'>Save address # ${imageID}</button>
                 `
-                const anchor = document.getElementById(event.target.id);
+                const anchorElement = document.getElementById(event.target.id);
                 console.log(event.target.id);
-                console.log(anchor);
-                // anchor.append(recordCard_EditAddress); // appends to the anchor element
-                anchor.after(recordCard_EditAddress); // append after the anchor element
-                // filteredListContainer.appendChild(recordCard_EditNote);
+                console.log(anchorElement);
+                // anchorElement.append(editAddressDiv); // appends to the anchor element
+                anchorElement.after(editAddressDiv); // append after the anchor element
+                // filteredListContainer.appendChild(editAddressDiv);
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export function doThis(x){
@@ -223,7 +272,7 @@ export function projectMJSisLoaded(){
                             }
                         });
                     } catch (error) {
-                        console.error("Error saving photo:", error);
+                        console.error("Error in filterBy():", error);
                     }
 
                 }
@@ -312,12 +361,12 @@ export function projectMJSisLoaded(){
                         console.log("image_Blob_compressed.type",image_Blob_compressed.type); // Should log something like "image/jpeg"
                         const userEmailAddress = document.getElementById("user-email-address").textContent; // Get user email from element
                         const address = document.getElementById("googlePlacesAPIautocomplete").value;
-                        // const notes = document.getElementById("save_note").value;
                         const imageDATE = new Date().toLocaleDateString();
                         const imageDD = newDateAttributes().date;
                         const imageMM = newDateAttributes().month;
                         const imageYYYY = newDateAttributes().year;
                         const imageTIME = new Date().toLocaleTimeString();
+                        // const notes = document.getElementById("save_note_0").value;
                         const notesHTML = localStorage.getItem('tas_note') || ''; // Get notes from localStorage
                         const formData = new FormData();
                         formData.append("image_blob", image_Blob_compressed, "photo.jpg"); // Add Blob with optional filename

@@ -1,14 +1,11 @@
-document.addEventListener("DOMContentLoaded", () => {
-
-    initTinyMCE(`all-startup-editors`); // Call this to initialize TinyMCE on page load
-
-});
     // Initialize TinyMCE START
         const tinymceConfig = {
             license_key: 'gpl',
-            // 💡selector: '#note-editor', // use target: dynamically instead
-                // - If you use selector, TinyMCE handles element detection internally.
-                // - If you use target (see function initTinyMCE), you're saying: “I already have the element—attach the editor to this one.” 💡
+            // selector START
+                // 💡selector: '#note-editor', // use target: dynamically instead
+                    // - If you use selector, TinyMCE handles element detection internally.
+                    // - If you use target (see function initTinyMCE), you're saying: “I already have the element—attach the editor to this one.” 💡
+            // selector END
             branding: false,
             // menubar: false,
             menubar: `format`,
@@ -23,9 +20,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 // - Uses TinyMCE’s getContent() and setContent() instead of accessing .value, since it’s not a basic textarea anymore.
                     editor.on('init', function () {
                         // 📝Load from localStorage on init START
-                            const savedNote = localStorage.getItem('tas_note');
-                            if (savedNote) {
-                            editor.setContent(savedNote);
+                            // console.log(editor.id);
+                            if(editor.id==="tinymce_0"){
+                                const savedNote = localStorage.getItem('tas_note_0');
+                                if (savedNote) {
+                                    editor.setContent(savedNote);
+                                }
+                            }else{
+                                const editedNote = localStorage.getItem('tas_note_toEdit');
+                                if (editedNote) {
+                                    editor.setContent(editedNote);
+                                }
                             }
                         // Load from localStorage on init END📝
                     });
@@ -33,8 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     editor.on('blur', function () {
                         // 📝Save to localStorage when focus is lost START
                             const currentContent = editor.getContent();
-                            localStorage.setItem('tas_note', currentContent);
-                            document.getElementById("save_note").innerHTML = currentContent;
+                            // console.log(editor.id);
+                            if(editor.id==="tinymce_0"){
+                                localStorage.setItem('tas_note_0', currentContent);
+                                document.getElementById("save_note_0").innerHTML = currentContent;
+                            }else{
+                                localStorage.setItem('tas_note_edited', currentContent);
+                            }
                         // Save to localStorage when focus is lost END📝
                     });
                 // - editor.on(`keydown`,...):
@@ -89,13 +99,37 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     // Initialize TinyMCE END
 
-export function initTinyMCE(editorId) {
-    // Initialize TinyMCE for all elements with class 'tinymce-editor'
-        console.log(`Initialisign TinyMCE editor for:- ${editorId}`)
-        document.querySelectorAll('.tinymce-editor').forEach(el => {
-            tinymce.init({
-                ...tinymceConfig,
-                target: el
-            });
-        });
+// export function initTinyMCE(id="tinymce_0") {
+//     // Initialize TinyMCE for all elements with class 'tinymce-editor'
+//         document.querySelectorAll('.tinymce-editor').forEach(el => {
+//             console.log(`Initialising TinyMCE editor for:- ${el.id}`)
+//             tinymce.init({
+//                 ...tinymceConfig,
+//                 target: el
+//             });
+//         });
+// }
+export function removeTinyMCE(){
+    document.querySelectorAll('.tinymce-editor').forEach(el => {
+        console.log(`Removing TinyMCE editor from:- ${el.id}`)
+        tinymce.remove(el);
+    });
 }
+export async function initTinyMCE(el) {
+    await removeTinyMCE();
+    console.log(`Initialising TinyMCE editor for:- ${el.id}`)
+    const textareaHTML = document.getElementById(`${el.id}`).textContent;
+    console.log(textareaHTML);
+    localStorage.setItem("tas_note",textareaHTML);
+    tinymce.init({
+        ...tinymceConfig,
+        target: el
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const tinymceElement = document.getElementById('tinymce_0');
+    initTinyMCE(tinymceElement); // Call this to initialize TinyMCE on page load
+
+});

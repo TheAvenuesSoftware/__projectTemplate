@@ -524,6 +524,24 @@ export function SQLite_ServerSideMJSisLoaded(){
         }
     });
 
+    dbRouter.post("/update-note", async (req, res) => {
+        const { fileName, tableName, fieldName, noteToSave, recordIdToUpdate } = req.body;
+        const db = await getDB(fileName);
+
+        const updates = { [fieldName]: noteToSave };      // maps to `SET note = ?`
+        const condition = "id = ?";                // maps to `WHERE id = ?`
+        const values = [recordIdToUpdate];         // passed in as params
+
+        try {
+            const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', ');
+            const query = `UPDATE ${tableName} SET ${setClause} WHERE ${condition}`;
+            await db.run(query, [...Object.values(updates), ...values]);
+            res.status(200).json({ success: true });
+        } catch (err) {
+            console.error(`Update error in ${tableName}:`, err);
+            res.status(500).json({ success: false, error: err.message });
+        }
+    });
 // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
-    
+
 export default dbRouter;
