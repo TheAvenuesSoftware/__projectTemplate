@@ -247,7 +247,7 @@
                     <input id="section3-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
                     <p class="section-heading">Address</p>
                     <div class="autocomplete-address-container">
-                        <input id="googlePlacesAPIautocomplete" class="autocomplete-address-input" type="text" placeholder="Enter address here...">
+                        <input id="googlePlacesAPIautocomplete_0" class="autocomplete-address-input" type="text" placeholder="Enter address here...">
                     </div>
                     <div id="map-container" class="map-container">
                         <button id="close-map" class="close-map-btn" >Close Map</button>
@@ -284,7 +284,7 @@
                     <div id="canvas-container-II" class="canvas-container" style="flex-direction: column; align-items: center;">
                         <canvas id="canvasII"></canvas>
                     </div>
-                    <button class="std-btn mapped-event" data-action="addNewRecord">ADD NEW: Photo, Address & Note.</button>
+                    <button class="std-btn mapped-event" data-action="insertRecord">ADD NEW: Photo, Address & Note.</button>
                     <!-- 💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾 -->
                 </section>
                 <section id="section6" class="section6 section-search">
@@ -384,7 +384,7 @@
         // set current section = last active section END
         // set last session values START
             const address = localStorage.getItem("tas_address")? localStorage.getItem("tas_address") : "";
-            document.getElementById("googlePlacesAPIautocomplete").value = address;
+            document.getElementById("googlePlacesAPIautocomplete_0").value = address;
             console.log(address);
     </script>
     <!-- <style>

@@ -237,7 +237,7 @@ export function SQLite_ServerSideMJSisLoaded(){
 // Endpoint to save a photo START
     // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
         // ADD NEW RECORD start
-            dbRouter.post("/add-new-record", async (req, res) => {
+            dbRouter.post("/insert-record", async (req, res) => {
 
                 let responseSent = false;
                 const safeRespond = (status, body) => {
@@ -524,24 +524,22 @@ export function SQLite_ServerSideMJSisLoaded(){
         }
     });
 
-    dbRouter.post("/update-note", async (req, res) => {
-        const { fileName, tableName, fieldName, noteToSave, recordIdToUpdate } = req.body;
-        const db = await getDB(fileName);
-
-        const updates = { [fieldName]: noteToSave };      // maps to `SET note = ?`
-        const condition = "id = ?";                // maps to `WHERE id = ?`
+    dbRouter.post("/update-record", async (req, res) => {
+        const { fileName, tableName, updates, recordIdToUpdate } = req.body;
+        const db = await getDB(fileName); // initialises and retrieves database connection
+        const condition = "image_id = ?";                // maps to `WHERE image_id = ?`
         const values = [recordIdToUpdate];         // passed in as params
-
         try {
-            const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', ');
-            const query = `UPDATE ${tableName} SET ${setClause} WHERE ${condition}`;
-            await db.run(query, [...Object.values(updates), ...values]);
+            const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', '); // Dynamically builds the SQL SET clause for fields you're updating
+            const query = `UPDATE ${tableName} SET ${setClause} WHERE ${condition}`; // Constructs the SQL UPDATE statement, inserting table and condition.
+            await db.run(query, [...Object.values(updates), ...values]); // Executes the update using parameterized values to prevent SQL injection.
             res.status(200).json({ success: true });
-        } catch (err) {
+        } catch (err) { // Gracefully handles and logs any errors encountered during the update.
             console.error(`Update error in ${tableName}:`, err);
             res.status(500).json({ success: false, error: err.message });
         }
     });
+
 // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
 
 export default dbRouter;

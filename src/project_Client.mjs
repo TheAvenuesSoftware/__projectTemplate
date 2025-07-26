@@ -11,6 +11,7 @@ export function projectMJSisLoaded(){
     import { showCustomMessage } from "./globalUIpopups_Client.mjs";
     import { newDateAttributes } from "./global_Client.mjs";
     import { initTinyMCE } from "./projectTinyMCE_Client.mjs";
+    import { initAutocomplete } from "./projectGoogleAPIs_Client.mjs"
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 // 🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️
@@ -18,8 +19,7 @@ export function projectMJSisLoaded(){
         export const actions = {
             alertDateTime: () => alert(`Current date and time: ${new Date().toLocaleString()}`),
             showNotes: () => doThis('showNotes'),
-            addNewRecord: async () => await addNewRecord(),
-            replaceRecordById: async () => await replaceRecordById(),
+            insertRecord: async () => await insertRecord(),
             // find search retrieve get START
                 searchByAddress: () => {
                     document.getElementById("search-button").setAttribute("data-action", "filterByAddress")
@@ -119,8 +119,9 @@ export function projectMJSisLoaded(){
                             body: JSON.stringify({
                                 fileName: userEmailAddress,
                                 tableName: "photos",
-                                fieldName: "image_notes",
-                                noteToSave: noteToSave,
+                                updates:{
+                                    image_notes: noteToSave
+                                },
                                 recordIdToUpdate: recordIdToUpdate
                             })
                         }
@@ -134,36 +135,83 @@ export function projectMJSisLoaded(){
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export function editRecordAddress(event){
-                console.log(`editRecord() called with:`, event);
-                console.log(filteredRecords);
+                console.log(`filteredRecords:-\n`,filteredRecords);
                 const filteredRecordID = event.target.dataset.imageId;
-                console.log(filteredRecordID);
-                console.log(filteredRecords[`${filteredRecordID}`]);
-                document.getElementById("googlePlacesAPIautocomplete").value = filteredRecords[`${filteredRecordID}`].image_address || '';
+                console.log(`filteredRecordID:- `,filteredRecordID);
+                console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
+                const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
+                console.log(`filteredRecord imageID:- `,imageID);
+                document.getElementById("googlePlacesAPIautocomplete_0").value = filteredRecords[`${filteredRecordID}`].image_address || '';
                 document.getElementById("note-date-time").textContent = filteredRecords[`${filteredRecordID}`].image_date + ' ' + filteredRecords[`${filteredRecordID}`].image_time || '';
                 document.getElementById("note-address").textContent = filteredRecords[`${filteredRecordID}`].image_address || '';
-                // document.getElementById("googlePlacesAPIautocomplete").select;
-                // document.getElementById("googlePlacesAPIautocomplete").focus;
-                // document.getElementById("googlePlacesAPIautocomplete").blur;
-                const addressHTML = filteredRecords[`${filteredRecordID}`].image_address || '';
-                const editAddressDiv = document.createElement("div");
-                editAddressDiv.className = "record-card-edit-address";
+                // insert DOM element input START
+                    const editAddressDiv = document.createElement("div");
+                    editAddressDiv.className = "record-card-edit-address";
+                    const addressValue = filteredRecords[`${filteredRecordID}`].image_address || '';
+                    console.log(addressValue);
+                    localStorage.setItem(`tas_address_edit`,addressValue);
+                    editAddressDiv.innerHTML = `
+                        <input id="googlePlacesAPIautocomplete_${imageID}" class="autocomplete-address-input" type="text" placeholder="Enter address here..."><br>
+                        <button id='saveEditedAddress${imageID}' class="std-btn" data-action="saveEditedAddress" data-image-id='image_${imageID}'>Save address # ${imageID}</button>`;
                 const filteredListContainer = document.getElementById("filteredList-container");
-                editAddressDiv.innerHTML = 
-                `
-                    <textarea id="selected-record-address-editor" class="tinymce-editor"></textarea>
-                    <button id='saveEditedAddress${imageID}' class="std-btn" data-action="saveEditedAddress" data-image-id='image_${imageID}'>Save address # ${imageID}</button>
-                `
                 const anchorElement = document.getElementById(event.target.id);
                 console.log(event.target.id);
                 console.log(anchorElement);
-                // anchorElement.append(editAddressDiv); // appends to the anchor element
                 anchorElement.after(editAddressDiv); // append after the anchor element
-                // filteredListContainer.appendChild(editAddressDiv);
+                initAutocomplete(`googlePlacesAPIautocomplete_${imageID}`);
+                // insert save button START
+                    const editAddressDivSaveBtn = document.createElement("div");
+                    editAddressDivSaveBtn.innerHTML = 
+                    `
+                        <button id='saveEditedAddress${imageID}' class="std-btn" data-action="saveEditedAddress" data-record-id='${imageID}'>Save changes to address # ${imageID}</button>
+                    `
+                    const anchorIIElement = document.getElementById(`deleteRecord${imageID}`);
+                    console.log(event.target.id);
+                    console.log(anchorIIElement);
+                    anchorIIElement.before(editAddressDivSaveBtn); // append after the anchorII element.  append; prepend; before; after
+                // insert save button END
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
-            export function doThis(x){
-                console.log(`editRecord() called with:`, event);
+            export async function saveEditedAddress(event){
+                console.log('saveEditedAddress:-\n',event);
+                const addressToSave = localStorage.getItem("tas_address_edited");
+                const recordIdToUpdate = event.target.dataset.recordId;
+                console.log('addressToSave:-\n',addressToSave);
+                console.log('recordIdToUpdate:-',recordIdToUpdate);
+                try {
+                    // const userEmailAddress = document.getElementById("user-email-address").textContent;
+                    const userEmailAddress = "donald.garton@outlook.com";
+                    console.log(userEmailAddress);
+                    const fetchUrl = "/dbRouter/update-record";
+                    const fetchOptions = {
+                            method: 'POST',
+                            mode: 'cors',                  // Ensures cross-origin requests are handled
+                            cache: 'no-cache',             // Prevents caching issues
+                            credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+                            headers: {
+                                'Content-Type': 'application/json',  // Sets content type
+                                // - POTENTIAL Content-Type header issue:
+                                //     - IF you're using FormData, you shouldn't manually set "Content-Type": "multipart/form-data".
+                                //     - The browser automatically sets the correct boundary for multipart/form-data. Manually setting it could lead to an error because the boundary isn’t included. You should remove that header.
+                                // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
+                                // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
+                            },
+                            body: JSON.stringify({
+                                fileName: userEmailAddress,
+                                tableName: "photos",
+                                updates:{
+                                    image_address: addressToSave
+                                },
+                                recordIdToUpdate: recordIdToUpdate
+                            })
+                        }
+                    if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
+                    const response = await fetch(fetchUrl, fetchOptions);
+                    const jso = await response.json(); // Fetch JSON 
+                    console.log(jso);
+                } catch (error) {
+                    console.error(`Error updating record # ${recordIdToUpdate} image_address in photos :`, error);
+                }
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             // filterBy START
@@ -258,7 +306,7 @@ export function projectMJSisLoaded(){
                                 <p><strong>Notes:</strong> ${imageNotes}</p>
                                 <button id='noteEdit${imageID}' class="std-btn" data-action="editRecordNote" data-image-id='image_${imageID}'>Edit note # ${imageID}</button>
                                 <br>
-                                <button id='deleteRecord${imageID}' class="std-btn-red" data-action="deleteRecord" data-image-id='image_${imageID}'>DELETE RECORD # ${imageID}</button>
+                                <button id='deleteRecord${imageID}' class="std-btn-red" data-action="deleteRecord" data-record-id='image_${imageID}'>DELETE RECORD # ${imageID}</button>
                                 <hr><hr><br>
                             `;
                             filteredListContainer.appendChild(recordCard);
@@ -333,8 +381,8 @@ export function projectMJSisLoaded(){
                 }
             // getByNote END
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
-            // addNewRecord START
-                export async function addNewRecord(){
+            // insertRecord START
+                export async function insertRecord(){
                     const imageCompression = 1; // imageCompression level for JPEG (0.1 = 10% quality, 1 = no imageCompression)
                     // ✅ Compress Image Before Sending to Backend >>> Blob
                         async function canvasToBlob(canvas,imageCompression=1) {
@@ -350,7 +398,7 @@ export function projectMJSisLoaded(){
                         function canvasToDataURL(canvas,imageCompression=1) {
                             return canvas.toDataURL("image/jpeg", imageCompression); // Compress to smaller JPEG
                         }
-                    console.log("addNewRecord() called.");
+                    console.log("insertRecord() called.");
                     // ✅ Save Photo & Data to SQLite via API
                         const canvas = document.getElementById("canvasII");                
                         const image_DataURL_compressed = canvasToDataURL(canvas, imageCompression);
@@ -360,7 +408,7 @@ export function projectMJSisLoaded(){
                         console.log("Compressed Image Blob:", window_image_Blob_compressed); // Log Blob
                         console.log("image_Blob_compressed.type",image_Blob_compressed.type); // Should log something like "image/jpeg"
                         const userEmailAddress = document.getElementById("user-email-address").textContent; // Get user email from element
-                        const address = document.getElementById("googlePlacesAPIautocomplete").value;
+                        const address = document.getElementById("googlePlacesAPIautocomplete_0").value;
                         const imageDATE = new Date().toLocaleDateString();
                         const imageDD = newDateAttributes().date;
                         const imageMM = newDateAttributes().month;
@@ -381,7 +429,7 @@ export function projectMJSisLoaded(){
                         formData.append("userEmailAddress", "donald.garton@outlook.com");
                         console.log("FormData entries:", Array.from(formData.entries())); // Log FormData entries
                         try {
-                            const fetchUrl = "/dbRouter/add-new-record";
+                            const fetchUrl = "/dbRouter/insert-record";
                             const fetchOptions = {
                                     method: 'POST',
                                     mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -411,13 +459,7 @@ export function projectMJSisLoaded(){
                             console.error("Error saving photo:", error);
                         }
                 }
-            // addNewRecord END
-        // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
-            // replaceRecordById START
-                export async function replaceRecordById(){
-                    console.log("replaceRecordById() called.");
-                }
-            // replaceRecordById END
+            // insertRecord END
 // DOM element "data-action" functions END
 // ⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️
 // 🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴

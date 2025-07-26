@@ -5,8 +5,9 @@
     ],
     "startup_URLs": [
         "/establish-session",
+        "/dbRouter/insert-record",
         "/dbRouter/filter-by",
-        "/dbRouter/add-new-record",
+        "/dbRouter/update-record",
         "/globalRouter/getProjectFunctionsMap",
         "/globalRouter/getGlobalFooter",
         "/loginRouter/isLoginRequired",
@@ -14,6 +15,6 @@
         "/loginRouter/emailCode",
         "/loginRouter/loginCodeSubmit",
         "/sessionsRouter/sessionRegen",
-        "/googleAPIsRouter/google-places-api-key"
+        "/googleAPIsRouter/get-google-places-api-key"
     ]
 }

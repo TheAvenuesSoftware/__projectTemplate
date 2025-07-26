@@ -93,7 +93,7 @@ export function projectSQLite_Client_isLoaded(){
             //     body: JSON.stringify({ userEmailAddress: "your-email@example.com" }) // Replace with actual email
             // });
                     const userEmailAddress = document.getElementById("user-email-address").textContent; // Get user email from element
-                    const address = document.getElementById("googlePlacesAPIautocomplete").value;
+                    const address = document.getElementById("googlePlacesAPIautocomplete_0").value;
                     const fetchUrl = "/dbRouter/get-all-photos";
                     const fetchOptions = {
                         method: 'POST',

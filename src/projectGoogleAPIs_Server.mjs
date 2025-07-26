@@ -13,8 +13,8 @@ export function googleAPIs_ServerSideMJSisLoaded(){
         dotenv.config({path:`./config/globalServer.env`});
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
-googleAPIsRouter.post('/google-places-api-key', (req, res) => {
-// googleAPIsRouter.get('/google-places-api-key', (req, res) => {
+googleAPIsRouter.post('/get-google-places-api-key', (req, res) => {
+// googleAPIsRouter.get('/get-google-places-api-key', (req, res) => {
     res.json({ apiKey: process.env.GOOGLE_PLACES_API_KEY });
 });
 

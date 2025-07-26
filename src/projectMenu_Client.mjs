@@ -308,20 +308,20 @@ export function setRequiredMenuHeight(){
 // const dims = getDims(el);
 // console.log(dims);
 
-export function saveToDB() {
-    alert("Saving to the database...");
-}
+// export function saveToDB() {
+//     alert("Saving to the database...");
+// }
 
-export function showAddress(event) {
-    event.preventDefault();
-    console.log("Address function executed!",event);
-    // Implement the logic to show address
-    document.getElementById("googlePlacesAPIautocomplete").focus();
-}
+// export function showAddress(event) {
+//     event.preventDefault();
+//     console.log("Address function executed!",event);
+//     // Implement the logic to show address
+//     document.getElementById("googlePlacesAPIautocomplete").focus();
+// }
 
-export function showNotes(event) {
-    event.preventDefault();
-    console.log("Notes function executed!",event);
-    // Implement the logic to show notes
-    document.getElementById("notesTextArea").focus();
-}
+// export function showNotes(event) {
+//     event.preventDefault();
+//     console.log("Notes function executed!",event);
+//     // Implement the logic to show notes
+//     document.getElementById("notesTextArea").focus();
+// }

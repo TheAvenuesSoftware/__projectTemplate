@@ -7,6 +7,7 @@ const consoleLog = true;
 console.log("LOADED:- projectGoogleAPIs_Client.mjs is loaded",new Date().toLocaleString());
 
 async function loadScript(src) {
+    console.log(`loadScript(src) executed.`)
     return new Promise((resolve, reject) => {
         const script = document.createElement("script");
         script.src = src;
@@ -20,12 +21,17 @@ async function loadScript(src) {
     });
 }
 
-function initAutocomplete() {
+export function initAutocomplete(inputId) {
+    const addressInput = document.getElementById(inputId);
+    if(!addressInput){
+        console.warn(`Input with ID '${inputId}' not found.`);
+        return;
+    }
     if (!google.maps || !google.maps.places) {
         console.error("Google Maps Places library is not available yet.");
         return;
     }
-    var addressInput = document.getElementById("googlePlacesAPIautocomplete");
+    // var addressInput = document.getElementById("googlePlacesAPIautocomplete");
     var addressOptions = {
         componentRestrictions: { country: "AU" } // Restrict to Australia
     };
@@ -101,7 +107,7 @@ function initMap() {
 export async function getGooglePlacesAPIkey() {
 
     try {
-        const fetchUrl = "/googleAPIsRouter/google-places-api-key";
+        const fetchUrl = "/googleAPIsRouter/get-google-places-api-key";
         const fetchOptions = {
             method: 'POST',
             mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -118,7 +124,7 @@ export async function getGooglePlacesAPIkey() {
         }
         if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
         const response = await fetch(fetchUrl, fetchOptions);
-        // const response = await fetch('/googleAPIsRouter/google-places-api-key');
+        // const response = await fetch('/googleAPIsRouter/get-google-places-api-key');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -131,7 +137,7 @@ export async function getGooglePlacesAPIkey() {
         // await loadScript(`https://maps.googleapis.com/maps/api/js?key=${jso.apiKey}&libraries=places&callback=initMap`)
         .then(() => {
             console.log("Google Maps API script loaded successfully.");
-            initAutocomplete(); // Ensures autocomplete runs **after** Maps loads
+            initAutocomplete("googlePlacesAPIautocomplete_0"); // Ensures autocomplete runs **after** Maps loads
             // initMap(); // Initializes the map
         })
         .catch(error => console.error("Error loading Google Maps script:", error));
