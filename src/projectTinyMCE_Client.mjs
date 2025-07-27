@@ -13,6 +13,7 @@
             plugins: 'autoresize lists link code',
             // toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist',
             toolbar: 'undo redo bold italic underline strikethrough bullist numlist',
+            content_css: './styles/globalTinyMCE.css',
             statusbar: true,
             elementpath: false,
             setup: function (editor) {

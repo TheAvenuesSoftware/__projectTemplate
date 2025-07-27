@@ -203,15 +203,30 @@
                     <!-- 🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡 -->
                     <!-- home -->
                     <input id="section0-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
-                    <p class="section-heading">Home</p>
-                    <p>No more lost photos.</p>
-                    <p>Store them by address.</p>
-                    <p>Add notes to each photo.</p>
-                    <p>Easy find photos by searching by:-</p>
+                    <p class="section-heading">Home</p><br>
+                    <p style="text-align: center;"><b>|&nbsp&nbspNo more lost job photos.&nbsp&nbsp|&nbsp&nbspStore them by job address.&nbsp&nbsp|&nbsp&nbspAdd a job note to each photo.&nbsp&nbsp|</b></p><br>
+                    <p><strong>Easily find photos searching by:-</strong></p>
                     <ol>
-                        <li style="margin-left:20px;">address, or any part of an address.</li>
-                        <li style="margin-left:20px;">note, or any part of a note.</li>
-                        <li style="margin-left:20px;">date.</li>
+                        <li style="margin-left:20px;">job address; any part of a job address.</li>
+                        <li style="margin-left:20px;">job note; any part of a job note.</li>
+                        <li style="margin-left:20px;">job date.</li>
+                    </ol>
+                    <br>
+                    <p><strong>Create an account to:</strong></p>
+                    <ul>
+                        <li style="margin-left:20px;list-style-type: none;">Store and retrieve photos along with the</li>
+                        <ul>
+                            <li style="margin-left:40px;">address.</li>
+                            <li style="margin-left:40px;">date and time taken.</li>
+                            <li style="margin-left:40px;">job note.</li>
+                        </ul> 
+                    </ul> 
+                    <br>
+                    <p><strong>Your account data security and privacy features:</strong></p>
+                    <ol>
+                        <li style="margin-left:20px;">Secure login.  A login code is emailed to your chosen email address.  Use the code to access your account.  Your account is not accessible without the one-time-use code.</li>
+                        <li style="margin-left:20px;">If your email account is secure, your account and your information stored at Tradie Photo Catalogue is secure.</li>
+                        <li style="margin-left:20px;">No images are stored on the Tradie Photo Catalogue server.  Images are stored as non-viewable data but they are rendered in your browser as viewable images.</li>
                     </ol>
                     <!-- 🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡🏡 -->
                 </section>
@@ -237,7 +252,7 @@
                         </div>
                         <div id="canvas-container" class="canvas-container" style="flex-direction: column; align-items: center;">
                             <canvas id="canvas"></canvas>
-                            <button id="save-png" style="margin-top: 10px;">Save as PNG</button>
+                            <!-- <button id="save-png" style="margin-top: 10px;">Save as PNG</button> -->
                         </div>
                     <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
                 </section>
@@ -308,8 +323,10 @@
                         </label><br>
                     </form>
                     <div class="search-container">
-                        <input id="search-input" type="text" placeholder="Enter search term...">
-                        <button id="search-button">Search</button>
+                        <input id="search-input" class="search-input" type="text" placeholder="Enter search term...">
+                        <div style="text-align: center;">
+                            <button id="search-button" class="std-btn">Search</button>
+                        </div>
                     </div>
                     <div id="search-results" class="search-results">
                         <p class="section-heading">Search Results</p>

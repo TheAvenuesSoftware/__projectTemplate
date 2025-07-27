@@ -55,7 +55,46 @@ export function projectMJSisLoaded(){
     // DOM element "data-action" functions START
         let filteredRecords = {}; // Store filtered records globally
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
+            export async function deleteRecord(event){
+                const recordIdToDELETE = event.target.dataset.recordId;
+                console.log('recordIdToDELETE:-',recordIdToDELETE);
+                try {
+                    // const userEmailAddress = document.getElementById("user-email-address").textContent;
+                    const userEmailAddress = "donald.garton@outlook.com";
+                    console.log(userEmailAddress);
+                    const fetchUrl = "/dbRouter/delete-record";
+                    const fetchOptions = {
+                            method: 'POST',
+                            mode: 'cors',                  // Ensures cross-origin requests are handled
+                            cache: 'no-cache',             // Prevents caching issues
+                            credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+                            headers: {
+                                'Content-Type': 'application/json',  // Sets content type
+                                // - POTENTIAL Content-Type header issue:
+                                //     - IF you're using FormData, you shouldn't manually set "Content-Type": "multipart/form-data".
+                                //     - The browser automatically sets the correct boundary for multipart/form-data. Manually setting it could lead to an error because the boundary isn’t included. You should remove that header.
+                                // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
+                                // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
+                            },
+                            body: JSON.stringify({
+                                fileName: userEmailAddress,
+                                tableName: "photos",
+                                updates:{
+                                },
+                                recordIdToDELETE: recordIdToDELETE
+                            })
+                        }
+                    if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
+                    const response = await fetch(fetchUrl, fetchOptions);
+                    const jso = await response.json(); // Fetch JSON 
+                    console.log(jso);
+                } catch (error) {
+                    console.error(`Error DELETING record # ${recordIdToDELETE} in photos :`, error);
+                }
+            }
+        // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export function editRecordNote(event){
+                event.target.disabled = true;
                 console.log(`filteredRecords:-\n`,filteredRecords);
                 const filteredRecordID = event.target.dataset.imageId;
                 console.log(`filteredRecordID:- `,filteredRecordID);
@@ -70,8 +109,6 @@ export function projectMJSisLoaded(){
                     localStorage.setItem('tas_note_toEdit', noteHTML);
                     editNoteDiv.innerHTML = `<textarea id='tinymce_${imageID}' class='tinymce-editor'>${noteHTML}</textarea>`;
                     const anchorElement = document.getElementById(event.target.id);
-                    // console.log(event.target.id);
-                    // console.log(anchorElement);
                     anchorElement.after(editNoteDiv); // append after the anchor element.  append; prepend; before; after
                 // insert DOM element textarea END
                 // initialise TinyMCE START
@@ -81,6 +118,7 @@ export function projectMJSisLoaded(){
                 // initialise TinyMCE END
                 // insert save button START
                     const editNoteDivSaveBtn = document.createElement("div");
+                    editNoteDivSaveBtn.style.textAlign = "center";
                     editNoteDivSaveBtn.innerHTML = 
                     `
                         <button id='saveEditedNote${imageID}' class="std-btn" data-action="saveEditedNote" data-record-id='${imageID}'>Save changes to note # ${imageID}</button>
@@ -94,8 +132,8 @@ export function projectMJSisLoaded(){
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export async function saveEditedNote(event){
                 console.log('saveEditedNote:-\n',event);
-                const noteToSave = localStorage.getItem("tas_note_edited");
                 const recordIdToUpdate = event.target.dataset.recordId;
+                const noteToSave = localStorage.getItem("tas_note_edited"); // this localStorage item is updated by TinyMCE editor.on 'blur'
                 console.log('noteToSave:-\n',noteToSave);
                 console.log('recordIdToUpdate:-',recordIdToUpdate);
                 try {
@@ -135,6 +173,7 @@ export function projectMJSisLoaded(){
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export function editRecordAddress(event){
+                event.target.disabled = true;
                 console.log(`filteredRecords:-\n`,filteredRecords);
                 const filteredRecordID = event.target.dataset.imageId;
                 console.log(`filteredRecordID:- `,filteredRecordID);
@@ -146,36 +185,41 @@ export function projectMJSisLoaded(){
                 document.getElementById("note-address").textContent = filteredRecords[`${filteredRecordID}`].image_address || '';
                 // insert DOM element input START
                     const editAddressDiv = document.createElement("div");
-                    editAddressDiv.className = "record-card-edit-address";
+                    // editAddressDiv.className = "record-card-edit-address";
+                    editAddressDiv.className = "autocomplete-address-container";
                     const addressValue = filteredRecords[`${filteredRecordID}`].image_address || '';
                     console.log(addressValue);
-                    localStorage.setItem(`tas_address_edit`,addressValue);
+                    localStorage.setItem(`tas_address_toEdit`,addressValue);
                     editAddressDiv.innerHTML = `
                         <input id="googlePlacesAPIautocomplete_${imageID}" class="autocomplete-address-input" type="text" placeholder="Enter address here..."><br>
-                        <button id='saveEditedAddress${imageID}' class="std-btn" data-action="saveEditedAddress" data-image-id='image_${imageID}'>Save address # ${imageID}</button>`;
-                const filteredListContainer = document.getElementById("filteredList-container");
-                const anchorElement = document.getElementById(event.target.id);
-                console.log(event.target.id);
-                console.log(anchorElement);
-                anchorElement.after(editAddressDiv); // append after the anchor element
-                initAutocomplete(`googlePlacesAPIautocomplete_${imageID}`);
+                        `;
+                    const anchorElement = document.getElementById(event.target.id);
+                    console.log(event.target.id);
+                    console.log(anchorElement);
+                    anchorElement.after(editAddressDiv); // append after the anchor element
+                // insert DOM element input END
+                // initialise Google API START
+                    document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = filteredRecords[`${filteredRecordID}`].image_address || '';
+                    initAutocomplete(`googlePlacesAPIautocomplete_${imageID}`);
+                // initialise Google API END
                 // insert save button START
                     const editAddressDivSaveBtn = document.createElement("div");
-                    editAddressDivSaveBtn.innerHTML = 
-                    `
+                    editAddressDivSaveBtn.style.textAlign = "center";
+                    editAddressDivSaveBtn.innerHTML = `
                         <button id='saveEditedAddress${imageID}' class="std-btn" data-action="saveEditedAddress" data-record-id='${imageID}'>Save changes to address # ${imageID}</button>
-                    `
-                    const anchorIIElement = document.getElementById(`deleteRecord${imageID}`);
+                        `;
+                    const anchorIIElement = document.getElementById(`googlePlacesAPIautocomplete_${imageID}`);
                     console.log(event.target.id);
                     console.log(anchorIIElement);
-                    anchorIIElement.before(editAddressDivSaveBtn); // append after the anchorII element.  append; prepend; before; after
+                    anchorIIElement.after(editAddressDivSaveBtn); // append after the anchorII element.  append; prepend; before; after
                 // insert save button END
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export async function saveEditedAddress(event){
                 console.log('saveEditedAddress:-\n',event);
-                const addressToSave = localStorage.getItem("tas_address_edited");
                 const recordIdToUpdate = event.target.dataset.recordId;
+                const addressToSave = document.getElementById(`googlePlacesAPIautocomplete_${recordIdToUpdate}`).value;
+                localStorage.setItem("tas_address_edited",addressToSave);
                 console.log('addressToSave:-\n',addressToSave);
                 console.log('recordIdToUpdate:-',recordIdToUpdate);
                 try {
@@ -300,10 +344,12 @@ export function projectMJSisLoaded(){
                                 <p><strong>Date:</strong> ${imageDate}</p>
                                 <p><strong>Time:</strong> ${imageTime}</p>
                                 <hr>
-                                <p><strong>Address:</strong> ${imageAddress}</p>
+                                <p><strong>Address:</strong></p>
+                                <p>${imageAddress}</p>
                                 <button id='addressEdit${imageID}' class="std-btn" data-action="editRecordAddress" data-image-id='image_${imageID}'>Edit address # ${imageID}</button>
                                 <hr>
-                                <p><strong>Notes:</strong> ${imageNotes}</p>
+                                <p><strong>Notes:</strong></p>
+                                <div class="tinymce-textarea">${imageNotes}</div>
                                 <button id='noteEdit${imageID}' class="std-btn" data-action="editRecordNote" data-image-id='image_${imageID}'>Edit note # ${imageID}</button>
                                 <br>
                                 <button id='deleteRecord${imageID}' class="std-btn-red" data-action="deleteRecord" data-record-id='image_${imageID}'>DELETE RECORD # ${imageID}</button>

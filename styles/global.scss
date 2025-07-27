@@ -83,6 +83,20 @@ body{
     text-align: center;
 }
 
+.tinymce-textarea{
+    background-color: palegoldenrod;
+    border: 1px solid black;
+    padding:5px;
+}
+.tinymce-textarea strong{
+    padding: 0;
+    margin: 0;
+    border: none;
+    // color: black;
+}
+.tinymce-textarea li{
+    margin-left: 40px;
+}
 // 🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳
 // standard button <<<--- scss scss scss scss scss scss scss scss scss scss
 .std-btn{
@@ -470,7 +484,7 @@ body{
 
 // 📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌
 // GOOGLE PLACES API start
-.section-googleAPIs{
+.section-googleAPIs, .section-search{
     .autocomplete-address-container{
         display: flex;
         flex-direction: column;
@@ -657,6 +671,17 @@ body{
             margin: 5px 0;
             font-size: 14px;
         }
+    }
+    .search-input{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color:var(--std-input-color);
+        background: var(--std-input-bckgrnd);
+        width: 80%; 
+        margin:auto;
+        padding:5px;
     }
 }
 

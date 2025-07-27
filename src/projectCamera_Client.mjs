@@ -191,15 +191,15 @@
     }
   });
 
-  document.getElementById('save-png').addEventListener('click', () => {
-    const dataURL = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.href = dataURL;
-    link.download = `capture_${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
+  // document.getElementById('save-png').addEventListener('click', () => {
+  //   const dataURL = canvas.toDataURL('image/png');
+  //   const link = document.createElement('a');
+  //   link.href = dataURL;
+  //   link.download = `capture_${Date.now()}.png`;
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // });
 
   startCamera();
 
