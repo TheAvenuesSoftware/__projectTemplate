@@ -126,13 +126,53 @@
             display: flex;
             flex-direction: column;
         }
-        header, footer {
+        /* .header-controls-container{ */
+        header > div{
+            display: flex;
+            /* justify-content: center; */
+            justify-content: space-between;
+            align-items: center;
+            text-align: center; /* targets the text within a div */
+            padding: 3px;
             background-color: rgba(25, 255, 25,.5);
             color: rgba(0, 55, 0,1);
             font-weight: 900;
-            text-align: center;
-            padding: 2.5px;
+        }
+        /* sign IN OUT start */
+            header .sign-in-out-icon-container img{
+                display:flex;
+                border-radius: 5px;
+                width:30px;
+                height:25px;
+                /* display:flex; */
+                cursor:pointer;
+            }
+            header .sign-in-out-icon-container .icon-hidden{
+                    display:none;
+            }
+        /* sign IN OUT end */
+        footer {
+            display:flex;
             flex-shrink: 0;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            background-color: rgba(25, 255, 25,.5);
+            color: rgba(0, 55, 0,1);
+            font-weight: 900;
+            padding: 2.5px;
+            margin: 0px;
+        }
+        .footer-control {
+            /* margin: 0 2.5px; */
+            padding: 0 2.5px;
+            cursor: pointer;
+            height:30px;
+            width:44px;
+        }
+        .footer-control:hover {
+            border: 2px solid black;
         }
         main {
             position: relative;
@@ -141,61 +181,38 @@
         }
         section {
             position: absolute;
-            top: 0; left: -5000px; right: 0; bottom: 0;
+            top: 0; left: 0px; right: 0; bottom: 0;
+            flex: 1;
             overflow-y: auto;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0s linear 0.5s;
             padding: 1rem;
-            /* background: #f1f1f1; */
-            /* background: aqua; */
         }
         section.active {
-            top: 0; left: 0; right: 0; bottom: 0;
             opacity: 1;
-            z-index: 1;
+            visibility: visible;
+            transition-delay: 0s;
         }
         .section-heading{
             font-weight: 900;
-        }
-        .footer-controls {
-            /* margin-top: 1rem; */
-            text-align: center;
-        }
-        .footer-control {
-            margin: 0 5px;
-            cursor: pointer;
-            height:30px;
-            width:44px;
-        }
-        .footer-control:hover {
-            border: 2px solid black;
         }
     </style>
 
 </head>
 <body>
     <header>
-        <!--  -->
-            <!-- <div id="classic-menu-icon-container" class="classic-menu-icon-container">
-                <img src="__MenuIcon.png" height="20px">
-            </div> -->
-        <!--  -->
-        <!--  -->
-            <!-- <div> -->
-                <div class="app-name">Tradie Photo Catalogue</div>
-                <div id="user-email-address" class="user-email-address" style="text-align: center;">...</div>        
-            <!-- </div> -->
-        <!--  -->
-        <!--  -->
-            <!-- sign-in-out-button START -->
-                <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-                    <div id="sign-in-out-container" class="sign-in-out-container" data-status="signed-out" tabindex="-1" role="button" title="Click to sign in.">
-                        <img id="padlock-icon" src="__padlock_locked.png" class="icon">
-                        <!-- <img id="padlock-unlocked-icon" src="__padlock_unlocked.png" class="icon icon-hidden"> -->
-                    </div> 
-                <!-- initial class is "sign-in-button" and toggles to/from class "sign-out-button"-->
-            <!-- sign-in-out-button END -->
-        <!--  -->
+        <div id="header-controls-container" class="header-controls-container">
+            <div class="app-name" class="header-control">
+                <span>Tradie Photo Catalogue</span>
+            </div>
+            <div id="user-email-address" class="header-control user-email-address">
+                <span>...</span>
+            </div>
+            <div id="sign-in-out-icon-container" class="header-control sign-in-out-icon-container" data-status="signed-out" tabindex="-1" role="button" title="Click to sign in.">
+                <img id="padlock-icon" src="__padlock_locked.png" class="icon">
+            </div> 
+        </div>
     </header>
     <main>
 
@@ -241,18 +258,15 @@
                     <input id="section2-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
                         <div id="video-container" class="video-container">
                             <video id="camera-stream" autoplay muted playsinline></video>
-                            <!-- Controls UI -->
                             <div class="controls-wrapper">
                                 <label>Zoom:<br>
-                                    <!-- <input type="range" id="zoom" min="0.2" max="4" step="0.05"> -->
                                     <input type="range" id="zoom" min="0.0" max="4" step="0.025">
                                 </label>
-                                <button id="capture-still">Capture Image</button>
+                                <button id="capture-still" class="std-btn">Capture Image</button>
                             </div>
                         </div>
                         <div id="canvas-container" class="canvas-container" style="flex-direction: column; align-items: center;">
                             <canvas id="canvas"></canvas>
-                            <!-- <button id="save-png" style="margin-top: 10px;">Save as PNG</button> -->
                         </div>
                     <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
                 </section>
@@ -278,10 +292,6 @@
                     <p id="note-date-time">&nbsp</p>
                     <p id="note-address">&nbsp</p>
                     <textarea id="tinymce_0" class="tinymce-editor"></textarea>
-                    <div class="toolbar">
-                        <!-- <button id="saveNoteBtn" class="std-btn">💾 Save Note</button> -->
-                        <!-- <button id="loadBtn">📥 Load</button> -->
-                    </div>
                     <!-- 📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️📝🖋️ -->
                 </section>
                 <section id="section5" class="section5 section-save">
@@ -307,20 +317,20 @@
                     <!-- search -->
                     <input id="section6-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
                     <p class="section-heading">Search</p>
-                    <form>
-                        <p>Search by:</p>
+                    <form id="search-criteria" class="search-criteria">
+                        <span>Search by:</span>
                         <label>
                             <input type="radio" name="searchOption" data-action="searchByAddress" value="address" />
                             Part of an address
-                        </label><br>
+                        </label>
                         <label>
                             <input type="radio" name="searchOption" data-action="searchByNote" value="note" />
                             Part of a note
-                        </label><br>
+                        </label>
                         <label>
                             <input type="radio" name="searchOption" data-action="searchByDate" value="date" />
                             Date
-                        </label><br>
+                        </label>
                     </form>
                     <div class="search-container">
                         <input id="search-input" class="search-input" type="text" placeholder="Enter search term...">
@@ -340,7 +350,7 @@
     </main>
 
     <footer>
-        <div id="footer-controls" class="footer-controls">
+        <div id="footer-controls-container" class="footer-controls-container">
             <img id="footer-control-home" src="/_Home.png" class="footer-control" data-section-number="0">
             <!-- <img id="footer-control-menu" src="/_Menu.png" class="footer-control" data-section-number="1"> -->
             <img id="footer-control-camera" src="/_Camera.png" class="footer-control" data-section-number="2">
@@ -351,22 +361,6 @@
         </div>
     </footer>
     <script>
-        // async function getModule(fileName) {
-        //     const response = await fetch(fileName);
-        //     if (!response.ok) {
-        //         throw new Error(`Failed to load module: ${fileName}`);
-        //     }
-        //     const html = await response.text();
-        //     return html;
-        // }
-        // async function loadScript(fileName, sectionId) {
-        //     const html = await getModule(fileName); // get HTML string from module
-        //     const section = document.getElementById(sectionId);
-        //     if (section) {
-        //         section.innerHTML = html;
-        //     }
-        // }
-        // loadScript("./src/sectionModules/googlePlacesAPI.mjs","section3");
         function focusInput(sectionId) {
             const input = document.querySelector(`#section${sectionId}-focus-on-activation`);
             input?.focus();
@@ -386,9 +380,7 @@
                 localStorage.setItem("tas_sectionNumber",index);
             }, 500); // Matches the CSS transition duration
         }
-        document.getElementById("footer-controls").addEventListener("click",(ev) => {
-            // console.log(ev.target.id);
-            // console.log(ev.target.getAttribute("data-section-number"));
+        document.getElementById("footer-controls-container").addEventListener("click",(ev) => {
             const sectionNumber = ev.target.getAttribute("data-section-number");
             switchSection(sectionNumber);
         });
@@ -404,12 +396,5 @@
             document.getElementById("googlePlacesAPIautocomplete_0").value = address;
             console.log(address);
     </script>
-    <!-- <style>
-.tox .tox-tbtn[data-toolbar="italic"] {
-    background-color: #e1bee7;
-    background-color:red !important;
-    color: #4a148c !important;
-}
-    </style> -->
 </body>
 </html>

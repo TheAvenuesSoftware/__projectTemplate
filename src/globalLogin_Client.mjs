@@ -484,16 +484,16 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
                 document.getElementById("busy-animation-overlay").remove();
                 document.getElementById("popup-overlay").remove();
                 document.getElementById("padlock-icon").src="__padlock_unlocked.png";
-                document.getElementById("sign-in-out-container").setAttribute("data-status","signed-in");
-                document.getElementById("sign-in-out-container").title = "Click to sign out.";
+                document.getElementById("sign-in-out-icon-container").setAttribute("data-status","signed-in");
+                document.getElementById("sign-in-out-icon-container").title = "Click to sign out.";
                 postLoginActions({createNewAccount:createNewAccount,loginEmailAddress:loginEmailAddress});
                 alert("🟢 Secure login is successful."); // best to leave this to the end so that it doesn't interrupt execution?
             }else{
                 document.getElementById("busy-animation-overlay").remove();
                 document.getElementById("popup-overlay").remove();
                 document.getElementById("padlock-icon").src="__padlock_locked.png";
-                document.getElementById("sign-in-out-container").setAttribute("data-status","signed-out");
-                document.getElementById("sign-in-out-container").title = "Click to sign in.";
+                document.getElementById("sign-in-out-icon-container").setAttribute("data-status","signed-out");
+                document.getElementById("sign-in-out-icon-container").title = "Click to sign in.";
                 alert("🔴 Secure login failed, incorrect login code submitted."); // best to leave this to the end so that it doesn't interrupt execution?
             }
     } catch (error) {
@@ -584,8 +584,8 @@ export async function isLoginRequired() {
             // // if LOGIN REQUIRED
     
             // signin-out button START
-                document.getElementById("sign-in-out-container").addEventListener("click", (ev) => {
-                    console.log("sign-in-out-container clicked");
+                document.getElementById("sign-in-out-icon-container").addEventListener("click", (ev) => {
+                    console.log("sign-in-out-icon-container clicked");
                     console.log(ev.target.getAttribute("data-status"));
                     if(ev.target.getAttribute("data-status")==="signed-out"){
                         login_stepOne();
@@ -598,12 +598,12 @@ export async function isLoginRequired() {
                 //     ❗THIS
                 //         document.getElementById("sign-in-out-icon").addEventListener("click", function(ev) {
                 //             ev.stopPropagation(); // Prevent event bubbling issues
-                //             this.closest("#sign-in-out-container").click();
+                //             this.closest("#sign-in-out-icon-container").click();
                 //         });
                 //     ❗OR THIS works
                         document.getElementById("padlock-icon").addEventListener("click", (ev) => {
                             ev.stopPropagation(); // Prevent event bubbling issues
-                            document.getElementById("sign-in-out-container").click();
+                            document.getElementById("sign-in-out-icon-container").click();
                         });
                 // Ensure clicking the image triggers the container’s click event END
             // signin-out button END

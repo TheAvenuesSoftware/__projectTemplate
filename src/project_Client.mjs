@@ -339,7 +339,7 @@ export function projectMJSisLoaded(){
                                 const imageNotes = photo.image_notes || "No Notes Available";
                                 const imageID = photo.image_id;
                             recordCard.innerHTML = `
-                                <p><strong>RECORD # ${imageID}</strong></p>
+                                <p><strong>Photo # ${imageID}</strong></p>
                                 <img src="${imageSrc}" alt="Photo" class="photo">
                                 <p><strong>Date:</strong> ${imageDate}</p>
                                 <p><strong>Time:</strong> ${imageTime}</p>
@@ -351,9 +351,8 @@ export function projectMJSisLoaded(){
                                 <p><strong>Notes:</strong></p>
                                 <div class="tinymce-textarea">${imageNotes}</div>
                                 <button id='noteEdit${imageID}' class="std-btn" data-action="editRecordNote" data-image-id='image_${imageID}'>Edit note # ${imageID}</button>
-                                <br>
+                                <hr>
                                 <button id='deleteRecord${imageID}' class="std-btn-red" data-action="deleteRecord" data-record-id='image_${imageID}'>DELETE RECORD # ${imageID}</button>
-                                <hr><hr><br>
                             `;
                             filteredListContainer.appendChild(recordCard);
                             filteredRecords[`image_${imageID}`] = {

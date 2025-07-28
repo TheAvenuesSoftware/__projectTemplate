@@ -10,6 +10,9 @@
   --std-btn-red-color: rgba(255, 255, 255,1);
   --std-btn-red-bckgrnd: linear-gradient(135deg, rgb(226, 74, 74), rgb(253, 8, 8));
   --std-btn-red-bckgrnd-hover: linear-gradient(135deg, rgb(253, 8, 8), rgb(226, 74, 74));
+  --std-btn-disabled-color: rgba(0, 0, 0,1);
+  --std-btn-disabled-bckgrnd: linear-gradient(135deg, rgb(80, 79, 79), rgb(255, 255, 255));
+  --std-btn-disabled-bckgrnd-hover: linear-gradient(135deg, rgb(255, 255, 255), rgb(80, 79, 79));
   --std-input-color:darkblue;
   --std-input-bckgrnd:palegoldenrod;
   --off-screen-left:-5000px;
@@ -73,6 +76,11 @@ body {
   transform: scale(1.05);
   background: var(--std-btn-bckgrnd-hover);
 }
+.std-btn:disabled {
+  background: var(--std-btn-disabled-bckgrnd);
+  color: var(--std-btn-disabled-color);
+  border: 1px solid black;
+}
 
 .std-btn-red {
   display: inline-block;
@@ -88,6 +96,11 @@ body {
 .std-btn-red:hover {
   transform: scale(1.05);
   background: var(--std-btn-red-bckgrnd-hover);
+}
+.std-btn-red:disabled {
+  background: var(--std-btn-disabled-bckgrnd);
+  color: var(--std-btn-disabled-color);
+  border: 1px solid black;
 }
 
 .std-frm-flex-wrapper {
@@ -337,24 +350,6 @@ body {
   }
 }
 
-.sign-in-out-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.sign-in-out-container .icon {
-  border-radius: 5px;
-  width: 30px;
-  height: 25px;
-  display: flex;
-}
-.sign-in-out-container .icon-hidden {
-  display: none;
-}
-
 .section-googleAPIs .autocomplete-address-container, .section-search .autocomplete-address-container {
   display: flex;
   flex-direction: column;
@@ -373,8 +368,8 @@ body {
 }
 .section-googleAPIs .map-container, .section-search .map-container {
   position: relative; /* Keeps it inside the document flow */
-  width: 500px;
-  height: 400px;
+  width: 95%;
+  height: 80%;
   background-color: black;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.75);
@@ -434,7 +429,6 @@ body {
   height: 200px;
   height: 100%;
   overflow: hidden;
-  border: 2px solid blue;
   touch-action: none; /* prevent native gestures, enables custom touch handling */
 }
 .video-container video {
@@ -444,8 +438,7 @@ body {
   transform-origin: top left;
   user-select: none;
   pointer-events: none;
-  border: 5px solid green;
-  background-color: #007BFF;
+  border: 1px solid black;
   width: 100%;
   height: 100%;
   overflow: contain;
@@ -457,16 +450,11 @@ body {
   flex-direction: column;
   gap: 8px;
   bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
   max-width: 400px;
-  margin-top: 10px;
-  z-index: 2;
+  margin-left: 20px;
 }
 .controls-wrapper label {
   text-align: center;
-  font-size: 14px;
 }
 .controls-wrapper input {
   text-align: center;
@@ -477,31 +465,13 @@ body {
 canvas {
   margin-top: 10px;
   border: 1px solid #ccc;
-  border: 1px solid blue;
 }
 
-.section-search #photos-container {
+.section-search .search-criteria {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   gap: 15px;
-}
-.section-search #photos-container .record-card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  width: 250px;
-  text-align: center;
-  background: var(--std-bckgrnd);
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-}
-.section-search #photos-container .photo {
-  max-width: 100%;
-  height: auto;
-  object-fit: cover;
-  border-radius: 5px;
-}
-.section-search #photos-container p {
-  margin: 5px 0;
-  font-size: 14px;
 }
 .section-search .search-input {
   display: flex;
@@ -513,6 +483,21 @@ canvas {
   width: 80%;
   margin: auto;
   padding: 5px;
+}
+.section-search .record-card {
+  border: 1px solid black;
+  padding: 10px;
+  margin-bottom: 5px;
+  width: 250px;
+  width: 100%;
+  background: var(--std-bckgrnd);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+.section-search .record-card .photo {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 5px;
 }
 
 .section-note .toolbar, .record-card-edit-note .toolbar {
@@ -594,204 +579,6 @@ canvas {
 .section-save .save-canvas {
   border: 1px solid black;
   border-radius: 6px;
-}
-
-.offscreen {
-  left: var(--off-screen-left);
-}
-
-.m {
-  position: absolute;
-  top: 50px;
-  right: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 30px;
-  width: 40px;
-  background: var(--std-bckgrnd);
-  padding: 2px;
-  cursor: grab;
-  -webkit-touch-callout: none; /* disables callout (like Save Image) */
-  -webkit-user-select: none; /* prevents text/image selection */
-  user-select: none;
-  z-index: 2;
-}
-
-.c {
-  height: 30px;
-  width: 40px;
-  border: 2px solid black;
-  border-radius: 5px;
-}
-
-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  text-align: center;
-  padding: 0px;
-  margin-left: 2px;
-  margin-right: 2px;
-}
-header .app-name {
-  text-align: center;
-  font-weight: 900;
-}
-header .user-email-address {
-  text-align: center;
-  font-weight: 900;
-}
-header .classic-menu-icon-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 3px;
-  cursor: pointer;
-}
-header .classic-menu-icon-container img, header .classic-menu-icon-container .sign-in-out-icon {
-  height: 25px;
-}
-
-.mobile-device-footer-menu {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: var(--std-bckgrnd);
-  border-top: 1px solid black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.mobile-device-footer-menu .footer-menu {
-  position: relative;
-  background: var(--std-bckgrnd);
-  display: flex;
-}
-.mobile-device-footer-menu .footer-menu .footer-button {
-  position: absolute;
-  text-align: left;
-  padding: 0px;
-  margin: 10px;
-  height: 30px;
-  width: 44px;
-  flex-grow: 1;
-  cursor: pointer;
-}
-.mobile-device-footer-menu .footer-menu .footer-button:hover {
-  background: var(--std-bckgrnd);
-  border: 2px solid black;
-}
-.mobile-device-footer-menu .footer-menu img {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-}
-.mobile-device-footer-menu .footer-menu .tooltip {
-  position: relative;
-  cursor: pointer;
-}
-.mobile-device-footer-menu .footer-menu .tooltip::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 125%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #000;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease-in-out;
-}
-.mobile-device-footer-menu .footer-menu .tooltip:hover::after {
-  opacity: 1;
-}
-@media screen and (max-width: 768px) {
-  .mobile-device-footer-menu .footer-menu .footer-menu .footer-button {
-    touch-action: manipulation; /* Helps suppress iOS delay */
-    -webkit-tap-highlight-color: transparent; /* Removes blue flash on iOS */
-    position: relative;
-    padding: 0px;
-    height: 40px;
-    width: 55px;
-  }
-  .mobile-device-footer-menu .footer-menu .footer-menu img {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    user-select: none;
-    -webkit-user-drag: none;
-    pointer-events: none; /* Prevents iOS image preview */
-  }
-  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip {
-    position: relative;
-    cursor: pointer;
-  }
-  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #000;
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 4px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease-in-out;
-  }
-  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip:hover::after {
-    opacity: 1;
-  }
-}
-@media screen and (max-width: 414px) {
-  .mobile-device-footer-menu .footer-menu .footer-menu .footer-button {
-    touch-action: manipulation; /* Helps suppress iOS delay */
-    -webkit-tap-highlight-color: transparent; /* Removes blue flash on iOS */
-    position: relative;
-    padding: 0px;
-    height: 40px;
-    width: 55px;
-  }
-  .mobile-device-footer-menu .footer-menu .footer-menu img {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    user-select: none;
-    -webkit-user-drag: none;
-    pointer-events: none; /* Prevents iOS image preview */
-  }
-  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip {
-    position: relative;
-    cursor: pointer;
-  }
-  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #000;
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 4px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease-in-out;
-  }
-  .mobile-device-footer-menu .footer-menu .footer-menu .tooltip:hover::after {
-    opacity: 1;
-  }
 }
 
 /*# sourceMappingURL=project.css.map */

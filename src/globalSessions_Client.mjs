@@ -128,8 +128,8 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
                 });
                 console.log("🟢 logout successful.");
                 document.getElementById("padlock-icon").src="__padlock_locked.png";
-                document.getElementById("sign-in-out-container").setAttribute("data-status","signed-out");
-                document.getElementById("sign-in-out-container").title = "Click to sign in.";
+                document.getElementById("sign-in-out-icon-container").setAttribute("data-status","signed-out");
+                document.getElementById("sign-in-out-icon-container").title = "Click to sign in.";
                 alert("🟢 logout successful.");
 
                 // document.getElementById("sign-in-out-button").innerHTML = "Log In";
