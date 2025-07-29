@@ -551,4 +551,4 @@ function logAllEvents(target = document.body) {
             localStorage.setItem("tas_note",textarea.value);
         });
     });
-// TEXTAREA CUSTOMISATIONS start
+// TEXTAREA CUSTOMISATIONS end

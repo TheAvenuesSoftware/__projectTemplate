@@ -59,8 +59,8 @@ export function projectMJSisLoaded(){
                 const recordIdToDELETE = event.target.dataset.recordId;
                 console.log('recordIdToDELETE:-',recordIdToDELETE);
                 try {
-                    // const userEmailAddress = document.getElementById("user-email-address").textContent;
-                    const userEmailAddress = "donald.garton@outlook.com";
+                    const userEmailAddress = document.getElementById("user-email-address").textContent;
+                    // const userEmailAddress = "donald.garton@outlook.com";
                     console.log(userEmailAddress);
                     const fetchUrl = "/dbRouter/delete-record";
                     const fetchOptions = {
@@ -137,8 +137,8 @@ export function projectMJSisLoaded(){
                 console.log('noteToSave:-\n',noteToSave);
                 console.log('recordIdToUpdate:-',recordIdToUpdate);
                 try {
-                    // const userEmailAddress = document.getElementById("user-email-address").textContent;
-                    const userEmailAddress = "donald.garton@outlook.com";
+                    const userEmailAddress = document.getElementById("user-email-address").textContent;
+                    // const userEmailAddress = "donald.garton@outlook.com";
                     console.log(userEmailAddress);
                     const fetchUrl = "/dbRouter/update-record";
                     const fetchOptions = {
@@ -223,8 +223,8 @@ export function projectMJSisLoaded(){
                 console.log('addressToSave:-\n',addressToSave);
                 console.log('recordIdToUpdate:-',recordIdToUpdate);
                 try {
-                    // const userEmailAddress = document.getElementById("user-email-address").textContent;
-                    const userEmailAddress = "donald.garton@outlook.com";
+                    const userEmailAddress = document.getElementById("user-email-address").textContent;
+                    // const userEmailAddress = "donald.garton@outlook.com";
                     console.log(userEmailAddress);
                     const fetchUrl = "/dbRouter/update-record";
                     const fetchOptions = {
@@ -262,8 +262,8 @@ export function projectMJSisLoaded(){
                 export async function filterBy(filterField) {
                     console.log("filterBy() called.");
                     try {
-                        // const userEmailAddress = document.getElementById("user-email-address").textContent;
-                        const userEmailAddress = "donald.garton@outlook.com";
+                        const userEmailAddress = document.getElementById("user-email-address").textContent;
+                        // const userEmailAddress = "donald.garton@outlook.com";
                         console.log(userEmailAddress);
                         const filterText = `%${document.getElementById("search-input").value}%`;
                         if (!filterText) {
@@ -428,6 +428,34 @@ export function projectMJSisLoaded(){
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             // insertRecord START
                 export async function insertRecord(){
+                    // check if an image has been captured START
+                    	const canvasII = document.getElementById('canvasII'); // for image capture in section-save
+                        const ctx = canvasII.getContext('2d');
+                        const imageData = ctx.getImageData(0, 0, canvasII.width, canvasII.height);
+                        const pixels = new Uint32Array(imageData.data.buffer);
+                        const hasImage = pixels.some(pixel => pixel !== 0);
+                        console.log(hasImage);
+                        console.log(hasImage ? "Canvas has image data" : "Canvas is blank");
+                        if(hasImage===false){
+                            showCustomMessage("No image exists.  Please capture an image.")
+                            return;
+                        }
+                    // check if an image has been captured END
+                    // check for address START
+                        const address = document.getElementById("save_address").textContent;
+                        if(address.length===0){
+                            showCustomMessage("No address exists.  Please enter an address.")
+                            return;
+                        }
+                    // check for address END
+                    // check for note START
+                        // const notes = document.getElementById("save_note_0").value;
+                        const notesHTML = localStorage.getItem('tas_note_0') || ''; // Get notes from localStorage
+                        if(notesHTML.length===0){
+                            showCustomMessage("No note exists.  Please enter a note.")
+                            return;
+                        }
+                    // check for note END
                     const imageCompression = 1; // imageCompression level for JPEG (0.1 = 10% quality, 1 = no imageCompression)
                     // ✅ Compress Image Before Sending to Backend >>> Blob
                         async function canvasToBlob(canvas,imageCompression=1) {
@@ -453,14 +481,11 @@ export function projectMJSisLoaded(){
                         console.log("Compressed Image Blob:", window_image_Blob_compressed); // Log Blob
                         console.log("image_Blob_compressed.type",image_Blob_compressed.type); // Should log something like "image/jpeg"
                         const userEmailAddress = document.getElementById("user-email-address").textContent; // Get user email from element
-                        const address = document.getElementById("googlePlacesAPIautocomplete_0").value;
                         const imageDATE = new Date().toLocaleDateString();
                         const imageDD = newDateAttributes().date;
                         const imageMM = newDateAttributes().month;
                         const imageYYYY = newDateAttributes().year;
                         const imageTIME = new Date().toLocaleTimeString();
-                        // const notes = document.getElementById("save_note_0").value;
-                        const notesHTML = localStorage.getItem('tas_note') || ''; // Get notes from localStorage
                         const formData = new FormData();
                         formData.append("image_blob", image_Blob_compressed, "photo.jpg"); // Add Blob with optional filename
                         formData.append("image_date", imageDATE);
@@ -470,8 +495,8 @@ export function projectMJSisLoaded(){
                         formData.append("image_time", imageTIME);
                         formData.append("image_address", address);
                         formData.append("image_notes", notesHTML);
-                        // formData.append("userEmailAddress", userEmailAddress);
-                        formData.append("userEmailAddress", "donald.garton@outlook.com");
+                        formData.append("userEmailAddress", userEmailAddress);
+                        // formData.append("userEmailAddress", "donald.garton@outlook.com");
                         console.log("FormData entries:", Array.from(formData.entries())); // Log FormData entries
                         try {
                             const fetchUrl = "/dbRouter/insert-record";
@@ -497,6 +522,9 @@ export function projectMJSisLoaded(){
                             const response = await fetch(fetchUrl, fetchOptions);
                             const result = await response.json();
                             console.log(result.message);
+                            if(result.success===true){
+                                showCustomMessage("Added new record, successfully.");
+                            }
                             if (result.message==="Missing user details ~ authentication denied!") {
                                 showCustomMessage("Missing user details ~ authentication denied");
                             }

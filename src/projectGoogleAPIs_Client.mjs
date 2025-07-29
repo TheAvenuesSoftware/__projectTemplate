@@ -50,6 +50,10 @@ export function initAutocomplete(inputId) {
         if (!place.geometry) {
             console.error("No location data found.");
             return;
+        }else{
+            console.log('place:- ',place);
+            const save_address = document.getElementById("save_address");
+            save_address.textContent = document.getElementById("googlePlacesAPIautocomplete_0").value;
         }
 
         var map = new google.maps.Map(document.getElementById("map"), {

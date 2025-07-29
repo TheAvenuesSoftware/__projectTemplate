@@ -321,11 +321,11 @@ export function SQLite_ServerSideMJSisLoaded(){
 
                         // // res.json({ status: "success", message: "Image stored in SQLite!" });
                         // res.status(200).json({ message: 'Upload successful', data: formData });
-                        safeRespond(200, { message: 'Upload successful', data: formData });
+                        safeRespond(200, { message: 'Upload successful', data: formData, success: true });
 
                     } catch (err) {
                         console.error(trace(), '❌ Error saving to database:-\n', err);
-                        safeRespond(500, { message: 'ERROR: Internal server error during DB operation', data: formData });
+                        safeRespond(500, { message: 'ERROR: Internal server error during DB operation', data: formData, success: false });
                     }
                 });
 
@@ -333,11 +333,12 @@ export function SQLite_ServerSideMJSisLoaded(){
                     console.error(trace(), '❌ Busboy error:', err);
                     if (!res.headersSent) {
                         // res.status(500).json({ error: 'Error parsing form data' });
-                        safeRespond(500).json({ error: 'Error parsing form data' });
+                        safeRespond(500).json({ message: 'Error parsing form data', success: false });
                     }
                 });
                 req.on('error', (err) => {
                     console.error(trace(), '❌ Request stream error:', err);
+                    safeRespond(500).json({ message: '❌ Request stream error', success: false });
                 });
 
                 req.pipe(bb);

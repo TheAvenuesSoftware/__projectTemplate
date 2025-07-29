@@ -5,9 +5,6 @@
     ],
     "startup_URLs": [
         "/establish-session",
-        "/dbRouter/insert-record",
-        "/dbRouter/filter-by",
-        "/dbRouter/update-record",
         "/globalRouter/getProjectFunctionsMap",
         "/globalRouter/getGlobalFooter",
         "/loginRouter/isLoginRequired",

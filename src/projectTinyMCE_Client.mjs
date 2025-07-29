@@ -121,7 +121,7 @@ export async function initTinyMCE(el) {
     console.log(`Initialising TinyMCE editor for:- ${el.id}`)
     const textareaHTML = document.getElementById(`${el.id}`).textContent;
     console.log(textareaHTML);
-    localStorage.setItem("tas_note",textareaHTML);
+    localStorage.setItem("tas_note_0",textareaHTML);
     tinymce.init({
         ...tinymceConfig,
         target: el
