@@ -1,9 +1,20 @@
 {
     "safe_URLs": [
-        "/.well-known/appspecific/com.chrome.devtools.json",
-        "/heartbeat-session-extension"
+        "/.well-known/appspecific/com.chrome.devtools.json"
     ],
     "startup_URLs": [
+        "/dbRouter/filter-by",
+        "/establish-session",
+        "/globalRouter/getProjectFunctionsMap",
+        "/globalRouter/getGlobalFooter",
+        "/loginRouter/isLoginRequired",
+        "/loginRouter/fileExists",
+        "/loginRouter/emailCode",
+        "/loginRouter/loginCodeSubmit",
+        "/sessionsRouter/sessionRegen",
+        "/googleAPIsRouter/get-google-places-api-key"
+    ],
+    "archived_startup_URLs": [
         "/establish-session",
         "/globalRouter/getProjectFunctionsMap",
         "/globalRouter/getGlobalFooter",

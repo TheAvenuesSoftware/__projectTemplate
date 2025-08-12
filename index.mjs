@@ -45,15 +45,17 @@ const consoleLog = false;
         import https from 'https'; // For making HTTPS requests
     // EXPRESS
         import express from "express";
-    // COOKIE PARSER
-        import cookieParser from 'cookie-parser';
+    // COOKIE
+        import * as cookie from "cookie";
+    // // COOKIE PARSER
+    //     import cookieParser from 'cookie-parser';
     // JSONWEBTOKE for user authentication
         import jwt from 'jsonwebtoken';
     // CRYPTO
         import crypto from 'crypto'
         import { randomUUID } from 'crypto'; // randomUUID is a named export from crypto
-    // SESSIONS
-        import session from 'express-session';
+    // // SESSIONS
+    //     import session from 'express-session'; // dropped on 31 July 2025
     // CORS handling START
     import cors from 'cors';
     // SQLite
@@ -86,7 +88,7 @@ const consoleLog = false;
         import sessionsRouter from './src/globalSessions_Server.mjs';
         import googleAPIsRouter from './src/projectGoogleAPIs_Server.mjs';
     // SQLite CRUD
-        // import { insertRecord, getRecord, updateRecord, deleteRecord } from "./src/SQLite_ServerSide.mjs";
+        // import { insertFormDataRecord, getRecord, updateRecord, deleteRecord } from "./src/SQLite_ServerSide.mjs";
     // Trace()
         import { trace } from "./src/global_Server.mjs";
         
@@ -99,11 +101,12 @@ const consoleLog = false;
             console.log("Imported url { fileURLToPath }:", fileURLToPath ? "✅ " : "❌ Failed");
             console.log("Imported dotenv:", dotenv ? "✅ " : "❌ Failed");
             console.log("Imported express:", express ? "✅ " : "❌ Failed");
-            console.log("Imported cookieParser / cookie-parser:", cookieParser ? "✅ " : "❌ Failed");
+            console.log("Imported cookie / cookie:", cookie ? "✅ " : "❌ Failed");
+            // console.log("Imported cookieParser / cookie-parser:", cookieParser ? "✅ " : "❌ Failed");
             console.log("Imported jwt / jsonwebtoken:", jwt ? "✅ " : "❌ Failed");
             console.log("Imported crypto:", crypto ? "✅ " : "❌ Failed");
             console.log("Imported crypto { randomUUID }:", randomUUID ? "✅ " : "❌ Failed");
-            console.log("Imported session / express-session:", session ? "✅ " : "❌ Failed");
+            // console.log("Imported session / express-session:", session ? "✅ " : "❌ Failed");
             console.log("Imported cors:", cors ? "✅ " : "❌ Failed");
             console.log("Imported sqlite3:", sqlite3 ? "✅ " : "❌ Failed");
             console.log("Imported sqlite { open }:", open ? "✅ " : "❌ Failed");
@@ -114,7 +117,7 @@ const consoleLog = false;
             console.log("Imported projectRouter:", projectRouter ? "✅ " : "❌ Failed");
             console.log("Imported sessionsRouter:", sessionsRouter ? "✅ " : "❌ Failed");
             console.log("Imported googleAPIsRouter:", googleAPIsRouter ? "✅ " : "❌ Failed");
-            // console.log("Imported {insertRecord} from SQLite_ServerSide.mjs:", insertRecord ? "✅ " : "❌ Failed");
+            // console.log("Imported {insertFormDataRecord} from SQLite_ServerSide.mjs:", insertFormDataRecord ? "✅ " : "❌ Failed");
             // console.log("Imported {getRecord} from SQLite_ServerSide.mjs:", getRecord ? "✅ " : "❌ Failed");
             // console.log("Imported {updateRecord} from SQLite_ServerSide.mjs:", updateRecord ? "✅ " : "❌ Failed");
             // console.log("Imported {deleteRecord} from SQLite_ServerSide.mjs:", deleteRecord ? "✅ " : "❌ Failed");
@@ -180,12 +183,13 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 3️⃣ create express app AND middleware
     const app = express();
-    app.use(express.json());
+    app.use(express.json()); // Middleware to parse JSON data
     app.disable('x-powered-by'); // Reduce fingerprinting by hiding that this is an ExpressJS app
     app.set('trust proxy', 1) // trust first proxy
     app.use(express.json({ limit: "10mb" })); // Middleware to parse JSON data // Increase JSON request size limit
     app.use(express.urlencoded({ limit: "10mb", extended: true })); // ✅ Parses text fields from FormData
-    app.use(cookieParser()); // Enables reading of cookies
+    // app.use(cookie()); // Enables reading of cookies
+    // app.use(cookieParser()); // Enables reading of cookies, express specific cookie parser
     app.use(express.raw({ type: "image/jpeg", limit: "10mb" })); // ✅ Captures Blob data
 
     app.use('/tinymce', express.static(__dirname + '/node_modules/tinymce'));
@@ -208,9 +212,9 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
             app.use(express.static(folder));
             app.use(`/${folder}`, express.static(path.join(__dirname, folder), {
                 setHeaders: (res, filePath) => {
-                if (filePath.endsWith('.mjs')) {
-                    res.setHeader('Content-Type', 'application/javascript');
-                }
+                    if (filePath.endsWith('.mjs')) {
+                        res.setHeader('Content-Type', 'application/javascript');
+                    }
                 }
             }));
             console.log(`mapped folder:- ${path.join(__dirname,folder)}`);
@@ -241,11 +245,13 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
     // CORS handling
         if (process.env.APP_SERVER_MODE_DEVELOPMENT === "true") {
+            console.log(`${trace()}🔒✅ CORS headers set up for Development commenced.`);
             const PORT = process.env.APP_PORT; 
             const corsDevelopmentOrigin = `http://localhost:${PORT}`;
             app.use(cors({
-                // origin: corsDevelopmentOrigin,
-                    origin: '*',
+
+                    origin: corsDevelopmentOrigin,
+                    // origin: '*', // blocks cookies when credentials is set to true
 
                     credentials: true,
 
@@ -254,12 +260,14 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                     allowedHeaders: ['Content-Type', 'Authorization'],
 
                     optionsSuccessStatus: 204, // Avoids extra response headers in preflight requests
+
             }));
             console.log(`${trace()}🔒✅ CORS headers set up for Development completed.`);
         } else if (process.env.APP_SERVER_MODE_PRODUCTION === "true") {
+            console.log(`${trace()}🔒✅ CORS headers set up for Production commenced.`);
             app.use(cors({
 
-                    origin: "https://myproductiondomain.com",
+                    origin: ["https://netit.au", "https://www.netit.au"],
 
                     credentials: true,
 
@@ -268,6 +276,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                     allowedHeaders: ["Content-Type", "Authorization"],
 
                     optionsSuccessStatus: 204
+
             }));
             console.log(`${trace()}🔒✅ CORS headers set up for Production completed.`);
         } else {
@@ -275,117 +284,88 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
             throw new Error("Invalid configuration: Neither development nor production mode is set.");
         }
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
-    // 4️⃣ session management
-        // retrieve the session key OR create one if can't be retrieved
-            // const crypto = require("crypto");
-                // const sessionKey = crypto.randomBytes(32).toString("hex");
-                const sessionKey = process.env.APP_SESSION_KEY || crypto.randomBytes(32).toString("hex");
-                console.log(`${trace()}🔒✅ sessionKey created.`); // DON'T LOG THE KEY!!!  KEEP IT SECURE!!!
-            // express-session ~ set up the Express session middleware
-
-                if (process.env.APP_SERVER_MODE_DEVELOPMENT === "true") {
-                    console.log(`${trace()}🔒✅ Session management set up for Development commenced.`);
-                    app.use(session({
-                        // Generate a unique session ID
-                            genid: (req) => randomUUID(),
-
-                            secret: process.env.APP_SESSION_SECRET || "defaultSecret",
-
-                            resave: false,
-
-                        // saveUninitialized if true, a session starts on the first request, even if the user doesn’t interact with it, ensuring the session ID is available early. 
-                        // saveUninitialized if false, a session is only created when something is stored in it, reducing unnecessary session storage usage
-                            saveUninitialized: true,
-   
-                            cookie:
-                            {
-
-                                    secure: false, // Allow HTTP in development
-
-                                // httpOnly: true,   // Helps mitigate XSS ~ set to false for development, true for production
-                                    httpOnly: true,
-
-                                //     ~ 'strict' → Only sends the cookie for same-site requests (highest security). Prevents cross-site cookie access for security.
-                                //     ~ 'lax' → Sends the cookie for same-site requests + top-level navigation (default).
-                                //     ~ 'none' → Allows cross-site cookies but requires Secure: true (useful for APIs).
-                                    // if sameSite is set to none, secure must be set to true
-                                    sameSite: "lax",
-
-                                    maxAge: 60 * 60 * 1000 // 1-hour session expiration
-
-                            }
-                    }));
-                    console.log(`${trace()}🔒✅ Session management set up for Development completed.`);
-                } else if (process.env.APP_SERVER_MODE_PRODUCTION === "true") {
-                    console.log(`${trace()}🔒✅ Session management set up for Production commenced.`);
-                    app.use(session({
-                       // Generate a unique session ID
-                            genid: (req) => randomUUID(),
-
-                           secret: process.env.APP_SESSION_SECRET || "defaultSecret",
-
-                           resave: false,
-
-                        // saveUninitialized if true, a session starts on the first request, even if the user doesn’t interact with it, ensuring the session ID is available early. 
-                        // saveUninitialized if false, a session is only created when something is stored in it, reducing unnecessary session storage usage
-                           saveUninitialized: true,
-
-                           cookie: 
-                            {
-
-                                    secure: true, // Requires HTTPS in production
-
-                                // httpOnly: true,   // Helps mitigate XSS ~ set to false for development, true for production
-                                    httpOnly: true,
-
-                                    //     ~ 'strict' → Only sends the cookie for same-site requests (highest security). Prevents cross-site cookie access for security.
-                                    //     ~ 'lax' → Sends the cookie for same-site requests + top-level navigation (default).
-                                    //     ~ 'none' → Allows cross-site cookies but requires Secure: true (useful for APIs).
-                                        // if sameSite is set to none, secure must be set to true
-                                    sameSite: "strict",
-
-                                    maxAge: 60 * 60 * 1000 // 1-hour session expiration
-                            }
-                    }));
-                    console.log(`${trace()}🔒✅ Session management set up for Production completed.`);
-                } else {
-                    console.log(`${trace()}🔒🔴 Session management set up failed.  Neither development nor production mode is set.`);
-                    throw new Error("Invalid configuration: Neither development nor production mode is set.");
-                }
+// 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+    // // 4️⃣ session management
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
 if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(trace());}
 if(consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
-app.use((req, res, next) => {
-    console.log("Headers:-\n", req.headers);
-    console.log(`URL:-\n`, req.url);
-    console.log("Body:-\n", req.body);
-    next();
+let sessionInitialised=false;
+app.use(async (req, res, next) => {
+    console.log(("❓").repeat(60));
+    console.log(`${trace()} Request received.`);
+    console.log(`${trace()}req.Headers:-\n`, req.headers);
+    console.log(`${trace()}req.URL:-`, req.url);
+    console.log(`${trace()}req.Body:-`, req.body);
+    console.log(("❓").repeat(60));
+    if(sessionInitialised===false){
+        console.log(("🍪").repeat(60));
+        console.log(`${trace()} Initialise cookies.`);
+        const sessionId = crypto.randomBytes(32).toString("hex");
+        const sessionData = JSON.stringify(
+            {
+                user: "guest",
+                createdAt: Date.now(),
+                milisecondsDuration: (60 * 60 * 1000) // 60 * 60 * 1000 = 1 hour
+            }
+        );
+        await fs.writeFile('./sessions/' + sessionId + '.json', sessionData, (err) => {
+            if (err){
+                console.log(`${trace()} 🗝️ Session store created?`,false,err);
+            } else {
+                console.log(`${trace()} 🗝️ Session store created?`,true);
+            }
+        });
+        function buildCookie(name, value, options = {}) {
+        const {
+            path = "/",
+            httpOnly = true,
+            secure = true,
+            sameSite = "None"
+        } = options;
+            return `${name}=${value}; Path=${path}; ${httpOnly ? "HttpOnly;" : ""} ${secure ? "Secure;" : ""} SameSite=${sameSite}`;
+        }
+        const cookies = [
+            buildCookie("connectSID", sessionId),
+            buildCookie("theme", "dark"),
+            buildCookie("token", "XYZ456"),
+            buildCookie("mode", "auto", { sameSite: "Lax", secure: false })
+        ];
+        res.setHeader("Set-Cookie", cookies);
+        sessionInitialised=true;
+        console.log(("🍪").repeat(60));
+    }
+    next(); // next(); // Proceed to the next middleware or route handler
 });
-// 🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪
+//    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
+// 🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪🚪
 // AUTHENTICATE USER
-    console.log(`${trace()}🔒✅ Authentication setup START.`);
+    console.log(`${trace()}🔒✅ Authentication setup.  START.`);
     // const safePaths = JSON.parse(fs.readFileSync("safe_paths.json", "utf8")).allowedPaths;
     const safeURLs = JSON.parse(fs.readFileSync("knownURLs.json", "utf8")).safe_URLs;
+    console.log(`${trace()}🔒✅ Authentication setup.  Ignore safeURLs`);
     const startupURLs = JSON.parse(fs.readFileSync("knownURLs.json", "utf8")).startup_URLs;
+    console.log(`${trace()}🔒✅ Authentication setup.  Ignore startupURLs`);
 
     app.use((req, res, next) => {
         console.log(("🔒").repeat(60));
-        console.log(`🪣 ${trace()}🔒 ⁉️req.url:-`,req.url);
+        console.log(`🪣 ${trace()}🔒 Authenticate user START`);
 
         // skip startup URLs
             if (startupURLs.includes(req.url)) {
                 console.warn(`🪣 ${trace()}🔒🟢 Startup URL:- ${req.url}..., by-pass authentication.`);
-                return next();
+                return next(); // next(); // Proceed to the next middleware or route handler
             }
 
-        // Skip authentication for public routes
-            const publicRoutes = ["/loginRouter/login_step2", "/loginRouter/login_step3", "/loginRouter/login_step4"];
-            if (publicRoutes.includes(req.path)) {
-                console.log(`🪣 ${trace()}🔒✅ Loggoing in..., by-pass authentication.`);
-                return next(); 
-            }
+        // // NRL, use the guest session cookie to authenticate logins START
+        //     // Skip authentication for login
+        //         const publicRoutes = ["/loginRouter/login_step2", "/loginRouter/login_step3", "/loginRouter/login_step4"];
+        //         if (publicRoutes.includes(req.path)) {
+        //             console.log(`🪣 ${trace()}🔒✅ Loggoing in..., by-pass authentication.`);
+        //             return next(); // next(); // Proceed to the next middleware or route handler
+        //         }
+        // // NRL, use the guest session cookie to authenticate logins END
 
         // 
             if (req.headers.cookie) {
@@ -399,35 +379,48 @@ app.use((req, res, next) => {
             //     console.log(`🪣 ${trace()}🔒🔴 Authorization header not found:-`,req.headers.cookie);
             // }
 
-        // verify connect.sid
-            const rawCookieSessionId = req.cookies["connect.sid"];
-                if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️cookie connect.sid:-              `,rawCookieSessionId);}
-                if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️req.headers.cookie:-`,req.headers.cookie);}
-            const cookieSid = (req.cookies["connect.sid"] || "").replace(/^s:/, "");
-            const headerSid_raw = (req.headers.cookie || "").match(/connect\.sid=s%3A([^;]+)/)?.[1];
-            const headerSid_decoded = headerSid_raw ? decodeURIComponent(headerSid_raw) : "🔴...could not decode [headerSid_raw]";
-                if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️cookieSid:-`,cookieSid);}
-                if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️headerSid_decoded:-`,headerSid_decoded);}
-            if (cookieSid !== headerSid_decoded) {
-                console.warn(`🪣 ${trace()}🔒⚠️Session ID mismatch detected, cookieSid != headersSid:-\n🪣 ${cookieSid} v \n🪣 ${headerSid_decoded}`);
-                console.warn(`🪣 ${trace()}🔒⚠️Session ID mismatch detected for ${req.url}`);
-                if (!safeURLs.includes(req.url)) {
-                    const allowedRouters = ["/dbRouter/", "/projectRouter/", "/globalRouter/", "/loginRouter/", "/sessionsRouter/", "/googleAPIsRouter/"];
-                    if (allowedRouters.some(prefix => req.url.startsWith(prefix))) {
-                        // console.log("Request is allowed");
-                        console.warn(`🪣 ${trace()}🔒⚠️🟢 Access allowed to router:- ${req.url}`);
-                    } else {
-                        // console.log("Access denied");
-                        console.warn(`🪣 ${trace()}🔒⚠️🔴 Access denied due to session inconsistency:- ${req.url}`);
-// console.log(trace(),"Cookie SID:", req.cookies.sid);
-// console.log(trace(),"Headers SID:", req.headers["sid"]);
-// console.log(trace(),"Session ID:", req.sessionID);
-                        return res.status(403).send({message:"Access denied due to session inconsistency.",status:false});
-                    }
-                }else{
-                    console.warn(`🪣 ${trace()}🔒⚠️🟢 Access allowed to safe path:- ${req.url}`);
-                }
+        // verify connect.sid/connectSID
+            const parsed = cookie.parse(req.headers.cookie);
+            console.log(`🪣 ${trace()}🔒 ⁉️req.headers.cookie.connectSID`,parsed.connectSID);
+            const connectSidExists = fs.readFileSync(`./sessions/${parsed.connectSID}.json`);
+            const authenticated = connectSidExists? true : false;
+            console.log(`🪣 ${trace()}🔒 ⁉️authenticated?`,authenticated);
+            if(authenticated){
+                console.log(`🪣 ${trace()}🔒✅ User authentication successful!`);
+                return next(); // next(); // Proceed to the next middleware or route handler
+            }else{
+                res.send({message:`Authentication invalid, denied!`,status:false});
+                res.end();
             }
+
+//             const rawCookieSessionId = req.cookies["connect.sid"];
+//                 if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️cookie connect.sid:-              `,rawCookieSessionId);}
+//                 if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️req.headers.cookie:-`,req.headers.cookie);}
+//             const cookieSid = (req.cookies["connect.sid"] || "").replace(/^s:/, "");
+//             const headerSid_raw = (req.headers.cookie || "").match(/connect\.sid=s%3A([^;]+)/)?.[1];
+//             const headerSid_decoded = headerSid_raw ? decodeURIComponent(headerSid_raw) : "🔴...could not decode [headerSid_raw]";
+//                 if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️cookieSid:-`,cookieSid);}
+//                 if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️headerSid_decoded:-`,headerSid_decoded);}
+//             if (cookieSid !== headerSid_decoded) {
+//                 console.warn(`🪣 ${trace()}🔒⚠️Session ID mismatch detected, cookieSid != headersSid:-\n🪣 ${cookieSid} v \n🪣 ${headerSid_decoded}`);
+//                 console.warn(`🪣 ${trace()}🔒⚠️Session ID mismatch detected for ${req.url}`);
+//                 if (!safeURLs.includes(req.url)) {
+//                     const allowedRouters = ["/dbRouter/", "/projectRouter/", "/globalRouter/", "/loginRouter/", "/sessionsRouter/", "/googleAPIsRouter/"];
+//                     if (allowedRouters.some(prefix => req.url.startsWith(prefix))) {
+//                         // console.log("Request is allowed");
+//                         console.warn(`🪣 ${trace()}🔒⚠️🟢 Access allowed to router:- ${req.url}`);
+//                     } else {
+//                         // console.log("Access denied");
+//                         console.warn(`🪣 ${trace()}🔒⚠️🔴 Access denied due to session inconsistency:- ${req.url}`);
+// // console.log(trace(),"Cookie SID:", req.cookies.sid);
+// // console.log(trace(),"Headers SID:", req.headers["sid"]);
+// // console.log(trace(),"Session ID:", req.sessionID);
+//                         return res.status(403).send({message:"Access denied due to session inconsistency.",status:false});
+//                     }
+//                 }else{
+//                     console.warn(`🪣 ${trace()}🔒⚠️🟢 Access allowed to safe path:- ${req.url}`);
+//                 }
+//             }
 
         // check expiry
             // console.log(`🪣 ${trace()}🔒✅ Authenticating....req.session\n`,req.session);
@@ -441,7 +434,7 @@ app.use((req, res, next) => {
                 // console.log(`🪣 ${trace()}🔒✅ authenticating user...`);
                 // if (req.session.securityCode.code === req.cookies.securityCode) {
                     console.log(`🪣 ${trace()}🔒✅ User authentication successful!`);
-                    return next();
+                    return next(); // next(); // Proceed to the next middleware or route handler
                 // } else {
                 //     console.log(`🪣 ${trace()}🔒🔴 Security code mismatch — authentication failed!`,req.session.securityCode.code,req.cookies.securityCode);
                 //     // res.status(401).send("Unauthorized");
@@ -541,7 +534,6 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
             if (req.body && req.body.content) {
                 req.body.content = sanitizeHtml(req.body.content);
             }
-            // next(); // Proceed to the next middleware or route handler
 
         // REQuest summary
             const myDate = new Date();
@@ -552,31 +544,33 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
             console.log(`🪣 ${trace()}📫 REQuest headers received:`, req.headers? true : false);
             console.log(`🪣 ${trace()}📫 Cookie in REQuest headers:`, req.headers.cookie? true : false);
             console.log(`🪣 ${trace()}📫 Session in REQuest:`, req.session? true : false);
-            console.log(`🪣 ${trace()}📫 Cookie in REQuest session:`, req.session.cookie? true : false);
+            if(req.session){
+                console.log(`🪣 ${trace()}📫 Cookie in REQuest session:`, req.session.cookie? true : false);
+            }
             if(req.session && req.headers.cookie){
                 console.log(`🪣 ${trace()}📫 🟢 Credentials received.`,JSON.stringify(req.session,null,2),JSON.stringify(req.headers,null,2));
             }else{
-                console.log(`🪣 ${trace()}📫 🔴 Credentials NOT received. ${JSON.stringify(req.session,null,2)} != ${JSON.stringify(req.headers,null,2)}`);
+                console.log(`🪣 ${trace()}📫 🔴 Credentials NOT received.  req.headers:-\n${JSON.stringify(req.headers,null,2)}`);
             }
 
-        // set session creation timestamp
-            // console.log(`🪣 Session object before try/catch:`, req.session);
-            // console.log("🪣 Before try/catch—this should appear!");
-            try{
-                if (!req.session.createdAt) {
-                    req.session.createdAt = Date.now(); // Store creation timestamp
-                    console.log(`🪣 ${trace()}📫 Session create time set to:`, req.session.createdAt);
-                }
-            } catch (error) {
-                console.log(`🪣 ${trace()}📫🔴 Session create time could not be set:`, error);
-            }
-            // Extract session ID from cookie
-            const rawSessionId = req.cookies["connect.sid"]; 
-            console.log(`🪣 ${trace()}📫 cookie connect.sid:- `,rawSessionId);
-            const createdAtMilliseconds = req.session.createdAt;
-            console.log(`🪣 ${trace()}📫 req.session.createdAt:-`,new Date(createdAtMilliseconds).toLocaleDateString(),new Date(createdAtMilliseconds).toLocaleTimeString());
+        // // set session creation timestamp
+        //     // console.log(`🪣 Session object before try/catch:`, req.session);
+        //     // console.log("🪣 Before try/catch—this should appear!");
+        //     try{
+        //         if (!req.session.createdAt) {
+        //             req.session.createdAt = Date.now(); // Store creation timestamp
+        //             console.log(`🪣 ${trace()}📫 Session create time set to:`, req.session.createdAt);
+        //         }
+        //     } catch (error) {
+        //         console.log(`🪣 ${trace()}📫🔴 Session create time could not be set:`, error);
+        //     }
+        //     // Extract session ID from cookie
+        //     const rawSessionId = req.cookies["connect.sid"]; 
+        //     console.log(`🪣 ${trace()}📫 cookie connect.sid:- `,rawSessionId);
+        //     const createdAtMilliseconds = req.session.createdAt;
+        //     console.log(`🪣 ${trace()}📫 req.session.createdAt:-`,new Date(createdAtMilliseconds).toLocaleDateString(),new Date(createdAtMilliseconds).toLocaleTimeString());
 
-        next();
+        next(); // next(); // Proceed to the next middleware or route handler
 
     });
 // 🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣
@@ -584,32 +578,35 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 if(consoleLog===true){console.log(trace());}
 if(consoleLog===true){console.log(("<>").repeat(60));}
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-app.post("/establish-session", (req, res) => {
-// app.get("/establish-session", (req, res) => {
-if (req.session) {
-    console.log(`🪣 ${trace()}🔒🟢 req.session:-\n`,req.session);
-    // update session with authenticated user details
-    req.session.user = {
-        id: req.cookies["connect.sid"],
-        name: "guest",
-        email: "",
-        authenticated: false
-    };
-    // ensure session is saved
-    req.session.save(err => {
-        if (err) {
-            console.error(`${trace()}🔒🔴 Failed to save session:`, err);
-            res.json({ sessionEstablished: true, sessionName: "error saving req.session.user"});
-        } else {
-            console.log(`${trace()}🔒🟢 Session saved successfully.${JSON.stringify(req.session,null,2)}`);
-            res.json({ sessionEstablished: true, sessionName: req.session.user.name});
-        }
+    app.post("/establish-session", (req, res) => {
+    // app.get("/establish-session", (req, res) => {
+    if (req.session) {
+        console.log(`🪣 ${trace()}🔒🟢 req.session:-\n`,req.session);
+        // update session with authenticated user details
+        req.session.user = {
+            id: req.cookies["connect.sid"],
+            name: "guest",
+            email: "",
+            authenticated: false
+        };
+        console.log(`${trace()}📦 Response headers:\n`, res.getHeaders());
+        // res.json({ sessionEstablished: true });
+        // ensure session is saved START
+            req.session.save(err => {
+                if (err) {
+                    console.error(`${trace()}🔒🔴 Failed to save session:`, err);
+                    res.json({ sessionEstablished: true, sessionName: "error saving req.session.user"});
+                } else {
+                    console.log(`${trace()}🔒🟢 Session saved successfully.${JSON.stringify(req.session,null,2)}`);
+                    res.json({ sessionEstablished: true, sessionName: req.session.user.name});
+                }
+            });
+        // ensure session is saved END
+    } else {
+        console.log(`🪣 ${trace()}🔒🔴 req.session:-\n`,req.session);
+        res.json({ sessionEstablished: false,sessionName: "error creating session" });
+    }
     });
-} else {
-    console.log(`🪣 ${trace()}🔒🔴 req.session:-\n`,req.session);
-    res.json({ sessionEstablished: false,sessionName: "error creating session" });
-  }
-});
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     // Client heartbeat detected, extend session.💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙
         app.post("/heartbeat-session-extension", (req, res) => {    
@@ -687,26 +684,37 @@ setInterval(() => {
 }, 1000 * 60 * 60);
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 7️⃣ start server START
-    // Start the server
-        const PORT = process.env.APP_PORT;
-        const DEV_IP_ADDRESS = process.env.APP_DEV_IP_ADDRESS;
-        const options = {
-            key: fs.readFileSync("server.key"),
-            cert: fs.readFileSync("server.cert")
-        };
-        // app.listen(PORT,'0.0.0.0', () => {
-        https.createServer(options,app).listen(PORT, () => {
-            console.log(("🎾").repeat(60));
-            // console.log(`${trace()}\nServer is running on port:${PORT}\nAccessible on the server at either http://localhost:${PORT} or http://${DEV_IP_ADDRESS}:${PORT}.\nAccessible on the LAN at http://${DEV_IP_ADDRESS}:${PORT}.`);
-            console.log(`🎾 ${trace()}${(" ").repeat(118-(`🎾 ${trace()}`).length)}🎾`);
-            myDate = new Date();
-            console.log(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}${(" ").repeat(118-(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`).length)}🎾`);
-            console.log(`🎾 Server is running on port:${PORT}.${(" ").repeat(118-(`🎾 Server is running on port:${PORT}.`).length)}🎾`);
-            console.log(process.env.APP_SERVER_MODE_PRODUCTION === "true" ?
-                `🎾 Server is running in Production mode. ${(" ").repeat(117-(`🎾 Server is running in Production mode.`).length)}🎾` : 
-                `🎾 Server is running in Development mode. ${(" ").repeat(117-(`🎾 Server is running in Development mode.`).length)}🎾`);
-            // console.log(`🎾 Server is running on port # ${process.env.APP_PORT}${(" ").repeat(118-(`🎾 Server is running on port # ${process.env.APP_PORT}`).length)}🎾`);
-            console.log(("🎾").repeat(60));
+    function logServerStartup(){
+        console.log(`${trace()}🔍 SERVER MODE = production:`, process.env.APP_SERVER_MODE_PRODUCTION);
+        console.log(("🎾").repeat(60));
+        // console.log(`${trace()}\nServer is running on port:${PORT}\nAccessible on the server at either http://localhost:${PORT} or http://${DEV_IP_ADDRESS}:${PORT}.\nAccessible on the LAN at http://${DEV_IP_ADDRESS}:${PORT}.`);
+        console.log(`🎾 ${trace()}${(" ").repeat(118-(`🎾 ${trace()}`).length)}🎾`);
+        myDate = new Date();
+        console.log(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}${(" ").repeat(118-(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`).length)}🎾`);
+        console.log(`🎾 Server is running on port:${PORT}.${(" ").repeat(118-(`🎾 Server is running on port:${PORT}.`).length)}🎾`);
+        console.log(process.env.APP_SERVER_MODE_PRODUCTION==="true" ?
+            `🎾 Server is running in Production mode. ${(" ").repeat(117-(`🎾 Server is running in Production mode.`).length)}🎾` : 
+            `🎾 Server is running in Development mode. ${(" ").repeat(117-(`🎾 Server is running in Development mode.`).length)}🎾`);
+        // console.log(`🎾 Server is running on port # ${process.env.APP_PORT}${(" ").repeat(118-(`🎾 Server is running on port # ${process.env.APP_PORT}`).length)}🎾`);
+        console.log(("🎾").repeat(60));
+    };
+    const PORT = process.env.APP_PORT;
+    const DEV_IP_ADDRESS = process.env.APP_DEV_IP_ADDRESS;
+    if (process.env.APP_SERVER_MODE_PRODUCTION==="true") {
+        app.listen(PORT, '0.0.0.0', () => {
+            // Logging for production...
+            logServerStartup();
         });
+    } else {
+        const options = {
+            key: fs.readFileSync("serverGITignore.key"),
+            cert: fs.readFileSync("serverGITignore.cert")
+        };
+        console.log(`${trace()}🔍 Development mode options:`, options);
+        https.createServer(options, app).listen(PORT, () => {
+            // Logging for development...
+            logServerStartup();
+        });
+    }
 // 7️⃣ start server END
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹

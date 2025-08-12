@@ -20,7 +20,9 @@ export function globalLoginServerMJSisLoaded(){
         dotenv.config({path:`./config/projectServer.env`});
     import { trace} from "./global_Server.mjs";
     // import { postLoginActions_serverSide } from "./projectServer.mjs";
-    import { optPer, insertRecord, getRecord, initDB, setupSchema } from "./projectSQLite_Server.mjs";
+    import { optPer, insertDataRecord, insertFormDataRecord, getRecord, initDB, setupSchema, updateDataRecord, updateFormDataRecord } from "./projectSQLite_Server.mjs";
+    import * as cookie from "cookie";
+    import { isValidJSONString } from "./global_Server.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 loginRouter.post("/isLoginRequired", (req, res) => {
@@ -61,7 +63,7 @@ loginRouter.post("/emailCode", async (req, res) => {
         if(consoleLog===true){console.log(trace(),`Login: session regen - Session securityCodeX:- ${securityCodeX}`);}
     // save the code in users.db; table logIns; schema: 
         optPer("users"); // optimise database performance
-        const insertedId = await insertRecord(
+        const insertedId = await insertDataRecord(
             "users",
             "logins",
             [
@@ -77,7 +79,7 @@ loginRouter.post("/emailCode", async (req, res) => {
                 securityCode
             ]
         );
-        console.log("Inserted ID:", insertedId);
+        console.log(trace(),"Inserted ID:", insertedId);
     // send code by email START
         const from = process.env.SMTP_USER;
         const to = req.body.loginEmailAddress;
@@ -104,28 +106,59 @@ loginRouter.post("/emailCode", async (req, res) => {
 
 loginRouter.post("/loginCodeSubmit", async (req, res) => {
     console.log(trace(),"loginCodeSubmit req.body:-\n",req.body);
-    const x = await req.body.loginCodeSubmit;
+    const x = req.body.loginCodeSubmit;
+    console.log(trace(),typeof req.body.loginCodeSubmit); // "string"? "function"?
     const dbFileName = "users"; // Ensure this matches the actual database file
     const table = "logins";
     const condition = "id = ?";
     const values = [req.body.loginsDBinsertedID]; // Example query parameter        
     const records = await getRecord(dbFileName, table, condition, values);
-    console.log(records);        
-    console.log(records[0].id);
+    console.log(trace(),records);
+    console.log(trace(),records[0].id);
+    console.log(trace(),x);
     if(x.toString().toLowerCase().trim() === records[0].login_code.toString().toLowerCase().trim()){
-        // update session with authenticated user details
-            req.session.user = {
-                email: req.body.loginEmailAddressInputValue,
-                authenticated: true
-            };
-        // ensure session is saved
-            req.session.save(err => {
-                if (err) {
-                    console.error(`${trace()}🔒🔴 Failed to save session:`, err);
+        // update sessions file
+            const parsed = cookie.parse(req.headers.cookie);
+            fs.readFile('./sessions/' + parsed.connectSID + '.json','utf8',(errASync,fileContentsASync) => {
+                if (errASync){
+                    console.log('login errASync:- error');
                 } else {
-                    console.log(`${trace()}🔒🟢 Session saved successfully.${JSON.stringify(req.session,null,2)}`);
+                    console.log('login fileContentsASync:-\n',fileContentsASync);
+                    console.log('login fileContentsASync:- isJSON()?',isValidJSONString(fileContentsASync));
+                    // res.json(fileContentsASync);
+                    // res.end();
                 }
             });
+        // update users.db table: logins
+            // updateRecord(fileName, tableName, updates, conditionField, conditionComparison, conditionValue)
+            // updateRecord(fileName, tableName, updates, conditions)
+            // This allows comparisons like =, !=, >, <, LIKE, etc. Then build the condition string accordingly.
+            const login_code_submitted = x.toString().toLowerCase().trim();
+            const jso =
+            {
+                fileName: "users",
+                tableName: "logins",
+                updates: 
+                {
+                    login_code_submitted: login_code_submitted,
+                    login_status: "authenticated"
+                },
+                where: 
+                {
+                    conditions: [
+                        { field: "id", operator: "=", value: records[0].id },
+                        { field: "login_email", operator: "=", value: req.body.loginEmailAddress }
+                    ],
+                    logic: "AND" // or "OR" if needed
+                }
+            }
+            console.log(trace(),"jso to updateRecord:-\n",JSON.stringify(jso,null,2));
+            console.log(trace(),"🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻");
+            for (const [key, value] of Object.entries(req.body)) {
+                console.log(`🔹 ${key}:`, typeof value === 'object' ? JSON.stringify(value, null, 2) : value);
+            }
+            console.log(trace(),"🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺🔺");
+            updateDataRecord(jso);
         // send response to client
             res.send({message:`Login approved for ${req.body.loginEmailAddressInputValue}.`,loginApproved:true});
             console.log(`${trace()}🔒🟢 login success`);

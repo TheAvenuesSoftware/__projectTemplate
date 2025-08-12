@@ -157,4 +157,90 @@ export function projectSQLite_Client_isLoaded(){
         }
     }
 
+// Simulated fetch from server
+async function fetchRecords() {
+  // Replace with actual fetch logic
+  return [
+    { id: 1, name: "Alice", email: "alice@example.com" },
+    { id: 2, name: "Bob", email: "bob@example.com" }
+  ];
+}
+
+// Render a single record
+function renderRecord(record, container) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "record";
+  wrapper.dataset.id = record.id;
+
+  const fields = Object.entries(record).filter(([key]) => key !== "id");
+  const fieldElements = {};
+
+  fields.forEach(([key, value]) => {
+    const fieldWrapper = document.createElement("div");
+    fieldWrapper.className = "field";
+
+    const label = document.createElement("label");
+    label.textContent = key;
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = value;
+    input.disabled = true;
+    input.name = key;
+
+    fieldWrapper.appendChild(label);
+    fieldWrapper.appendChild(input);
+    wrapper.appendChild(fieldWrapper);
+
+    fieldElements[key] = input;
+  });
+
+  const editBtn = document.createElement("button");
+  editBtn.textContent = "Edit";
+  editBtn.onclick = () => {
+    Object.values(fieldElements).forEach(input => input.disabled = false);
+    editBtn.style.display = "none";
+    saveBtn.style.display = "inline-block";
+  };
+
+  const saveBtn = document.createElement("button");
+  saveBtn.textContent = "Save";
+  saveBtn.style.display = "none";
+  saveBtn.onclick = async () => {
+    const updatedData = {};
+    Object.entries(fieldElements).forEach(([key, input]) => {
+      updatedData[key] = input.value;
+      input.disabled = true;
+    });
+
+    await updateRecord(record.id, updatedData);
+    editBtn.style.display = "inline-block";
+    saveBtn.style.display = "none";
+  };
+
+  wrapper.appendChild(editBtn);
+  wrapper.appendChild(saveBtn);
+  container.appendChild(wrapper);
+}
+
+// Update record on server
+async function updateRecord(id, data) {
+  // Replace with actual PUT/PATCH logic
+  console.log(`Updating record ${id}:`, data);
+  // Example:
+  // await fetch(`/api/records/${id}`, {
+  //   method: "PATCH",
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify(data)
+  // });
+}
+
+// Initialize UI
+async function initUI() {
+  const container = document.getElementById("record-container");
+  const records = await fetchRecords();
+  records.forEach(record => renderRecord(record, container));
+}
+
+initUI();
 // 🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️

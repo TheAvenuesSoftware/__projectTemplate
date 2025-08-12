@@ -19,7 +19,7 @@ export function projectMJSisLoaded(){
         export const actions = {
             alertDateTime: () => alert(`Current date and time: ${new Date().toLocaleString()}`),
             showNotes: () => doThis('showNotes'),
-            insertRecord: async () => await insertRecord(),
+            insertFormDataRecord: async () => await insertFormDataRecord(),
             // find search retrieve get START
                 searchByAddress: () => {
                     document.getElementById("search-button").setAttribute("data-action", "filterByAddress")
@@ -81,7 +81,12 @@ export function projectMJSisLoaded(){
                                 tableName: "photos",
                                 updates:{
                                 },
-                                recordIdToDELETE: recordIdToDELETE
+                                where: {
+                                    conditions: [
+                                        { field: "image_id", operator: "=", value: recordIdToDELETE }
+                                    ],
+                                    // logic: "AND" // or "OR" if needed
+                                }
                             })
                         }
                     if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
@@ -96,51 +101,60 @@ export function projectMJSisLoaded(){
             export function editRecordNote(event){
                 event.target.disabled = true;
                 console.log(`filteredRecords:-\n`,filteredRecords);
-                const filteredRecordID = event.target.dataset.imageId;
+                const filteredRecordID = event.target.dataset.recordId;
                 console.log(`filteredRecordID:- `,filteredRecordID);
                 console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
                 const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
                 console.log(`filteredRecord imageID:- `,imageID);
+                if(imageID !== parseInt(filteredRecordID)){
+                    showCustomMessage("Error: conflicting ID.  Edit cannot proceed.");
+                    return;
+                }
                 // insert DOM element textarea START
-                    const editNoteDiv = document.createElement("div");
-                    editNoteDiv.className = "record-card-edit-note";
-                    const noteHTML = filteredRecords[`${filteredRecordID}`].image_notes || '';
+                    const editNoteTinymceContainer = document.createElement("div");
+                    editNoteTinymceContainer.id = "editNoteTinymceContainer";
+                    editNoteTinymceContainer.className = "record-card-edit-note";
+                    // const noteHTML = filteredRecords[`${filteredRecordID}`].image_notes || '';
+                    const noteHTML = document.getElementById(`notes${filteredRecordID}`).innerHTML;
                     console.log(noteHTML);
                     localStorage.setItem('tas_note_toEdit', noteHTML);
-                    editNoteDiv.innerHTML = `<textarea id='tinymce_${imageID}' class='tinymce-editor'>${noteHTML}</textarea>`;
+                    editNoteTinymceContainer.innerHTML = `<textarea id='tinymce_${imageID}' class='tinymce-editor'>${noteHTML}</textarea>`;
                     const anchorElement = document.getElementById(event.target.id);
-                    anchorElement.after(editNoteDiv); // append after the anchor element.  append; prepend; before; after
+                    anchorElement.after(editNoteTinymceContainer); // append after the anchor element.  append; prepend; before; after
                 // insert DOM element textarea END
                 // initialise TinyMCE START
-                    const tinymceEditor = document.getElementById(`tinymce_${imageID}`);
+                    const tinymceEditor = document.getElementById(`noteEdit${imageID}`);
                     console.log(tinymceEditor); // textarea, now style="display: none;"
                     initTinyMCE(tinymceEditor); // Call this to initialize TinyMCE editor
                 // initialise TinyMCE END
                 // insert save button START
-                    const editNoteDivSaveBtn = document.createElement("div");
-                    editNoteDivSaveBtn.style.textAlign = "center";
-                    editNoteDivSaveBtn.innerHTML = 
+                    const editNoteTinymceContainerSaveBtn = document.createElement("div");
+                    editNoteTinymceContainerSaveBtn.style.textAlign = "center";
+                    editNoteTinymceContainerSaveBtn.innerHTML = 
                     `
                         <button id='saveEditedNote${imageID}' class="std-btn" data-action="saveEditedNote" data-record-id='${imageID}'>Save changes to note # ${imageID}</button>
                     `
                     const anchorIIElement = document.getElementById(`deleteRecord${imageID}`);
                     console.log(event.target.id);
                     console.log(anchorIIElement);
-                    anchorIIElement.before(editNoteDivSaveBtn); // append after the anchorII element.  append; prepend; before; after
+                    anchorIIElement.before(editNoteTinymceContainerSaveBtn); // append after the anchorII element.  append; prepend; before; after
                 // insert save button END
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export async function saveEditedNote(event){
                 console.log('saveEditedNote:-\n',event);
                 const recordIdToUpdate = event.target.dataset.recordId;
+                const editNoteBtn = document.getElementById(`noteEdit${recordIdToUpdate}`);
+                editNoteBtn.disabled = false; // Re-enable the edit button
                 const noteToSave = localStorage.getItem("tas_note_edited"); // this localStorage item is updated by TinyMCE editor.on 'blur'
+                event.target.remove();
                 console.log('noteToSave:-\n',noteToSave);
                 console.log('recordIdToUpdate:-',recordIdToUpdate);
                 try {
                     const userEmailAddress = document.getElementById("user-email-address").textContent;
                     // const userEmailAddress = "donald.garton@outlook.com";
                     console.log(userEmailAddress);
-                    const fetchUrl = "/dbRouter/update-record";
+                    const fetchUrl = "/dbRouter/update-data-record";
                     const fetchOptions = {
                             method: 'POST',
                             mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -157,16 +171,30 @@ export function projectMJSisLoaded(){
                             body: JSON.stringify({
                                 fileName: userEmailAddress,
                                 tableName: "photos",
-                                updates:{
+                                updates: {
                                     image_notes: noteToSave
                                 },
-                                recordIdToUpdate: recordIdToUpdate
+                                where: {
+                                    conditions: [
+                                        { field: "image_id", operator: "=", value: recordIdToUpdate }
+                                    ],
+                                    // logic: "AND" // or "OR" if needed
+                                }
                             })
                         }
                     if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
                     const response = await fetch(fetchUrl, fetchOptions);
                     const jso = await response.json(); // Fetch JSON 
                     console.log(jso);
+                    console.log(jso.updates.image_notes);
+                    if(jso.success===true){
+                        const notesElement = document.getElementById(`notes${recordIdToUpdate}`);
+                        notesElement.innerHTML = jso.updates.image_notes; // Update the notes in the DOM
+                        const editNoteTinymceContainer = document.getElementById("editNoteTinymceContainer");
+                        editNoteTinymceContainer.remove(); // Remove the notes input element
+                    }else{
+                        showCustomMessage("Failed to update note", "error");
+                    }
                 } catch (error) {
                     console.error(`Error updating record # ${recordIdToUpdate} image_notes in photos :`, error);
                 }
@@ -175,7 +203,7 @@ export function projectMJSisLoaded(){
             export function editRecordAddress(event){
                 event.target.disabled = true;
                 console.log(`filteredRecords:-\n`,filteredRecords);
-                const filteredRecordID = event.target.dataset.imageId;
+                const filteredRecordID = event.target.dataset.recordId;
                 console.log(`filteredRecordID:- `,filteredRecordID);
                 console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
                 const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
@@ -186,6 +214,7 @@ export function projectMJSisLoaded(){
                 // insert DOM element input START
                     const editAddressDiv = document.createElement("div");
                     // editAddressDiv.className = "record-card-edit-address";
+                    editAddressDiv.id = "autocomplete-address-container";
                     editAddressDiv.className = "autocomplete-address-container";
                     const addressValue = filteredRecords[`${filteredRecordID}`].image_address || '';
                     console.log(addressValue);
@@ -218,7 +247,10 @@ export function projectMJSisLoaded(){
             export async function saveEditedAddress(event){
                 console.log('saveEditedAddress:-\n',event);
                 const recordIdToUpdate = event.target.dataset.recordId;
+                const editAddressBtn = document.getElementById(`addressEdit${recordIdToUpdate}`);
+                editAddressBtn.disabled = false; // Re-enable the edit button
                 const addressToSave = document.getElementById(`googlePlacesAPIautocomplete_${recordIdToUpdate}`).value;
+                event.target.remove();
                 localStorage.setItem("tas_address_edited",addressToSave);
                 console.log('addressToSave:-\n',addressToSave);
                 console.log('recordIdToUpdate:-',recordIdToUpdate);
@@ -226,7 +258,7 @@ export function projectMJSisLoaded(){
                     const userEmailAddress = document.getElementById("user-email-address").textContent;
                     // const userEmailAddress = "donald.garton@outlook.com";
                     console.log(userEmailAddress);
-                    const fetchUrl = "/dbRouter/update-record";
+                    const fetchUrl = "/dbRouter/update-data-record";
                     const fetchOptions = {
                             method: 'POST',
                             mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -243,16 +275,30 @@ export function projectMJSisLoaded(){
                             body: JSON.stringify({
                                 fileName: userEmailAddress,
                                 tableName: "photos",
-                                updates:{
+                                updates: {
                                     image_address: addressToSave
                                 },
-                                recordIdToUpdate: recordIdToUpdate
+                                where: {
+                                    conditions: [
+                                        { field: "image_id", operator: "=", value: recordIdToUpdate }
+                                    ],
+                                    // logic: "AND" // or "OR" if needed
+                                }
                             })
                         }
                     if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
                     const response = await fetch(fetchUrl, fetchOptions);
                     const jso = await response.json(); // Fetch JSON 
                     console.log(jso);
+                    console.log(jso.updates.image_address);
+                    if(jso.success===true){
+                        const addressElement = document.getElementById(`address${recordIdToUpdate}`);
+                        addressElement.textContent = jso.updates.image_address; // Update the address in the DOM
+                        const addressInputContainer = document.getElementById("autocomplete-address-container");
+                        addressInputContainer.remove(); // Remove the address input container
+                    }else{
+                        showCustomMessage("failed to update address", "error");
+                    }
                 } catch (error) {
                     console.error(`Error updating record # ${recordIdToUpdate} image_address in photos :`, error);
                 }
@@ -311,7 +357,13 @@ export function projectMJSisLoaded(){
                             }
                         if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
                         const response = await fetch(fetchUrl, fetchOptions);
-                        const filteredList = await response.json();
+                        const jso = await response.json();
+                        if(jso.success !== true){
+                            // showCustomMessage("Error filtering records. Please try again.", "error");
+                            showCustomMessage(jso.message);
+                            return;
+                        }
+                        const filteredList = jso.formattedPhotos || [];
                         console.log("Filtered List:", filteredList);
                         const filteredListContainer = document.getElementById("filteredList-container");
                         filteredListContainer.innerHTML = ""; // Clear previous content
@@ -345,17 +397,17 @@ export function projectMJSisLoaded(){
                                 <p><strong>Time:</strong> ${imageTime}</p>
                                 <hr>
                                 <p><strong>Address:</strong></p>
-                                <p>${imageAddress}</p>
-                                <button id='addressEdit${imageID}' class="std-btn" data-action="editRecordAddress" data-image-id='image_${imageID}'>Edit address # ${imageID}</button>
+                                <p id='address${imageID}'>${imageAddress}</p>
+                                <button id='addressEdit${imageID}' class="std-btn" data-action="editRecordAddress" data-record-id='${imageID}'>Edit address # ${imageID}</button>
                                 <hr>
                                 <p><strong>Notes:</strong></p>
-                                <div class="tinymce-textarea">${imageNotes}</div>
-                                <button id='noteEdit${imageID}' class="std-btn" data-action="editRecordNote" data-image-id='image_${imageID}'>Edit note # ${imageID}</button>
+                                <div id='notes${imageID}' class="tinymce-textarea">${imageNotes}</div>
+                                <button id='noteEdit${imageID}' class="std-btn" data-action="editRecordNote" data-record-id='${imageID}'>Edit note # ${imageID}</button>
                                 <hr>
-                                <button id='deleteRecord${imageID}' class="std-btn-red" data-action="deleteRecord" data-record-id='image_${imageID}'>DELETE RECORD # ${imageID}</button>
+                                <button id='deleteRecord${imageID}' class="std-btn-red" data-action="deleteRecord" data-record-id='${imageID}'>DELETE RECORD # ${imageID}</button>
                             `;
                             filteredListContainer.appendChild(recordCard);
-                            filteredRecords[`image_${imageID}`] = {
+                            filteredRecords[`${imageID}`] = {
                                 image_blob: imageSrc,
                                 image_date: imageDate,
                                 image_time: imageTime,
@@ -426,8 +478,8 @@ export function projectMJSisLoaded(){
                 }
             // getByNote END
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
-            // insertRecord START
-                export async function insertRecord(){
+            // insertFormDataRecord START
+                export async function insertFormDataRecord(){
                     // check if an image has been captured START
                     	const canvasII = document.getElementById('canvasII'); // for image capture in section-save
                         const ctx = canvasII.getContext('2d');
@@ -471,7 +523,7 @@ export function projectMJSisLoaded(){
                         function canvasToDataURL(canvas,imageCompression=1) {
                             return canvas.toDataURL("image/jpeg", imageCompression); // Compress to smaller JPEG
                         }
-                    console.log("insertRecord() called.");
+                    console.log("insertFormDataRecord() called.");
                     // ✅ Save Photo & Data to SQLite via API
                         const canvas = document.getElementById("canvasII");                
                         const image_DataURL_compressed = canvasToDataURL(canvas, imageCompression);
@@ -499,7 +551,7 @@ export function projectMJSisLoaded(){
                         // formData.append("userEmailAddress", "donald.garton@outlook.com");
                         console.log("FormData entries:", Array.from(formData.entries())); // Log FormData entries
                         try {
-                            const fetchUrl = "/dbRouter/insert-record";
+                            const fetchUrl = "/dbRouter/insert-form-data-record";
                             const fetchOptions = {
                                     method: 'POST',
                                     mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -532,7 +584,7 @@ export function projectMJSisLoaded(){
                             console.error("Error saving photo:", error);
                         }
                 }
-            // insertRecord END
+            // insertFormDataRecord END
 // DOM element "data-action" functions END
 // ⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️
 // 🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴🏳️🏴

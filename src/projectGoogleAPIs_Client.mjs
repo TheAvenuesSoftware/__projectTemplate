@@ -116,7 +116,8 @@ export async function getGooglePlacesAPIkey() {
             method: 'POST',
             mode: 'cors',                  // Ensures cross-origin requests are handled
             cache: 'no-cache',             // Prevents caching issues
-            // NOT YET SET >>> credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+            // credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+            credentials: "include",
             headers: {
                 'Content-Type': 'application/json',  // Sets content type
                 // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)

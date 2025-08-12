@@ -1,2 +1,2 @@
 set TZ=Australia/Sydney
-start /max nodemon index.mjs
+start /max nodemon index.mjs --ignore sessions/

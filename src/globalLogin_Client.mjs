@@ -370,7 +370,8 @@ function passcodeEntry() {
 }
 
 async function login_stepSeven(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed,loginsDBinsertedID){
-    const fetchUrl = `/sessionsRouter/sessionRegen`;
+    // const fetchUrl = `/sessionsRouter/sessionRegen`;
+    const fetchUrl = `/sessionsRouter/sessionInit`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
             mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -392,7 +393,8 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
             if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
             const jso = await response.json(); // Fetch JSON object
             if(consoleLog===true){console.log(`sessionRegen:- `,jso);}
-            if(jso.sessionRegenOK===true){
+            // if(jso.sessionRegenOK===true){
+            if(jso.sessionInitOK===true){
                 passcodeEntry(); // Initialize passcode entry functionality
                 document.getElementById("popup-overlay").classList.add("fade-in");
                 document.getElementById("popup-overlay").classList.remove("fade-out");

@@ -15,40 +15,40 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
         // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
             if(consoleLog===true){console.log('Window load successsful ~ globalSessions_Client.',Date.now());}
 
-            // dynamically set fetch "credentials mode" START 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
-                const fetchUrl = "/establish-session";
-                const fetchOptions = {
-                        method: 'POST',
-                        mode: 'cors',                  // Ensures cross-origin requests are handled
-                        cache: 'no-cache',             // Prevents caching issues
-                        credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
-                        headers: {
-                            'Content-Type': 'application/json',  // Sets content type
-                            // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
-                            // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
-                        },
-                        body: JSON.stringify({          // Converts object to JSON for request
-                            sessionCheck:"retrieve 'fetch() credentials:' mode from server"
-                        })
-                    }
-                // if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
-                try {
-                    const response = await fetch(fetchUrl, fetchOptions);                
-                    // if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
-                    // const data = await response.json();
-                    const jso = await response.json(); // converts fetch response from JSON to a JSO
-                    console.log('🟢 Response received:-\n', JSON.stringify(jso,null,2));
-                    if(jso.sessionEstablished===true){
-                        clientConfigSettings.CLIENT_SESSION_CREDENTIALS = "include";
-                        console.log("Session active?", jso.sessionEstablished,"  Session user name:", jso.sessionName,"  Credentials mode:",clientConfigSettings.CLIENT_SESSION_CREDENTIALS);
-                    }else{
-                        clientConfigSettings.CLIENT_SESSION_CREDENTIALS = "omit";
-                        console.log("Session active?", jso.sessionEstablished,"  Session user name:", jso.sessionName,"  Credentials mode:",clientConfigSettings.CLIENT_SESSION_CREDENTIALS);
-                    }
-                } catch (error) {
-                    if(consoleLog===true){console.error("Error sending POST request:", error.message);}
-                }
-            // dynamically set fetch credentials mode END 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+            // // dynamically set fetch "credentials mode" START 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
+            //     const fetchUrl = "/establish-session";
+            //     const fetchOptions = {
+            //             method: 'POST',
+            //             mode: 'cors',                  // Ensures cross-origin requests are handled
+            //             cache: 'no-cache',             // Prevents caching issues
+            //             credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+            //             headers: {
+            //                 'Content-Type': 'application/json',  // Sets content type
+            //                 // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
+            //                 // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
+            //             },
+            //             body: JSON.stringify({          // Converts object to JSON for request
+            //                 sessionCheck:"retrieve 'fetch() credentials:' mode from server"
+            //             })
+            //         }
+            //     // if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
+            //     try {
+            //         const response = await fetch(fetchUrl, fetchOptions);                
+            //         // if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
+            //         // const data = await response.json();
+            //         const jso = await response.json(); // converts fetch response from JSON to a JSO
+            //         console.log('🟢 Response received:-\n', JSON.stringify(jso,null,2));
+            //         if(jso.sessionEstablished===true){
+            //             clientConfigSettings.CLIENT_SESSION_CREDENTIALS = "include";
+            //             console.log("Session active?", jso.sessionEstablished,"  Session user name:", jso.sessionName,"  Credentials mode:",clientConfigSettings.CLIENT_SESSION_CREDENTIALS);
+            //         }else{
+            //             clientConfigSettings.CLIENT_SESSION_CREDENTIALS = "omit";
+            //             console.log("Session active?", jso.sessionEstablished,"  Session user name:", jso.sessionName,"  Credentials mode:",clientConfigSettings.CLIENT_SESSION_CREDENTIALS);
+            //         }
+            //     } catch (error) {
+            //         if(consoleLog===true){console.error("Error sending POST request:", error.message);}
+            //     }
+            // // dynamically set fetch credentials mode END 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 
             // // idle tracking START 🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸🔸
             //     let lastActivity = Date.now();

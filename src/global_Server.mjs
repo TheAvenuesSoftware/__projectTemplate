@@ -32,6 +32,16 @@ export function globalServerMJSisLoaded(){
 
 // ===========================================================================================================================
 
+// check if JSONstring is valid
+    export function isValidJSONString(data) {
+        if (typeof data !== 'string') return false;
+        try {
+            JSON.parse(data);
+            return true;
+        } catch {
+            return false;
+        }
+    }
 
 // nodemailer sendMail START
     export async function sendMail(from="",to="",subject="",html="",text=""){

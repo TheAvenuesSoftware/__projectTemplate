@@ -432,7 +432,7 @@ export async function getGlobalFooter() {
             method: 'POST',                // Specifies a POST request
             mode: 'cors',                  // Ensures cross-origin requests are handled
             cache: 'no-cache',             // Prevents caching issues
-            // credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+            credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
             headers: {
                 'Content-Type': 'application/json',  // Sets content type
                 // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)

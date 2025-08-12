@@ -41,6 +41,7 @@ export function SQLite_ServerSideMJSisLoaded(){
                     if (!dbInstances.has(dbFileName)) {
                         dbInstances.set(dbFileName, await initDB(dbFileName));
                     }
+                    console.log(trace(),'dbInstances:-',dbInstances)
                     return dbInstances.get(dbFileName);
                 }
                 // // Example usage
@@ -121,7 +122,7 @@ export function SQLite_ServerSideMJSisLoaded(){
                         try{
                             // For production, optimize SQLite:
                             // 1.1 - Enable WAL Mode (Write-Ahead Logging)
-                            // 1.2- Enable WAL mode for concurrent reads and writes:
+                            // 1.2 - Enable WAL mode for concurrent reads and writes:
                                 await db.exec('PRAGMA journal_mode = WAL;');
                                 const mode = await db.get('PRAGMA journal_mode;');
                                 console.log(trace(),"📗📚 Current journal mode:", mode);
@@ -157,7 +158,9 @@ export function SQLite_ServerSideMJSisLoaded(){
 // Here’s a complete set of generic CRUD functions START:
 // ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️
         // 1. Create (Insert)
-            export async function insertRecord(dbFileName, table, columns, values) {
+            export async function insertFormDataRecord(dbFileName, table, columns, values) {
+            }
+            export async function insertDataRecord(dbFileName, table, columns, values) {
                 try {
                     const db = await getDB(dbFileName);
                     const placeholders = columns.map(() => '?').join(', ');
@@ -190,17 +193,17 @@ export function SQLite_ServerSideMJSisLoaded(){
                     return [];
                 }
             }
-        // 3. Update (Modify)
-            export async function updateRecord(dbFileName, table, updates, condition, values) {
-                const db = await getDB(dbFileName);
-                try {
-                    const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', ');
-                    const query = `UPDATE ${table} SET ${setClause} WHERE ${condition}`;
-                    await db.run(query, [...Object.values(updates), ...values]);
-                } catch (err) {
-                    if(consoleLog===true){console.error(`${trace()} Update error in ${table}:`, err);}
-                }
-            }
+        // // 3. Update (Modify)
+        //     export async function updateRecord(dbFileName, table, updates, condition, values) {
+        //         const db = await getDB(dbFileName);
+        //         try {
+        //             const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', ');
+        //             const query = `UPDATE ${table} SET ${setClause} WHERE ${condition}`;
+        //             await db.run(query, [...Object.values(updates), ...values]);
+        //         } catch (err) {
+        //             if(consoleLog===true){console.error(`${trace()} Update error in ${table}:`, err);}
+        //         }
+        //     }
         // 4. Delete (Remove)
             export async function deleteRecord(dbFileName, table, condition, values) {
                 const db = await getDB(dbFileName);
@@ -213,7 +216,7 @@ export function SQLite_ServerSideMJSisLoaded(){
             }
         // Usage
             // Insert a user
-                // insertRecord("alice123", "users", ["name", "email"], ["Alice", "alice@example.com"]);
+                // insertFormDataRecord("alice123", "users", ["name", "email"], ["Alice", "alice@example.com"]);
             // Fetch users
                 // getRecord("alice123", "users")
                 // .then(()=>{
@@ -237,7 +240,7 @@ export function SQLite_ServerSideMJSisLoaded(){
 // Endpoint to save a photo START
     // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
         // ADD NEW RECORD start
-            dbRouter.post("/insert-record", async (req, res) => {
+            dbRouter.post("/insert-form-data-record", async (req, res) => {
 
                 let responseSent = false;
                 const safeRespond = (status, body) => {
@@ -411,17 +414,81 @@ export function SQLite_ServerSideMJSisLoaded(){
         }
     });
 
+    dbRouter.post("/delete-record", async (req, res) => {
+        console.log(trace(),`req.body`, req.body);
+        const { fileName, tableName, updates, where } = req.body;
+
+        console.log(trace(), '🔧 updates:-\n', updates);
+
+        function buildWhereClause({ conditions, logic = "AND" }) {
+            if (!Array.isArray(conditions) || conditions.length === 0) {
+                return { clause: "1", values: [] }; // no conditions = update all
+            }
+
+            const safeLogic = logic.toUpperCase() === "OR" ? "OR" : "AND";
+
+            const clause = conditions
+                .map(cond => `${cond.field} ${cond.operator} ?`)
+                .join(` ${safeLogic} `);
+
+            const values = conditions.map(cond => cond.value);
+
+            console.log(trace(), clause, values);
+            return { clause, values };
+        }
+    
+        const db = await getDB(fileName);
+
+        const columns = await db.all(`PRAGMA table_info(${tableName});`);
+        console.log(trace(), '🧬 Table columns:', columns.map(c => c.name));
+
+        // Modular WHERE clause
+        const { clause: whereClause, values: conditionValues } = buildWhereClause(where);
+        const match = await db.get(`DELETE * FROM ${tableName} WHERE ${whereClause}`, conditionValues);
+        console.log(trace(), '🔍 Matching record:', match);
+
+        // SET clause
+        const setClause = Object.keys(updates).map(key => `${key} = ?`).join(", ");
+        const updateValues = Object.values(updates);
+
+        const query = `UPDATE ${tableName} SET ${setClause} WHERE ${whereClause}`;
+        const params = [...updateValues, ...conditionValues];
+
+        console.log(`${trace()} query: ${query}`);
+        console.log(`${trace()} params:`, params);
+
+        try {
+            // const result = await db.exec(query, params);
+            const result = await db.run(query, params);
+            console.log(trace(), result);
+
+            if (fileName === "users") {
+                optPer(fileName); // optimize after a successful write
+                const walStats = await db.get("PRAGMA wal_checkpoint(PASSIVE);");
+                console.log(trace(), "🔍 WAL checkpoint stats:", walStats);
+            }
+
+            const verify = await db.get(`SELECT * FROM ${tableName} WHERE ${whereClause}`, conditionValues);
+            console.log(trace(), '🔍 Post-update record:', verify);
+
+            console.log(`${trace()} 🟢 Updated ok`, { fileName, tableName, updates, where });
+        } catch (err) {
+            console.error(`${trace()} 🔴 Update failed`, { fileName, tableName, updates, where }, err);
+        }
+
+    });
     dbRouter.post("/delete-photo-by-id", async (req, res) => {
         try {
-            const db = await getDB(`${req.body.userEmailAddress}`);
-            const result = await db.run("DELETE FROM photos WHERE id = ?", [req.body.image_id]);
+            const db = await getDB(`${req.body.fileName}`);
+            // const result = await db.run("DELETE FROM photos WHERE id = ?", [req.body.image_id]);
+            const result = await db.run(`DELETE FROM ${req.body.tableName} WHERE id = ?`, [req.body.recordIdToDELETE]);
             if (result.changes === 0) {
-                return res.status(404).json({ message: "Photo not found" });
+                return res.status(404).json({ message: `Record ${req.body.recordIdToDELETE} not found.`});
             }
-            res.json({ message: "Photo deleted successfully" });
+            res.json({ message: `Record ${req.body.recordIdToDELETE} deleted successfully.`});
         } catch (err) {
             console.error("Database error:", err);
-            res.status(500).json({ message: "Failed to delete photo" });
+            res.status(500).json({ message: `Failed to delete record ${req.body.recordIdToDELETE}.`});
         }
     });
 
@@ -512,33 +579,169 @@ export function SQLite_ServerSideMJSisLoaded(){
                 image_notes: row.image_notes
             }));
 
-            console.log(trace(), formattedPhotos);
-            res.json(formattedPhotos);
+            // console.log(trace(), formattedPhotos);
+            res.status(200).json({success: true, formattedPhotos: formattedPhotos});
         } catch (err) {
             if(!db) {
                 console.error(trace(), "❌ Database connection failed for user:", req.body.userEmailAddress);
-                return res.status(500).json({ message: "Database connection failed" }); 
+                res.status(401).json({ success: false, message: `Database connection failed.`, error: err }); 
             } else {
                 console.error("Database error:", err);
-                res.status(500).json({ message: "Failed to filter on address" });
+                res.status(500).json({ success: false, message: `Failed to filter.`, error: err });
             }
         }
     });
 
-    dbRouter.post("/update-record", async (req, res) => {
-        const { fileName, tableName, updates, recordIdToUpdate } = req.body;
-        const db = await getDB(fileName); // initialises and retrieves database connection
-        const condition = "image_id = ?";                // maps to `WHERE image_id = ?`
-        const values = [recordIdToUpdate];         // passed in as params
-        try {
-            const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', '); // Dynamically builds the SQL SET clause for fields you're updating
-            const query = `UPDATE ${tableName} SET ${setClause} WHERE ${condition}`; // Constructs the SQL UPDATE statement, inserting table and condition.
-            await db.run(query, [...Object.values(updates), ...values]); // Executes the update using parameterized values to prevent SQL injection.
-            res.status(200).json({ success: true });
-        } catch (err) { // Gracefully handles and logs any errors encountered during the update.
-            console.error(`Update error in ${tableName}:`, err);
-            res.status(500).json({ success: false, error: err.message });
+    // export async function updateRecord(fileName, tableName, updates, conditionField, conditionValue, conditionComparison){
+    //     const db = await getDB(fileName); // initialises and retrieves database connection
+    //     const condition = `${conditionField} = ${conditionValue}`;                // maps to `WHERE image_id = ?`
+    //     console.log(`${trace()} conditionField:- ${conditionField}`);
+    //     console.log(`${trace()} conditionValue:- ${conditionValue}`);
+    //     const values = [conditionValue];                          // passed in as params
+    //     const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', '); // Dynamically builds the SQL SET clause for fields you're updating
+    //     console.log(`${trace()} setClause:- ${setClause}`);
+    //     const query = `UPDATE ${tableName} SET ${setClause} WHERE ${condition}`; // Constructs the SQL UPDATE statement, inserting table and condition.
+    //     console.log(`${trace()} query:- ${query}`);
+    //     try {
+    //         await db.run(query, [...Object.values(updates), ...values]); // Executes the update using parameterized values to prevent SQL injection.
+    //         console.error(`${trace()} 🟢 Updated ok:`, fileName, tableName, updates, conditionField, conditionValue);
+    //         // res.status(200).json({ success: true, error: false });
+    //     } catch (err) { // Gracefully handles and logs any errors encountered during the update.
+    //         console.error(`${trace()} 🔴 Update failed:`,fileName, tableName, updates, conditionField, conditionValue, err);
+    //         // res.status(500).json({ success: false, error: err.message });
+    //     }
+    // }
+
+    // export async function updateRecord({ fileName, tableName, updates, conditions }) {
+    //     console.log(trace(),fileName, tableName, updates, conditions);
+    // 
+    //     function buildWhereClause(conditions) {
+    //         if (!Array.isArray(conditions) || conditions.length === 0) return { clause: "1", values: [] }; // no conditions = update all
+    //         const clause = conditions.map(cond => `${cond.field} ${cond.comparison} ?`).join(" AND ");
+    //         const values = conditions.map(cond => cond.value);
+    //         console.log(trace(),clause, values);
+    //         return { clause, values };
+    //     }
+    // 
+    //     const db = await getDB(fileName);
+    // 
+    //     // Modular WHERE clause
+    //         const { clause: whereClause, values: conditionValues } = buildWhereClause(conditions);
+    // 
+    //     // SET clause
+    //         console.log(trace(),updates);
+    //         const setClause = Object.keys(updates).map(key => `${key} = ?`).join(", ");
+    //         const updateValues = Object.values(updates);
+    // 
+    //     const query = `UPDATE ${tableName} SET ${setClause} WHERE ${whereClause}`;
+    //     const params = [...updateValues, ...conditionValues];
+    // 
+    //     console.log(`${trace()} query: ${query}`);
+    //     console.log(`${trace()} params:`, params);
+    // 
+    //     try {
+    //         // await db.run(query, params);
+    //         const y = await db.exec(query, params);
+    //         console.log(trace(),y);
+    //         if(fileName==="users"){
+    //             optPer(`${fileName}`); // optimize after a successful write
+    //             const walStats = await db.get('PRAGMA wal_checkpoint(PASSIVE);');
+    //             console.log(trace(),"🔍 WAL checkpoint stats:", walStats);
+    //             // await db.exec("PRAGMA wal_checkpoint(RESTART);");
+    //         }
+    //         console.log(`${trace()} 🟢 Updated ok`, { fileName, tableName, updates, conditions });
+    //     } catch (err) {
+    //         console.error(`${trace()} 🔴 Update failed`, { fileName, tableName, updates, conditions }, err);
+    //     }
+    // }
+    export async function updateFormDataRecord({ fileName, tableName, updates, where }) {
+    }
+    export async function updateDataRecord({ fileName, tableName, updates, where }) {
+        console.log(trace(), fileName, tableName, updates, where);
+
+        console.log(trace(), '🔧 Updates object:', updates);
+
+        function buildWhereClause({ conditions, logic = "AND" }) {
+            if (!Array.isArray(conditions) || conditions.length === 0) {
+                return { clause: "1", values: [] }; // no conditions = update all
+            }
+
+            const safeLogic = logic.toUpperCase() === "OR" ? "OR" : "AND";
+
+            const clause = conditions
+                .map(cond => `${cond.field} ${cond.operator} ?`)
+                .join(` ${safeLogic} `);
+
+            const values = conditions.map(cond => cond.value);
+
+            console.log(trace(), clause, values);
+            return { clause, values };
         }
+    
+        const db = await getDB(fileName);
+
+        const columns = await db.all(`PRAGMA table_info(${tableName});`);
+        console.log(trace(), '🧬 Table columns:', columns.map(c => c.name));
+
+        // Modular WHERE clause
+        const { clause: whereClause, values: conditionValues } = buildWhereClause(where);
+        const match = await db.get(`SELECT * FROM ${tableName} WHERE ${whereClause}`, conditionValues);
+        console.log(trace(), '🔍 Matching record:', match);
+
+        // SET clause
+        const setClause = Object.keys(updates).map(key => `${key} = ?`).join(", ");
+        const updateValues = Object.values(updates);
+
+        const query = `UPDATE ${tableName} SET ${setClause} WHERE ${whereClause}`;
+        const params = [...updateValues, ...conditionValues];
+
+        console.log(`${trace()} query: ${query}`);
+        console.log(`${trace()} params:`, params);
+
+        try {
+            // const result = await db.exec(query, params);
+            const result = await db.run(query, params);
+            console.log(trace(), result);
+
+            if (fileName === "users") {
+                optPer(fileName); // optimize after a successful write
+                const walStats = await db.get("PRAGMA wal_checkpoint(PASSIVE);");
+                console.log(trace(), "🔍 WAL checkpoint stats:", walStats);
+            }
+
+            const verify = await db.get(`SELECT * FROM ${tableName} WHERE ${whereClause}`, conditionValues);
+            console.log(trace(), '🔍 Post-update record:', verify);
+
+            console.log(`${trace()} 🟢 Updated ok`, { fileName, tableName, updates, where });
+            return { success: true, message: updates };
+        } catch (err) {
+            console.error(`${trace()} 🔴 Update failed`, { fileName, tableName, updates, where }, err);
+            return { success: false, message: updates };
+        }
+    }
+    dbRouter.post("/update-form-data-record", async (req, res) => {
+    });
+    dbRouter.post("/update-data-record", async (req, res) => {
+        //  // server uses:- app.use(express.json()); // Middleware to parse JSON data
+            console.log(trace(),"/update-record req.body:-\n",req.body);
+            console.log(trace(),"/update-record req.body:-\n",JSON.stringify(req.body,null,2));
+            //     NO! console.log(trace(),"/update-record req.body:-\n",JSON.parse(req.body));
+        //  // server uses:- app.use(express.json()); // Middleware to parse JSON data
+        const { fileName, tableName, updates, where } = req.body;
+        console.log(trace(),fileName);
+        console.log(trace(),tableName);
+        console.log(trace(),updates);
+        console.log(trace(),where);
+        // updateRecord({fileName, tableName, updates, where});
+        const response = await updateDataRecord(req.body);
+        res.status(200).json({
+            success: response.success,
+            message: response.message,
+            fileName: fileName,
+            tableName: tableName,
+            updates: updates,
+            where: where
+        });
     });
 
 // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸

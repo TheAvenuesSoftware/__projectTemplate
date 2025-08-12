@@ -10,6 +10,10 @@ export function globalSessionsServerMJSisLoaded(){
     import { Router } from "express";
     const sessionsRouter = Router();
     import { trace } from "./global_Server.mjs";
+    import * as cookie from "cookie";
+    import fs from "fs";
+    import crypto from 'crypto'
+    // import { randomUUID } from 'crypto'; // randomUUID is a named export from crypto
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
     // LOGOUT 🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️
@@ -84,8 +88,52 @@ export function globalSessionsServerMJSisLoaded(){
                     }
                 });
                 if(sessionRegenOK===true){console.log(trace(),`🟢 Session regen ok!`);}
-                // regenerate session & add security code to regenerated session START
-            // generate securityCode END 🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒🔒
+                // regenerate session & add security code to regenerated session END
+        });
+    // SESSION REGENERATION ®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️
+        sessionsRouter.post("/sessionInit", async (req, res) => {
+            // initialise session for llogin user START
+            const parsed = cookie.parse(req.headers.cookie);
+            // console.log(`🪣 ${trace()}🔒 ⁉️req.headers.cookie.connectSID`,parsed.connectSID);
+            // const connectSidExists = fs.readFileSync(`./sessions/${parsed.connectSID}.json`);
+            // const authenticated = connectSidExists? true : false;            
+            const sessionIdOld = parsed.connectSID;
+            try {
+                fs.unlinkSync(`./sessions/${sessionIdOld}.json`);
+                console.log("Session deleted from server OK!");
+            } catch (err) {
+                console.log("Session deleted from server FAILED!",err);
+            }
+            const sessionId = crypto.randomBytes(32).toString("hex");
+            const sessionData = JSON.stringify(
+                {
+                    user: req.body.loginEmailAddress,
+                    createdAt: Date.now(),
+                    milisecondsDuration: (60 * 60 * 1000) // 60 * 60 * 1000 = 1 hour
+                }
+            );
+            await fs.writeFile('./sessions/' + sessionId + '.json', sessionData, (err) => {
+                if (err){
+                    console.log(`${trace()} 🗝️ Session store created?`,false,err);
+                } else {
+                    console.log(`${trace()} 🗝️ Session store created?`,true);
+                }
+            });
+            function buildCookie(name, value, options = {}) {
+            const {
+                path = "/",
+                httpOnly = true,
+                secure = true,
+                sameSite = "None"
+            } = options;
+                return `${name}=${value}; Path=${path}; ${httpOnly ? "HttpOnly;" : ""} ${secure ? "Secure;" : ""} SameSite=${sameSite}`;
+            }
+            const cookies = [
+                buildCookie("connectSID", sessionId),
+            ];
+            res.setHeader("Set-Cookie", cookies);
+            const sessionInitOK = true; // Set to true to indicate save success
+            res.send({sessionInitOK:sessionInitOK});
         });
 
 

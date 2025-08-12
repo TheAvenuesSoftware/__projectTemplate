@@ -576,6 +576,7 @@ canvas {
 .section-save .save-note_0 {
   border: 1px solid black;
   border-radius: 6px;
+  min-height: 48px;
 }
 .section-save .save-canvas {
   border: 1px solid black;
