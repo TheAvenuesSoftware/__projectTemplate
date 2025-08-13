@@ -79,7 +79,8 @@ export function projectMJSisLoaded(){
                             body: JSON.stringify({
                                 fileName: userEmailAddress,
                                 tableName: "photos",
-                                updates:{
+                                updates: {
+                                    field_to_update: "None.  DELETE record."
                                 },
                                 where: {
                                     conditions: [
@@ -93,6 +94,23 @@ export function projectMJSisLoaded(){
                     const response = await fetch(fetchUrl, fetchOptions);
                     const jso = await response.json(); // Fetch JSON 
                     console.log(jso);
+                    if(jso.success===true){
+                        if(jso.deleted === 0){
+                            showCustomMessage(`No records found to delete`);
+                            return;
+                        }
+                        // steps START
+                            // 1 remove the record from the DOM
+                                const recordElement = document.getElementById(`record${recordIdToDELETE}`);
+                                if(recordElement) {
+                                    recordElement.remove(); // Remove the record element from the DOM
+                                }
+                            // 2 remove the record from filteredRecords
+                                delete filteredRecords[`${recordIdToDELETE}`];
+                                console.log(`Record # ${recordIdToDELETE} deleted from filteredRecords.`);
+                        // steps END
+                        showCustomMessage(`Record # ${recordIdToDELETE} deleted successfully.`);
+                    }
                 } catch (error) {
                     console.error(`Error DELETING record # ${recordIdToDELETE} in photos :`, error);
                 }
@@ -112,7 +130,7 @@ export function projectMJSisLoaded(){
                 }
                 // insert DOM element textarea START
                     const editNoteTinymceContainer = document.createElement("div");
-                    editNoteTinymceContainer.id = "editNoteTinymceContainer";
+                    editNoteTinymceContainer.id = `editNoteTinymceContainer${imageID}`;
                     editNoteTinymceContainer.className = "record-card-edit-note";
                     // const noteHTML = filteredRecords[`${filteredRecordID}`].image_notes || '';
                     const noteHTML = document.getElementById(`notes${filteredRecordID}`).innerHTML;
@@ -123,7 +141,8 @@ export function projectMJSisLoaded(){
                     anchorElement.after(editNoteTinymceContainer); // append after the anchor element.  append; prepend; before; after
                 // insert DOM element textarea END
                 // initialise TinyMCE START
-                    const tinymceEditor = document.getElementById(`noteEdit${imageID}`);
+                    // const tinymceEditor = document.getElementById(`noteEdit${imageID}`);
+                    const tinymceEditor = document.getElementById(`editNoteTinymceContainer${imageID}`);
                     console.log(tinymceEditor); // textarea, now style="display: none;"
                     initTinyMCE(tinymceEditor); // Call this to initialize TinyMCE editor
                 // initialise TinyMCE END
@@ -188,10 +207,16 @@ export function projectMJSisLoaded(){
                     console.log(jso);
                     console.log(jso.updates.image_notes);
                     if(jso.success===true){
-                        const notesElement = document.getElementById(`notes${recordIdToUpdate}`);
-                        notesElement.innerHTML = jso.updates.image_notes; // Update the notes in the DOM
-                        const editNoteTinymceContainer = document.getElementById("editNoteTinymceContainer");
-                        editNoteTinymceContainer.remove(); // Remove the notes input element
+                        // steps START
+                            // 1 update the notes in the DOM
+                                const notesElement = document.getElementById(`notes${recordIdToUpdate}`);
+                                notesElement.innerHTML = jso.updates.image_notes; // Update the notes in the DOM
+                            // 2 destroy TinyMCE editor instance
+                                tinymce.get(`editNoteTinymceContainer${recordIdToUpdate}`)?.remove();
+                            // 3 remove the notes input element
+                                const editNoteTinymceContainer = document.getElementById(`editNoteTinymceContainer${recordIdToUpdate}`);
+                                editNoteTinymceContainer.remove(); // Remove the notes input element
+                        // steps END
                     }else{
                         showCustomMessage("Failed to update note", "error");
                     }
@@ -216,7 +241,9 @@ export function projectMJSisLoaded(){
                     // editAddressDiv.className = "record-card-edit-address";
                     editAddressDiv.id = "autocomplete-address-container";
                     editAddressDiv.className = "autocomplete-address-container";
-                    const addressValue = filteredRecords[`${filteredRecordID}`].image_address || '';
+                    // const addressValue = filteredRecords[`${filteredRecordID}`].image_address || '';
+                    const addressElement = document.getElementById(`address${imageID}`);
+                    const addressValue = addressElement.textContent || '';
                     console.log(addressValue);
                     localStorage.setItem(`tas_address_toEdit`,addressValue);
                     editAddressDiv.innerHTML = `
@@ -228,7 +255,8 @@ export function projectMJSisLoaded(){
                     anchorElement.after(editAddressDiv); // append after the anchor element
                 // insert DOM element input END
                 // initialise Google API START
-                    document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = filteredRecords[`${filteredRecordID}`].image_address || '';
+                    // document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = filteredRecords[`${filteredRecordID}`].image_address || '';
+                    document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = addressElement.textContent || '';
                     initAutocomplete(`googlePlacesAPIautocomplete_${imageID}`);
                 // initialise Google API END
                 // insert save button START
@@ -365,8 +393,14 @@ export function projectMJSisLoaded(){
                         }
                         const filteredList = jso.formattedPhotos || [];
                         console.log("Filtered List:", filteredList);
-                        const filteredListContainer = document.getElementById("filteredList-container");
-                        filteredListContainer.innerHTML = ""; // Clear previous content
+                        // re-set all previous filtered records START
+                            const filteredListContainer = document.getElementById("filteredList-container");
+                            while (filteredListContainer.firstChild) {
+                                filteredListContainer.removeChild(filteredListContainer.firstChild);
+                            }
+                            const x = filteredListContainer;
+                            console.log("filteredListContainer:-\n",x);
+                        // re-set all previous filtered records END
                         if (!filteredList.length) {
                             filteredListContainer.innerHTML = "<p>No photos available.</p>";
                             return;
@@ -390,6 +424,7 @@ export function projectMJSisLoaded(){
                                 const imageAddress = photo.image_address || "No Address Provided";
                                 const imageNotes = photo.image_notes || "No Notes Available";
                                 const imageID = photo.image_id;
+                                recordCard.id = `recordCard${imageID}`;
                             recordCard.innerHTML = `
                                 <p><strong>Photo # ${imageID}</strong></p>
                                 <img src="${imageSrc}" alt="Photo" class="photo">
@@ -397,7 +432,7 @@ export function projectMJSisLoaded(){
                                 <p><strong>Time:</strong> ${imageTime}</p>
                                 <hr>
                                 <p><strong>Address:</strong></p>
-                                <p id='address${imageID}'>${imageAddress}</p>
+                                <p id='address${imageID}' style="border:1px solid black;padding:5px;">${imageAddress}</p>
                                 <button id='addressEdit${imageID}' class="std-btn" data-action="editRecordAddress" data-record-id='${imageID}'>Edit address # ${imageID}</button>
                                 <hr>
                                 <p><strong>Notes:</strong></p>

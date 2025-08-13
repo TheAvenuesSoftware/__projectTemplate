@@ -414,68 +414,98 @@ export function SQLite_ServerSideMJSisLoaded(){
         }
     });
 
+    // dbRouter.post("/delete-record", async (req, res) => {
+    //     console.log(trace(),`req.body`, req.body);
+    //     const { fileName, tableName, updates, where } = req.body;
+    // 
+    //     console.log(trace(), '🔧 updates:-\n', updates);
+    // 
+    //     function buildWhereClause({ conditions, logic = "AND" }) {
+    //         if (!Array.isArray(conditions) || conditions.length === 0) {
+    //             return { clause: "1", values: [] }; // no conditions = update all
+    //         }
+    // 
+    //         const safeLogic = logic.toUpperCase() === "OR" ? "OR" : "AND";
+    // 
+    //         const clause = conditions
+    //             .map(cond => `${cond.field} ${cond.operator} ?`)
+    //             .join(` ${safeLogic} `);
+    // 
+    //         const values = conditions.map(cond => cond.value);
+    // 
+    //         console.log(trace(), clause, values);
+    //         return { clause, values };
+    //     }
+    // 
+    //     const db = await getDB(fileName);
+    // 
+    //     const columns = await db.all(`PRAGMA table_info(${tableName});`);
+    //     console.log(trace(), '🧬 Table columns:', columns.map(c => c.name));
+    // 
+    //     // Modular WHERE clause
+    //     const { clause: whereClause, values: conditionValues } = buildWhereClause(where);
+    //     const match = await db.get(`DELETE FROM ${tableName} WHERE ${whereClause}`, conditionValues);
+    //     console.log(trace(), '🔍 Matching record:', match);
+    // 
+    //     // SET clause
+    //     const setClause = Object.keys(updates).map(key => `${key} = ?`).join(", ");
+    //     const updateValues = Object.values(updates);
+    // 
+    //     const query = `UPDATE ${tableName} SET ${setClause} WHERE ${whereClause}`;
+    //     const params = [...updateValues, ...conditionValues];
+    // 
+    //     console.log(`${trace()} query: ${query}`);
+    //     console.log(`${trace()} params:`, params);
+    // 
+    //     try {
+    //         // const result = await db.exec(query, params);
+    //         const result = await db.run(query, params);
+    //         console.log(trace(), result);
+    // 
+    //         if (fileName === "users") {
+    //             optPer(fileName); // optimize after a successful write
+    //             const walStats = await db.get("PRAGMA wal_checkpoint(PASSIVE);");
+    //             console.log(trace(), "🔍 WAL checkpoint stats:", walStats);
+    //         }
+    // 
+    //         const verify = await db.get(`SELECT * FROM ${tableName} WHERE ${whereClause}`, conditionValues);
+    //         console.log(trace(), '🔍 Post-update record:', verify);
+    // 
+    //         console.log(`${trace()} 🟢 Updated ok`, { fileName, tableName, updates, where });
+    //     } catch (err) {
+    //         console.error(`${trace()} 🔴 Update failed`, { fileName, tableName, updates, where }, err);
+    //     }
+    // 
+    // });
     dbRouter.post("/delete-record", async (req, res) => {
-        console.log(trace(),`req.body`, req.body);
-        const { fileName, tableName, updates, where } = req.body;
+        console.log(trace(), `req.body`, req.body);
+        const { fileName, tableName, where } = req.body;
 
-        console.log(trace(), '🔧 updates:-\n', updates);
+        const db = await getDB(fileName);
 
         function buildWhereClause({ conditions, logic = "AND" }) {
             if (!Array.isArray(conditions) || conditions.length === 0) {
-                return { clause: "1", values: [] }; // no conditions = update all
+                // 🚫 Reject empty conditions
+                throw new Error("At least one WHERE condition is required for DELETE operation.");
             }
 
             const safeLogic = logic.toUpperCase() === "OR" ? "OR" : "AND";
-
-            const clause = conditions
-                .map(cond => `${cond.field} ${cond.operator} ?`)
-                .join(` ${safeLogic} `);
-
+            const clause = conditions.map(cond => `${cond.field} ${cond.operator} ?`).join(` ${safeLogic} `);
             const values = conditions.map(cond => cond.value);
-
-            console.log(trace(), clause, values);
             return { clause, values };
         }
-    
-        const db = await getDB(fileName);
-
-        const columns = await db.all(`PRAGMA table_info(${tableName});`);
-        console.log(trace(), '🧬 Table columns:', columns.map(c => c.name));
-
-        // Modular WHERE clause
-        const { clause: whereClause, values: conditionValues } = buildWhereClause(where);
-        const match = await db.get(`DELETE * FROM ${tableName} WHERE ${whereClause}`, conditionValues);
-        console.log(trace(), '🔍 Matching record:', match);
-
-        // SET clause
-        const setClause = Object.keys(updates).map(key => `${key} = ?`).join(", ");
-        const updateValues = Object.values(updates);
-
-        const query = `UPDATE ${tableName} SET ${setClause} WHERE ${whereClause}`;
-        const params = [...updateValues, ...conditionValues];
-
-        console.log(`${trace()} query: ${query}`);
-        console.log(`${trace()} params:`, params);
 
         try {
-            // const result = await db.exec(query, params);
-            const result = await db.run(query, params);
-            console.log(trace(), result);
+            const { clause: whereClause, values: conditionValues } = buildWhereClause(where);
 
-            if (fileName === "users") {
-                optPer(fileName); // optimize after a successful write
-                const walStats = await db.get("PRAGMA wal_checkpoint(PASSIVE);");
-                console.log(trace(), "🔍 WAL checkpoint stats:", walStats);
-            }
+            const result = await db.run(`DELETE FROM ${tableName} WHERE ${whereClause}`, conditionValues);
+            console.log(`${trace()} 🗑️ Deleted record(s):`, result);
 
-            const verify = await db.get(`SELECT * FROM ${tableName} WHERE ${whereClause}`, conditionValues);
-            console.log(trace(), '🔍 Post-update record:', verify);
-
-            console.log(`${trace()} 🟢 Updated ok`, { fileName, tableName, updates, where });
+            res.json({ success: true, deleted: result.changes });
         } catch (err) {
-            console.error(`${trace()} 🔴 Update failed`, { fileName, tableName, updates, where }, err);
+            console.error(`${trace()} ❌ Deletion failed`, err);
+            res.status(400).json({ success: false, error: err.message });
         }
-
     });
     dbRouter.post("/delete-photo-by-id", async (req, res) => {
         try {
@@ -492,44 +522,44 @@ export function SQLite_ServerSideMJSisLoaded(){
         }
     });
 
-    dbRouter.post("/filter-photos-by-address", async (req, res) => {
-        try{
-            console.log(trace(), 'Received request with Content-Type:', req.headers['content-type']);
-            console.log(trace(), 'Received request:', req.body);
-            const db = await getDB(`${req.body.userEmailAddress}`);
-            if(!db) {
-                console.error(trace(), "❌ Database connection failed for user:", req.body.userEmailAddress);
-                return res.status(500).json({ message: "Database connection failed" }); 
-            }
-
-            const rows = await db.all("SELECT image_blob, image_date, image_time, image_address, image_notes FROM photos WHERE image_address LIKE ?", [req.body.filterText]);
-            
-            if (!rows.length) {
-                console.log(trace(), "No photos found.");
-                return res.status(404).json({ message: "No photos found." });
-            }
-
-            console.log(trace(), rows);
-
-            const formattedPhotos = rows.map(row => ({
-                // image_blob: `data:image/png;base64,${row.image_blob.toString("base64")}`,
-                image_id: row.id, 
-                image_blob: row.image_blob 
-                    ? `data:image/png;base64,${row.image_blob.toString("base64")}` 
-                    : null, // ✅ If null, don't process
-                image_date: row.image_date,
-                image_time: row.image_time,
-                image_address: row.image_address,
-                image_notes: row.image_notes
-            }));
-
-            console.log(trace(), formattedPhotos);
-            res.json(formattedPhotos);
-        } catch (err) {
-            console.error("Database error:", err);
-            res.status(500).json({ message: "Failed to filter photos" });
-        }
-    });
+    // dbRouter.post("/filter-photos-by-address", async (req, res) => {
+    //     try{
+    //         console.log(trace(), 'Received request with Content-Type:', req.headers['content-type']);
+    //         console.log(trace(), 'Received request:', req.body);
+    //         const db = await getDB(`${req.body.userEmailAddress}`);
+    //         if(!db) {
+    //             console.error(trace(), "❌ Database connection failed for user:", req.body.userEmailAddress);
+    //             return res.status(500).json({ message: "Database connection failed" }); 
+    //         }
+    // 
+    //         const rows = await db.all("SELECT image_blob, image_date, image_time, image_address, image_notes FROM photos WHERE image_address LIKE ?", [req.body.filterText]);
+    //      
+    //         if (!rows.length) {
+    //             console.log(trace(), "No photos found.");
+    //             return res.status(404).json({ message: "No photos found." });
+    //         }
+    //
+    //         console.log(trace(), rows);
+    //
+    //         const formattedPhotos = rows.map(row => ({
+    //             // image_blob: `data:image/png;base64,${row.image_blob.toString("base64")}`,
+    //             image_id: row.id, 
+    //             image_blob: row.image_blob 
+    //                 ? `data:image/png;base64,${row.image_blob.toString("base64")}` 
+    //                 : null, // ✅ If null, don't process
+    //             image_date: row.image_date,
+    //             image_time: row.image_time,
+    //             image_address: row.image_address,
+    //             image_notes: row.image_notes
+    //         }));
+    //
+    //         console.log(trace(), formattedPhotos);
+    //         res.json(formattedPhotos);
+    //     } catch (err) {
+    //         console.error("Database error:", err);
+    //         res.status(500).json({ message: "Failed to filter photos" });
+    //     }
+    // });
 
     dbRouter.post("/filter-by", async (req, res) => {
         let db; // makes it visible to both try and catch.
@@ -584,7 +614,7 @@ export function SQLite_ServerSideMJSisLoaded(){
         } catch (err) {
             if(!db) {
                 console.error(trace(), "❌ Database connection failed for user:", req.body.userEmailAddress);
-                res.status(401).json({ success: false, message: `Database connection failed.`, error: err }); 
+                res.status(401).json({ success: false, message: `Database connection failed.\nAre you signed in?\nCheck the padlock icon at top right of screen.`, error: err }); 
             } else {
                 console.error("Database error:", err);
                 res.status(500).json({ success: false, message: `Failed to filter.`, error: err });

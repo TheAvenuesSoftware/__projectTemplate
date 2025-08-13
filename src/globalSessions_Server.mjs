@@ -18,16 +18,16 @@ export function globalSessionsServerMJSisLoaded(){
 
     // LOGOUT 🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️
         sessionsRouter.post("/sessionLogout", (req, res) => {
-            req.session.destroy((err) => {
-                if (err){
-                    if(consoleLog===true){console.log(("🛑").repeat(60));}
-                    if(consoleLog===true){console.log(trace());}
-                    if(consoleLog===true){console.log(`${trace()} logout failed:- `,err);}
-                    return res.status(500).send({"logoutConfirmed":false});
-                }
-                res.clearCookie("connect.sid"); // Remove session cookie
-                res.send({"logoutConfirmed":true});
-            });
+            // req.session.destroy((err) => {
+            //     if (err){
+            //         if(consoleLog===true){console.log(("🛑").repeat(60));}
+            //         if(consoleLog===true){console.log(trace());}
+            //         if(consoleLog===true){console.log(`${trace()} logout failed:- `,err);}
+            //         return res.status(500).send({"logoutConfirmed":false});
+            //     }
+            //     res.clearCookie("connect.sid"); // Remove session cookie
+                res.json({success: true, logoutConfirmed: true});
+            // });
         });
 
     // SESSION REGENERATION ®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️

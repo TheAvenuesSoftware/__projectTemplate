@@ -37,9 +37,12 @@ console.log("LOADED:- globalUIpopups.mjs is loaded",new Date().toLocaleString())
         const messageParagraph1 = document.createElement("p");
         messageParagraph1.textContent = "Alert";
     
+        // // Create message paragraph
+        // const messageParagraph2 = document.createElement("p");
+        // messageParagraph2.textContent = message;
         // Create message paragraph
         const messageParagraph2 = document.createElement("p");
-        messageParagraph2.textContent = message;
+        messageParagraph2.innerHTML = message.replace(/\n/g, "<br>");
     
         // Create OK button
         const okButton = document.createElement("button");
