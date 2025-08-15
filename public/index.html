@@ -86,12 +86,17 @@
     <script type="module" src="./projectCamera_Client.mjs"></script>
     <!-- <script type="module" src="./projectFormattedTextArea_Client.mjs"></script> -->
     <!-- <script type="module" src="./projectLexical_Client.mjs"></script> -->
-    <!-- <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> -->
-    <script src="/tinymce/tinymce.min.js"></script>
+    <!-- TinyMCE start -->
+        <!-- <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> -->
+         <!-- .....\node_modules\tinymce -->
+            <script src="/tinymce/tinymce.min.js"></script>
+         <!-- .....\node_modules\tinymce -->
+    <!-- TinyMCE end -->
     <script type="module" src="./projectTinyMCE_Client.mjs"></script>
     <script type="module" src="./projectMenu_Client.mjs"></script>
     <script type="module" src="./globalUIpopups_Client.mjs"></script>
     <script type="module" src="./projectGoogleAPIs_Client.mjs"></script>
+    <script type="module" src="./globalUploadImage_Client.mjs"></script>
     
     <script type="module" src="./global_Client_Dimensions.mjs"></script>
 
@@ -257,7 +262,8 @@
                 <section id="section2" class="section2 section-camera">
                     <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
                     <!-- camera -->
-                    <input id="section2-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
+                        <input id="section2-focus-on-activation" style="position:fixed;left:-5000px;" tabindex="-1">
+                        <p class="section-heading">Image Capture</p>
                         <div id="video-container" class="video-container">
                             <video id="camera-stream" autoplay muted playsinline></video>
                             <div class="controls-wrapper">
@@ -271,6 +277,21 @@
                             <canvas id="canvas"></canvas>
                         </div>
                     <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
+                    <p class="section-heading">Image Upload</p>
+                    <div class="upload-image-container">
+                        <!-- ✅🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
+                        <!-- uplad image as blob  -->
+                            <!-- <h2>Upload Image from Mobile</h2> -->
+                            <div class="upload-image-file">
+                                <label for="imageInput" class="std-btn NO-custom-file-upload">Select Image</label>
+                                <input type="file" data-action="selectImageToUpload" id="imageInput" accept="image/*" />
+                                <span class="file-name" id="fileName">No file chosen</span>
+                                <br>
+                                <!-- <button class="std-btn" onclick="uploadImage()">Upload</button> -->
+                                <button class="std-btn" data-action="uploadImageToCanvas" >Upload Image</button>
+                            </div>
+                        <!-- ✅🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
+                    </div>
                 </section>
                 <section id="section3" class="section3 section-googleAPIs">
                     <!-- 📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌 -->

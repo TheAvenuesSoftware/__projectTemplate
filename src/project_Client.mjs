@@ -12,6 +12,8 @@ export function projectMJSisLoaded(){
     import { newDateAttributes } from "./global_Client.mjs";
     import { initTinyMCE } from "./projectTinyMCE_Client.mjs";
     import { initAutocomplete } from "./projectGoogleAPIs_Client.mjs"
+    import { selectImageToUpload } from "./globalUploadImage_Client.mjs";
+    import { uploadImageToCanvas } from "./globalUploadImage_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 // 🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️
@@ -19,6 +21,8 @@ export function projectMJSisLoaded(){
         export const actions = {
             alertDateTime: () => alert(`Current date and time: ${new Date().toLocaleString()}`),
             showNotes: () => doThis('showNotes'),
+            selectImageToUpload: () => selectImageToUpload(),
+            uploadImageToCanvas: () => uploadImageToCanvas(),
             insertFormDataRecord: async () => await insertFormDataRecord(),
             // find search retrieve get START
                 searchByAddress: () => {
@@ -667,6 +671,7 @@ export function projectMJSisLoaded(){
                     if (typeof handler === "function"){
                         try{
                             console.warn(`🟢 Handler found for action: ${event.target.dataset.action}`);
+                            console.warn(`🟢 Handler found at element: ${event.target.id}`);
                             handler(event);
                         } catch (error) {
                             console.error(`🔴 Error executing handler for action: ${event.target.dataset.action}`, error);

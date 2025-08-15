@@ -107,6 +107,7 @@ body{
 // 🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳
 // standard button <<<--- scss scss scss scss scss scss scss scss scss scss
 .std-btn{
+    font-size: 16px;
     display:inline-block;
     padding: 0px 6px;
     margin: 6px 0px;
@@ -127,6 +128,7 @@ body{
     }
 }
 .std-btn-red{
+    font-size: 16px;
     display:inline-block;
     padding: 0px 6px;
     margin: 6px 0px;
@@ -790,5 +792,30 @@ body{
     .save-canvas{
         border:1px solid black;
         border-radius:6px;
+    }
+}
+
+.upload-image-container{
+    border:1px solid black;
+    border-radius: 5px;
+    padding:5px;
+    .upload-image-file{
+        #imageInput{
+            display:none;
+        }
+        // .custom-file-upload {
+        //     display: inline-block;
+        //     padding: 10px 20px;
+        //     background-color: #007BFF;
+        //     color: white;
+        //     font-size: 16px;
+        //     border: none;
+        //     border-radius: 4px;
+        //     cursor: pointer;
+        // }
+        .file-name {
+            margin-left: 10px;
+            font-style: italic;
+        }
     }
 }
