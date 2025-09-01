@@ -50,6 +50,13 @@ import { showCustomMessage } from "./globalUIpopups_Client.mjs";
 						drawImageScaled(img, ctx); // in section-save
 					ctxII.drawImage(img, 0, 0); // in section-save
 						drawImageScaled(img, ctxII); // in section-save
+				// Show canvas container & heading
+					document.getElementsByClassName('canvas-container-heading')[0].style.display = 'block';
+					document.getElementsByClassName('canvas-container-heading')[0].textContent = 'Image Uplpaded';
+					canvasContainer.style.display = 'flex';
+					canvasContainer.scrollIntoView({ behavior: 'smooth' });
+					canvasContainerII.style.display = 'flex';
+					canvasContainerII.scrollIntoView({ behavior: 'smooth' });
 				// Revoke blob URL (cleanup)
 					URL.revokeObjectURL(blobUrl);
 			};

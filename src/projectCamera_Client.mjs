@@ -85,6 +85,9 @@
 
 	// capture still image START
 		document.getElementById('capture-still').addEventListener('click', () => {
+
+			document.getElementsByClassName('canvas-container-heading')[0].style.display = 'block';
+
 			const cw = container.clientWidth;
 			const ch = container.clientHeight;
 			const cropWidth = cw / zoom;
