@@ -18,12 +18,13 @@ export function SQLite_ServerSideMJSisLoaded(){
             // 1. Initialize SQLite database based on a user's unique identifier: email address for example.
                 export async function initDB(dbFileName) {
                     try {
+                        if(consoleLog===true){console.log(`🟢${trace()}🟢 Initialising database ${dbFileName}🟢[${new Date().toISOString()}]`);}
                         return open({
-                            filename: `./db/${dbFileName}.db`, // Stores user databases in a dedicated folder
+                            filename: `${process.env.APP_PATH_TO_DATA}${dbFileName}.db`, // Use env variable
                             driver: sqlite3.Database,
                         });
                     } catch (error) {
-                            if(consoleLog===true){console.error(`${trace()} Error initializing database for ${dbFileName}:`, error);}       
+                            if(consoleLog===true){console.log(`🔴${trace()}🔴 Error initializing database for ${dbFileName}🔴:`, error);}       
                             throw error; // Ensure the error is propagated
                     }
                 }
@@ -41,7 +42,7 @@ export function SQLite_ServerSideMJSisLoaded(){
                     if (!dbInstances.has(dbFileName)) {
                         dbInstances.set(dbFileName, await initDB(dbFileName));
                     }
-                    console.log(trace(),'dbInstances:-',dbInstances)
+                    console.log(trace(),'dbInstances:-',dbInstances,`[${new Date().toISOString()}]`);
                     return dbInstances.get(dbFileName);
                 }
                 // // Example usage
@@ -152,6 +153,28 @@ export function SQLite_ServerSideMJSisLoaded(){
                         }
                     }
                     // optPer("alice123");
+
+export async function closeDB(dbFileName) {
+    const db = dbInstances.get(dbFileName);
+    if (db) {
+        try {
+            await db.close(); // Release SQLite lock
+            dbInstances.delete(dbFileName); // Remove from in-memory cache
+            if (consoleLog === true) {
+                console.log(`${trace()} 🟢 Database ${dbFileName} closed (file remains).`);
+            }
+        } catch (error) {
+            if (consoleLog === true) {
+                console.error(`${trace()} 🔴 Error closing ${dbFileName}:`, error);
+            }
+        }
+    } else {
+        if (consoleLog === true) {
+            console.log(`${trace()} ⚪ Database ${dbFileName} not found in cache — nothing to close.`);
+        }
+    }
+}
+
 
 
 // (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:)

@@ -13,24 +13,35 @@ export function globalSessionsServerMJSisLoaded(){
     import * as cookie from "cookie";
     import fs from "fs";
     import crypto from 'crypto'
+    import { closeDB } from "./projectSQLite_Server.mjs";
+import session from "express-session";
     // import { randomUUID } from 'crypto'; // randomUUID is a named export from crypto
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
     // LOGOUT 🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️
-        sessionsRouter.post("/sessionLogout", (req, res) => {
-            // req.session.destroy((err) => {
-            //     if (err){
-            //         if(consoleLog===true){console.log(("🛑").repeat(60));}
-            //         if(consoleLog===true){console.log(trace());}
-            //         if(consoleLog===true){console.log(`${trace()} logout failed:- `,err);}
+        sessionsRouter.post("/sessionLogout", async (req, res) => {
             //         return res.status(500).send({"logoutConfirmed":false});
-            //     }
-            //     res.clearCookie("connect.sid"); // Remove session cookie
-                res.json({success: true, logoutConfirmed: true});
-            // });
+            try{
+                // 1. Remove session file from server
+                    const parsed = cookie.parse(req.headers.cookie);
+                    const sessionIdOld = parsed.connectSID;
+                    fs.unlinkSync(`./sessions/${sessionIdOld}.json`);
+                    console.log(trace(),"Session deleted from server OK!");
+                // 1.1 close DB connection if applicable
+                    await closeDB(req.body.userEmailAddress);
+                // 2. Clear cookie from client
+                    // res.cookie('session_id', '', { expires: new Date(0), path: '/' }); // MUST use same path and other options as when the cookie was set
+                    res.clearCookie("connectSID"); // Remove session cookie
+                // 3. Confirm logout to client
+                    res.status(200).json({success: true, logoutConfirmed: true, silent: req.body.silent});
+                    console.error(trace(),"🟢 Logout: success.  Cookie removed.  Session file deleted.");
+            }catch(err){
+                res.status(500).json({success: false, logoutConfirmed: false});
+                console.error(trace(),"🔴 Logout: Error during logout process:\n", err);
+            }
         });
 
-    // SESSION REGENERATION ®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️
+    // SESSION REGENERATION ®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️START
         sessionsRouter.post("/sessionRegen", async (req, res) => {
             // regenerate session & add security code to regenerated session START
                 const sessionID_preRegen = req.sessionID;
@@ -90,33 +101,40 @@ export function globalSessionsServerMJSisLoaded(){
                 if(sessionRegenOK===true){console.log(trace(),`🟢 Session regen ok!`);}
                 // regenerate session & add security code to regenerated session END
         });
-    // SESSION REGENERATION ®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️
+    // SESSION REGENERATION ®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️®️END
         sessionsRouter.post("/sessionInit", async (req, res) => {
-            // initialise session for llogin user START
+            console.log(trace(),"i n i t i a l i s e   s e s s i o n   f o r   l o g i n   u s e r   S T A R T");
+            console.log(trace(),new Date().toLocaleString());
             const parsed = cookie.parse(req.headers.cookie);
             // console.log(`🪣 ${trace()}🔒 ⁉️req.headers.cookie.connectSID`,parsed.connectSID);
             // const connectSidExists = fs.readFileSync(`./sessions/${parsed.connectSID}.json`);
             // const authenticated = connectSidExists? true : false;            
             const sessionIdOld = parsed.connectSID;
             try {
-                fs.unlinkSync(`./sessions/${sessionIdOld}.json`);
-                console.log("Session deleted from server OK!");
+                if(sessionIdOld===undefined){
+                    console.log(trace(),"No existing session ID found in cookies.");
+                    // return res.status(400).json({sessionInitOK:false, message: "No existing session ID found in cookies."});
+                }else{
+                    fs.unlinkSync(`./sessions/${sessionIdOld}.json`);
+                    console.log(trace(),"Session deleted from server OK!");
+                }
             } catch (err) {
-                console.log("Session deleted from server FAILED!",err);
+                console.log(trace(),"Session deleted from server FAILED!",err);
             }
             const sessionId = crypto.randomBytes(32).toString("hex");
             const sessionData = JSON.stringify(
                 {
                     user: req.body.loginEmailAddress,
                     createdAt: Date.now(),
-                    milisecondsDuration: (60 * 60 * 1000) // 60 * 60 * 1000 = 1 hour
+                    milisecondsDuration: (60 * 60 * 1000), // 60 * 60 * 1000 = 1 hour
+                    authorisedAccess: false
                 }
             );
             await fs.writeFile('./sessions/' + sessionId + '.json', sessionData, (err) => {
                 if (err){
-                    console.log(`${trace()} 🗝️ Session store created?`,false,err);
+                    console.log(`${trace()} 🗝️ /sessionInit store created?`,false,err);
                 } else {
-                    console.log(`${trace()} 🗝️ Session store created?`,true);
+                    console.log(`${trace()} 🗝️ /sessionInit store created?`,true);
                 }
             });
             function buildCookie(name, value, options = {}) {
@@ -134,6 +152,8 @@ export function globalSessionsServerMJSisLoaded(){
             res.setHeader("Set-Cookie", cookies);
             const sessionInitOK = true; // Set to true to indicate save success
             res.send({sessionInitOK:sessionInitOK});
+            console.log(`${trace()} 🗝️ /sessionInit cookie set.`,cookies);
+            console.log(trace(),"i n i t i a l i s e   s e s s i o n   f o r   l o g i n   u s e r   E N D");
         });
 
 

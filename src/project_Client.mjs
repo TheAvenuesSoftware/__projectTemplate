@@ -14,6 +14,7 @@ export function projectMJSisLoaded(){
     import { initAutocomplete } from "./projectGoogleAPIs_Client.mjs"
     import { selectImageToUpload } from "./globalUploadImage_Client.mjs";
     import { uploadImageToCanvas } from "./globalUploadImage_Client.mjs";
+    import { isEmailValid } from "./global_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 // 🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️
@@ -547,6 +548,15 @@ export function projectMJSisLoaded(){
                             return;
                         }
                     // check for note END
+                    // check for user email START
+                        // check if user email exists in the DOM
+                        const userEmailAddress = document.getElementById("user-email-address").textContent; // Get user email from element
+                        const userEmailAddressStatus = await isEmailValid(userEmailAddress);
+                        if(userEmailAddressStatus===false){
+                            showCustomMessage("Invalid email address.  Please sign in with a valid email address.");
+                            return;
+                        }
+                    // check for user email END
                     const imageCompression = 1; // imageCompression level for JPEG (0.1 = 10% quality, 1 = no imageCompression)
                     // ✅ Compress Image Before Sending to Backend >>> Blob
                         async function canvasToBlob(canvas,imageCompression=1) {
@@ -571,7 +581,7 @@ export function projectMJSisLoaded(){
                         console.log("Compressed Image Blob:", image_Blob_compressed); // Log Blob
                         console.log("Compressed Image Blob:", window_image_Blob_compressed); // Log Blob
                         console.log("image_Blob_compressed.type",image_Blob_compressed.type); // Should log something like "image/jpeg"
-                        const userEmailAddress = document.getElementById("user-email-address").textContent; // Get user email from element
+                        // const userEmailAddress = document.getElementById("user-email-address").textContent; // Get user email from element
                         const imageDATE = new Date().toLocaleDateString();
                         const imageDD = newDateAttributes().date;
                         const imageMM = newDateAttributes().month;

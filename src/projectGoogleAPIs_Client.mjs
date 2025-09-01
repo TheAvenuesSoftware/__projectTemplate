@@ -134,6 +134,7 @@ export async function getGooglePlacesAPIkey() {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const jso = await response.json();
+        if(consoleLog===true){console.log(jso.success?"✅ Google Places API key fetched successfully.":"❌ Failed to fetch Google Places API key.",jso);}
         // DON'T LOG THE API KEY!!! console.log(`https://maps.googleapis.com/maps/api/js?key=${jso.apiKey}&loading=async&libraries=places&callback=initMap`);
         // DON'T LOG THE API KEY!!! console.log(jso);
         // DON'T LOG THE API KEY!!! console.log(jso.apiKey);

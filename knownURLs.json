@@ -1,9 +1,37 @@
 {
     "safe_URLs": [
-        "/.well-known/appspecific/com.chrome.devtools.json"
+        "/.well-known/appspecific/com.chrome.devtools.json",
+        "/",
+        "/favicon.ico",
+        "/project.css",
+        "/project.css.map",
+        "/globalLogin_Client.mjs",
+        "/globalSessions_Client.mjs",
+        "/global_Client.mjs",
+        "/project_Client.mjs",
+        "/projectCamera_Client.mjs",
+        "/styles/globalTinyMCE.css",
+        "/projectTinyMCE_Client.mjs",
+        "/projectMenu_Client.mjs",
+        "/globalUIpopups_Client.mjs",
+        "/projectGoogleAPIs_Client.mjs",
+        "/globalUploadImage_Client.mjs",
+        "/global_Client_Dimensions.mjs",
+        "/globalConfig_Client.mjs",
+        "/projectConfig_Client.mjs",
+        "/__padlock_locked.png",
+        "/__padlock_unlocked.png",
+        "/_Home.png",
+        "/_Camera.png",
+        "/_Address.png",
+        "/_Note.png",
+        "/_Save.png",
+        "/_Search.png",
+        "/favicon.png",
+        "/session-reset?reload=true",
+        "/map-marker.webp"
     ],
     "startup_URLs": [
-        "/dbRouter/filter-by",
         "/establish-session",
         "/globalRouter/getProjectFunctionsMap",
         "/globalRouter/getGlobalFooter",
@@ -15,6 +43,7 @@
         "/googleAPIsRouter/get-google-places-api-key"
     ],
     "archived_startup_URLs": [
+        "/dbRouter/filter-by",
         "/establish-session",
         "/globalRouter/getProjectFunctionsMap",
         "/globalRouter/getGlobalFooter",
@@ -23,6 +52,17 @@
         "/loginRouter/emailCode",
         "/loginRouter/loginCodeSubmit",
         "/sessionsRouter/sessionRegen",
-        "/googleAPIsRouter/get-google-places-api-key"
+        "/googleAPIsRouter/get-google-places-api-key",
+        "/tinymce/tinymce.min.js",
+        "/tinymce/themes/silver/theme.min.js",
+        "/tinymce/models/dom/model.min.js",
+        "/tinymce/icons/default/icons.min.js",
+        "/tinymce/plugins/autoresize/plugin.min.js",
+        "/tinymce/plugins/lists/plugin.min.js",
+        "/tinymce/plugins/link/plugin.min.js",
+        "/tinymce/plugins/code/plugin.min.js",
+        "/tinymce/skins/ui/oxide/skin.min.css",
+        "/tinymce/skins/ui/oxide/content.min.css"
     ]
+
 }

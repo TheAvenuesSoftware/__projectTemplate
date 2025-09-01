@@ -9,11 +9,11 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
 
     document.addEventListener("DOMContentLoaded",async () => {
     //1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ START
-        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ globalSessions_Client.',Date.now());}
+        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ globalSessions_Client.',Date.now().toLocaleString());}
 
         window.addEventListener("load",async () => {
         // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
-            if(consoleLog===true){console.log('Window load successsful ~ globalSessions_Client.',Date.now());}
+            if(consoleLog===true){console.log('Window load successsful ~ globalSessions_Client.',Date.now().toLocaleString());}
 
             // // dynamically set fetch "credentials mode" START 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
             //     const fetchUrl = "/establish-session";
@@ -96,7 +96,13 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
     // 1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ END
 
 // logout
-    export async function sessionLogout(){
+    // postLogoutActions START
+        export function postLogoutActions(){
+            if(consoleLog===true){console.log('postLogoutActions() launched.',Date.now().toLocaleString());}
+            // place "PROJECT SPECIFIC" actions to take post secure logout here
+        }
+    // postLogoutActions END
+    export async function sessionLogout(mode={silent:false}){ // if mode.silent=true, do not show alerts
         try {
             const fetchUrl = `/sessionsRouter/sessionLogout`;
             const fetchOptions = {
@@ -110,7 +116,8 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
                         'Accept': 'application/json',        // Expect JSON response
                     },
                     body: JSON.stringify({ 
-                        logUserOut:true
+                        logUserOut:true,
+                        silent: mode.silent  // if true, do not show alerts
                     })  // Converts object to JSON for request
                 }
             if(consoleLog===true){console.log(JSON.stringify(fetchOptions,null,2));}
@@ -119,7 +126,7 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const jso = await response.json(); // converts fetch response from JSON to a JSO
-            console.log('🟢 Request Success:', JSON.stringify(jso,null,2));
+            console.log('🟢 Request response:-', JSON.stringify(jso,null,2));
             if(jso.logoutConfirmed===true){
                 document.querySelectorAll('.overlay').forEach(el => {
                     el.style.transition = "opacity 0.5s";
@@ -130,7 +137,9 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
                 document.getElementById("padlock-icon").src="__padlock_locked.png";
                 document.getElementById("sign-in-out-icon-container").setAttribute("data-status","signed-out");
                 document.getElementById("sign-in-out-icon-container").title = "Click to sign in.";
-                alert("🟢 logout successful.");
+                document.getElementById("user-email-address").innerHTML = "...not signed in.";
+                postLogoutActions(); // any actions to do after logout success
+                if(jso.silent!==true){alert("🟢 logout successful.");}
 
                 // document.getElementById("sign-in-out-button").innerHTML = "Log In";
                 // document.getElementById("sign-in-out-button").classList.remove("sign-out-button");

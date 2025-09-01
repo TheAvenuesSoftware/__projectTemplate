@@ -38,16 +38,16 @@
             <!--  -->
                 <meta name="twitter:card" content="summary_large_image">
 
-        <!-- 🔧 PWA Setup -->
+        <!-- 🔧 PWA Setup
             <link rel="manifest" href="/manifest.json">
             <meta name="mobile-web-app-capable" content="yes">
             <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-            <!-- Optional for iOS -->
+            Optional for iOS
                 <meta name="apple-mobile-web-app-capable" content="yes">
-            <!-- This is recognized by Chrome on Android and aligns better with current PWA standards. -->
+            This is recognized by Chrome on Android and aligns better with current PWA standards.
                 <meta name="mobile-web-app-capable" content="yes">
-            <!--  -->
-                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+            
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> -->
 
         <!-- 🧠 Favicons & Icons -->
             <!-- <link rel="icon" href="/favicon.ico"> -->
@@ -193,13 +193,13 @@
             overflow-y: auto;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+            transition: opacity 0.25s ease, visibility 0s linear 0.25s;
             padding: 1rem;
         }
         section.active {
             opacity: 1;
             visibility: visible;
-            transition-delay: 0s;
+            transition-delay: 0.25s;
         }
         .section-heading{
             font-weight: 900;
@@ -214,7 +214,7 @@
                 <span>Tradie Photo Catalogue</span>
             </div>
             <div id="user-email-address" class="header-control user-email-address">
-                <span>...</span>
+                <span>...not signed in.</span>
             </div>
             <div id="sign-in-out-icon-container" class="header-control sign-in-out-icon-container" data-status="signed-out" tabindex="-1" role="button" title="Click to sign in.">
                 <img id="padlock-icon" src="__padlock_locked.png" class="icon">
@@ -281,14 +281,11 @@
                     <div class="upload-image-container">
                         <!-- ✅🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
                         <!-- uplad image as blob  -->
-                            <!-- <h2>Upload Image from Mobile</h2> -->
                             <div class="upload-image-file">
                                 <label for="imageInput" class="std-btn NO-custom-file-upload">Select Image</label>
                                 <input type="file" data-action="selectImageToUpload" id="imageInput" accept="image/*" />
                                 <span class="file-name" id="fileName">No file chosen</span>
                                 <br>
-                                <!-- <button class="std-btn" onclick="uploadImage()">Upload</button> -->
-                                <button class="std-btn" data-action="uploadImageToCanvas" >Upload Image</button>
                             </div>
                         <!-- ✅🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
                     </div>
@@ -384,40 +381,91 @@
         </div>
     </footer>
     <script>
-        function focusInput(sectionId) {
-            const input = document.querySelector(`#section${sectionId}-focus-on-activation`);
-            input?.focus();
-        }
-        function switchSection(index) {
-            console.log(current,index);
-            if (index === current) return;
-            const currentSection = document.getElementById(`section${current}`);
-            console.log(currentSection);
-            const nextSection = document.getElementById(`section${index}`);
-            currentSection.classList.remove('active');
-            setTimeout(() => {
-                nextSection.classList.add('active');
-                console.log(nextSection);
-                current = index;
-                focusInput(index);
-                localStorage.setItem("tas_sectionNumber",index);
-            }, 500); // Matches the CSS transition duration
-        }
-        document.getElementById("footer-controls-container").addEventListener("click",(ev) => {
-            const sectionNumber = ev.target.getAttribute("data-section-number");
-            switchSection(sectionNumber);
-        });
-        // set current section = last active section START
-            let current = localStorage.getItem("tas_sectionNumber")? localStorage.getItem("tas_sectionNumber") : 0; // start-up at last active section
-            const el = document.getElementById(`section${current}`);
-            el.classList.add("active");
-            switchSection(current); // ensure last active section is viewable
-            focusInput(current); // set focus to active section
-        // set current section = last active section END
-        // set last session values START
-            const address = localStorage.getItem("tas_address")? localStorage.getItem("tas_address") : "";
-            document.getElementById("googlePlacesAPIautocomplete_0").value = address;
-            console.log(address);
+        // section focus and switch START
+            function focusInput(sectionId) {
+                const input = document.querySelector(`#section${sectionId}-focus-on-activation`);
+                input?.focus();
+            }
+            function switchSection(index) {
+                console.log(current,index);
+                if (index === current) return;
+                const currentSection = document.getElementById(`section${current}`);
+                console.log(currentSection);
+                const nextSection = document.getElementById(`section${index}`);
+                currentSection.classList.remove('active');
+                setTimeout(() => {
+                    nextSection.classList.add('active');
+                    console.log(nextSection);
+                    current = index;
+                    focusInput(index);
+                    localStorage.setItem("tas_sectionNumber",index);
+                }, 250); // Matches the CSS transition duration of 0.25s
+            }
+            document.getElementById("footer-controls-container").addEventListener("click",(ev) => {
+                const sectionNumber = ev.target.getAttribute("data-section-number");
+                switchSection(sectionNumber);
+            });
+            // set current section = last active section START
+                let current = localStorage.getItem("tas_sectionNumber")? localStorage.getItem("tas_sectionNumber") : 0; // start-up at last active section
+                const el = document.getElementById(`section${current}`);
+                el.classList.add("active");
+                switchSection(current); // ensure last active section is viewable
+                focusInput(current); // set focus to active section
+            // set current section = last active section END
+            // set last session values START
+                const address = localStorage.getItem("tas_address")? localStorage.getItem("tas_address") : "";
+                document.getElementById("googlePlacesAPIautocomplete_0").value = address;
+                console.log(address);
+        // section focus and switch END
+        // re-load START
+            // // if (!window.location.search.includes("reload=true")) {
+            // //     window.location.href = window.location.pathname + "?reload=true";
+            // // }
+            // if (!window.location.search.includes("reload=true")) {
+            //     const separator = window.location.search ? '&' : '?';
+            //     const newUrl = window.location.pathname + window.location.search + separator + "reload=true";
+            //     window.location.replace(newUrl); // prevents back button loop
+            //     console.log("11111111111111111111111111111 Page reloaded with ?reload=true");
+            // }
+            // // Page loads normally
+            // // Browser sees reload=true is missing
+            // // Redirects to the same page with ?reload=true
+            // // IMPORTANT BIT... Server sees it and clears the session
+            // // // Only run if the page was loaded with ?reload=true START
+            // //     // Clears "reload=true" from the URL
+            // //     setTimeout(() => {                    
+            // //         if (window.location.search.includes('reload=true')) {
+            // //             // Replace the current URL with the same path but without the query string
+            // //             const newUrl = window.location.pathname;
+            // //             window.history.replaceState({}, '', newUrl);
+            // //             console.log("22222222222222222222222222 Page reloaded and URL cleaned up");
+            // //         }
+            // //     }, 2000);
+            // // // Only run if the page was loaded with ?reload=true END
+            // Only clear session once
+            const cleared = sessionStorage.getItem('sessionCleared');            
+            if (!cleared) {
+                console.log('✅ Session reset commenced');
+                fetch('/session-reset?reload=true', {
+                    method: 'GET',
+                    // credentials: 'same-origin' // Send credentials only if the request URL is on the same origin (same scheme, host, and port) as the calling script.
+                    credentials: 'include'// Always send credentials, even for cross-origin requests (if CORS allows it).
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('✅ Session reset successful');
+                        sessionStorage.setItem('sessionCleared', 'true');
+                        // optionally redirect or update UI
+                    } else {
+                        console.warn('⚠️ Session reset failed:', data.message);
+                    }
+                })
+                .catch(err => {
+                    console.error('🚨 Session reset request failed:', err);
+                });
+            }
+        // re-load END
     </script>
 </body>
 </html>

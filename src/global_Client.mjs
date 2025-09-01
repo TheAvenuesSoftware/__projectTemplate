@@ -42,7 +42,29 @@ export function globalClientJSisLoaded(){
 
         if(consoleLog===true){console.log('doAfterDOMandWindowLoad__project_ClientMJS() launched.',Date.now());}
 
-        getGooglePlacesAPIkey();
+        // // 1. Initialize guest session by hitting your backend
+        //     async function initSession() {
+        //         console.log(("🍪").repeat(20));
+        //         const response = await fetch('/api/init-session', { credentials: 'include' }); // Sets the cookie
+        //         if (!response.ok) {
+        //             throw new Error(`HTTP error! Status: ${response.status}`);
+        //         }
+        //         const jso = await response.json();
+        //         console.log('🟢 init-session:-', jso);
+        //     }
+        //     initSession().then(() => {
+        //         console.log('🟢 Session initialized successfully.');
+        //         console.log(("🍪✅").repeat(10));
+        //     }).catch(error => {
+        //         console.error('🔴 Failed to initialize session:', error);
+        //         // Handle session initialization failure
+        //         console.log(("🍪❌").repeat(10));
+        //     });    
+        // 2. Call Google Places API only after session is initialized
+            // initSession().then(() => {
+            //     initializeGooglePlacesAutocomplete();
+            // });
+            getGooglePlacesAPIkey();
 
     }
 // 1️⃣🔹1️⃣ END
@@ -181,9 +203,9 @@ export async function universalFetchII(url,options){
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const result = await response.json();
-        console.log('🟢 Request Success:', result);
-        return result;  // Return response data
+        const jso = await response.json();
+        console.log('🟢 Request Success:', jso);
+        return jso;  // Return response data
     } catch (error) {
         console.error('🔴 Request Failed:', error);
         return null;
@@ -552,3 +574,49 @@ function logAllEvents(target = document.body) {
         });
     });
 // TEXTAREA CUSTOMISATIONS end
+
+// isEmailValid() START
+    export async function isEmailValid(email) {
+        // Basic format check (safe and realistic)
+        const formatRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // Max length constraints
+        const MAX_EMAIL_LENGTH = 254;
+        const MAX_LOCAL_LENGTH = 64;
+        const MAX_DOMAIN_LENGTH = 255;
+
+        if (typeof email !== 'string') return false;
+
+        if (email.length > MAX_EMAIL_LENGTH || !formatRegex.test(email)) {
+            return false;
+        }
+
+        const [localPart, domain] = email.split('@');
+
+        if (!localPart || !domain) return false;
+        if (localPart.length > MAX_LOCAL_LENGTH || domain.length > MAX_DOMAIN_LENGTH) {
+            return false;
+        }
+
+        // Optional: Validate domain name format
+        const domainRegex = /^(?!\-)(?:[a-zA-Z0-9\-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,}$/;
+        if (!domainRegex.test(domain)) {
+            return false;
+        }
+
+        // ✅ MX Record Check using Google DNS API
+        try {
+            const response = await fetch(`https://dns.google/resolve?name=${domain}&type=MX`);
+            const data = await response.json();
+
+            const hasMX = data?.Answer?.some(record => record.type === 15);
+            const success = data.Status === 0;
+
+            return success && hasMX;
+        } catch (err) {
+            // DNS check failed (offline or blocked)
+            console.warn("MX check failed:", err);
+            return false;
+        }
+    }
+//  isEmailValid() END

@@ -159,9 +159,8 @@ async function login_stepFour(loginEmailAddress){
                 // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
                 // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
             },
-            body: JSON.stringify({          // Converts object to JSON for request
-                filePath:"./db/",
-                fileName:loginEmailAddress + ".db"
+            body: JSON.stringify({              // Converts object to JSON for request
+                fileName:loginEmailAddress      // add file extension server side not here
             })
         }
     if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
@@ -427,15 +426,16 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
                         loginsDBinsertedID
                     );
                 }
-                document.getElementById("popup-button-1").addEventListener("click", popupButton1);
+                document.getElementById("popup-button-1").addEventListener("click", popupButton1); // Submit button
 
                 function popupButton2(){
                     document.getElementById("popup-button-1").removeEventListener("click", popupButton1);
                     document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
                     document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
                     document.getElementById("popup-overlay").remove();
+                    sessionLogout({silent:true}); // logout to clear session
                 }
-                document.getElementById("popup-button-2").addEventListener("click", popupButton2);
+                document.getElementById("popup-button-2").addEventListener("click", popupButton2); // Cancel button
 
                 function popupButton3(){
                     document.body.insertAdjacentHTML("beforeend", busyAnimationHTML);
@@ -444,7 +444,7 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
                     document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
                     document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
                 }
-                document.getElementById("popup-button-3").addEventListener("click", popupButton3);
+                // document.getElementById("popup-button-3").addEventListener("click", popupButton3); // not used
 
             }else{
                 login_cancel(`Problem generating login code. ${jso.sessionRegenOK}`);
@@ -488,7 +488,8 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
                 document.getElementById("padlock-icon").src="__padlock_unlocked.png";
                 document.getElementById("sign-in-out-icon-container").setAttribute("data-status","signed-in");
                 document.getElementById("sign-in-out-icon-container").title = "Click to sign out.";
-                postLoginActions({createNewAccount:createNewAccount,loginEmailAddress:loginEmailAddress});
+                console.log("🟦 🟦 🟦 postLoginActions L A U N C H 🟦 🟦 🟦");
+                postLoginActions({createNewAccount:createNewAccount,loginEmailAddress:loginEmailAddress}); // any actions to do after login success
                 alert("🟢 Secure login is successful."); // best to leave this to the end so that it doesn't interrupt execution?
             }else{
                 document.getElementById("busy-animation-overlay").remove();
@@ -616,10 +617,12 @@ export async function isLoginRequired() {
 
     // postLoginActions START
         export async function postLoginActions(jso){
+            console.log("💥🚀postLoginActions(jso) launched.🚀💥");
             // place "PROJECT SPECIFIC" actions to take post secure login here
             document.getElementById("user-email-address").textContent = jso.loginEmailAddress;
-            console.log("Create new account? ",jso.createNewAccount);
-            if(jso.createNewAccount===true){
+            console.log("postLoginActions(jso) - create new account? ",jso.createNewAccount);
+            if(jso.createNewAccount==="true"){
+                    console.log("💥🚀/loginRouter/createNewAccount launched.🚀💥");
                     const fetchUrl = `/loginRouter/createNewAccount`;
                     const fetchOptions = {
                             method: 'POST',                // Specifies a POST request
@@ -632,7 +635,6 @@ export async function isLoginRequired() {
                                 // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
                             },
                             body: JSON.stringify({          // Converts object to JSON for request
-                                filePath:"./db/",
                                 fileName:jso.loginEmailAddress // file extension is added server side + ".db"
                             })
                         }
@@ -650,10 +652,3 @@ export async function isLoginRequired() {
             }
         }
     // postLoginActions END
-
-    // postLogoutActions START
-        export function postLogoutActions(){
-            if(consoleLog===true){console.log('postLogoutActions() launched.',Date.now().toLocaleString());}
-            // place "PROJECT SPECIFIC" actions to take post secure logout here
-        }
-    // postLogoutActions END

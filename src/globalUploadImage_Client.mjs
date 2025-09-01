@@ -18,7 +18,8 @@ import { showCustomMessage } from "./globalUIpopups_Client.mjs";
 				return;
 			}
 			console.log("Selected file:", file);
-			fileNameSpan.textContent = file.name;
+			fileNameSpan.textContent = await file.name;
+			uploadImageToCanvas(); // Call the function to upload image to canvas
 		}
 	// Select image to upload END
 
