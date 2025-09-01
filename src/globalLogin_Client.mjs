@@ -548,34 +548,6 @@ export async function isLoginRequired() {
     }
 }
 
-// // popup busy animation
-//     function popupBusyAnimation(){
-// 
-//         const overlay= document.createElement("div");
-//         const animation = document.createElement("div");
-//         const span1 = document.createElement("span");
-//         const span2 = document.createElement("span");
-//         const span3 = document.createElement("span");
-// 
-//         overlay.id = "overlay";
-//         overlay.classList.add("busy-animation", "overlay");
-// 
-//         // animation.id = "busy-animation-container";
-//             animation.classList.add("container");
-// 
-//         span1.classList.add("dot");
-//         span2.classList.add("dot");
-//         span3.classList.add("dot");
-// 
-//         overlay.appendChild(animation);
-//         animation.appendChild(span1);
-//         animation.appendChild(span2);
-//         animation.appendChild(span3);
-//         // animation.appendChild(overlay);
-//             document.body.appendChild(overlay);
-// 
-//     }
-
     export function doAfterDOMandWindowLoad__globalLogin_ClientMJS(){
         // 1️⃣🔹2️⃣ START // doAfterDOMandWindowLoad_globalLoginClient() START
         // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹

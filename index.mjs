@@ -1069,8 +1069,8 @@ setInterval(() => {
     };
     const PORT = process.env.APP_PORT;
     const DEV_IP_ADDRESS = process.env.APP_DEV_IP_ADDRESS;
-    const isProduction = process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() === "true";
-    const isDevelopment = process.env.APP_SERVER_MODE_DEVELOPMENT?.toLowerCase() === "true";
+    const isProduction = process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase();
+    const isDevelopment = process.env.APP_SERVER_MODE_DEVELOPMENT?.toLowerCase();
     if (isProduction==="true") {
         app.listen(PORT, '0.0.0.0', () => {
             // Logging for production...
