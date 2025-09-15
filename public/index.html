@@ -117,9 +117,6 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <link rel="icon" type="image/png" href="./favicon.png">
-
-
     <style>
         /* *{
             border:1px solid red;
@@ -131,32 +128,6 @@
             display: flex;
             flex-direction: column;
         }
-        /* .header-controls-container{ */
-        header > div{
-            display: flex;
-            /* justify-content: center; */
-            justify-content: space-between;
-            align-items: center;
-            text-align: center; /* targets the text within a div */
-            padding: 3px;
-            background-color: rgba(25, 255, 25,.5);
-            background-color: rgb(67, 248, 67);
-            color: rgba(0, 55, 0,1);
-            font-weight: 900;
-        }
-        /* sign IN OUT start */
-            header .sign-in-out-icon-container img{
-                display:flex;
-                border-radius: 5px;
-                width:30px;
-                height:25px;
-                /* display:flex; */
-                cursor:pointer;
-            }
-            header .sign-in-out-icon-container .icon-hidden{
-                    display:none;
-            }
-        /* sign IN OUT end */
         footer {
             display:flex;
             flex-shrink: 0;
@@ -181,6 +152,35 @@
         .footer-control:hover {
             border: 2px solid black;
         }
+
+footer {
+  position: relative;
+  display: block;
+  background-color: rgb(67, 248, 67);
+  color: rgba(0, 55, 0, 1);
+  font-weight: 900;
+  padding: 5px 0;
+  margin: 0;
+}
+/* Flex layout for controls */
+.footer-controls-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* important for absolute positioning inside */
+  padding: 0 1rem;
+}
+/* Icon style */
+.footer-control {
+  padding: 0 2.5px;
+  cursor: pointer;
+  height: 30px;
+  width: 44px;
+}
+.footer-control:hover {
+  border: 2px solid black;
+}
+
         main {
             position: relative;
             flex-grow: 1;
@@ -204,21 +204,93 @@
         .section-heading{
             font-weight: 900;
         }
+
+        /* header css START */
+            /* General header styling */
+                .header {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #43f843;
+                color: #003700;
+                font-weight: 900;
+                padding: 1rem;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                user-select: none;
+                }
+            /* Top row layout */
+                .top-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                position: relative;
+                }
+            /* Icon container on left */
+                .sign-in-out-icon-container {
+                width: 40px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                outline: none;
+                }
+                .sign-in-out-icon-container:focus {
+                outline: 2px solid #005500;
+                outline-offset: 2px;
+                }
+            /* Padlock icon styling */
+                .icon {
+                width: 30px;
+                height: 25px;
+                border-radius: 5px;
+                display: block;
+                }
+            /* App name centered */
+                .app-name {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 1.5rem;
+                white-space: nowrap;
+                pointer-events: none; /* So clicks pass through */
+                }
+            /* Spacer div to balance flexbox */
+                .spacer {
+                width: 40px; /* same width as icon container */
+                }
+            /* Email row */
+                .email-row {
+                margin-top: 0.5rem;
+                text-align: center;
+                font-weight: 600;
+                font-size: 1rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+                }
+        /* header css END */
+
     </style>
 
 </head>
 <body>
-    <header>
-        <div id="header-controls-container" class="header-controls-container">
-            <div class="app-name" class="header-control">
-                <span>Tradie Photo Catalogue</span>
-            </div>
-            <div id="user-email-address" class="header-control user-email-address">
-                <span>...not signed in.</span>
-            </div>
+    <header class="header">
+        <div class="top-row">
             <div id="sign-in-out-icon-container" class="header-control sign-in-out-icon-container" data-status="signed-out" tabindex="-1" role="button" title="Click to sign in.">
                 <img id="padlock-icon" src="__padlock_locked.png" class="icon">
             </div> 
+            <!-- <div class="icon-container" tabindex="0" role="button" title="Click to sign in.">
+                <img id="padlock-icon" src="__padlock_locked.png" alt="Padlock icon" class="icon" />
+            </div> -->
+            <div class="app-name">Tradie Photo Catalogue
+            </div>
+            <div class="spacer"></div> <!-- To keep app name centered -->
+            </div>
+        <div class="email-row">
+            <span id="user-email-address">...not signed in.</span>
+            <!-- <div id="user-email-address" class="header-control user-email-address">
+                <span>...not signed in.</span>
+            </div> -->
         </div>
     </header>
     <main>
@@ -279,18 +351,23 @@
                             <canvas id="canvas"></canvas>
                         </div>
                     <!-- ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷 -->
-                    <p class="section-heading image-upload-selection-heading">Image Upload Selection</p>
-                    <div class="upload-image-container">
-                        <!-- ✅🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
-                        <!-- uplad image as blob  -->
-                            <div class="upload-image-file">
-                                <label for="imageInput" class="std-btn NO-custom-file-upload">Select Image</label>
-                                <input type="file" data-action="selectImageToUpload" id="imageInput" accept="image/*" />
-                                <span class="file-name" id="fileName">No file chosen</span>
-                                <br>
-                            </div>
-                        <!-- ✅🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
-                    </div>
+                    <!-- ✅🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
+                    <!-- uplad image file as blob  -->
+                        <p class="section-heading image-upload-selection-heading">Image Upload Selection</p>
+                        <div class="upload-image-container">
+                                <div class="upload-image-file">
+                                    <label for="imageInput" class="std-btn NO-custom-file-upload">Select Image</label>
+                                    <input type="file" data-action="selectImageToUpload" id="imageInput" accept="image/*" />
+                                    <span class="file-name" id="fileName">No file chosen</span>
+                                    <br>
+                                </div>
+                        </div>
+                        <p id="canvas-upload-container-heading" class="section-heading canvas-upload-container-heading">Image Uploaded</p>
+                        <div id="canvas-upload-container" class="canvas-upload-container">
+                            <!-- <div id="canvas-container" class="canvas-container" style="flex-direction: column; align-items: center;"> -->
+                            <canvas id="canvas-upload"></canvas>
+                        </div>
+                    <!-- ✅🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️🖼️ -->
                 </section>
                 <section id="section3" class="section3 section-googleAPIs">
                     <!-- 📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌 -->

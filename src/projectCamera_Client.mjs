@@ -57,12 +57,12 @@
 		video.style.height = `${vh * zoom}px`;
 		video.style.left = `${-offsetX * zoom}px`;
 		video.style.top = `${-offsetY * zoom}px`;
-		// added by Donald 29 July 2025 START
-			container.style.width = `${vw * zoom}px`;
-			container.style.height = `${vh * zoom}px`;
-			container.style.left = `${-offsetX * zoom}px`;
-			container.style.top = `${-offsetY * zoom}px`;
-		// added by Donald 29 July 2025 END
+		// // added by Donald 29 July 2025 START
+		// 	container.style.width = `${vw * zoom}px`;
+		// 	container.style.height = `${vh * zoom}px`;
+		// 	container.style.left = `${-offsetX * zoom}px`;
+		// 	container.style.top = `${-offsetY * zoom}px`;
+		// // added by Donald 29 July 2025 END
 	}
 
 	function clampOffsets() {
@@ -86,7 +86,12 @@
 	// capture still image START
 		document.getElementById('capture-still').addEventListener('click', () => {
 
+			canvasContainer.style.display = 'flex';
+			canvasContainer.scrollIntoView({ behavior: 'smooth' });
 			document.getElementsByClassName('canvas-container-heading')[0].style.display = 'block';
+
+			canvasContainerII.style.display = 'flex';
+			canvasContainerII.scrollIntoView({ behavior: 'smooth' });
 
 			const cw = container.clientWidth;
 			const ch = container.clientHeight;
@@ -115,11 +120,6 @@
 				cw, ch
 			);
 
-			canvasContainer.style.display = 'flex';
-			canvasContainer.scrollIntoView({ behavior: 'smooth' });
-
-			canvasContainerII.style.display = 'flex';
-			canvasContainerII.scrollIntoView({ behavior: 'smooth' });
 		});
 	// capture still image END
 

@@ -1,4 +1,4 @@
-import { showCustomMessage } from "./globalUIpopups_Client.mjs";
+// import { showCustomMessage } from "./globalUIpopups_Client.mjs"; // WRONG!  don't import this way, it creates a circular dependency
 
 	// Select image to upload START
 		export async function selectImageToUpload(){
@@ -24,9 +24,11 @@ import { showCustomMessage } from "./globalUIpopups_Client.mjs";
 	// Select image to upload END
 
 	// upload image to canvas START
-		const canvasContainer = document.getElementById('canvas-container');
+		const canvasUpload = document.getElementById('canvas-upload'); // for image capture
+		const canvasII = document.getElementById('canvasII'); // in section-save
+		const canvasContainer = document.getElementById('canvas-upload-container');
 		const canvasContainerII = document.getElementById('canvas-container-II');
-		const ctx = canvas.getContext('2d');
+		const ctxUpload = canvasUpload.getContext('2d');
 		const ctxII = canvasII.getContext('2d'); // in section-save
 		export function uploadImageToCanvas(){
 			console.log("uploadImageToCanvas() called");
@@ -46,13 +48,13 @@ import { showCustomMessage } from "./globalUIpopups_Client.mjs";
 					// 	canvas.width = img.width;
 					// 	canvas.height = img.height;
 				// Draw image on canvas
-					ctx.drawImage(img, 0, 0);
-						drawImageScaled(img, ctx); // in section-save
+					ctxUpload.drawImage(img, 0, 0); // in section-camera ...upload
+						drawImageScaled(img, ctxUpload); // in section-camera ...upload
 					ctxII.drawImage(img, 0, 0); // in section-save
 						drawImageScaled(img, ctxII); // in section-save
 				// Show canvas container & heading
-					document.getElementsByClassName('canvas-container-heading')[0].style.display = 'block';
-					document.getElementsByClassName('canvas-container-heading')[0].textContent = 'Image Uplpaded';
+					document.getElementsByClassName('canvas-upload-container-heading')[0].style.display = 'block';
+					document.getElementsByClassName('canvas-upload-container-heading')[0].textContent = 'Image Uploaded';
 					canvasContainer.style.display = 'flex';
 					canvasContainer.scrollIntoView({ behavior: 'smooth' });
 					canvasContainerII.style.display = 'flex';
@@ -76,15 +78,15 @@ import { showCustomMessage } from "./globalUIpopups_Client.mjs";
 		canvas.width = containerX1 - containerX0;
 		// canvas.height = containerY0 - containerY1;
 	}
-	function drawImageScaled(img, ctx) {
-		const canvas = ctx.canvas;
+	function drawImageScaled(img, ctxUpload) {
+		const canvas = ctxUpload.canvas;
 		const hRatio = canvas.width  / img.width;
 		const vRatio = canvas.height / img.height;
 		const ratio  = Math.min(hRatio, vRatio);
 		const centerShift_x = (canvas.width - img.width * ratio) / 2;
 		const centerShift_y = (canvas.height - img.height * ratio) / 2;
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.drawImage(img, 0, 0, img.width, img.height,
+		ctxUpload.clearRect(0, 0, canvas.width, canvas.height);
+		ctxUpload.drawImage(img, 0, 0, img.width, img.height,
 						centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
 	}
 

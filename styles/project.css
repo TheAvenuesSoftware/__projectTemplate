@@ -455,7 +455,26 @@ body {
   display: none;
 }
 
+.canvas-upload-container-heading {
+  margin-top: 10px;
+  display: none;
+}
+
 .canvas-container {
+  position: relative;
+  display: none;
+  align-items: center;
+  width: 300px;
+  width: 100%;
+  height: 200px;
+  height: 100%;
+  height: auto;
+  overflow: hidden;
+  border: 2px solid var(--header-bckgrnd);
+  touch-action: none; /* prevent native gestures, enables custom touch handling */
+}
+
+.canvas-upload-container {
   position: relative;
   display: none;
   align-items: center;
