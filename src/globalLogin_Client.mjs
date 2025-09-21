@@ -31,7 +31,7 @@ const popupHTML =
             <button id="popup-button-2" class="popup-button">Button 2</button>
             <button id="popup-button-3" class="popup-button">Button 3</button>
             <p id="popup-error-message" class="popup-error-message"></p>
-            <input id="popup-focus-select-nodisplay" style="display:none" type="text" placeholder="Focus Select No Display" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <input id="popup-focus-select-nodisplay" class="display-none" type="text" placeholder="Focus Select No Display" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         </div>
     </div>`
 

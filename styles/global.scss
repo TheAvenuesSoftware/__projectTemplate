@@ -860,6 +860,8 @@ body{
     .save-canvas{
         border:1px solid black;
         border-radius:6px;
+        flex-direction: column; 
+        align-items: center;
     }
 }
 
@@ -886,4 +888,8 @@ body{
             font-style: italic;
         }
     }
+}
+
+.display-none{
+    display:none;
 }

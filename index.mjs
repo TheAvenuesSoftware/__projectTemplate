@@ -266,6 +266,10 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                             // SETTING THE GUEST COOKIE end
                             req.guestId = guestId;
                             console.log(`🍪 ${trace()} ➡️➡️➡️ Guest Cookie set to ➡️➡️➡️ ${guestId}`);
+                            setTimeout(()=>{
+                                logREQuest(req);
+                                console.log(`🍪 ${trace()} ⏰ 1 second delay before writing to logFile.`);
+                            },1000);
                     }
                 // set the cookie END
                 if (!req.cookies) {
@@ -508,8 +512,6 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // authentication specific routes - must be ahead of app.use middleware ??? better check if that's correct Donald
 
-
-
 app.post('/login', (req, res) => {
   const user = authenticate(req.body.username, req.body.password);
   if (!user) {
@@ -527,17 +529,18 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('authToken');
-  // Optionally reassign guestId (if app needs anonymous session)
-  const newGuestId = uuidv4();
-  res.cookie('guestId', newGuestId, {
-    httpOnly: true,
-    sameSite: 'Lax',
-    maxAge: 1000 * 60 * 60 * 24 * 30,
-  });
-  res.send('Logged out');
+    res.clearCookie('authToken');
+    // Optionally reassign guestId (if app needs anonymous session) START
+        const newGuestId = uuidv4();
+        res.cookie('guestId', newGuestId, {
+            httpOnly: true,
+            sameSite: 'Lax',
+            maxAge: 1000 * 60 * 60 * 24 * 30,
+        });
+        console.log(`🍪 ${trace()} ➡️➡️➡️ New Guest Cookie set to ➡️➡️➡️ ${newGuestId}`);
+    // Optionally reassign guestId (if app needs anonymous session) END
+    res.send('Logged out');
 });
-
 
     app.use(async (req, res) => {
     // app.get('/session-reset?reload=true', async (req, res) => {
@@ -896,6 +899,8 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 
         console.log("\n");
         console.log(("🪣").repeat(60));
+
+        logREQuest(req);
 
         // sanitize any HTML in the request body
             if (req.body && req.body.content) {

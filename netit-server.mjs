@@ -1,0 +1,661 @@
+// <!-- collapse all     Ctrl + k + 0 -->
+// <!-- expand all       Ctrl + k + j -->
+// <!-- format           Alt + Shift + F (USE WITH CAUTION)-->
+// <!-- word wrap toggle Alt + z -->
+
+// ~ Variables & Functions: Use camelCase (e.g., getUserName(), totalAmount)
+// ~ Classes & Constructors: Use PascalCase (e.g., UserModel, DataProcessor)
+// ~ Constants: Use UPPER_CASE_SNAKE_CASE (e.g., API_KEY, MAX_LIMIT)
+// ~ Modules: Often kebab-case for filenames (e.g., user-profile.mjs)
+// ~ Event & Callback Handlers: Prefix with on (e.g., onClick, onDataReceived)
+// ~ Private Variables: Some use leading _ to indicate private properties (_hiddenProperty)
+
+export function trace(whoCalled="") {
+    try {
+        const stack = new Error().stack;
+        const firstLine = stack.split('\n')[2].trim();
+
+        const R = firstLine.lastIndexOf(":");
+        const RR = firstLine.lastIndexOf(":",R-1);
+        const rowNumber = firstLine.slice(RR+1,R);
+        // console.log("rowNumber:-",rowNumber,);
+
+        const x = firstLine.lastIndexOf("/");
+        const y = firstLine.lastIndexOf("/",x - 1);
+        const fileName = firstLine.slice(y,RR);
+        // console.log("fileName:-",fileName);
+
+        const fileName_rowNumber_position = firstLine.slice(y + 1,firstLine.length);
+        // return `▶️${whoCalled? whoCalled : ""} ${fileName_rowNumber_position} ▶️`;
+
+        return `▶️${whoCalled? whoCalled : ""} ${fileName} ${rowNumber} ▶️`;
+    } catch (error) {
+        return '▶️🔴 Trace: NOT AVAILABLE▶️',error;
+    }
+};
+
+const logAll = true; // Set to false to disable all console logs
+
+let myDate;
+myDate = new Date();
+console.log(("🔰").repeat(45));
+console.log(`🔰 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}${(" ").repeat(88-(`🔰 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`).length)}🔰`);
+console.log(`🔰 ${myDate}${(" ").repeat(88-(`🔰 ${myDate}`).length)}🔰`);
+// IMPORTANT put this code in the batch file that starts your node app START
+    // this line in your batch file won't work START
+        // process.env.APP_TZ = "Australia/Sydney"; // 🌏 Sets the server timezone
+    // this line in your batch file won't work END
+    // Environment variables like TZ must be set before the Node.js process starts.
+    // By the time your server file (TheAvenuesSoftware.mjs) is running, Node.js has already read the environment — it's too late to change TZ and expect date/time functions to behave differently.
+    // batch file line START:
+        // set TZ=Australia/Sydney
+    // batch file line END
+// IMPORTANT put this code in the batch file that starts your node app END
+console.log(`🔰 Server running in timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}${(" ").repeat(88-(`🔰 Server running in timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`).length)}🔰`);
+console.log(("🔰").repeat(45));
+
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 1️⃣ import packages START
+    console.log((`🚀  I M P O R T   P A C K A G E S`));
+    // EXPRESS
+        import express from "express";
+    // https
+        import https from 'https'; // For making HTTPS requests
+    // helmet
+        import helmet from 'helmet'; // Set various HTTP headers for security
+    // // axios
+    //     import axios from 'axios';
+    // OS ~ operatingSystem
+        import os from 'os';
+    // FS ~ fileSystem
+        import fs from 'fs';
+        // import fs from 'fs/promises';
+            // ~ fs.writeFile from 'fs' expects a callback (cb), which is why you're getting the "cb argument must be of type function" error.
+            // ~ The 'fs/promises' version works natively with async/await, so no callback is needed.
+    // PATH
+        import path from 'path';
+        import { fileURLToPath } from 'url';
+            // Get the current file path
+                const __filename = fileURLToPath(import.meta.url);
+            // Get the directory name
+                const __dirname = path.dirname(__filename);
+    // ENVironment variables
+        import dotenv from "dotenv";
+    // // COOKIE ...this is not middleware, but a utility to parse cookies
+    //     import * as cookie from "cookie";
+    // // COOKIE PARSER
+        import cookieParser from 'cookie-parser';
+    // JSONWEBTOKE for user authentication
+        import jwt from 'jsonwebtoken';
+    // CRYPTO
+        import crypto from 'crypto'
+        import { randomUUID } from 'crypto'; // randomUUID is a named export from crypto
+    // // SESSIONS
+    //     import session from 'express-session'; // dropped on 31 July 2025
+    // CORS handling START
+        import cors from 'cors';
+    // SQLite
+        // async await environment
+            import sqlite3 from "sqlite3"; //The core Node.js SQLite package (handles database operations).
+            import { open } from "sqlite"; // The SQLite package that provides a promise-based API for database operations.
+    // busboy
+        import busboy from 'busboy'; // For handling file uploads in Express.js
+    // RATE LIMITER
+        import { rateLimit } from 'express-rate-limit';         
+    // SANITIZE INPUTS
+        import sanitizeHtml from "sanitize-html";
+        const userInput = "<script>alert('Hacked!');</script><p>Hello</p>";
+        const cleanedInput = sanitizeHtml(userInput);
+        console.log(`${trace()} 🟢 userInput   :- ${userInput}`); // Output: "<p>Hello</p>";
+        console.log(`${trace()} 🟢 cleanedInput:- ${cleanedInput}`); // Output: "<p>Hello</p>";
+        console.log(`${trace()} ⚠️ Ensure all HTML requests are sent as REQ.BODY.HTML`);
+        console.log(`${trace()} ⚠️ and then use sanitizeHtml(req.body.html) server side.`);
+        // examples
+            // 1
+                // const cleanInput = sanitizeHtml(userInput, {
+                //     allowedTags: ["p", "strong", "a"],
+                //     allowedAttributes: {
+                //         "a": ["href"]
+                //     }
+                // });
+                // console.log(cleanInput); // Only keeps `<p>`, `<strong>`, and `<a>`
+    // ROUTERS
+        import dbRouter from "./src/projectSQLite_Server.mjs";
+        import loginRouter from './src/globalLogin_Server.mjs';
+        import globalRouter from './src/global_Server.mjs'; 
+        import projectRouter from './src/project_Server.mjs';
+        import sessionsRouter from './src/globalSessions_Server.mjs';
+        import googleAPIsRouter from './src/projectGoogleAPIs_Server.mjs';
+    // SQLite CRUD
+        // import { insertFormDataRecord, getRecord, updateRecord, deleteRecord } from "./src/SQLite_ServerSide.mjs";
+    // // Trace()
+    //     import { trace } from "./src/global_Server.mjs";
+        
+    function checkImports(){
+        try{
+            // console.log(trace(),"Imported axios:", axios ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported os:", os ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported fs:", fs ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported path:", path ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported url { fileURLToPath }:", fileURLToPath ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported dotenv:", dotenv ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported express:", express ? "✅ " : "❌ Failed");
+            // console.log(trace(),"Imported cookie / cookie:", cookie ? "✅ " : "❌ Failed"); ... this is not middleware, but a utility to parse cookies
+            console.log(trace(),"Imported cookieParser / cookie-parser:", cookieParser ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported jwt / jsonwebtoken:", jwt ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported crypto:", crypto ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported crypto { randomUUID }:", randomUUID ? "✅ " : "❌ Failed");
+            // console.log(trace(),"Imported session / express-session:", session ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported cors:", cors ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported sqlite3:", sqlite3 ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported sqlite { open }:", open ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported busboy:", busboy ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported dbRouter:", dbRouter ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported loginRouter:", loginRouter ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported globalRouter:", globalRouter ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported projectRouter:", projectRouter ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported sessionsRouter:", sessionsRouter ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported googleAPIsRouter:", googleAPIsRouter ? "✅ " : "❌ Failed");
+            // console.log(trace(),"Imported {insertFormDataRecord} from SQLite_ServerSide.mjs:", insertFormDataRecord ? "✅ " : "❌ Failed");
+            // console.log(trace(),"Imported {getRecord} from SQLite_ServerSide.mjs:", getRecord ? "✅ " : "❌ Failed");
+            // console.log(trace(),"Imported {updateRecord} from SQLite_ServerSide.mjs:", updateRecord ? "✅ " : "❌ Failed");
+            // console.log(trace(),"Imported {deleteRecord} from SQLite_ServerSide.mjs:", deleteRecord ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported {trace} from globalServer.mjs:", trace ? "✅ " : "❌ Failed");
+        }
+        catch (error) {
+            console.log(trace(),"imports error:",error);
+        }     
+    }
+    checkImports();
+// 1️⃣ import packages END
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 2️⃣ setup environment variables START
+    console.log((`🚀  S E T U P   E N V I R O N M E N T   V A R I A B L E S`));
+    // .ENV;  .MJS
+        // globalServer.env
+            try{
+                const envPath = "./config/globalServer.env";
+                console.log(envPath,"Exists?", fs.existsSync(envPath)); // Should be true
+                if (fs.existsSync(envPath)) {
+                    dotenv.config({ path: envPath });
+                    if(logAll===true){console.log(trace(),`\n   Global environment variables:- ${envPath}`);}
+                    const result = dotenv.config({ path: envPath });
+                    // if(logAll===true){console.log(trace(),`\n${envPath}:-\n`, result.parsed);}  
+                    const envVar = result.parsed;
+                    Object.keys(envVar).forEach(key => {
+                        // console.log(`key:- ${key} :- ${envVar[key]}`);  //  DO NOT LOG ~ SECRET INDO !!!
+                        if(logAll===true){console.log(`      key:- ${key}`);}
+                    }); 
+                    console.log(`${trace()}🟢 Global environment variables loaded.`);
+                } else {
+                    console.log(`${trace()}🔴 ERROR:- ${envPath} not found!`);
+                }
+            } catch (error) {
+                console.log(`${trace()}🔴 ERROR:- ${error}`);
+            }
+        // projectServer.env
+            try{
+                const envPath = "./config/projectServer.env";
+                console.log(envPath,"Exists?", fs.existsSync(envPath)); // Should be true
+                if (fs.existsSync(envPath)) {
+                    dotenv.config({ path: envPath });
+                    if(logAll===true){console.log(trace(),`\n   Project environment variables:- ${envPath}`);}
+                    const result = dotenv.config({ path: envPath });
+                    // if(logAll===true){console.log(trace(),`\n${envPath}:`, result);}                
+                    const envVar = result.parsed;
+                    Object.keys(envVar).forEach(key => {
+                        // console.log(`key:- ${key} :- ${envVar[key]}`);  //  DO NOT LOG ~ SECRET INDO !!!
+                        if(logAll===true){console.log(`      key:- ${key}`);}
+                    }); 
+                    console.log(`${trace()}🟢 Project environment variables loaded.`);
+                } else {
+                    console.log(`${trace()}🔴 ERROR:- ${envPath} not found!`);
+                }
+            } catch (error) {
+                console.log(`${trace()}🔴 ERROR:- ${error}`);
+            }
+// 2️⃣ setup environment variables END
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 3️⃣ setup Express app START
+    console.log((`🚀  S E T U P   E X P R E S S   A P P   &   C O R S   &   M I D D L E W A R E`));
+    const app = express();
+    // ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+        // 3️⃣ setup CORS immediately after "const app = express();" START
+            console.log((`🚀  S E T U P   C O R S`));
+            if (process.env.APP_SERVER_MODE_DEVELOPMENT === "true") {
+                console.log(`${trace()}🔒✅ CORS headers set up for Development commenced.`);
+                const PORT = process.env.APP_PORT; 
+                const corsDevelopmentOrigin = `http://localhost:${PORT}`;
+                app.use(cors({
+                        origin: corsDevelopmentOrigin,
+                        // origin: '*', // blocks cookies when credentials is set to true
+                        credentials: true,
+                        methods: ["GET", "POST", "PUT", "DELETE","OPTIONS"],
+                        allowedHeaders: ['Content-Type', 'Authorization'],
+                        optionsSuccessStatus: 204, // Avoids extra response headers in preflight requests
+                }));
+                console.log(`${trace()}🔒✅ CORS headers set up for Development completed.`);
+            } else if (process.env.APP_SERVER_MODE_PRODUCTION === "true") {
+                console.log(`${trace()}🔒✅ CORS headers set up for Production commenced.`);
+                app.use(cors({
+                        origin: ["https://netit.au", "https://www.netit.au"],
+                        credentials: true,
+                        methods: ["GET", "POST", "PUT", "DELETE"],
+                        allowedHeaders: ["Content-Type", "Authorization"],
+                        optionsSuccessStatus: 204
+                }));
+                console.log(`${trace()}🔒✅ CORS headers set up for Production completed.`);
+            } else {
+                console.log(`${trace()}🔒🔴 CORS headers set up failed. Neither development nor production mode is set.`);
+                throw new Error("Invalid configuration: Neither development nor production mode is set.");
+            }
+        // 3️⃣ setup CORS immediately after "const app = express();" END
+    // ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+    // exceptional placement - place this middleware right after [const app = express()] START
+        console.log((`🚀  S E T U P   S E C U R I T Y`));
+        // app.use(
+        //     helmet({
+        //         contentSecurityPolicy: false, // disable CSP if you're not ready for it
+        //         crossOriginEmbedderPolicy: false,
+        //     })
+        // );
+        // // ✅✅✅ Set various HTTP headers for security START ✅✅✅
+        //     app.use(helmet()); // Set various HTTP headers for security
+        // // ✅✅✅ Set various HTTP headers for security END ✅✅✅
+            console.log(`${trace()} ✅ [app.use(helmet());]\n${trace()}    :- Set various HTTP headers for security.`);
+            app.use(
+                helmet.contentSecurityPolicy({
+                    useDefaults: true,
+                    directives: {
+                        "default-src": [
+                            "'self'"
+                        ],
+                        "script-src": [
+                            "'self'",
+                            // // "'unsafe-inline'", // only if you're using inline scripts ❗❗❗REMOVE FOR PRODUCTION❗❗❗
+                            "https://apis.google.com",
+                            "https://accounts.google.com",
+                            "https://*.gstatic.com",
+                            "https://maps.googleapis.com"
+                        ],
+                        "style-src": [
+                            "'self'",
+                            // // "'unsafe-inline'", // only if you're using inline styles ❗❗❗REMOVE FOR PRODUCTION❗❗❗
+                            "sha256-cwZgAPm2CTAW2GLDlL0o2J5isI4Gr0wno+xO/MvtT3s=", // this hash applies to "https://fonts.googleapis.com"
+                            "https://fonts.googleapis.com",
+                            // "sha256-cwZgAPm2CTAW2GLDlL0o2J5isI4Gr0wno+xO/MvtT3s="
+                        ],
+                        "font-src": [
+                            "'self'",
+                            "https://fonts.gstatic.com"
+                        ],
+                        "connect-src": [
+                            "'self'",
+                            "https://fonts.googleapis.com",
+                            "https://fonts.gstatic.com",
+                            "https://maps.googleapis.com",
+                            "https://dns.google"
+                        ],
+                        "frame-src": [
+                            "'self'",
+                            "https://accounts.google.com"
+                        ],
+                        "img-src": [
+                            "'self'",
+                            "data:",
+                            "https:",
+                            "https://maps.gstatic.com"
+                        ],
+                    },
+                })
+            );
+        app.disable('x-powered-by'); // Hide Express fingerprint
+            console.log(`${trace()} ✅ [app.disable('x-powered-by');]\n${trace()}    :- Hide Express fingerprint.`);
+        app.set('trust proxy', 1);   // Trust reverse proxy like NGINX
+            console.log(`${trace()} ✅ [app.set('trust proxy', 1);]\n${trace()}    :- Trust reverse proxy like NGINX.`);
+        // RATE LIMITER start
+            // If you're using a rate limiter, put it early to block abusers before they hit your routes:
+                const rateLimitNumber = 5
+                const rateLimitDuration = 0.1; // minutes
+                const limiter = rateLimit({
+                    windowMs: rateLimitDuration * 60 * 1000,
+                    limit: rateLimitNumber,
+                    handler: (req, res) => {
+                        res.send('<h1>stop!</>');
+                        // res.status(429).json({
+                        //     error: "Rate limit exceeded",
+                        //     retryAfter: "15 minutes"
+                        // });
+                    }
+                });
+                // if (process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() == 'true') {
+                //     // app.use(limiter); // ✅ Applies to all requests, causes issues with static assets/images/icons
+                //     app.use('/api', limiter); // ✅ Only applies to API traffic
+                // }
+                    app.use('/api', limiter); // ✅ Only applies to API traffic
+                    console.log(`${trace()} 🟢 RATE LIMITER Rate limiter set to a limit of ${rateLimitNumber} requests every ${rateLimitDuration} minutes.`);
+                    console.log(`${trace()} ✅ RATE LIMITER [app.use(limiter);]\n${trace()}    :- enables rate limiting for all requests.`);
+        // RATE LIMITER end
+        // MIDDLEWARE to parse incoming request bodies START
+            app.use(express.json({ limit: "10mb" })); // Middleware to parse JSON data // Increase JSON request size limit
+                console.log(`${trace()} ✅ [app.use(express.json({ limit: "10mb" }));]\n${trace()}    :- increases JSON request size limit from default 100kb.`);
+            app.use(express.urlencoded({ limit: "10mb", extended: true }));
+                console.log(`${trace()} ✅ [app.use(express.urlencoded({ limit: "10mb", extended: true }));]\n${trace()}    :- increases URL-encoded request size limit from default 100kb.`);
+            app.use(express.raw({ type: "image/jpeg", limit: "10mb" })); // For raw image data end points
+                console.log(`${trace()} ✅ [app.use(express.raw({ type: "image/jpeg", limit: "10mb" }));]\n${trace()}    :- enables raw image data handling.`);
+            app.use(cookieParser()); // Enables reading of cookies, express specific cookie parser
+                console.log(`${trace()} ✅ [app.use(cookieParser());]\n${trace()}    :- enables reading of cookies, express specific cookie parser.`);
+        // MIDDLEWARE to parse incoming request bodies END
+    // exceptional placement - place this middleware right after [const app = express()] END
+    // // static assets for third party libraries START
+        app.use('/tinymce', express.static(__dirname + '/node_modules/tinymce'));
+            console.log(`${trace()} ✅ [app.use('/tinymce', express.static(__dirname + '/node_modules/tinymce'));]\n${trace()}    :- text editor package plugin.`);
+    // static assets for third party libraries END
+// 3️⃣ setup Express app END
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 4️⃣ mount external routers START
+    console.log((`🚀  M O U N T   E X T E R N A L   R O U T E R S`));
+    // Order matters here!
+    // IF the entire router (or all its routes) should be protected and only accessible to authenticated users,
+    // then yes — it makes sense to mount it after your authentication middleware.
+    // IF a router includes public routes (e.g., login, signup, health checks, static files, etc.),
+    // then it should not be mounted after global authentication — otherwise users can’t access it
+    // without being logged in (which creates a chicken-and-egg problem).
+        app.use("/dbRouter", dbRouter);
+        app.use("/loginRouter", loginRouter);
+        app.use("/globalRouter", globalRouter);
+        app.use("/projectRouter", projectRouter);
+        app.use("/sessionsRouter", sessionsRouter);
+        app.use("/googleAPIsRouter", googleAPIsRouter);
+        console.log(trace()," ✅ /dbRouter");
+        console.log(trace()," ✅ /loginRouter");
+        console.log(trace()," ✅ /globalRouter");
+        console.log(trace()," ✅ /projectRouter");
+        console.log(trace()," ✅ /sessionsRouter");
+        console.log(trace()," ✅ /googleAPIsRouter");
+// 4️⃣ mount external routers END
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 3️⃣ map static folders START
+    console.log((`🚀  S E T U P   S T A T I C   F O L D E R S`));
+    const staticFolders = ['config', 'db', 'media', 'public', 'src', 'styles'];
+    try{
+        staticFolders.forEach(folder => {
+            app.use(express.static(folder));
+            app.use(`/${folder}`, express.static(path.join(__dirname, folder), {
+                setHeaders: (res, filePath) => {
+                    if (filePath.endsWith('.mjs')) {
+                        res.setHeader('Content-Type', 'application/javascript');
+                    }
+                }
+            }));
+            console.log(`mapped folder:- ${path.join(__dirname,folder)}`);
+        });
+        console.log(`${trace()}🟢 Project folders mapped.`);
+    }
+    catch{
+        console.log(`🔴 map to folder failed:- ${folder}`);
+    }
+// 3️⃣ map static folders END
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 5️⃣ set guest JSON Web Token (JWT) START
+    console.log((`🪙   🚀   G U E S T   J S O N   W E B   T O K E N   ~   w i l l   b e   s e t   i f   o n e   d o e s ' n t   e x i s t   🪙`));
+    // Function to set the guest JWT
+        function setGuestJWT(req, res) {
+            const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'your-secret-key';
+            const guestTokenId = `guest_${Date.now()}`;
+            const isProd = process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() === "true";
+            const maxAgeSeconds = 60 * 60; // 1 hour
+            const guestToken = jwt.sign(
+                { guest: true, guestTokenId },
+                JWT_SECRET_KEY,
+                { expiresIn: '1h' }
+            );
+            res.cookie("guestToken", guestToken, {
+                httpOnly: true,
+                secure: isProd,
+                sameSite: isProd ? "strict" : "lax",
+                maxAge: maxAgeSeconds * 1000 // milliseconds
+            });
+            req.guestToken = guestToken;
+            console.log(`🪙 ${trace()} ➡️➡️➡️ req.guestToken has been set to ➡️➡️➡️ ${guestToken.slice(0, 30)}...`);
+            console.log(`🪙   🚀   S E T   G U E S T   J S O N   W E B   T O K E N   C O O K I E   S U C C E S S   🪙`);
+        }
+    // Middleware to assign a guest JWT if not already present
+        app.use((req, res, next) => {
+            // function guestJWTMiddleware(req, res, next) {
+            console.log(`🪙 ${trace()} ➡️➡️➡️ req.url:-`, req.url);
+            const guestTokenCookie = req.cookies?.guestToken;
+            if (!guestTokenCookie) {
+                console.log(`🪙   🚀   S E T   G U E S T   J S O N   W E B   T O K E N   C O O K I E   🪙`);
+                setGuestJWT(req, res);
+            } else {
+                req.guestToken = guestTokenCookie;
+                // console.log(`🪙 ${trace()} 🟢🟢🟢 Guest JWT is already set. 🟢🟢🟢`);
+            }
+            next();
+        });
+// 5️⃣ set guest JSON Web Token (JWT) END
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 5️⃣ set guest cookie START
+    console.log(`🍪   🚀   G U E S T   C O O K I E                   ~   w i l l   b e   s e t   i f   o n e   d o e s ' n t   e x i s t   🍪`);
+    // Function to set the guest cookie
+        function setGuestCookie(req, res) {
+            const guestCookie = randomUUID();
+            const isProd = process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() === "true"; // Prevents errors if process.env.APP_SERVER_MODE_PRODUCTION is undefined or null.
+            const maxAgeSeconds = 60 * 60; // 60 * 60 = 1 hour.  Max-Age in 'Set-Cookie' must be seconds, not milliseconds
+            const iat = Date.now();
+            const exp = Date.now() + (maxAgeSeconds * 1000);
+            // const exp = Math.floor(Date.now() / 1000) + 3600; // now + 1h in seconds, 60 x 60 = 3600
+            // Store metadata inside the cookie value (JSON string or JWT)
+                const cookieMetadata = {
+                    guest: true,
+                    exp
+                };
+            // WARNING: This cookie will be visible in the browser if not HttpOnly
+                const cookiePayload = JSON.stringify(cookieMetadata);
+            // set the cookie in the response, stores it in the browser START
+                // res.setHeader("Set-Cookie", cookieStr);
+                // res.cookie("guestId",cookieStr); // Use Express’s built-in res.cookie():
+                res.cookie("guestCookie", cookiePayload, {
+                    httpOnly: isProd,
+                    secure: isProd,
+                    sameSite: isProd ? "strict" : "lax",
+                    maxAge: maxAgeSeconds * 1000 // in milliseconds
+                });
+            // set the cookie in the response, stores it in the browser END
+            req.guestCookie = guestCookie;
+            console.log(`🍪 ${trace()} ➡️➡️➡️ req.guestId has been set to ➡️➡️➡️ ${guestCookie}`);
+            console.log(`🍪   🚀   S E T   G U E S T   C O O K I E   S U C C E S S   🍪`);
+        }
+    // Middleware to assign a guestId cookie if not already present
+        app.use((req, res, next) => {
+            console.log(`🍪 ${trace()} ➡️➡️➡️ req.url:-`, req.url);
+            const guestCookie = req.cookies?.guestCookie;
+            if (!guestCookie) {
+                console.log(`🍪   🚀   S E T   G U E S T   C O O K I E   🍪`);
+                setGuestCookie(req, res);
+            } else if (guestCookie) {
+                // console.log(`🍪 ${trace()} 🟢🟢🟢 Guest Cookie is already set. 🟢🟢🟢`);
+                req.guestCookie = guestCookie;
+            }
+            next();
+        });
+// 5️⃣ set guest cookie END
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 6️⃣ log each REQuest START
+    console.log((`🚀  L O G   A L L   R E Q U E S T S`));
+    // Middleware to log each request
+        app.use((req, res, next) => {
+            const now = new Date();
+            const localISO = now.toLocaleString('en-AU', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                timeZoneName: 'short'
+            });
+            console.log(`🪵 ${trace()} 🪵🪵🪵 LOG date/time (local): ${now.toLocaleString()} | (ISO): ${localISO}`);
+            function toLocalISOString(date = new Date()) {
+                const pad = n => n.toString().padStart(2, '0');
+                const yyyy = date.getFullYear();
+                const mm = pad(date.getMonth() + 1);
+                const dd = pad(date.getDate());
+                const hh = pad(date.getHours());
+                const min = pad(date.getMinutes());
+                const ss = pad(date.getSeconds());
+
+                return `${yyyy}-${mm}-${dd}, ${hh}:${min}:${ss}`;
+            }
+            console.log(`🪵 ${trace()} 🪵🪵🪵 LOG date/time (local): ${now.toLocaleString()} | (ISO): ${toLocalISOString()}`);
+            const ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress;
+            console.log(`🪵 ${trace()} 🪵 ${req.method} ${req.originalUrl} ${req.url}`);
+            console.log(`🪵 ${trace()} 🪵 Origin IP: ${req.ip}`);
+            console.log(`🪵 ${trace()} 🪵 Origin req.headers['x-forwarded-for'] ${ip}`);
+            console.log(`🪵 ${trace()} 🪵 User-Agent: ${req.headers['user-agent']}`);
+            const authHeader = req.headers['authorization'];
+            // JWT decode START
+                let jwtPayload = null;
+                let jwtLog = null;
+                const guestToken = req.cookies?.guestToken;
+                if (guestToken) {
+                    try {
+                        jwtPayload = jwt.decode(guestToken); // decode without verifying
+                        const issuedAtDate = new Date(jwtPayload.iat * 1000);
+                        const expiresAtDate = new Date(jwtPayload.exp * 1000);
+                        console.log(`🪵 ${trace()} 🪙 JWT guest?:${jwtPayload.guest}`);
+                        console.log(`🪵 ${trace()} 🪙 JWT guest id:${jwtPayload.guestTokenId}`);
+                        console.log(`🪵 ${trace()} 🪙 JWT iat:${issuedAtDate.toLocaleString()}`);
+                        console.log(`🪵 ${trace()} 🪙 JWT exp:${expiresAtDate.toLocaleString()}`);
+                    } catch (err) {
+                        console.warn(`❌ Failed to decode guest JWT:`, err.message);
+                    }
+                }
+            // JWT decode END
+            // guestCookie decode START
+                let guestCookiePayload = null;
+                let guestCookieLog = null;
+                const guestCookie = req.cookies?.guestCookie;
+                if (guestCookie) {
+                    try {
+                        guestCookiePayload = JSON.parse(guestCookie); // parse the JSON string
+                        const expiresAtDate = new Date(guestCookiePayload.exp);
+                        // guestCookieLog = `🪵 Cookie guest?:${guestCookiePayload.guest}\n🪵 Cookie exp:${expiresAtDate.toLocaleString()}`;
+                        console.log(`🪵 ${trace()} 🍪 Cookie guest?:${guestCookiePayload.guest}`);
+                        console.log(`🪵 ${trace()} 🍪 Cookie guest exp:${expiresAtDate.toLocaleString()}`);
+                    } catch (err) {
+                        console.warn(`❌ Failed to parse guestCookie:`, err.message);
+                        }
+                    }
+            // guestCookie decode END
+            setTimeout(()=>{
+                // logREQuest(req);
+                console.log(`🪵 ${trace()} ✒️✒️✒️ ⏰ 1 second delay before writing to logFile.`);
+            },1000);
+            next();
+        });
+// 6️⃣ log each REQuest END
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 7️⃣ authenticate users START
+    console.log((`🚀  A U T H E N T I C A T E   U S E R S`));
+    // Middleware to authenticate users based on JWT token in cookies
+        app.use((req, res, next) => {
+            // const publicPaths = [
+            //     '/loginRouter/login',
+            //     '/loginRouter/signup',
+            //     '/loginRouter/forgotPassword',
+            //     '/loginRouter/resetPassword',
+            //     '/loginRouter/verifyEmail',
+            //     '/globalRouter/publicInfo',
+            //     '/projectRouter/getPublicData',
+            //     '/sessionsRouter/createSession',
+            //     '/sessionsRouter/getSession',
+            //     '/sessionsRouter/deleteSession',
+            //     '/googleAPIsRouter/getGooglePublicData',
+            //     // Add other public paths here
+            //     // Also consider static files, health checks, etc.
+            // ];
+            // if (publicPaths.includes(req.path) || req.path.startsWith('/public/') || req.path.startsWith('/static/')) {
+            //     // Public path, skip authentication
+            //     return next();
+            // }
+            // JWT authentication START
+                console.log((`🚀   A U T H E N T I C A T E   U S E R S   ~   J W T`));
+                const token = req.cookies.guestToken;
+                if (!token) {
+                    console.log(`🔒 ${trace()} 🔒🔒🔒 No token provided. Access denied to ${req.path}`);
+                    return res.status(401).json({ message: 'Access denied. No token provided.' });
+                }
+                try {
+                    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+                    req.user = decoded;
+                    console.log(`🔓 ${trace()} 🔓🔓🔓 Token verified. User authenticated for ${req.path}`);
+                    next();
+                } catch (error) {
+                    console.log(`🔒 ${trace()} 🔒🔒🔒 Invalid token. Access denied to ${req.path}`, error);
+                    return res.status(400).json({ message: 'Invalid token.' });
+                }
+            // JWT authentication END
+            // COOKIE authenticate START
+                console.log((`🚀   A U T H E N T I C A T E   U S E R S   ~   C O O K I E`));
+                const guestCookie = req.cookies.guestCookie;
+                if (!guestCookie) {
+                    console.log(`🔒 ${trace()} 🔒🔒🔒 No cookie provided. Access denied to ${req.path}`);
+                    return res.status(401).json({ message: 'Access denied. No cookie provided.' });
+                }
+                try {
+                    // const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+                    // req.user = decoded;
+                    console.log(`🔓 ${trace()} 🔓🔓🔓 Cookie verified. User authenticated for ${req.path}`);
+                    next();
+                } catch (error) {
+                    console.log(`🔒 ${trace()} 🔒🔒🔒 Invalid cookie. Access denied to ${req.path}`, error);
+                    return res.status(400).json({ message: 'Invalid cookie.' });
+                }
+            // COOKIE authenticate END
+        });
+// 7️⃣ authenticate users END
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 7️⃣ start server START
+    function logServerStartup(){
+        console.log(("🎾").repeat(45));
+        console.log(`🎾 S T A R T   S E R V E R${(" ").repeat(88-("🎾 S T A R T   S E R V E R").length)}🎾`);
+        // console.log(`🎾 SERVER MODE = production: ${isProduction}.${(" ").repeat(88-("🎾 SERVER MODE = production: false.").length)}🎾`);
+        // console.log(`🎾 SERVER MODE = development:${isDevelopment}.${(" ").repeat(88-("🎾 SERVER MODE = production: true.").length)}🎾`);
+        myDate = new Date();
+        console.log(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}${(" ").repeat(88-(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`).length)}🎾`);
+        console.log(`🎾 Server is running on port:${PORT}.${(" ").repeat(88-(`🎾 Server is running on port:${PORT}.`).length)}🎾`);
+        console.log(isProduction==="true" ?
+            `🎾 Server is running in Production mode. ${(" ").repeat(88-(`🎾 Server is running in Production mode. `).length)}🎾` : 
+            `🎾 Server is running in Development mode. ${(" ").repeat(88-(`🎾 Server is running in Development mode. `).length)}🎾`);
+        // console.log(`🎾 Server is running on port # ${process.env.APP_PORT}${(" ").repeat(118-(`🎾 Server is running on port # ${process.env.APP_PORT}`).length)}🎾`);
+        console.log(("🎾").repeat(45));
+    };
+    const PORT = process.env.APP_PORT;
+    const DEV_IP_ADDRESS = process.env.APP_DEV_IP_ADDRESS;
+    const isProduction = process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase();
+    const isDevelopment = process.env.APP_SERVER_MODE_DEVELOPMENT?.toLowerCase();
+    if (isProduction==="true") {
+        app.listen(PORT, '0.0.0.0', () => {
+            // Logging for production...
+            logServerStartup();
+        });
+    } else {
+        // const options = {
+        //     key: fs.readFileSync("serverGITignore.key"),
+        //     cert: fs.readFileSync("serverGITignore.cert")
+        // };
+        // console.log(`${trace()}🔍 Development mode options:`, options);
+        // https.createServer(options, app).listen(PORT, () => {
+        //     // Logging for development...
+        //     logServerStartup();
+        // });
+        app.listen(PORT, () => {
+            // Logging for development...
+            logServerStartup();
+        });
+    }
+// 7️⃣ start server END
+// 🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫
