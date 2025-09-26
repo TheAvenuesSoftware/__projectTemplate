@@ -12,6 +12,7 @@ export function projectMJSisLoaded(){
     import { newDateAttributes } from "./global_Client.mjs";
     import { initTinyMCE } from "./projectTinyMCE_Client.mjs";
     import { initAutocomplete } from "./projectGoogleAPIs_Client.mjs"
+    import { showMapInIframe } from "./projectGoogleAPIs_Client.mjs"
     import { selectImageToUpload } from "./globalUploadImage_Client.mjs";
     import { uploadImageToCanvas } from "./globalUploadImage_Client.mjs";
     import { isEmailValid } from "./global_Client.mjs";
@@ -21,6 +22,7 @@ export function projectMJSisLoaded(){
     // functions mapping START
         export const actions = {
             alertDateTime: () => alert(`Current date and time: ${new Date().toLocaleString()}`),
+            showMapInIframe: () => showMapInIframe(),
             showNotes: () => doThis('showNotes'),
             selectImageToUpload: () => selectImageToUpload(),
             uploadImageToCanvas: () => uploadImageToCanvas(),

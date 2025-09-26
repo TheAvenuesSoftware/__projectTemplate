@@ -1,1 +1,0 @@
-sass --watch projectMenu.scss:projectMenu.css

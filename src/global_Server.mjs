@@ -2,14 +2,39 @@ const consoleLog = false;
 
 console.log("LOADED:- globalServer.mjs is loaded",new Date().toLocaleString());
 
+// export function trace(whoCalled="") {
+//     try {
+//         const stack = new Error().stack;
+//         const firstLine = stack.split('\n')[2].trim();
+//         const x = firstLine.lastIndexOf("/");
+//         const y = firstLine.lastIndexOf("/",x - 1);
+//         const fileName_rowNumber_position = firstLine.slice(y + 1,firstLine.length);
+//         return `▶️Trace: [${whoCalled? whoCalled : ""}] ${fileName_rowNumber_position} ▶️`;
+//     } catch (error) {
+//         return '▶️🔴 Trace: NOT AVAILABLE▶️',error;
+//     }
+// };
+
 export function trace(whoCalled="") {
     try {
+        const myDate = new Date();
         const stack = new Error().stack;
         const firstLine = stack.split('\n')[2].trim();
+
+        const R = firstLine.lastIndexOf(":");
+        const RR = firstLine.lastIndexOf(":",R-1);
+        const rowNumber = firstLine.slice(RR+1,R);
+        // console.log("rowNumber:-",rowNumber,);
+
         const x = firstLine.lastIndexOf("/");
         const y = firstLine.lastIndexOf("/",x - 1);
+        const fileName = firstLine.slice(y,RR);
+        // console.log("fileName:-",fileName);
+
         const fileName_rowNumber_position = firstLine.slice(y + 1,firstLine.length);
-        return `▶️Trace: [${whoCalled? whoCalled : ""}] ${fileName_rowNumber_position} ▶️`;
+        // return `▶️${whoCalled? whoCalled : ""} ${fileName_rowNumber_position} ▶️`;
+
+        return `▶️${whoCalled? whoCalled : ""} ${fileName} ${rowNumber} ▶️[${myDate.toLocaleTimeString().replace(" ","")}]▶️`;
     } catch (error) {
         return '▶️🔴 Trace: NOT AVAILABLE▶️',error;
     }

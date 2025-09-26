@@ -10,34 +10,39 @@
 // ~ Event & Callback Handlers: Prefix with on (e.g., onClick, onDataReceived)
 // ~ Private Variables: Some use leading _ to indicate private properties (_hiddenProperty)
 
-export function trace(whoCalled="") {
-    try {
-        const stack = new Error().stack;
-        const firstLine = stack.split('\n')[2].trim();
+let myDate;
 
-        const R = firstLine.lastIndexOf(":");
-        const RR = firstLine.lastIndexOf(":",R-1);
-        const rowNumber = firstLine.slice(RR+1,R);
-        // console.log("rowNumber:-",rowNumber,);
+import { trace } from "./src/global_Server.mjs";
 
-        const x = firstLine.lastIndexOf("/");
-        const y = firstLine.lastIndexOf("/",x - 1);
-        const fileName = firstLine.slice(y,RR);
-        // console.log("fileName:-",fileName);
+// export function trace(whoCalled="") {
+//     try {
+//         myDate = new Date();
+//         const stack = new Error().stack;
+//         const firstLine = stack.split('\n')[2].trim();
 
-        const fileName_rowNumber_position = firstLine.slice(y + 1,firstLine.length);
-        // return `▶️${whoCalled? whoCalled : ""} ${fileName_rowNumber_position} ▶️`;
+//         const R = firstLine.lastIndexOf(":");
+//         const RR = firstLine.lastIndexOf(":",R-1);
+//         const rowNumber = firstLine.slice(RR+1,R);
+//         // console.log("rowNumber:-",rowNumber,);
 
-        return `▶️${whoCalled? whoCalled : ""} ${fileName} ${rowNumber} ▶️`;
-    } catch (error) {
-        return '▶️🔴 Trace: NOT AVAILABLE▶️',error;
-    }
-};
+//         const x = firstLine.lastIndexOf("/");
+//         const y = firstLine.lastIndexOf("/",x - 1);
+//         const fileName = firstLine.slice(y,RR);
+//         // console.log("fileName:-",fileName);
+
+//         const fileName_rowNumber_position = firstLine.slice(y + 1,firstLine.length);
+//         // return `▶️${whoCalled? whoCalled : ""} ${fileName_rowNumber_position} ▶️`;
+
+//         return `▶️${whoCalled? whoCalled : ""} ${fileName} ${rowNumber} ▶️[${myDate.toLocaleTimeString()}]▶️`;
+//     } catch (error) {
+//         return '▶️🔴 Trace: NOT AVAILABLE▶️',error;
+//     }
+// };
 
 const logAll = true; // Set to false to disable all console logs
 
-let myDate;
 myDate = new Date();
+
 console.log(("🔰").repeat(45));
 console.log(`🔰 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}${(" ").repeat(88-(`🔰 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`).length)}🔰`);
 console.log(`🔰 ${myDate}${(" ").repeat(88-(`🔰 ${myDate}`).length)}🔰`);
@@ -262,53 +267,81 @@ console.log(("🔰").repeat(45));
         // // ✅✅✅ Set various HTTP headers for security START ✅✅✅
         //     app.use(helmet()); // Set various HTTP headers for security
         // // ✅✅✅ Set various HTTP headers for security END ✅✅✅
+        app.use(
+            helmet.contentSecurityPolicy({
+                useDefaults: true,
+                directives: {
+                    "default-src": [
+                        "'self'"
+                    ],
+                    "script-src": [
+                        "'self'",
+                        // "'unsafe-inline'", // only if you're using inline scripts ❗❗❗REMOVE FOR PRODUCTION❗❗❗
+                        "https://apis.google.com",
+                        "https://accounts.google.com",
+                        // wildcards must be at the subdomain level only START
+                            // "https://*.gstatic.com", // wildcards must be at the subdomain level only
+                            "https://gstatic.com", // or "https://maps.gstatic.com"
+                        // wildcards must be at the subdomain level only END
+                        "https://maps.googleapis.com"
+                    ],
+                    "style-src": [
+                        "'self'",
+                        // "'unsafe-inline'", // only if you're using inline styles ❗❗❗REMOVE FOR PRODUCTION❗❗❗
+                        "https://fonts.googleapis.com",
+                        // Hashes for Google places; Google maps START
+                            "'sha256-cwZgAPm2CTAW2GLDlL0o2J5isI4Gr0wno+xO/MvtT3s='", // this hash applies to "https://fonts.googleapis.com"
+                            "'sha256-mmA4m52ZWPKWAzDvKQbF7Qhx9VHCZ2pcEdC0f9Xn/Po='", // this hash applies to "https://fonts.googleapis.com"
+                            "'sha256-pzRbDTkOofZpG91nLe+vEuUeKxXX9yPEAiFygDXB4h4='", // this hash applies to "https://fonts.googleapis.com"
+                            "'sha256-/VVOq+Ws/EiUxf2CU6tsqsHdOWqBgHSgwBPqCTjYD3U='", // this hash applies to "https://fonts.googleapis.com"
+                            "'sha256-zZp8BI/LRCsExnI71KZA79vRfTQ/33qQr5GcSWAOwto='", // this hash applies to "https://fonts.googleapis.com"
+                            "'sha256-j69g0Z+HAbHBMIzQNFis9uADYR6LPo2LYlSo6DI4wy0='", // this hash applies to "https://fonts.googleapis.com"
+                            "'sha256-g/+r3r7IhgvloBqpNntHVylYT3vrqlLIZ5V0tTv7Cvg='", // this hash applies to "https://fonts.googleapis.com"
+                            "'sha256-IaM8xvcujDol1nAtq0BzSXIFdWOl+DiuhOV5dqL9STo='", // this hash applies to "https://fonts.googleapis.com"
+                            "'sha256-PNsPul0zQFUiYu9XLVKzTdD5Cz5ghp1MT4H5/zAeI3Q='", // this hash applies to "https://fonts.googleapis.com"
+                            "'sha256-vNrevWaq6uKv3XSoEo/8TU13p1HYuC7oFmoCZ3zHhGM='"  // this hash is for iframe
+                        // Hashes for Google places; Google maps END
+                    ],
+                    "font-src": [
+                        "'self'",
+                        "https://fonts.gstatic.com"
+                    ],
+                    "connect-src": [
+                        "'self'",
+                        "https://fonts.googleapis.com",
+                        "https://fonts.gstatic.com",
+                        "https://maps.googleapis.com",
+                        "https://dns.google"
+                    ],
+                    "frame-src": [
+                        "'self'",
+                        "https://www.google.com", // for Google map in iframe
+                    ],
+                    "img-src": [
+                        "'self'",
+                        "data:",
+                        "https:",
+                        "https://maps.gstatic.com"
+                    ],
+                },
+            })
+        );
+        app.use(helmet.frameguard({ action: 'sameorigin' })); // Prevents your site from being embedded in iframes — use 'DENY' or 'SAMEORIGIN'.
+        app.use(helmet.hidePoweredBy()); // Removes the X-Powered-By: Express header to obfuscate stack.  Minor security-through-obscurity — avoids disclosing you use Express (which can aid attackers).
+        app.use(
+            helmet.hsts({
+                maxAge: 31536000, // 1 year in seconds
+                includeSubDomains: true, // Apply to subdomains
+                preload: true, // Enable preload eligibility
+            })
+        ); // Enforces HTTPS via Strict-Transport-Security.  Prevents downgrade attacks; only works over HTTPS; include preload flag to submit to HSTS preload.
+        // Enable DNS prefetching if desired
+        app.use(helmet.dnsPrefetchControl({ allow: false })); // allow: true → Enables DNS prefetching (faster page loads, lower privacy). allow: false or omitted → Disables DNS prefetching (slightly slower, better privacy). Default behavior in Helmet: false (privacy-focused).
+        app.use(helmet.noSniff()); // Without this header: Browsers (especially older ones) may "guess" file types based on content. A file served as text/plain could be executed as text/html or application/javascript — a major security risk.
+        app.use(helmet.originAgentCluster()); // What Does Origin-Agent-Cluster Do? It tells the browser to split your origin into separate “agent clusters”. This means: Each tab or iframe runs in a separate isolated process, even if they share the same origin. This improves site isolation, making side-channel attacks harder or impossible. ⚠️ Important Notes This can increase memory usage because your site uses more isolated processes. Only effective in browsers that support it (mostly Chromium-based browsers currently). Helps mitigate Spectre-class side-channel attacks but does not replace other security measures like CSP or secure coding.
+        app.use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' })); // Send full URL for same-origin, only origin for cross-origin HTTPS, no referrer for HTTPS → HTTP. Recommended default; balances privacy and analytics.
+            // Header hardening: You’ve covered all major Helmet modules (, , , , etc.).
             console.log(`${trace()} ✅ [app.use(helmet());]\n${trace()}    :- Set various HTTP headers for security.`);
-            app.use(
-                helmet.contentSecurityPolicy({
-                    useDefaults: true,
-                    directives: {
-                        "default-src": [
-                            "'self'"
-                        ],
-                        "script-src": [
-                            "'self'",
-                            // // "'unsafe-inline'", // only if you're using inline scripts ❗❗❗REMOVE FOR PRODUCTION❗❗❗
-                            "https://apis.google.com",
-                            "https://accounts.google.com",
-                            "https://*.gstatic.com",
-                            "https://maps.googleapis.com"
-                        ],
-                        "style-src": [
-                            "'self'",
-                            // // "'unsafe-inline'", // only if you're using inline styles ❗❗❗REMOVE FOR PRODUCTION❗❗❗
-                            "sha256-cwZgAPm2CTAW2GLDlL0o2J5isI4Gr0wno+xO/MvtT3s=", // this hash applies to "https://fonts.googleapis.com"
-                            "https://fonts.googleapis.com",
-                            // "sha256-cwZgAPm2CTAW2GLDlL0o2J5isI4Gr0wno+xO/MvtT3s="
-                        ],
-                        "font-src": [
-                            "'self'",
-                            "https://fonts.gstatic.com"
-                        ],
-                        "connect-src": [
-                            "'self'",
-                            "https://fonts.googleapis.com",
-                            "https://fonts.gstatic.com",
-                            "https://maps.googleapis.com",
-                            "https://dns.google"
-                        ],
-                        "frame-src": [
-                            "'self'",
-                            "https://accounts.google.com"
-                        ],
-                        "img-src": [
-                            "'self'",
-                            "data:",
-                            "https:",
-                            "https://maps.gstatic.com"
-                        ],
-                    },
-                })
-            );
         app.disable('x-powered-by'); // Hide Express fingerprint
             console.log(`${trace()} ✅ [app.disable('x-powered-by');]\n${trace()}    :- Hide Express fingerprint.`);
         app.set('trust proxy', 1);   // Trust reverse proxy like NGINX
@@ -321,20 +354,40 @@ console.log(("🔰").repeat(45));
                     windowMs: rateLimitDuration * 60 * 1000,
                     limit: rateLimitNumber,
                     handler: (req, res) => {
-                        res.send('<h1>stop!</>');
-                        // res.status(429).json({
-                        //     error: "Rate limit exceeded",
-                        //     retryAfter: "15 minutes"
+                        res.send('<html><head><title>Rate Limit Exceeded</title></head><body style="font-family: sans-serif; text-align: center; padding: 2em;"><h1>⏳ Too Many Requests</h1><p>You’ve hit the limit. Please wait a minute before trying again.</p><p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p></body></html>');
+                        // res.set('Retry-After', '60').status(429).send({
+                        //     error: "Rate limit exceeded.  Try again after 1 minute.",
+                        //     retryAfter: "15 minutes",
+                        //     retryAt: new Date(Date.now() + 15 * 60 * 1000).toISOString()
                         // });
+                        //     res.set('Retry-After', '60').status(429).send(`
+                        //         <html>
+                        //             <head><title>Rate Limit Exceeded</title></head>
+                        //             <body style="font-family: sans-serif; text-align: center; padding: 2em;">
+                        //             <h1>⏳ Too Many Requests</h1>
+                        //             <p>You’ve hit the limit. Please wait a minute before trying again.</p>
+                        //             <p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p>
+                        //             </body>
+                        //         </html>
+                        //     `);
                     }
                 });
-                // if (process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() == 'true') {
-                //     // app.use(limiter); // ✅ Applies to all requests, causes issues with static assets/images/icons
-                //     app.use('/api', limiter); // ✅ Only applies to API traffic
-                // }
-                    app.use('/api', limiter); // ✅ Only applies to API traffic
-                    console.log(`${trace()} 🟢 RATE LIMITER Rate limiter set to a limit of ${rateLimitNumber} requests every ${rateLimitDuration} minutes.`);
-                    console.log(`${trace()} ✅ RATE LIMITER [app.use(limiter);]\n${trace()}    :- enables rate limiting for all requests.`);
+                // Applies to all requests, causes issues with static assets/images/icons START
+                    // if (process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() == 'true') {
+                    //     // app.use(limiter); // ✅ Applies to all requests, causes issues with static assets/images/icons
+                    //     // console.log(`${trace()} ✅ RATE LIMITER [app.use(limiter);]\n${trace()}    :- enables rate limiting for all requests.`);
+                    // }
+                    // app.use('/', limiter); // ✅ Applies to ALL traffic
+                // Applies to all requests, causes issues with static assets/images/icons END
+                // app.use('/api', limiter); // ✅ Applies to API traffic only
+                // Apply rate limiter to individual routers START
+                    app.use("/dbRouter", limiter);
+                    app.use("/loginRouter", limiter);
+                    app.use("/globalRouter", limiter);
+                    app.use("/projectRouter", limiter);
+                    app.use("/sessionsRouter", limiter);
+                    app.use("/googleAPIsRouter", limiter);
+                    console.log(`${trace()} 🟢 🏃‍♂️🏃‍♂️‍➡️ RATE LIMITER Rate limiter set to a limit of ${rateLimitNumber} requests every ${rateLimitDuration} minutes.`);
         // RATE LIMITER end
         // MIDDLEWARE to parse incoming request bodies START
             app.use(express.json({ limit: "10mb" })); // Middleware to parse JSON data // Increase JSON request size limit

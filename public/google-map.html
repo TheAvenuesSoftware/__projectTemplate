@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Map - Address Viewer</title>
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    #error {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      padding: 10px;
+      border-radius: 4px;
+      z-index: 999;
+    }
+  </style>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"
+    defer
+  ></script>
+  <script>
+    let map;
+
+    function initMap() {
+      const params = new URLSearchParams(window.location.search);
+      const address = params.get('address');
+
+      if (!address) {
+        showError("Missing address in URL (use ?address=Your+Address)");
+        return;
+      }
+
+      const geocoder = new google.maps.Geocoder();
+
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === 'OK') {
+          const location = results[0].geometry.location;
+
+          map = new google.maps.Map(document.getElementById('map'), {
+            center: location,
+            zoom: 15,
+          });
+
+          new google.maps.Marker({
+            map,
+            position: location,
+          });
+        } else {
+          showError(`Geocoding failed: ${status}`);
+        }
+      });
+    }
+
+    function showError(msg) {
+      const errorDiv = document.createElement('div');
+      errorDiv.id = 'error';
+      errorDiv.textContent = msg;
+      document.body.appendChild(errorDiv);
+    }
+
+    window.initMap = initMap;
+  </script>
+</head>
+<body>
+  <div id="map"></div>
+</body>
+</html>
