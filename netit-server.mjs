@@ -299,6 +299,7 @@ console.log(("🔰").repeat(45));
                             "'sha256-g/+r3r7IhgvloBqpNntHVylYT3vrqlLIZ5V0tTv7Cvg='", // this hash applies to "https://fonts.googleapis.com"
                             "'sha256-IaM8xvcujDol1nAtq0BzSXIFdWOl+DiuhOV5dqL9STo='", // this hash applies to "https://fonts.googleapis.com"
                             "'sha256-PNsPul0zQFUiYu9XLVKzTdD5Cz5ghp1MT4H5/zAeI3Q='", // this hash applies to "https://fonts.googleapis.com"
+                            "'sha256-bSUb8oATdiRWGj6+osFexUukuqc+3yxgEYRAj67mELQ='", //this hash applies to "https://fonts.googleapis.com"
                             "'sha256-vNrevWaq6uKv3XSoEo/8TU13p1HYuC7oFmoCZ3zHhGM='"  // this hash is for iframe
                         // Hashes for Google places; Google maps END
                     ],
