@@ -9,11 +9,11 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
 
     document.addEventListener("DOMContentLoaded",async () => {
     //1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ START
-        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ globalSessions_Client.',Date.now().toLocaleString());}
+        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ globalSessions_Client.',new Date().toLocaleString());}
 
         window.addEventListener("load",async () => {
         // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
-            if(consoleLog===true){console.log('Window load successsful ~ globalSessions_Client.',Date.now().toLocaleString());}
+            if(consoleLog===true){console.log('Window load successsful ~ globalSessions_Client.',new Date().toLocaleString());}
 
         });
         // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ END
@@ -23,7 +23,7 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
 // 🚪 🚪 🚪 logout START
     // postLogoutActions START
         export function postLogoutActions(){
-            if(consoleLog===true){console.log('postLogoutActions() launched.',Date.now().toLocaleString());}
+            if(consoleLog===true){console.log('postLogoutActions() launched.',new Date().toLocaleString());}
             // place "PROJECT SPECIFIC" actions to take post secure logout here
         }
     // postLogoutActions END

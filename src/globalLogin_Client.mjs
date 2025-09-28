@@ -552,12 +552,18 @@ export async function isLoginRequired() {
         // 1️⃣🔹2️⃣ START // doAfterDOMandWindowLoad_globalLoginClient() START
         // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
     
-            if(consoleLog===true){console.log('doAfterDOMandWindowLoad_globalLoginClient() launched.',Date.now());}
-    
-            // // if LOGIN REQUIRED
-            //     isLoginRequired();
-            // // if LOGIN REQUIRED
-    
+            if(consoleLog===true){console.log('doAfterDOMandWindowLoad_globalLoginClient() launched.',new Date().toLocaleString());}
+
+            // initialise guest session START
+                const url = window.location;
+                // alert(`${url}api/initGuest`);
+                // fetch(`${url}api/initGuest`, {
+                fetch(`/api/initGuest`, {
+                    method: "GET",
+                    credentials: "include"
+                });
+            // initialise guest session END
+
             // signin-out button START
                 document.getElementById("sign-in-out-icon-container").addEventListener("click", (ev) => {
                     console.log("sign-in-out-icon-container clicked");

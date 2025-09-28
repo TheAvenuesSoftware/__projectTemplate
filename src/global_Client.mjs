@@ -19,11 +19,11 @@ export function globalClientJSisLoaded(){
 
     document.addEventListener("DOMContentLoaded",async () => {
     //1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ START
-        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ global_Client.',Date.now());}
+        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ global_Client.',new Date().toLocaleString());}
 
         window.addEventListener("load",async () => {
         // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
-            if(consoleLog===true){console.log('Window load successsful ~ global_Client.',Date.now());}
+            if(consoleLog===true){console.log('Window load successsful ~ global_Client.',new Date().toLocaleString());}
             
             await new Promise(resolve => setTimeout(resolve, 500)); // Simulated async process
             await doAfterDOMandWindowLoad__globalLogin_ClientMJS();
@@ -40,7 +40,7 @@ export function globalClientJSisLoaded(){
 // 1️⃣🔹1️⃣ START
     async function doAfterDOMandWindowLoad__global_ClientMJS(){
 
-        if(consoleLog===true){console.log('doAfterDOMandWindowLoad__project_ClientMJS() launched.',Date.now());}
+        if(consoleLog===true){console.log('doAfterDOMandWindowLoad__global_ClientMJS() launched.',new Date().toLocaleString());}
 
         // // 1. Initialize guest session by hitting your backend
         //     async function initSession() {

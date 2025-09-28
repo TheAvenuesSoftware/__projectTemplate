@@ -182,9 +182,9 @@ console.log(("🔰").repeat(45));
                 const envPath = "./config/globalServer.env";
                 console.log(envPath,"Exists?", fs.existsSync(envPath)); // Should be true
                 if (fs.existsSync(envPath)) {
-                    dotenv.config({ path: envPath });
+                    dotenv.config({ path: envPath, quiet: true, debug: false });
                     if(logAll===true){console.log(trace(),`\n   Global environment variables:- ${envPath}`);}
-                    const result = dotenv.config({ path: envPath });
+                    const result = dotenv.config({ path: envPath, quiet: true, debug: false });
                     // if(logAll===true){console.log(trace(),`\n${envPath}:-\n`, result.parsed);}  
                     const envVar = result.parsed;
                     Object.keys(envVar).forEach(key => {
@@ -203,9 +203,9 @@ console.log(("🔰").repeat(45));
                 const envPath = "./config/projectServer.env";
                 console.log(envPath,"Exists?", fs.existsSync(envPath)); // Should be true
                 if (fs.existsSync(envPath)) {
-                    dotenv.config({ path: envPath });
+                    dotenv.config({ path: envPath, quiet: true, debug: false });
                     if(logAll===true){console.log(trace(),`\n   Project environment variables:- ${envPath}`);}
-                    const result = dotenv.config({ path: envPath });
+                    const result = dotenv.config({ path: envPath, quiet: true, debug: false });
                     // if(logAll===true){console.log(trace(),`\n${envPath}:`, result);}                
                     const envVar = result.parsed;
                     Object.keys(envVar).forEach(key => {
@@ -243,11 +243,11 @@ console.log(("🔰").repeat(45));
             } else if (process.env.APP_SERVER_MODE_PRODUCTION === "true") {
                 console.log(`${trace()}🔒✅ CORS headers set up for Production commenced.`);
                 app.use(cors({
-                        origin: ["https://netit.au", "https://www.netit.au"],
+                        origin: "https://netit.au", // use just one, don't use ["https://netit.au", "https://www.netit.au"] 
                         credentials: true,
                         methods: ["GET", "POST", "PUT", "DELETE"],
                         allowedHeaders: ["Content-Type", "Authorization"],
-                        optionsSuccessStatus: 204
+                        optionsSuccessStatus: 204 // 204 avoids extra response headers in preflight requests
                 }));
                 console.log(`${trace()}🔒✅ CORS headers set up for Production completed.`);
             } else {
@@ -350,7 +350,7 @@ console.log(("🔰").repeat(45));
         // RATE LIMITER start
             // If you're using a rate limiter, put it early to block abusers before they hit your routes:
                 const rateLimitNumber = 5
-                const rateLimitDuration = 0.1; // minutes
+                const rateLimitDuration = 1; // minutes
                 const limiter = rateLimit({
                     windowMs: rateLimitDuration * 60 * 1000,
                     limit: rateLimitNumber,
@@ -451,14 +451,26 @@ console.log(("🔰").repeat(45));
     }
 // 3️⃣ map static folders END
 // ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
-// 5️⃣ set guest JSON Web Token (JWT) START
-    console.log((`🪙   🚀   G U E S T   J S O N   W E B   T O K E N   ~   w i l l   b e   s e t   i f   o n e   d o e s ' n t   e x i s t   🪙`));
-    // Function to set the guest JWT
-        function setGuestJWT(req, res) {
+    app.get("/api/initGuest", (req, res) => {
+        console.log(`🥠 ${trace()} Deleting old cookies if they exist...`);
+        const isProd = process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() === "true";
+        // Clear old cookies START
+            res.clearCookie('guestToken', {
+                httpOnly: true,
+                secure: true,
+                sameSite: isProd ? "strict" : "lax",
+            });
+            res.clearCookie('guestCookie', {
+                httpOnly: false,
+                secure: true,
+                sameSite: isProd ? "strict" : "lax",
+            });
+            console.log(`🥠 ${trace()} Cleared old cookies.`);
+        // Clear old cookies END
+        // ---- Set new guestToken cookie START
             const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'your-secret-key';
             const guestTokenId = `guest_${Date.now()}`;
-            const isProd = process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() === "true";
-            const maxAgeSeconds = 60 * 60; // 1 hour
+            const maxAgeSeconds = 60 * 60;
             const guestToken = jwt.sign(
                 { guest: true, guestTokenId },
                 JWT_SECRET_KEY,
@@ -468,73 +480,28 @@ console.log(("🔰").repeat(45));
                 httpOnly: true,
                 secure: isProd,
                 sameSite: isProd ? "strict" : "lax",
-                maxAge: maxAgeSeconds * 1000 // milliseconds
+                maxAge: maxAgeSeconds * 1000
             });
-            req.guestToken = guestToken;
-            console.log(`🪙 ${trace()} ➡️➡️➡️ req.guestToken has been set to ➡️➡️➡️ ${guestToken.slice(0, 30)}...`);
-            console.log(`🪙   🚀   S E T   G U E S T   J S O N   W E B   T O K E N   C O O K I E   S U C C E S S   🪙`);
-        }
-    // Middleware to assign a guest JWT if not already present
-        app.use((req, res, next) => {
-            // function guestJWTMiddleware(req, res, next) {
-            console.log(`🪙 ${trace()} ➡️➡️➡️ req.url:-`, req.url);
-            const guestTokenCookie = req.cookies?.guestToken;
-            if (!guestTokenCookie) {
-                console.log(`🪙   🚀   S E T   G U E S T   J S O N   W E B   T O K E N   C O O K I E   🪙`);
-                setGuestJWT(req, res);
-            } else {
-                req.guestToken = guestTokenCookie;
-                // console.log(`🪙 ${trace()} 🟢🟢🟢 Guest JWT is already set. 🟢🟢🟢`);
-            }
-            next();
-        });
-// 5️⃣ set guest JSON Web Token (JWT) END
-// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
-// 5️⃣ set guest cookie START
-    console.log(`🍪   🚀   G U E S T   C O O K I E                   ~   w i l l   b e   s e t   i f   o n e   d o e s ' n t   e x i s t   🍪`);
-    // Function to set the guest cookie
-        function setGuestCookie(req, res) {
+            const tokenPayload ={ guest: true, guestTokenId };
+            console.log(`🪙 ${trace()} Guest JWT set. tokenPayload:-\n${JSON.stringify(tokenPayload)}`);
+            console.log(`🪙 ${trace()} Guest JWT set. guestToken:-\n${guestToken}`);
+        // ---- Set new guestToken cookie END
+        // ---- Set new guestCookie START
             const guestCookie = randomUUID();
-            const isProd = process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() === "true"; // Prevents errors if process.env.APP_SERVER_MODE_PRODUCTION is undefined or null.
-            const maxAgeSeconds = 60 * 60; // 60 * 60 = 1 hour.  Max-Age in 'Set-Cookie' must be seconds, not milliseconds
-            const iat = Date.now();
             const exp = Date.now() + (maxAgeSeconds * 1000);
-            // const exp = Math.floor(Date.now() / 1000) + 3600; // now + 1h in seconds, 60 x 60 = 3600
-            // Store metadata inside the cookie value (JSON string or JWT)
-                const cookieMetadata = {
-                    guest: true,
-                    exp
-                };
-            // WARNING: This cookie will be visible in the browser if not HttpOnly
-                const cookiePayload = JSON.stringify(cookieMetadata);
-            // set the cookie in the response, stores it in the browser START
-                // res.setHeader("Set-Cookie", cookieStr);
-                // res.cookie("guestId",cookieStr); // Use Express’s built-in res.cookie():
-                res.cookie("guestCookie", cookiePayload, {
-                    httpOnly: isProd,
-                    secure: isProd,
-                    sameSite: isProd ? "strict" : "lax",
-                    maxAge: maxAgeSeconds * 1000 // in milliseconds
-                });
-            // set the cookie in the response, stores it in the browser END
-            req.guestCookie = guestCookie;
-            console.log(`🍪 ${trace()} ➡️➡️➡️ req.guestId has been set to ➡️➡️➡️ ${guestCookie}`);
-            console.log(`🍪   🚀   S E T   G U E S T   C O O K I E   S U C C E S S   🍪`);
-        }
-    // Middleware to assign a guestId cookie if not already present
-        app.use((req, res, next) => {
-            console.log(`🍪 ${trace()} ➡️➡️➡️ req.url:-`, req.url);
-            const guestCookie = req.cookies?.guestCookie;
-            if (!guestCookie) {
-                console.log(`🍪   🚀   S E T   G U E S T   C O O K I E   🍪`);
-                setGuestCookie(req, res);
-            } else if (guestCookie) {
-                // console.log(`🍪 ${trace()} 🟢🟢🟢 Guest Cookie is already set. 🟢🟢🟢`);
-                req.guestCookie = guestCookie;
-            }
-            next();
-        });
-// 5️⃣ set guest cookie END
+            const cookiePayload = JSON.stringify({ guest: true, exp });
+            res.cookie("guestCookie", cookiePayload, {
+                httpOnly: isProd,
+                secure: isProd,
+                sameSite: isProd ? "strict" : "lax",
+                maxAge: maxAgeSeconds * 1000
+            });
+            console.log(`🍪 ${trace()} Guest cookie set.\n${cookiePayload}`);
+            console.log(`🍪 ${trace()} Set-Cookie headers:, ${res.getHeader('Set-Cookie')}`);
+            res.status(200).json({ message: "Guest cookies reset" });
+        // ---- Set new guestCookie END
+    });
+// 5️⃣ set guestToken and guestCookie END
 // ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
 // 6️⃣ log each REQuest START
     console.log((`🚀  L O G   A L L   R E Q U E S T S`));
@@ -691,25 +658,43 @@ console.log(("🔰").repeat(45));
     const DEV_IP_ADDRESS = process.env.APP_DEV_IP_ADDRESS;
     const isProduction = process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase();
     const isDevelopment = process.env.APP_SERVER_MODE_DEVELOPMENT?.toLowerCase();
+    const onWebServer = process.env.APP_HOSTED_ON_WEB_SERVER?.toLowerCase();
+    const onDevelopmentMachine = process.env.APP_HOSTED_ON_DEVELOPMENT_MACHINE?.toLowerCase();
+
     if (isProduction==="true") {
-        app.listen(PORT, '0.0.0.0', () => {
-            // Logging for production...
-            logServerStartup();
-        });
+        if(onWebServer==="true"){
+            //   P R O D U C T I O N   M O D E   D E P L O Y E D   O N   S E R V E R
+                app.listen(PORT, '0.0.0.0', () => {
+                    console.log(`${trace()}🔍 Production mode deployed on server port:- ${PORT}`);
+                    // Logging for production...
+                    logServerStartup();
+                });
+            //   P R O D U C T I O N   M O D E   D E P L O Y E D   O N   S E R V E R
+        }else{
+            //   P R O D U C T I O N   M O D E   H O S T E D   L O C A L L Y
+                console.log(`${trace()}🔍 Production mode hosted locally at HTTPS://localhost:${PORT}`);
+                const options = {
+                    key: fs.readFileSync("serverGITignore.key"),
+                    cert: fs.readFileSync("serverGITignore.cert")
+                };
+                console.log(`${trace()}🔍 Production mode options key:- `, options.key.slice(0,15));
+                console.log(`${trace()}🔍 Production mode options cert:-`, options.cert.slice(0,15));
+                https.createServer(options, app).listen(PORT, () => {
+                    // Logging for development...
+                    logServerStartup();
+                });
+            //   P R O D U C T I O N   M O D E   H O S T E D   L O C A L L Y
+        }
     } else {
-        // const options = {
-        //     key: fs.readFileSync("serverGITignore.key"),
-        //     cert: fs.readFileSync("serverGITignore.cert")
-        // };
-        // console.log(`${trace()}🔍 Development mode options:`, options);
-        // https.createServer(options, app).listen(PORT, () => {
-        //     // Logging for development...
-        //     logServerStartup();
-        // });
-        app.listen(PORT, () => {
-            // Logging for development...
-            logServerStartup();
-        });
+        if(onDevelopmentMachine==="true"){
+            //   D E V E L O P M E N T   M O D E   H O S T E D   L O C A L L Y
+                app.listen(PORT, () => {
+                    console.log(`${trace()}🔍 Development mode hosted locally at HTTP://localhost:${PORT}`);
+                    // Logging for development...
+                    logServerStartup();
+                });
+            //   D E V E L O P M E N T   M O D E   H O S T E D   L O C A L L Y
+        }
     }
 // 7️⃣ start server END
 // 🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫

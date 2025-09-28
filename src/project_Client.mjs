@@ -645,13 +645,13 @@ export function projectMJSisLoaded(){
 
     document.addEventListener("DOMContentLoaded",async () => {
 
-        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ projectClient.',Date.now());}
+        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ projectClient.',new Date().toLocaleString());}
 
         // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
 
             window.addEventListener("load",async () => {
 
-                if(consoleLog===true){console.log('Window load successsful ~ projectClient.',Date.now());}
+                if(consoleLog===true){console.log('Window load successsful ~ projectClient.',new Date().toLocaleString());}
 
                 await new Promise(resolve => setTimeout(resolve, 500)); // Simulated async process
                 await doAfterDOMandWindowLoad();

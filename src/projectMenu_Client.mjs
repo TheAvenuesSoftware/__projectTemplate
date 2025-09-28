@@ -157,11 +157,11 @@ export function projectMenuClientJSisLoaded(){
         // footer menu START 🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶
             document.addEventListener("DOMContentLoaded",async () => {
                 //1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ START
-                    if(consoleLog===true){console.log('DOMContentLoaded successsful ~ projectMenu_Client.',Date.now());}
+                    if(consoleLog===true){console.log('DOMContentLoaded successsful ~ projectMenu_Client.',new Date().toLocaleString());}
 
                     window.addEventListener("load",async () => {
                     // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
-                        if(consoleLog===true){console.log('Window load successsful ~ projectMenu_Client.',Date.now());}
+                        if(consoleLog===true){console.log('Window load successsful ~ projectMenu_Client.',new Date().toLocaleString());}
 
                         // function displayUiPage(displaySection){
                         //     const uiPages = document.querySelectorAll(".ui-page");
