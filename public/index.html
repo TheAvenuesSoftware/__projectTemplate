@@ -7,7 +7,7 @@
     <!-- - Element IDs & Classes: Use kebab-case (e.g., <div id="user-profile">) -->
     <!-- - Attributes: Follow HTML syntax conventions, using lowercase (e.g., <input type="text">) -->
     <!-- - Custom Attributes: Typically data-* (e.g., data-user-id) -->
-    
+
 <html lang="en">
 <head>
 
@@ -18,7 +18,8 @@
                 <meta charset="UTF-8">
             <!--  -->
                 <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+                <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"> -->
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
             <!--  -->
                 <title>Tradie Photo</title>
             <!--  -->
@@ -73,14 +74,13 @@
             <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
             <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-
     <!-- 🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕🧕 -->
     <!-- BEST PRACTICE SECTION of <head></head> ELEMENT end -->
 
+    <!-- <link rel="stylesheet" href="./project.css"> -->
     <link rel="stylesheet" href="./indexHTMLcompanion.css">
-    <link rel="stylesheet" href="./project.css">
     <!-- <link rel="stylesheet" href="projectMenu.css"> -->
-    <!-- <link rel="stylesheet" href="global.css"> -->
+    <link rel="stylesheet" href="./global.css">
 
     <script type="module" src="./globalLogin_Client.mjs"></script>
     <script type="module" src="./globalSessions_Client.mjs"></script>
@@ -122,7 +122,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
 </head>
-<body>
+<body id="the-body-element">
     <header class="header">
         <div class="top-row">
             <div id="sign-in-out-icon-container" class="header-control sign-in-out-icon-container" data-status="signed-out" tabindex="-1" role="button" title="Click to sign in.">
@@ -298,7 +298,9 @@
 
     </main>
 
-    <footer>
+    <div id="scroll-buffer" class="scroll-buffer"></div>
+
+    <footer id="the-footer-element">
         <div id="footer-controls-container" class="footer-controls-container">
             <img id="footer-control-home" src="/_Home.png" class="footer-control" data-section-number="0">
             <!-- <img id="footer-control-menu" src="/_Menu.png" class="footer-control" data-section-number="1"> -->

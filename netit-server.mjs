@@ -450,59 +450,94 @@ console.log(("🔰").repeat(45));
         console.log(`🔴 map to folder failed:- ${folder}`);
     }
 // 3️⃣ map static folders END
-// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
-    app.get("/api/initGuest", (req, res) => {
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 5️⃣ set guestToken and guestCookie START 🪙🍪🪙🍪🪙🍪🪙🍪🪙🍪🪙🍪🪙🍪🪙🍪 
+    app.post("/api/initGuest", (req, res) => {
+        // T H I S   S H O U L D   B E   T H E   F I R S T   A P I
         console.log(`🥠 ${trace()} Deleting old cookies if they exist...`);
         const isProd = process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() === "true";
-        // Clear old cookies START
+        // Clear old cookies START 🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️
             res.clearCookie('guestToken', {
+                path: "/",
                 httpOnly: true,
                 secure: true,
                 sameSite: isProd ? "strict" : "lax",
             });
+            console.log(`🥠 🚮 ${trace()} 🥠 🚮 Cleared any existing guestToken.`);
             res.clearCookie('guestCookie', {
+                path: "/",
                 httpOnly: false,
                 secure: true,
                 sameSite: isProd ? "strict" : "lax",
             });
-            console.log(`🥠 ${trace()} Cleared old cookies.`);
-        // Clear old cookies END
-        // ---- Set new guestToken cookie START
+            console.log(`🥠 🚮 ${trace()} 🥠 🚮 Cleared any existing guestCookie.`);
+        // Clear old cookies END   🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️🚮🗑️
+        // ---- Set new guestToken cookie START 🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙
             const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'your-secret-key';
-            const guestTokenId = `guest_${Date.now()}`;
+            const guestTokenId = `guestToken__${Date.now()}__${randomUUID()}`;
             const maxAgeSeconds = 60 * 60;
-            const guestToken = jwt.sign(
-                { guest: true, guestTokenId },
+            // Order matters!  1) jwtPayload 2) jwtSecret 3) jwtOptions
+            // 1) jwtPayload ~ custom metadata
+            // 2) jwtSecret ~ the JWT_SECRET_KEY
+            // 3) jwtOptions ~ use for standard claims like expiration and issuer
+            const tokenPayload = jwt.sign(
+                { 
+                    guest: true, 
+                    guestTokenId 
+                },
                 JWT_SECRET_KEY,
-                { expiresIn: '1h' }
+                { 
+                    expiresIn: '1h', // will set exp automatically.  iat is always set automatically.
+                    jwtid: guestTokenId // a single user can have many tokens, so this is different to a userId.
+                }
             );
-            res.cookie("guestToken", guestToken, {
-                httpOnly: true,
-                secure: isProd,
-                sameSite: isProd ? "strict" : "lax",
-                maxAge: maxAgeSeconds * 1000
-            });
-            const tokenPayload ={ guest: true, guestTokenId };
-            console.log(`🪙 ${trace()} Guest JWT set. tokenPayload:-\n${JSON.stringify(tokenPayload)}`);
-            console.log(`🪙 ${trace()} Guest JWT set. guestToken:-\n${guestToken}`);
-        // ---- Set new guestToken cookie END
-        // ---- Set new guestCookie START
-            const guestCookie = randomUUID();
+            res.cookie(
+                "guestToken", 
+                tokenPayload, 
+                {
+                    path: "/",
+                    httpOnly: true,
+                    secure: isProd,
+                    sameSite: isProd ? "strict" : "lax",
+                    maxAge: maxAgeSeconds * 1000
+                }
+            );
+            console.log(`🪙 ${trace()} 🪙 Guest JWT tokenPayload:-\n${JSON.stringify(jwt.verify(tokenPayload,JWT_SECRET_KEY))}`);
+        // ---- Set new guestToken cookie END  🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙🪙
+        // ---- Set new guestCookie START 🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪
+            const guestCookieId = randomUUID();
             const exp = Date.now() + (maxAgeSeconds * 1000);
-            const cookiePayload = JSON.stringify({ guest: true, exp });
+            const cookiePayload = JSON.stringify({ guest: true, guestCookieId, exp });
+            // Order matters!  1) cookieName 2) cookiePayload 3) cookieOptions
+            // 1) cookieName ~ for example "guestCookie"
+            // 2) cookiePayload ~ custom metadata
+            // 3) cookieOptions ~ standard options only: 
+            // Domain,   ~ What it does: Sets the domain the cookie is valid for. Default: The current domain (no subdomains).
+            // Path,     ~ What it does: Defines the URL path the cookie applies to. Default: '/' (entire domain).
+            // Expires   ~ What it does: Sets the cookie's expiration as a fixed Date. Alternative: Use maxAge for relative time. expires: new Date(Date.now() + 3600000) // expires in 1 hour
+            // Max-Age,  ~ What it does: Cookie lifespan in milliseconds from now. maxAge: 60000 // 1 minute
+            // HttpPnly, ~ What it does: Makes the cookie inaccessible to JavaScript (document.cookie). Use it: For security (prevents XSS stealing cookies).
+            // Secure,   ~ What it does: Cookie is only sent over HTTPS. Recommended: Always use this in production.
+            // SameSite, ~ What it does: Controls whether the cookie is sent in cross-site requests.
+            //              Values:
+            //              'strict' → never sent on cross-site requests (most secure)
+            //              'lax' → sent on top-level navigations (like a link click)
+            //              'none' → sent always, must also set secure: true
+            // Priority  ~ What it does: Sets eviction priority in Chrome when cookie storage is full. Values: 'low', 'medium', 'high'. Only Chrome supports this right now; it’s mostly about memory pressure. 
+            //              priority: 'high'
             res.cookie("guestCookie", cookiePayload, {
+                path: "/",
                 httpOnly: isProd,
                 secure: isProd,
                 sameSite: isProd ? "strict" : "lax",
                 maxAge: maxAgeSeconds * 1000
             });
-            console.log(`🍪 ${trace()} Guest cookie set.\n${cookiePayload}`);
-            console.log(`🍪 ${trace()} Set-Cookie headers:, ${res.getHeader('Set-Cookie')}`);
-            res.status(200).json({ message: "Guest cookies reset" });
-        // ---- Set new guestCookie END
+            console.log(`🍪 ${trace()} Guest cookie cookiePayload:-\n${cookiePayload}`);
+        // ---- Set new guestCookie END  🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪
+        res.status(204).end(); // This satisfies the browser, resolves the Promise, and avoids errors — while keeping the payload zero.
     });
-// 5️⃣ set guestToken and guestCookie END
-// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
+// 5️⃣ set guestToken and guestCookie END  🪙🍪🪙🍪🪙🍪🪙🍪🪙🍪🪙🍪🪙🍪🪙🍪
+// ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
 // 6️⃣ log each REQuest START
     console.log((`🚀  L O G   A L L   R E Q U E S T S`));
     // Middleware to log each request
@@ -562,9 +597,12 @@ console.log(("🔰").repeat(45));
                 if (guestCookie) {
                     try {
                         guestCookiePayload = JSON.parse(guestCookie); // parse the JSON string
+                        const issuedAtDate = new Date(guestCookiePayload.iat);
                         const expiresAtDate = new Date(guestCookiePayload.exp);
                         // guestCookieLog = `🪵 Cookie guest?:${guestCookiePayload.guest}\n🪵 Cookie exp:${expiresAtDate.toLocaleString()}`;
                         console.log(`🪵 ${trace()} 🍪 Cookie guest?:${guestCookiePayload.guest}`);
+                        console.log(`🪵 ${trace()} 🍪 Cookie guest id?:${guestCookiePayload.guestCookieId}`);
+                        console.log(`🪵 ${trace()} 🍪 Cookie guest iat:${expiresAtDate.toLocaleString()}`);
                         console.log(`🪵 ${trace()} 🍪 Cookie guest exp:${expiresAtDate.toLocaleString()}`);
                     } catch (err) {
                         console.warn(`❌ Failed to parse guestCookie:`, err.message);

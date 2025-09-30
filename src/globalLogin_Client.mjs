@@ -559,7 +559,7 @@ export async function isLoginRequired() {
                 // alert(`${url}api/initGuest`);
                 // fetch(`${url}api/initGuest`, {
                 fetch(`/api/initGuest`, {
-                    method: "GET",
+                    method: "POST",
                     credentials: "include"
                 });
             // initialise guest session END

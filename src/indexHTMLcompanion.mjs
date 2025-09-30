@@ -1,40 +1,232 @@
-        console.log('Secure script running');
-        // section focus and switch START
-            function focusInput(sectionId) {
-                const input = document.querySelector(`#section${sectionId}-focus-on-activation`);
-                input?.focus();
+(function () {
+    // Browser detection
+        function isSafari() {
+            const ua = navigator.userAgent;
+            return ua.includes("Safari") && !ua.includes("Chrome") && !ua.includes("Edg");
+        }
+
+        function isEdge() {
+            return navigator.userAgent.includes("Edg");
+        }
+
+        function isiOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) || (
+                navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
+            );
+        }
+
+    // Layout adjustment
+        function updateFooterLayout() {
+            const footer = document.getElementById("the-footer-element");
+            const body = document.getElementById("the-body-element");
+            const buffer = document.getElementById("scroll-buffer");
+            buffer.style.height= "0px";
+            if (!footer) return;
+            const footerHeight = footer.getBoundingClientRect().height;
+            if (body) {
+                body.style.paddingBottom = `${footerHeight}px`;
             }
-            function switchSection(index) {
-                console.log(current,index);
-                if (index === current) return;
-                const currentSection = document.getElementById(`section${current}`);
-                console.log(currentSection);
-                const nextSection = document.getElementById(`section${index}`);
-                currentSection.classList.remove('active');
-                setTimeout(() => {
-                    nextSection.classList.add('active');
-                    console.log(nextSection);
-                    current = index;
-                    focusInput(index);
-                    localStorage.setItem("tas_sectionNumber",index);
-                }, 250); // Matches the CSS transition duration of 0.25s
+            if (buffer && isiOS() && isSafari()) {
+                buffer.style.height = "1px"; // Reliable scroll fix for Safari iOS
             }
-            document.getElementById("footer-controls-container").addEventListener("click",(ev) => {
-                const sectionNumber = ev.target.getAttribute("data-section-number");
-                switchSection(sectionNumber);
-            });
-            // set current section = last active section START
-                let current = localStorage.getItem("tas_sectionNumber")? localStorage.getItem("tas_sectionNumber") : 0; // start-up at last active section
-                const el = document.getElementById(`section${current}`);
-                el.classList.add("active");
-                switchSection(current); // ensure last active section is viewable
-                focusInput(current); // set focus to active section
-            // set current section = last active section END
-            // set last session values START
-                const address = localStorage.getItem("tas_address")? localStorage.getItem("tas_address") : "";
-                document.getElementById("googlePlacesAPIautocomplete_0").value = address;
-                console.log(address);
-        // section focus and switch END
+            // Optional: log Safari UI height for diagnostics
+                if (isiOS() && isSafari() && window.visualViewport) {
+                    const layoutHeight = window.innerHeight;
+                    const visualHeight = window.visualViewport.height;
+                    const safariUIHeight = Math.max(layoutHeight - visualHeight, 0);
+                    console.log("Safari UI height:", safariUIHeight.toFixed(2));
+                    // alert(`Safari UI height:- ${safariUIHeight.toFixed(2)}`);
+                }
+        }
+
+    // Debounce
+        let timer;
+        function scheduleUpdate() {
+            clearTimeout(timer);
+            timer = setTimeout(updateFooterLayout, 50);
+        }
+
+    // Event listeners
+        window.addEventListener("load", updateFooterLayout);
+        window.addEventListener("resize", scheduleUpdate);
+        window.addEventListener("scroll", scheduleUpdate);
+
+    if (window.visualViewport) {
+        console.log(`visualViewport.height: ${window.visualViewport.height}`);
+        // alert(`visualViewport.height: ${window.visualViewport.height}`);
+        window.visualViewport.addEventListener("resize", scheduleUpdate);
+        window.visualViewport.addEventListener("scroll", scheduleUpdate);
+    }
+
+    // Expose for manual triggering if needed
+        window.footerLayoutManager = {
+            update: updateFooterLayout,
+            isSafari,
+            isEdge,
+            isiOS
+        };
+})();
+
+// E X C E L L E N T   T O O L S   S T A R T
+// // // calculate padding-bottom for body element START
+//     function isIOS() {
+//         // This works for:
+//         // • 	iPhone
+//         // • 	iPad (pre-iPadOS 13)
+//         // • 	iPod Touch
+//         return (
+//             /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+//             !window.MSStream
+//         );
+//     }
+//     function isModerniPad() {
+//         // Apple changed the user agent for iPads running iPadOS 13 and later — they now report as MacIntel. To catch those:
+//         return (
+//             navigator.platform === 'MacIntel' &&
+//             navigator.maxTouchPoints > 1
+//         );
+//     }
+//     function isiOSDevice() {
+//         return isIOS() || isModerniPad();
+//     }
+//     if (isiOSDevice()) {
+//         console.log('Running on iOS');
+//         alert('Running on iOS');
+//         // Apply Safari-specific layout fixes or touch behavior
+//     }
+//     function isSafari() {
+//         // This works for:
+//         // - Safari on iPhone, iPad, and macOS
+//         // - Avoids false positives from Chrome and Edge (which also include "Safari")
+//         const ua = navigator.userAgent;
+//         return ua.includes("Safari") && !ua.includes("Chrome") && !ua.includes("Edg");
+//     }
+//     function isEdge() {
+//         // Edge includes "Edg" (note: not "Edge" anymore) in its user agent:
+//         // This works for:
+//         // - Edge on Windows, macOS, iOS, and Android
+//         // - Distinguishes Edge from Chrome and Safari
+//         return navigator.userAgent.includes("Edg");
+//     }
+//     if (isSafari()) {
+//         console.log("You're using Safari");
+//         // Apply Safari-specific layout fixes
+//     } else if (isEdge()) {
+//         console.log("You're using Edge");
+//         // Apply Edge-specific behavior
+//     }
+//     function isSafariOniOS() {
+//         // If you want to be extra precise for Safari on iPhone/iPad:
+//         return (
+//             /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+//             isSafari()
+//         );
+//     }
+//     function adjustPadding() {
+//         const f = document.getElementById("the-footer-element");
+//         const b = document.getElementById("the-body-element");
+//         const innerHeight = window.innerHeight;
+//         // const visualHeight = window.visualViewport.height;
+//         const outerHeight = window.outerHeight;
+//         const bufferHeight = Math.max(outerHeight - innerHeight, 0);
+//         if (f && b) {
+//             const fRect = f.getBoundingClientRect();
+//             // b.style.paddingBottom = `${fRect.height + bufferHeight}px`;
+//             b.style.paddingBottom = `${bufferHeight - fRect.height}px`;
+//             console.log(outerHeight, innerHeight, bufferHeight, fRect.height);
+//         }
+//     }
+//     window.addEventListener('load', adjustPadding);
+//     window.addEventListener('resize', adjustPadding);
+//     window.addEventListener('scroll', adjustPadding); // Safari quirk fix
+//     window.visualViewport.addEventListener('resize', adjustPadding);
+//     window.visualViewport.addEventListener('scroll', adjustPadding);
+// // // calculate padding-bottom for body element END
+// E X C E L L E N T   T O O L S   E N D
+
+// // calculate padding-bottom for body element START
+//     function updateLayout() {
+//         const footer = document.getElementById("the-footer-element");
+//         const body = document.getElementById("the-body-element");
+//         const buffer = document.getElementById("scroll-buffer");
+//
+//         if (!footer) return;
+//
+//         const footerHeight = footer.getBoundingClientRect().height;
+//
+//         if (body) {
+//             body.style.paddingBottom = `${footerHeight}px`;
+//         }
+//
+//         if (buffer) {
+//             buffer.style.height = `${footerHeight}px`;
+//         }
+//     }
+//
+//     // Optional: estimate Safari UI height if needed
+//     function getSafariUIHeight() {
+//         if (window.visualViewport) {
+//             const layoutHeight = window.innerHeight;
+//             const visualHeight = window.visualViewport.height;
+//             return Math.max(layoutHeight - visualHeight, 0);
+//         }
+//         return 0;
+//     }
+//
+//     // Debounce to avoid layout thrashing
+//     let layoutTimer;
+//     function scheduleLayoutUpdate() {
+//         clearTimeout(layoutTimer);
+//         layoutTimer = setTimeout(updateLayout, 50);
+//     }
+//
+//     // Initial and reactive updates
+//         window.addEventListener('load', updateLayout);
+//         window.addEventListener('resize', scheduleLayoutUpdate);
+//         window.addEventListener('scroll', scheduleLayoutUpdate);
+//
+//     if (window.visualViewport) {
+//         window.visualViewport.addEventListener('resize', scheduleLayoutUpdate);
+//         window.visualViewport.addEventListener('scroll', scheduleLayoutUpdate);
+//     }
+// // calculate padding-bottom for body element START
+
+// Menu section focus and switch START
+    function focusInput(sectionId) {
+        const input = document.querySelector(`#section${sectionId}-focus-on-activation`);
+        input?.focus();
+    }
+    function switchSection(index) {
+        console.log(current,index);
+        if (index === current) return;
+        const currentSection = document.getElementById(`section${current}`);
+        console.log(currentSection);
+        const nextSection = document.getElementById(`section${index}`);
+        currentSection.classList.remove('active');
+        setTimeout(() => {
+            nextSection.classList.add('active');
+            console.log(nextSection);
+            current = index;
+            focusInput(index);
+            localStorage.setItem("tas_sectionNumber",index);
+        }, 250); // Matches the CSS transition duration of 0.25s
+    }
+    document.getElementById("footer-controls-container").addEventListener("click",(ev) => {
+        const sectionNumber = ev.target.getAttribute("data-section-number");
+        switchSection(sectionNumber);
+    });
+    // set current section = last active section START
+        let current = localStorage.getItem("tas_sectionNumber")? localStorage.getItem("tas_sectionNumber") : 0; // start-up at last active section
+        const el = document.getElementById(`section${current}`);
+        el.classList.add("active");
+        switchSection(current); // ensure last active section is viewable
+        focusInput(current); // set focus to active section
+    // set current section = last active section END
+    // set last session values START
+        const address = localStorage.getItem("tas_address")? localStorage.getItem("tas_address") : "";
+        document.getElementById("googlePlacesAPIautocomplete_0").value = address;
+        console.log(address);
+// Menu section focus and switch END
         // // re-load START
         //     // // if (!window.location.search.includes("reload=true")) {
         //     // //     window.location.href = window.location.pathname + "?reload=true";

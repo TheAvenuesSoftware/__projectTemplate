@@ -65,10 +65,16 @@ $base-padding: 16px;
 }
 
 body {
-  color: var(--primary-color);
-  font-family: var(--font-stack);
-  padding: var(--one-spacing-unit);
+    color: var(--primary-color);
+    font-family: var(--font-stack);
+    // padding: var(--one-spacing-unit);
 }
+// SEE indexHTML.scss
+    // body{
+    //     height:100vh;
+    //     overflow: hidden;
+    // }
+// SEE indexHTML.scss
 
 * {
     margin: 0;
@@ -77,11 +83,6 @@ body {
     user-select: none;
     // font-family: "Consolas", "Courier New", monospace;
     font-family: 'Roboto', sans-serif;
-}
-
-body{
-    height:100vh;
-    overflow: hidden;
 }
 
 .section-heading{

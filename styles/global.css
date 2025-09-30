@@ -26,7 +26,6 @@
 body {
   color: var(--primary-color);
   font-family: var(--font-stack);
-  padding: var(--one-spacing-unit);
 }
 
 * {
@@ -35,11 +34,6 @@ body {
   box-sizing: border-box;
   user-select: none;
   font-family: "Roboto", sans-serif;
-}
-
-body {
-  height: 100vh;
-  overflow: hidden;
 }
 
 .section-heading {
