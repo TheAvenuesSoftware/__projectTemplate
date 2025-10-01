@@ -98,45 +98,58 @@
 		updateVideoStyle();
 	});
 
-	// capture still image START
-		document.getElementById('capture-still').addEventListener('click', () => {
+	// capture still image START 📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷
+		// 📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷
+			document.getElementById('capture-still').addEventListener('click', () => {
 
-			canvasContainer.style.display = 'flex';
-			canvasContainer.scrollIntoView({ behavior: 'smooth' });
-			document.getElementsByClassName('canvas-container-heading')[0].style.display = 'block';
+				canvasContainer.style.display = 'flex';
+				canvasContainer.scrollIntoView({ behavior: 'smooth' });
+				document.getElementsByClassName('canvas-container-heading')[0].style.display = 'block';
 
-			canvasContainerII.style.display = 'flex';
-			canvasContainerII.scrollIntoView({ behavior: 'smooth' });
+				canvasContainerII.style.display = 'flex';
+				canvasContainerII.scrollIntoView({ behavior: 'smooth' });
 
-			const cw = container.clientWidth;
-			const ch = container.clientHeight;
-			const cropWidth = cw / zoom;
-			const cropHeight = ch / zoom;
+				// 1 source > cropping the video source from (offsetX, offsetY) with dimensions cropWidth x cropHeight.
+				// 2 destination > drawing that crop into full canvas size, cw x ch.
+				// 3 the crop has to appear centered horizontally within the canvas with empty space on the sides
+				// 4 so, you must reduce the draw size (destination width), and then calculate dx.
 
-			canvas.width = cw;
-			canvas.height = ch;
+				const cw = container.clientWidth;
+				const ch = container.clientHeight;
+				const cropWidth = cw / zoom;
+				const cropHeight = ch / zoom;
 
-			canvasII.width = cw;
-			canvasII.height = ch;
+				const offsetX = (video.videoWidth - cropWidth) / 2;
+				const offsetY = (video.videoHeight - cropHeight) / 2;
 
-			ctx.drawImage(
-				video,
-				offsetX, offsetY,
-				cropWidth, cropHeight,
-				0, 0,
-				cw, ch
-			);
+				canvas.width = cw;
+				canvas.height = ch;
 
-			ctxII.drawImage(
-				video,
-				offsetX, offsetY,
-				cropWidth, cropHeight,
-				0, 0,
-				cw, ch
-			);
+				canvasII.width = cw;
+				canvasII.height = ch;
 
-		});
-	// capture still image END
+				const dx = 0;
+				const dy = 0;
+
+				ctx.drawImage(
+					video, // source
+					offsetX, offsetY, // source x, source y
+					cropWidth, cropHeight, // wource width, source height
+					dx, dy, // destination x on canvas, destination y on canvas
+					cw, ch // destination width on canvas, destination height on canvas
+				);
+
+				ctxII.drawImage(
+					video, // source
+					offsetX, offsetY, // source x, source y
+					cropWidth, cropHeight, // wource width, source height
+					dx, dy, // destination x on canvas, destination y on canvas
+					cw, ch // destination width on canvas, destination height on canvas
+				);
+
+			});
+		// 📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷
+	// capture still image END  📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷
 
 	container.addEventListener("touchstart", e => {
 		lastTouches = [...e.touches];

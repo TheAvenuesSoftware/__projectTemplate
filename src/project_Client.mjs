@@ -31,14 +31,17 @@ export function projectMJSisLoaded(){
                 searchByAddress: () => {
                     document.getElementById("search-button").setAttribute("data-action", "filterByAddress")
                     document.getElementById("search-input").type = "text"; // Ensures numeric input for date
+                    document.getElementById("filteredList-container").textContent = ""
                 },
                 searchByNote: () => {
                     document.getElementById("search-button").setAttribute("data-action", "filterByNote")
                     document.getElementById("search-input").type = "text"; // Ensures numeric input for date
+                    document.getElementById("filteredList-container").textContent = ""
                 },
                 searchByDate: () => {
                     document.getElementById("search-button").setAttribute("data-action", "filterByDate");
                     document.getElementById("search-input").type = "date"; // Ensures numeric input for date
+                    document.getElementById("filteredList-container").textContent = ""
                 },
                 filterByAddress: () => filterBy("address"),
                 filterByNote: () => filterBy("note"),
@@ -342,6 +345,7 @@ export function projectMJSisLoaded(){
             // filterBy START
                 export async function filterBy(filterField) {
                     console.log("filterBy() called.");
+                    document.getElementById("filteredList-container").textContent = ""
                     try {
                         const userEmailAddress = document.getElementById("user-email-address").textContent;
                         // const userEmailAddress = "donald.garton@outlook.com";

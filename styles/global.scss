@@ -478,10 +478,10 @@ body {
             //  h e i g t h
                 min-height: 100%;
             overflow: hidden;
-            border: 2px solid var(--header-bckgrnd);
             touch-action: none; /* prevent native gestures, enables custom touch handling */
-            box-sizing: content-box; /* or border-box depending on your layout */
+            // box-sizing: content-box; /* or border-box depending on your layout */
             padding: 0;
+            // border: 2px solid var(--header-bckgrnd);
             border: none;
             video {
                 position: absolute;
@@ -494,7 +494,11 @@ body {
                 // transform: translate(-50%, -50%);
                 user-select: none;
                 pointer-events: none; // avoids blocking user input
-                border: 2px solid #007BFF;
+                // border: 2px solid #007BFF;
+                padding: 0;
+                // border: 2px solid black;
+                // border-radius: 5px;
+                // background-color: black;
                 width:100%;
                 height:100%;
                 overflow: contain; // OR cover, depending on your preference
@@ -525,19 +529,35 @@ body {
             margin-top: 10px;
             display: none;
         }
-        .canvas-container{ // identical to .video-container, except for display:none
-            position: relative;
+        .canvas-container{
             // display: flex;
             display: none;
+            position: relative;
             align-items: center;
-            width: 300px;
-            width: 100%;
-            height: 200px;
-            height: 100%;
-            height: auto;
+            justify-content: center;
+            // w i d t h
+                min-width: 100%;
+            //  h e i g t h
+                min-height: 100%;
             overflow: hidden;
-            border: 2px solid var(--header-bckgrnd);
             touch-action: none; /* prevent native gestures, enables custom touch handling */
+            padding: 0;
+            border: none;
+            // border:2px solid green;
+            canvas{
+                position: absolute;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
+                padding:0;
+                margin:0;
+                // border:4px solid red;
+                display: flex;
+                box-sizing: border-box;
+                align-items: center;
+                justify-content: center;
+            }
         }
         .canvas-upload-container{ // identical to .video-container, except for display:none
             position: relative;

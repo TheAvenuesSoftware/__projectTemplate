@@ -355,7 +355,8 @@ console.log(("🔰").repeat(45));
                     windowMs: rateLimitDuration * 60 * 1000,
                     limit: rateLimitNumber,
                     handler: (req, res) => {
-                        res.send('<html><head><title>Rate Limit Exceeded</title></head><body style="font-family: sans-serif; text-align: center; padding: 2em;"><h1>⏳ Too Many Requests</h1><p>You’ve hit the limit. Please wait a minute before trying again.</p><p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p></body></html>');
+                        // res.send('<html><head><title>Rate Limit Exceeded</title></head><body style="font-family: sans-serif; text-align: center; padding: 2em;"><h1>⏳ Too Many Requests</h1><p>You’ve hit the limit. Please wait a minute before trying again.</p><p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p></body></html>');
+                        res.send({success: false, message: "Too many attempts.  Please wait 5 minutes."});
                         // res.set('Retry-After', '60').status(429).send({
                         //     error: "Rate limit exceeded.  Try again after 1 minute.",
                         //     retryAfter: "15 minutes",

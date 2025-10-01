@@ -7,8 +7,8 @@
 // - Mixins & Functions: Often use camelCase or PascalCase (e.g., @mixin flexCenter)
 // - BEM Methodology (Block Element Modifier): Uses block__element--modifier (e.g., .button__icon--large)
 
-@import "global";
-@import "indexHTMLcompanion"
+@use "global" as *; // OR @use "global"; and prefix with the namespace "global"
+@use "indexHTMLcompanion" as *; // @use "indexHTMLcompanion"; and prefix with the namespace "indexHTMLcompanion"
 // @import "projectMenu";
 
 // * {
