@@ -396,45 +396,18 @@ body {
   cursor: pointer;
 }
 
-.camera-container_OLD {
-  top: 0;
-  left: 0;
-  max-width: 702px;
-  margin: 0px auto;
-  height: auto;
-  background: rgba(0, 0, 0, 0.8);
-  background: var(--std-bckgrnd);
-}
-.camera-container_OLD .camera-stream_OLD {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-  border: 5px solid red;
-  background: #1440AF;
-  background: var(--std-bckgrnd);
-}
-.camera-container_OLD .photo-canvas_OLD {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-  border: 5px solid blue;
-  background: #1440AF;
-  background: var(--std-bckgrnd);
-}
-
 .video-container {
   position: relative;
-  display: flex;
+  display: block;
   align-items: center;
-  width: 300px;
-  width: 100%;
-  height: 200px;
-  height: 100%;
+  min-width: 50%;
+  min-height: 100%;
   overflow: hidden;
   border: 2px solid var(--header-bckgrnd);
   touch-action: none; /* prevent native gestures, enables custom touch handling */
+  box-sizing: content-box; /* or border-box depending on your layout */
+  padding: 0;
+  border: none;
 }
 .video-container video {
   position: absolute;
@@ -443,11 +416,27 @@ body {
   transform-origin: top left;
   user-select: none;
   pointer-events: none;
-  border: 1px solid var(--header-bckgrnd);
   border: 2px solid #007BFF;
   width: 100%;
   height: 100%;
   overflow: contain;
+}
+.video-container .controls-wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  bottom: 10px;
+  max-width: 400px;
+  margin-left: 20px;
+}
+.video-container .controls-wrapper label {
+  text-align: center;
+}
+.video-container .controls-wrapper input {
+  text-align: center;
+  width: 90%;
+  max-width: 390px;
 }
 
 .canvas-container-heading {
@@ -490,24 +479,6 @@ body {
 
 .image-upload-selection-heading {
   margin-top: 10px;
-}
-
-.controls-wrapper {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  bottom: 10px;
-  max-width: 400px;
-  margin-left: 20px;
-}
-.controls-wrapper label {
-  text-align: center;
-}
-.controls-wrapper input {
-  text-align: center;
-  width: 90%;
-  max-width: 390px;
 }
 
 .section-search .search-criteria {

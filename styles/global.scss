@@ -467,97 +467,56 @@ body {
 // GOOGLE PLACES API end
 // 📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌
 
-// ❌📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
-// CAMERA / PHOTO start
-.camera-container_OLD{
-    // position: fixed;
-    top: 0;
-    left: 0;
-    max-width: 702px;
-    margin: 0px auto;
-    height: auto;
-    background: rgba(0, 0, 0, 0.8);
-    background: var(--std-bckgrnd);
-    // Hidden by default
-        // display: block;
-        // display: none;
-    // Hidden by default
-    // z-index: -5000;
-    .camera-stream_OLD{
-        // position: relative;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 5px;
-        border: 5px solid red;
-        background: #1440AF;
-        // background-color: red;
-        background: var(--std-bckgrnd);
-        // z-index: -5000;
-    }
-    .photo-canvas_OLD{
-        // position: relative;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 5px;
-        border: 5px solid blue;
-        background: #1440AF;
-        background: var(--std-bckgrnd);
-        // z-index: -5000;
-    }   
-}
-// CAMERA / PHOTO end
-// ❌📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
-
 // ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷
 // CAMERA - ZOOM & PAN start
-    // body {
-    //   margin: 0;
-    //   background: #111;
-    //   color: white;
-    //   font-family: sans-serif;
-    //   display: flex;
-    //   flex-direction: column;
-    //   align-items: center;
-    //   justify-content: center;
-    // }
-    // .video-container-wrapper {
-    //     display: flex;
-    //     align-items: center;
-    //     // gap: 10px;
         .video-container{
             position: relative;
-            display: flex;
+            display: block;
             align-items: center;
-            width: 300px;
-            width: 100%;
-            height: 200px;
-            height: 100%;
+            // w i d t h
+                min-width: 50%;
+            //  h e i g t h
+                min-height: 100%;
             overflow: hidden;
             border: 2px solid var(--header-bckgrnd);
             touch-action: none; /* prevent native gestures, enables custom touch handling */
+            box-sizing: content-box; /* or border-box depending on your layout */
+            padding: 0;
+            border: none;
             video {
                 position: absolute;
                 top: 0;
+                // top: 50%;
                 left: 0;
+                // left: 50%;
                 transform-origin: top left;
-                // object-fit: contain;
+                // transform-origin: center center;
+                // transform: translate(-50%, -50%);
                 user-select: none;
                 pointer-events: none; // avoids blocking user input
-                border: 1px solid var(--header-bckgrnd);
                 border: 2px solid #007BFF;
                 width:100%;
                 height:100%;
                 overflow: contain; // OR cover, depending on your preference
             }
+            .controls-wrapper {
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                bottom:10px;
+                max-width: 400px;
+                margin-left:20px;
+                label {
+                    text-align: center;
+                }
+                input {
+                    text-align: center;
+                    width:90%;
+                    max-width: 390px;
+                }
+            }
         }
-    // canvas {
-    //     margin-top: 10px;
-    //     // border: 1px solid #ccc;
-    //     border: 1px solid blue;
-    //     background-color: red;
-    // }
         .canvas-container-heading{
             margin-top: 10px;
             display: none;
@@ -579,20 +538,6 @@ body {
             overflow: hidden;
             border: 2px solid var(--header-bckgrnd);
             touch-action: none; /* prevent native gestures, enables custom touch handling */
-            // video {
-            //     position: absolute;
-            //     top: 0;
-            //     left: 0;
-            //     transform-origin: top left;
-            //     // object-fit: contain;
-            //     user-select: none;
-            //     pointer-events: none; // avoids blocking user input
-            //     border: 1px solid var(--header-bckgrnd);
-            //     border: 2px solid #007BFF;
-            //     width:100%;
-            //     height:100%;
-            //     overflow: contain; // OR cover, depending on your preference
-            // }
         }
         .canvas-upload-container{ // identical to .video-container, except for display:none
             position: relative;
@@ -607,47 +552,11 @@ body {
             overflow: hidden;
             border: 2px solid var(--header-bckgrnd);
             touch-action: none; /* prevent native gestures, enables custom touch handling */
-            // video {
-            //     position: absolute;
-            //     top: 0;
-            //     left: 0;
-            //     transform-origin: top left;
-            //     // object-fit: contain;
-            //     user-select: none;
-            //     pointer-events: none; // avoids blocking user input
-            //     border: 1px solid var(--header-bckgrnd);
-            //     border: 2px solid #007BFF;
-            //     width:100%;
-            //     height:100%;
-            //     overflow: contain; // OR cover, depending on your preference
-            // }
         }
         .image-upload-selection-heading{
             margin-top: 10px;
         }
     // }
-    .controls-wrapper {
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        bottom:10px;
-        // left:50%;
-        // transform: translateX(-50%);
-        // width: 90%;
-        max-width: 400px;
-        // margin-top: 10px;
-        margin-left:20px;
-        label {
-            text-align: center;
-            // font-size: 14px;
-        }
-        input {
-            text-align: center;
-            width:90%;
-            max-width: 390px;
-        }
-    }
 // CAMERA - ZOOM & PAN end
 // ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷
 
