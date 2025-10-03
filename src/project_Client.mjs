@@ -28,6 +28,9 @@ export function projectMJSisLoaded(){
             uploadImageToCanvas: () => uploadImageToCanvas(),
             insertFormDataRecord: async () => await insertFormDataRecord(),
             // find search retrieve get START
+                pleaseChooseFilter: () => {
+                    showCustomMessage("Please choose a filter.  Address, note or date.");
+                },
                 searchByAddress: () => {
                     document.getElementById("search-button").setAttribute("data-action", "filterByAddress")
                     document.getElementById("search-input").type = "text"; // Ensures numeric input for date

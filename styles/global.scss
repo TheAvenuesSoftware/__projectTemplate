@@ -118,6 +118,7 @@ body {
     border:1px solid blue;
     border-radius: 5px;
     transition: all 0.5s ease-in-out;
+    cursor: pointer;
     &:hover{
         transform:scale(1.05);
         background:var(--std-btn-bckgrnd-hover);
@@ -598,8 +599,14 @@ body {
         margin:auto;
         padding:5px;
     }
+    .search-results{
+        background-color: lightgrey;
+        border: 1px solid var(--header-bckgrnd);
+        border-radius: 5px;
+        padding:3px;
+    }
     .record-card {
-        border: 1px solid black;
+        border: 1px solid grey;
         padding: 10px;
         margin-bottom:5px;
         width: 250px;
@@ -607,7 +614,7 @@ body {
         // text-align: center;
         // background-color: #f9f9f9;
         background: var(--std-bckgrnd);
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 2px 2px 5px rgba(128, 128, 128, 0.1);
         .photo {
             max-width: 100%;
             height: auto;

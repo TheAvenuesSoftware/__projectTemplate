@@ -10,6 +10,9 @@
 // ~ Event & Callback Handlers: Prefix with on (e.g., onClick, onDataReceived)
 // ~ Private Variables: Some use leading _ to indicate private properties (_hiddenProperty)
 
+// express-rate-limit
+    const useExpressRateLimit = false;
+
 let myDate;
 
 import { trace } from "./src/global_Server.mjs";
@@ -348,48 +351,54 @@ console.log(("🔰").repeat(45));
         app.set('trust proxy', 1);   // Trust reverse proxy like NGINX
             console.log(`${trace()} ✅ [app.set('trust proxy', 1);]\n${trace()}    :- Trust reverse proxy like NGINX.`);
         // RATE LIMITER start
-            // If you're using a rate limiter, put it early to block abusers before they hit your routes:
-                const rateLimitNumber = 5
-                const rateLimitDuration = 1; // minutes
-                const limiter = rateLimit({
-                    windowMs: rateLimitDuration * 60 * 1000,
-                    limit: rateLimitNumber,
-                    handler: (req, res) => {
-                        // res.send('<html><head><title>Rate Limit Exceeded</title></head><body style="font-family: sans-serif; text-align: center; padding: 2em;"><h1>⏳ Too Many Requests</h1><p>You’ve hit the limit. Please wait a minute before trying again.</p><p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p></body></html>');
-                        res.send({success: false, message: "Too many attempts.  Please wait 5 minutes."});
-                        // res.set('Retry-After', '60').status(429).send({
-                        //     error: "Rate limit exceeded.  Try again after 1 minute.",
-                        //     retryAfter: "15 minutes",
-                        //     retryAt: new Date(Date.now() + 15 * 60 * 1000).toISOString()
-                        // });
-                        //     res.set('Retry-After', '60').status(429).send(`
-                        //         <html>
-                        //             <head><title>Rate Limit Exceeded</title></head>
-                        //             <body style="font-family: sans-serif; text-align: center; padding: 2em;">
-                        //             <h1>⏳ Too Many Requests</h1>
-                        //             <p>You’ve hit the limit. Please wait a minute before trying again.</p>
-                        //             <p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p>
-                        //             </body>
-                        //         </html>
-                        //     `);
-                    }
-                });
-                // Applies to all requests, causes issues with static assets/images/icons START
-                    // if (process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() == 'true') {
-                    //     // app.use(limiter); // ✅ Applies to all requests, causes issues with static assets/images/icons
-                    //     // console.log(`${trace()} ✅ RATE LIMITER [app.use(limiter);]\n${trace()}    :- enables rate limiting for all requests.`);
-                    // }
-                    // app.use('/', limiter); // ✅ Applies to ALL traffic
-                // Applies to all requests, causes issues with static assets/images/icons END
-                // app.use('/api', limiter); // ✅ Applies to API traffic only
-                // Apply rate limiter to individual routers START
-                    app.use("/dbRouter", limiter);
-                    app.use("/loginRouter", limiter);
-                    app.use("/globalRouter", limiter);
-                    app.use("/projectRouter", limiter);
-                    app.use("/sessionsRouter", limiter);
-                    app.use("/googleAPIsRouter", limiter);
-                    console.log(`${trace()} 🟢 🏃‍♂️🏃‍♂️‍➡️ RATE LIMITER Rate limiter set to a limit of ${rateLimitNumber} requests every ${rateLimitDuration} minutes.`);
+            if(useExpressRateLimit===true){
+                (() => { 
+                    // If you're using a rate limiter, put it early to block abusers before they hit your routes:
+                        const rateLimitNumber = 5
+                        const rateLimitDuration = 1; // minutes
+                        const limiter = rateLimit({
+                            windowMs: rateLimitDuration * 60 * 1000,
+                            limit: rateLimitNumber,
+                            handler: (req, res) => {
+                                // res.send('<html><head><title>Rate Limit Exceeded</title></head><body style="font-family: sans-serif; text-align: center; padding: 2em;"><h1>⏳ Too Many Requests</h1><p>You’ve hit the limit. Please wait a minute before trying again.</p><p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p></body></html>');
+                                res.send({success: false, message: "Too many attempts.  Please wait 5 minutes."});
+                                // res.set('Retry-After', '60').status(429).send({
+                                //     error: "Rate limit exceeded.  Try again after 1 minute.",
+                                //     retryAfter: "15 minutes",
+                                //     retryAt: new Date(Date.now() + 15 * 60 * 1000).toISOString()
+                                // });
+                                //     res.set('Retry-After', '60').status(429).send(`
+                                //         <html>
+                                //             <head><title>Rate Limit Exceeded</title></head>
+                                //             <body style="font-family: sans-serif; text-align: center; padding: 2em;">
+                                //             <h1>⏳ Too Many Requests</h1>
+                                //             <p>You’ve hit the limit. Please wait a minute before trying again.</p>
+                                //             <p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p>
+                                //             </body>
+                                //         </html>
+                                //     `);
+                            }
+                        });
+                        // Applies to all requests, causes issues with static assets/images/icons START
+                            // if (process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() == 'true') {
+                            //     // app.use(limiter); // ✅ Applies to all requests, causes issues with static assets/images/icons
+                            //     // console.log(`${trace()} ✅ RATE LIMITER [app.use(limiter);]\n${trace()}    :- enables rate limiting for all requests.`);
+                            // }
+                            // app.use('/', limiter); // ✅ Applies to ALL traffic
+                        // Applies to all requests, causes issues with static assets/images/icons END
+                        // app.use('/api', limiter); // ✅ Applies to API traffic only
+                        // Apply rate limiter to individual routers START
+                            app.use("/dbRouter", limiter);
+                            app.use("/loginRouter", limiter);
+                            app.use("/globalRouter", limiter);
+                            app.use("/projectRouter", limiter);
+                            app.use("/sessionsRouter", limiter);
+                            app.use("/googleAPIsRouter", limiter);
+                            console.log(`${trace()} 🟢 🏃‍♂️🏃‍♂️‍➡️ RATE LIMITER Rate limiter set to a limit of ${rateLimitNumber} requests every ${rateLimitDuration} minutes.`);
+                })();
+            }else{
+                console.log(`${trace()} 🔴 🏃‍♂️🏃‍♂️‍➡️ RATE LIMITER not used.`);
+            }
         // RATE LIMITER end
         // MIDDLEWARE to parse incoming request bodies START
             app.use(express.json({ limit: "10mb" })); // Middleware to parse JSON data // Increase JSON request size limit
