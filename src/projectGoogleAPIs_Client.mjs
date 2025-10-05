@@ -67,7 +67,7 @@ export function initAutocomplete(inputId) {
             // ZOOM changed by Donald END
         });
         // added by Donald START
-            localStorage.setItem("tas_address",addressInput.value);
+            localStorage.setItem("tas_address_0",addressInput.value);
             localStorage.setItem("tas_placeGeometryLocation",JSON.stringify(place.geometry.location));
             document.getElementById("save_address").textContent = addressInput.value;
         // added by Donald END

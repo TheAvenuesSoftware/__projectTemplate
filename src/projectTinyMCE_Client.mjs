@@ -28,7 +28,7 @@
                                     editor.setContent(savedNote);
                                 }
                             }else{
-                                const editedNote = localStorage.getItem('tas_note_toEdit');
+                                const editedNote = localStorage.getItem('tas_toEdit_note');
                                 if (editedNote) {
                                     editor.setContent(editedNote);
                                 }
@@ -44,7 +44,7 @@
                                 localStorage.setItem('tas_note_0', currentContent);
                                 document.getElementById("save_note_0").innerHTML = currentContent;
                             }else{
-                                localStorage.setItem('tas_note_edited', currentContent);
+                                localStorage.setItem('tas_edited_note', currentContent);
                             }
                         // Save to localStorage when focus is lost END📝
                     });

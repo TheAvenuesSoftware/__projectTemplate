@@ -16,6 +16,7 @@ export function projectMJSisLoaded(){
     import { selectImageToUpload } from "./globalUploadImage_Client.mjs";
     import { uploadImageToCanvas } from "./globalUploadImage_Client.mjs";
     import { isEmailValid } from "./global_Client.mjs";
+    import { showProgressCircle } from "./indexHTMLcompanion.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 // 🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️
@@ -130,47 +131,65 @@ export function projectMJSisLoaded(){
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export function editRecordNote(event){
-                event.target.disabled = true;
-                console.log(`filteredRecords:-\n`,filteredRecords);
-                const filteredRecordID = event.target.dataset.recordId;
-                console.log(`filteredRecordID:- `,filteredRecordID);
-                console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
-                const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
-                console.log(`filteredRecord imageID:- `,imageID);
-                if(imageID !== parseInt(filteredRecordID)){
-                    showCustomMessage("Error: conflicting ID.  Edit cannot proceed.");
-                    return;
-                }
-                // insert DOM element textarea START
-                    const editNoteTinymceContainer = document.createElement("div");
-                    editNoteTinymceContainer.id = `editNoteTinymceContainer${imageID}`;
-                    editNoteTinymceContainer.className = "record-card-edit-note";
-                    // const noteHTML = filteredRecords[`${filteredRecordID}`].image_notes || '';
-                    const noteHTML = document.getElementById(`notes${filteredRecordID}`).innerHTML;
-                    console.log(noteHTML);
-                    localStorage.setItem('tas_note_toEdit', noteHTML);
-                    editNoteTinymceContainer.innerHTML = `<textarea id='tinymce_${imageID}' class='tinymce-editor'>${noteHTML}</textarea>`;
-                    const anchorElement = document.getElementById(event.target.id);
-                    anchorElement.after(editNoteTinymceContainer); // append after the anchor element.  append; prepend; before; after
-                // insert DOM element textarea END
-                // initialise TinyMCE START
-                    // const tinymceEditor = document.getElementById(`noteEdit${imageID}`);
-                    const tinymceEditor = document.getElementById(`editNoteTinymceContainer${imageID}`);
-                    console.log(tinymceEditor); // textarea, now style="display: none;"
-                    initTinyMCE(tinymceEditor); // Call this to initialize TinyMCE editor
-                // initialise TinyMCE END
-                // insert save button START
-                    const editNoteTinymceContainerSaveBtn = document.createElement("div");
-                    editNoteTinymceContainerSaveBtn.style.textAlign = "center";
-                    editNoteTinymceContainerSaveBtn.innerHTML = 
-                    `
-                        <button id='saveEditedNote${imageID}' class="std-btn" data-action="saveEditedNote" data-record-id='${imageID}'>Save changes to note # ${imageID}</button>
-                    `
-                    const anchorIIElement = document.getElementById(`deleteRecord${imageID}`);
-                    console.log(event.target.id);
-                    console.log(anchorIIElement);
-                    anchorIIElement.before(editNoteTinymceContainerSaveBtn); // append after the anchorII element.  append; prepend; before; after
-                // insert save button END
+                // thing1 - cannot use setTimeout, fetch, or await otherwise thing2 will start before thing1 finishes
+                    (() => {
+                        try{
+                            removeAllDomEditElements();
+                        }catch (err){
+                            console.error(`Error in editRecordNote(event) >>> removeAllDomEditElements():`, err);
+                        }
+                    })();
+                // thing2
+                    (() => {
+                        try{
+                            event.target.disabled = true;
+                            console.log(`filteredRecords:-\n`,filteredRecords);
+                            const filteredRecordID = event.target.dataset.recordId;
+                            console.log(`filteredRecordID:- `,filteredRecordID);
+                            console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
+                            // const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
+                            // console.log(`filteredRecord imageID:- `,imageID);
+                            const imageID = filteredRecords[`${filteredRecordID}`].image_id || ''; // image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            localStorage.setItem(`tas_toEdit_imageID`,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            console.log(`filteredRecord imageID:- `,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            if(imageID !== parseInt(filteredRecordID)){
+                                showCustomMessage("Error: conflicting ID.  Edit cannot proceed.");
+                                return;
+                            }
+                            // insert DOM element textarea START
+                                const editNoteTinymceContainer = document.createElement("div");
+                                editNoteTinymceContainer.id = `editNoteTinymceContainer${imageID}`;
+                                editNoteTinymceContainer.className = "record-card-edit-note";
+                                // const noteHTML = filteredRecords[`${filteredRecordID}`].image_notes || '';
+                                const noteHTML = document.getElementById(`notes${filteredRecordID}`).innerHTML;
+                                console.log(noteHTML);
+                                localStorage.setItem('tas_toEdit_note', noteHTML);
+                                editNoteTinymceContainer.innerHTML = `<textarea id='tinymce_${imageID}' class='tinymce-editor'>${noteHTML}</textarea>`;
+                                const anchorElement = document.getElementById(event.target.id);
+                                anchorElement.after(editNoteTinymceContainer); // append after the anchor element.  append; prepend; before; after
+                            // insert DOM element textarea END
+                            // initialise TinyMCE START
+                                // const tinymceEditor = document.getElementById(`noteEdit${imageID}`);
+                                const tinymceEditor = document.getElementById(`editNoteTinymceContainer${imageID}`);
+                                console.log(tinymceEditor); // textarea, now style="display: none;"
+                                initTinyMCE(tinymceEditor); // Call this to initialize TinyMCE editor
+                            // initialise TinyMCE END
+                            // insert save button START
+                                const editNoteTinymceContainerSaveBtn = document.createElement("div");
+                                editNoteTinymceContainerSaveBtn.style.textAlign = "center";
+                                editNoteTinymceContainerSaveBtn.innerHTML = 
+                                    `
+                                        <button id='saveEditedNote${imageID}' class="std-btn" data-action="saveEditedNote" data-record-id='${imageID}'>Save changes to note # ${imageID}</button>
+                                    `
+                                const anchorIIElement = document.getElementById(`deleteRecord${imageID}`);
+                                console.log(event.target.id);
+                                console.log(anchorIIElement);
+                                anchorIIElement.before(editNoteTinymceContainerSaveBtn); // append after the anchorII element.  append; prepend; before; after
+                            // insert save button END
+                        }catch (err){
+                            console.error(`Error in editRecordNote(event):`, err);
+                        }
+                    })();
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export async function saveEditedNote(event){
@@ -178,7 +197,7 @@ export function projectMJSisLoaded(){
                 const recordIdToUpdate = event.target.dataset.recordId;
                 const editNoteBtn = document.getElementById(`noteEdit${recordIdToUpdate}`);
                 editNoteBtn.disabled = false; // Re-enable the edit button
-                const noteToSave = localStorage.getItem("tas_note_edited"); // this localStorage item is updated by TinyMCE editor.on 'blur'
+                const noteToSave = localStorage.getItem("tas_edited_note"); // this localStorage item is updated by TinyMCE editor.on 'blur'
                 event.target.remove();
                 console.log('noteToSave:-\n',noteToSave);
                 console.log('recordIdToUpdate:-',recordIdToUpdate);
@@ -239,50 +258,73 @@ export function projectMJSisLoaded(){
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export function editRecordAddress(event){
-                event.target.disabled = true;
-                console.log(`filteredRecords:-\n`,filteredRecords);
-                const filteredRecordID = event.target.dataset.recordId;
-                console.log(`filteredRecordID:- `,filteredRecordID);
-                console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
-                const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
-                console.log(`filteredRecord imageID:- `,imageID);
-                document.getElementById("googlePlacesAPIautocomplete_0").value = filteredRecords[`${filteredRecordID}`].image_address || '';
-                document.getElementById("note-date-time").textContent = filteredRecords[`${filteredRecordID}`].image_date + ' ' + filteredRecords[`${filteredRecordID}`].image_time || '';
-                document.getElementById("note-address").textContent = filteredRecords[`${filteredRecordID}`].image_address || '';
-                // insert DOM element input START
-                    const editAddressDiv = document.createElement("div");
-                    // editAddressDiv.className = "record-card-edit-address";
-                    editAddressDiv.id = "autocomplete-address-container";
-                    editAddressDiv.className = "autocomplete-address-container";
-                    // const addressValue = filteredRecords[`${filteredRecordID}`].image_address || '';
-                    const addressElement = document.getElementById(`address${imageID}`);
-                    const addressValue = addressElement.textContent || '';
-                    console.log(addressValue);
-                    localStorage.setItem(`tas_address_toEdit`,addressValue);
-                    editAddressDiv.innerHTML = `
-                        <input id="googlePlacesAPIautocomplete_${imageID}" class="autocomplete-address-input" type="text" placeholder="Enter address here..."><br>
-                        `;
-                    const anchorElement = document.getElementById(event.target.id);
-                    console.log(event.target.id);
-                    console.log(anchorElement);
-                    anchorElement.after(editAddressDiv); // append after the anchor element
-                // insert DOM element input END
-                // initialise Google API START
-                    // document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = filteredRecords[`${filteredRecordID}`].image_address || '';
-                    document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = addressElement.textContent || '';
-                    initAutocomplete(`googlePlacesAPIautocomplete_${imageID}`);
-                // initialise Google API END
-                // insert save button START
-                    const editAddressDivSaveBtn = document.createElement("div");
-                    editAddressDivSaveBtn.style.textAlign = "center";
-                    editAddressDivSaveBtn.innerHTML = `
-                        <button id='saveEditedAddress${imageID}' class="std-btn" data-action="saveEditedAddress" data-record-id='${imageID}'>Save changes to address # ${imageID}</button>
-                        `;
-                    const anchorIIElement = document.getElementById(`googlePlacesAPIautocomplete_${imageID}`);
-                    console.log(event.target.id);
-                    console.log(anchorIIElement);
-                    anchorIIElement.after(editAddressDivSaveBtn); // append after the anchorII element.  append; prepend; before; after
-                // insert save button END
+                // thing1 - cannot use setTimeout, fetch, or await otherwise thing2 will start before thing1 finishes
+                    (() => {
+                        try{
+                            removeAllDomEditElements();
+                        }catch (err){
+                            console.error(`Error in editRecordAddress(event) >>> removeAllDomEditElements():`, err);
+                        }
+                    })();
+                // thing2
+                    (() => {
+                        try{
+                            event.target.disabled = true;
+                            console.log(`filteredRecords:-\n`,filteredRecords);
+                            const filteredRecordID = event.target.dataset.recordId; // If 4 records are returned, filteredRecordID can be 0, 1, 2 or 3.
+                            console.log(`filteredRecordID:- `,filteredRecordID);
+                            console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
+                            const imageID = filteredRecords[`${filteredRecordID}`].image_id || ''; // image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            if(imageID !== parseInt(filteredRecordID)){
+                                showCustomMessage("Error: conflicting ID.  Edit cannot proceed.");
+                                return;
+                            }
+                            localStorage.setItem(`tas_toEdit_imageID`,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            console.log(`filteredRecord imageID:- `,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            // store Address in the location page
+                                document.getElementById("googlePlacesAPIautocomplete_0").value = filteredRecords[`${filteredRecordID}`].image_address || '';
+                            // store Date & Time in the note page
+                                document.getElementById("note-date-time").textContent = filteredRecords[`${filteredRecordID}`].image_date + ' ' + filteredRecords[`${filteredRecordID}`].image_time || ''; // store edited address in the note page
+                            // store Address in the note page
+                                document.getElementById("note-address").textContent = filteredRecords[`${filteredRecordID}`].image_address || ''; // store edited address in the note page
+                            // insert DOM element input START
+                                const editAddressDiv = document.createElement("div");
+                                // editAddressDiv.className = "record-card-edit-address";
+                                editAddressDiv.id = `autocomplete-address-container-${imageID}`;
+                                editAddressDiv.className = "autocomplete-address-container";
+                                // const addressValue = filteredRecords[`${filteredRecordID}`].image_address || '';
+                                const addressElement = document.getElementById(`address${imageID}`);
+                                const addressValue = addressElement.textContent || '';
+                                console.log(addressValue);
+                                localStorage.setItem(`tas_toEdit_address`,addressValue);
+                                editAddressDiv.innerHTML = `
+                                    <input id="googlePlacesAPIautocomplete_${imageID}" class="autocomplete-address-input" type="text" placeholder="Enter address here..."><br>
+                                    `;
+                                const anchorElement = document.getElementById(event.target.id);
+                                console.log(event.target.id);
+                                console.log(anchorElement);
+                                anchorElement.after(editAddressDiv); // append after the anchor element
+                            // insert DOM element input END
+                            // initialise Google API START
+                                // document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = filteredRecords[`${filteredRecordID}`].image_address || '';
+                                document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = addressElement.textContent || '';
+                                initAutocomplete(`googlePlacesAPIautocomplete_${imageID}`);
+                            // initialise Google API END
+                            // insert save button START
+                                const editAddressDivSaveBtn = document.createElement("div");
+                                editAddressDivSaveBtn.style.textAlign = "center";
+                                editAddressDivSaveBtn.innerHTML = `
+                                    <button id='saveEditedAddress${imageID}' class="std-btn" data-action="saveEditedAddress" data-record-id='${imageID}'>Save changes to address # ${imageID}</button>
+                                    `;
+                                const anchorIIElement = document.getElementById(`googlePlacesAPIautocomplete_${imageID}`);
+                                console.log(event.target.id);
+                                console.log(anchorIIElement);
+                                anchorIIElement.after(editAddressDivSaveBtn); // append after the anchorII element.  append; prepend; before; after
+                            // insert save button END
+                        }catch (err){
+                            console.error(`Error in editRecordAddress(event):`, err);
+                        }
+                    })();
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export async function saveEditedAddress(event){
@@ -292,7 +334,7 @@ export function projectMJSisLoaded(){
                 editAddressBtn.disabled = false; // Re-enable the edit button
                 const addressToSave = document.getElementById(`googlePlacesAPIautocomplete_${recordIdToUpdate}`).value;
                 event.target.remove();
-                localStorage.setItem("tas_address_edited",addressToSave);
+                localStorage.setItem("tas_edited_address",addressToSave);
                 console.log('addressToSave:-\n',addressToSave);
                 console.log('recordIdToUpdate:-',recordIdToUpdate);
                 try {
@@ -344,6 +386,48 @@ export function projectMJSisLoaded(){
                     console.error(`Error updating record # ${recordIdToUpdate} image_address in photos :`, error);
                 }
             }
+        // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
+            // remove all DOM edit elements START
+                function removeAllDomEditElements(){
+                    const data = filteredRecords;
+                    let index = 0;
+                    for (let key in data) {
+                        showProgressCircle(data.length,index);
+                        // 🔹 hasOwnProperty ensures you're only accessing properties directly on the object (not inherited ones).
+                        if (data.hasOwnProperty(key)) {
+                            const value = data[key];
+                            console.log(`Key: ${key}, Value:`, value);
+                            // ensure all editing buttons are enabled for user clicks
+                                document.getElementById(`addressEdit${data[key].image_id}`).disabled=false;
+                                document.getElementById(`noteEdit${data[key].image_id}`).disabled=false;
+                            // 2 destroy TinyMCE editor instance
+                                try{
+                                    tinymce.get(`editNoteTinymceContainer${data[key].image_id}`)?.remove();
+                                    console.log(`✅ Removal of destroy TinyMCE editor instance ${data[key].image_id} successful 🟢.`);
+                                }catch{
+                                    console.log(`✅ Removal of destroy TinyMCE editor instance ${data[key].image_id} skipped ⚠️.`);
+                                }
+                            // 3 remove the notes input element
+                                try{
+                                    const editNoteTinymceContainer = document.getElementById(`editNoteTinymceContainer${data[key].image_id}`);
+                                    editNoteTinymceContainer.remove(); // Remove the notes input element
+                                    console.log(`✅ Removal of editNoteTinymceContainer${data[key].image_id} successful. 🟢`);
+                                }catch{
+                                    console.log(`✅ Removal of editNoteTinymceContainer${data[key].image_id} skipped. ⚠️`);
+                                }
+                            // remove the address autocomplete container
+                                try{
+                                    const addressInputContainer = document.getElementById(`autocomplete-address-container-${data[key].image_id}`);
+                                    addressInputContainer.remove(); // Remove the address input container
+                                    console.log(`✅ Removal of autocomplete-address-container-${data[key].image_id} successful. 🟢`);
+                                }catch{
+                                    console.log(`✅ Removal of autocomplete-address-container-${data[key].image_id} skipped ⚠️.`);
+                                }
+                            index++;
+                        }
+                    }
+                }
+            // remove all DOM edit elements END
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             // filterBy START
                 export async function filterBy(filterField) {

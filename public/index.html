@@ -300,6 +300,32 @@
 
     </main>
 
+        <div class="progress-circle">
+            <svg id="progress-circle-svg" class="progress-circle-svg" width="200" height="200">
+                <circle
+                    cx="100"
+                    cy="100"
+                    r="90"
+                    stroke="#eee"
+                    stroke-width="15"
+                    fill="none"
+                />
+                <circle
+                    id="progress"
+                    cx="100"
+                    cy="100"
+                    r="90"
+                    stroke="#4caf50"
+                    stroke-width="15"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-dasharray="565.48"
+                    stroke-dashoffset="565.48"
+                />
+            </svg>
+            <div class="progress-value" id="progress-value">0%</div>
+        </div>
+
     <div id="scroll-buffer" class="scroll-buffer"></div>
 
     <footer id="the-footer-element">

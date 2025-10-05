@@ -191,7 +191,8 @@
 //     }
 // // calculate padding-bottom for body element START
 
-// Menu section focus and switch START
+// 🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅
+// Menu section focus and switch START 🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅
     function focusInput(sectionId) {
         const input = document.querySelector(`#section${sectionId}-focus-on-activation`);
         input?.focus();
@@ -223,10 +224,11 @@
         focusInput(current); // set focus to active section
     // set current section = last active section END
     // set last session values START
-        const address = localStorage.getItem("tas_address")? localStorage.getItem("tas_address") : "";
+        const address = localStorage.getItem("tas_address_0")? localStorage.getItem("tas_address_0") : "";
         document.getElementById("googlePlacesAPIautocomplete_0").value = address;
         console.log(address);
-// Menu section focus and switch END
+// Menu section focus and switch END   🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅
+// 🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅
         // // re-load START
         //     // // if (!window.location.search.includes("reload=true")) {
         //     // //     window.location.href = window.location.pathname + "?reload=true";
@@ -276,3 +278,42 @@
         //         });
         //     }
         // // re-load END
+
+// ⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕
+// progress-circle-svg START   ⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕
+    export function showProgressCircle(stepsTotal=0,stepsCompleted=0){
+        document.getElementById("progress-circle-svg").display = "block";
+        // // Total number of records (simulated)
+        //     const stepsTotal = 100;
+        //     let stepsDone = 0;
+        // Get DOM elements
+            const circle = document.getElementById('progress');
+            const label = document.getElementById('progress-value');
+        // Circle circumference = 2 * π * r
+            const radius = 90;
+            const circumference = 2 * Math.PI * radius;
+            circle.style.strokeDasharray = circumference;
+        // Function to set progress (0 to 100)
+            function setProgress(percent) {
+                const offset = circumference - (percent / 100) * circumference;
+                circle.style.strokeDashoffset = offset;
+                label.textContent = `${Math.round(percent)}%`;
+            }
+        // Simulated processing function
+            function startProcessing() {
+                stepsDone = 0;
+                const interval = setInterval(() => {
+                    if (stepsDone < stepsTotal) {
+                        stepsDone++;
+                        const percent = (stepsDone / stepsTotal) * 100;
+                        setProgress(percent);
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 50); // simulate record processing delay
+            }
+        // You can also call setProgress(percent) externally
+        // for example: setProgress(75); to manually update to 75%
+    }
+// progress-circle-svg END   ⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕
+// ⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕
