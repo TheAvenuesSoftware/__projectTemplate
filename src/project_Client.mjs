@@ -1,6 +1,6 @@
 const consoleLog = true;
 
-console.log("LOADED:- project_Client.mjs is loaded",new Date().toLocaleString());
+if(consoleLog===true){console.log("LOADED:- project_Client.mjs is loaded",new Date().toLocaleString());}
 export function projectMJSisLoaded(){
     return true;
 }
@@ -71,11 +71,11 @@ export function projectMJSisLoaded(){
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export async function deleteRecord(event){
                 const recordIdToDELETE = event.target.dataset.recordId;
-                console.log('recordIdToDELETE:-',recordIdToDELETE);
+                if(consoleLog===true){console.log('recordIdToDELETE:-',recordIdToDELETE);}
                 try {
                     const userEmailAddress = document.getElementById("user-email-address").textContent;
                     // const userEmailAddress = "donald.garton@outlook.com";
-                    console.log(userEmailAddress);
+                    if(consoleLog===true){console.log(userEmailAddress);}
                     const fetchUrl = "/dbRouter/delete-record";
                     const fetchOptions = {
                             method: 'POST',
@@ -107,7 +107,7 @@ export function projectMJSisLoaded(){
                     if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
                     const response = await fetch(fetchUrl, fetchOptions);
                     const jso = await response.json(); // Fetch JSON 
-                    console.log(jso);
+                    if(consoleLog===true){console.log(jso);}
                     if(jso.success===true){
                         if(jso.deleted === 0){
                             showCustomMessage(`No records found to delete`);
@@ -121,12 +121,12 @@ export function projectMJSisLoaded(){
                                 }
                             // 2 remove the record from filteredRecords
                                 delete filteredRecords[`${recordIdToDELETE}`];
-                                console.log(`Record # ${recordIdToDELETE} deleted from filteredRecords.`);
+                                if(consoleLog===true){console.log(`Record # ${recordIdToDELETE} deleted from filteredRecords.`);}
                         // steps END
                         showCustomMessage(`Record # ${recordIdToDELETE} deleted successfully.`);
                     }
                 } catch (error) {
-                    console.error(`Error DELETING record # ${recordIdToDELETE} in photos :`, error);
+                    if(consoleLog===true){console.error(`Error DELETING record # ${recordIdToDELETE} in photos :`, error);}
                 }
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
@@ -136,22 +136,22 @@ export function projectMJSisLoaded(){
                         try{
                             removeAllDomEditElements();
                         }catch (err){
-                            console.error(`Error in editRecordNote(event) >>> removeAllDomEditElements():`, err);
+                            if(consoleLog===true){console.error(`Error in editRecordNote(event) >>> removeAllDomEditElements():`, err);}
                         }
                     })();
                 // thing2
                     (() => {
                         try{
                             event.target.disabled = true;
-                            console.log(`filteredRecords:-\n`,filteredRecords);
+                            if(consoleLog===true){console.log(`filteredRecords:-\n`,filteredRecords);}
                             const filteredRecordID = event.target.dataset.recordId;
-                            console.log(`filteredRecordID:- `,filteredRecordID);
-                            console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
+                            if(consoleLog===true){console.log(`filteredRecordID:- `,filteredRecordID);}
+                            if(consoleLog===true){console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);}
                             // const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
-                            // console.log(`filteredRecord imageID:- `,imageID);
+                            // if(consoleLog===true){console.log(`filteredRecord imageID:- `,imageID);}
                             const imageID = filteredRecords[`${filteredRecordID}`].image_id || ''; // image_id INTEGER PRIMARY KEY AUTOINCREMENT
                             localStorage.setItem(`tas_toEdit_imageID`,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
-                            console.log(`filteredRecord imageID:- `,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            if(consoleLog===true){console.log(`filteredRecord imageID:- `,imageID);} // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
                             if(imageID !== parseInt(filteredRecordID)){
                                 showCustomMessage("Error: conflicting ID.  Edit cannot proceed.");
                                 return;
@@ -162,7 +162,7 @@ export function projectMJSisLoaded(){
                                 editNoteTinymceContainer.className = "record-card-edit-note";
                                 // const noteHTML = filteredRecords[`${filteredRecordID}`].image_notes || '';
                                 const noteHTML = document.getElementById(`notes${filteredRecordID}`).innerHTML;
-                                console.log(noteHTML);
+                                if(consoleLog===true){console.log(noteHTML);}
                                 localStorage.setItem('tas_toEdit_note', noteHTML);
                                 editNoteTinymceContainer.innerHTML = `<textarea id='tinymce_${imageID}' class='tinymce-editor'>${noteHTML}</textarea>`;
                                 const anchorElement = document.getElementById(event.target.id);
@@ -171,7 +171,7 @@ export function projectMJSisLoaded(){
                             // initialise TinyMCE START
                                 // const tinymceEditor = document.getElementById(`noteEdit${imageID}`);
                                 const tinymceEditor = document.getElementById(`editNoteTinymceContainer${imageID}`);
-                                console.log(tinymceEditor); // textarea, now style="display: none;"
+                                if(consoleLog===true){console.log(tinymceEditor);} // textarea, now style="display: none;"
                                 initTinyMCE(tinymceEditor); // Call this to initialize TinyMCE editor
                             // initialise TinyMCE END
                             // insert save button START
@@ -182,29 +182,29 @@ export function projectMJSisLoaded(){
                                         <button id='saveEditedNote${imageID}' class="std-btn" data-action="saveEditedNote" data-record-id='${imageID}'>Save changes to note # ${imageID}</button>
                                     `
                                 const anchorIIElement = document.getElementById(`deleteRecord${imageID}`);
-                                console.log(event.target.id);
-                                console.log(anchorIIElement);
+                                if(consoleLog===true){console.log(event.target.id);}
+                                if(consoleLog===true){console.log(anchorIIElement);}
                                 anchorIIElement.before(editNoteTinymceContainerSaveBtn); // append after the anchorII element.  append; prepend; before; after
                             // insert save button END
                         }catch (err){
-                            console.error(`Error in editRecordNote(event):`, err);
+                            if(consoleLog===true){console.error(`Error in editRecordNote(event):`, err);}
                         }
                     })();
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export async function saveEditedNote(event){
-                console.log('saveEditedNote:-\n',event);
+                if(consoleLog===true){console.log('saveEditedNote:-\n',event);}
                 const recordIdToUpdate = event.target.dataset.recordId;
                 const editNoteBtn = document.getElementById(`noteEdit${recordIdToUpdate}`);
                 editNoteBtn.disabled = false; // Re-enable the edit button
                 const noteToSave = localStorage.getItem("tas_edited_note"); // this localStorage item is updated by TinyMCE editor.on 'blur'
                 event.target.remove();
-                console.log('noteToSave:-\n',noteToSave);
-                console.log('recordIdToUpdate:-',recordIdToUpdate);
+                if(consoleLog===true){console.log('noteToSave:-\n',noteToSave);}
+                if(consoleLog===true){console.log('recordIdToUpdate:-',recordIdToUpdate);}
                 try {
                     const userEmailAddress = document.getElementById("user-email-address").textContent;
                     // const userEmailAddress = "donald.garton@outlook.com";
-                    console.log(userEmailAddress);
+                    if(consoleLog===true){console.log(userEmailAddress);}
                     const fetchUrl = "/dbRouter/update-data-record";
                     const fetchOptions = {
                             method: 'POST',
@@ -236,8 +236,8 @@ export function projectMJSisLoaded(){
                     if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
                     const response = await fetch(fetchUrl, fetchOptions);
                     const jso = await response.json(); // Fetch JSON 
-                    console.log(jso);
-                    console.log(jso.updates.image_notes);
+                    if(consoleLog===true){console.log(jso);}
+                    if(consoleLog===true){console.log(jso.updates.image_notes);}
                     if(jso.success===true){
                         // steps START
                             // 1 update the notes in the DOM
@@ -253,7 +253,7 @@ export function projectMJSisLoaded(){
                         showCustomMessage("Failed to update note", "error");
                     }
                 } catch (error) {
-                    console.error(`Error updating record # ${recordIdToUpdate} image_notes in photos :`, error);
+                    if(consoleLog===true){console.error(`Error updating record # ${recordIdToUpdate} image_notes in photos :`, error);}
                 }
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
@@ -263,24 +263,24 @@ export function projectMJSisLoaded(){
                         try{
                             removeAllDomEditElements();
                         }catch (err){
-                            console.error(`Error in editRecordAddress(event) >>> removeAllDomEditElements():`, err);
+                            if(consoleLog===true){console.error(`Error in editRecordAddress(event) >>> removeAllDomEditElements():`, err);}
                         }
                     })();
                 // thing2
                     (() => {
                         try{
                             event.target.disabled = true;
-                            console.log(`filteredRecords:-\n`,filteredRecords);
+                            if(consoleLog===true){console.log(`filteredRecords:-\n`,filteredRecords);}
                             const filteredRecordID = event.target.dataset.recordId; // If 4 records are returned, filteredRecordID can be 0, 1, 2 or 3.
-                            console.log(`filteredRecordID:- `,filteredRecordID);
-                            console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
+                            if(consoleLog===true){console.log(`filteredRecordID:- `,filteredRecordID);}
+                            if(consoleLog===true){console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);}
                             const imageID = filteredRecords[`${filteredRecordID}`].image_id || ''; // image_id INTEGER PRIMARY KEY AUTOINCREMENT
                             if(imageID !== parseInt(filteredRecordID)){
                                 showCustomMessage("Error: conflicting ID.  Edit cannot proceed.");
                                 return;
                             }
                             localStorage.setItem(`tas_toEdit_imageID`,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
-                            console.log(`filteredRecord imageID:- `,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            if(consoleLog===true){console.log(`filteredRecord imageID:- `,imageID);} // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
                             // store Address in the location page
                                 document.getElementById("googlePlacesAPIautocomplete_0").value = filteredRecords[`${filteredRecordID}`].image_address || '';
                             // store Date & Time in the note page
@@ -295,14 +295,14 @@ export function projectMJSisLoaded(){
                                 // const addressValue = filteredRecords[`${filteredRecordID}`].image_address || '';
                                 const addressElement = document.getElementById(`address${imageID}`);
                                 const addressValue = addressElement.textContent || '';
-                                console.log(addressValue);
+                                if(consoleLog===true){console.log(addressValue);}
                                 localStorage.setItem(`tas_toEdit_address`,addressValue);
                                 editAddressDiv.innerHTML = `
                                     <input id="googlePlacesAPIautocomplete_${imageID}" class="autocomplete-address-input" type="text" placeholder="Enter address here..."><br>
                                     `;
                                 const anchorElement = document.getElementById(event.target.id);
-                                console.log(event.target.id);
-                                console.log(anchorElement);
+                                if(consoleLog===true){console.log(event.target.id);}
+                                if(consoleLog===true){console.log(anchorElement);}
                                 anchorElement.after(editAddressDiv); // append after the anchor element
                             // insert DOM element input END
                             // initialise Google API START
@@ -317,30 +317,30 @@ export function projectMJSisLoaded(){
                                     <button id='saveEditedAddress${imageID}' class="std-btn" data-action="saveEditedAddress" data-record-id='${imageID}'>Save changes to address # ${imageID}</button>
                                     `;
                                 const anchorIIElement = document.getElementById(`googlePlacesAPIautocomplete_${imageID}`);
-                                console.log(event.target.id);
-                                console.log(anchorIIElement);
+                                if(consoleLog===true){console.log(event.target.id);}
+                                if(consoleLog===true){console.log(anchorIIElement);}
                                 anchorIIElement.after(editAddressDivSaveBtn); // append after the anchorII element.  append; prepend; before; after
                             // insert save button END
                         }catch (err){
-                            console.error(`Error in editRecordAddress(event):`, err);
+                            if(consoleLog===true){console.error(`Error in editRecordAddress(event):`, err);}
                         }
                     })();
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export async function saveEditedAddress(event){
-                console.log('saveEditedAddress:-\n',event);
+                if(consoleLog===true){console.log('saveEditedAddress:-\n',event);}
                 const recordIdToUpdate = event.target.dataset.recordId;
                 const editAddressBtn = document.getElementById(`addressEdit${recordIdToUpdate}`);
                 editAddressBtn.disabled = false; // Re-enable the edit button
                 const addressToSave = document.getElementById(`googlePlacesAPIautocomplete_${recordIdToUpdate}`).value;
                 event.target.remove();
                 localStorage.setItem("tas_edited_address",addressToSave);
-                console.log('addressToSave:-\n',addressToSave);
-                console.log('recordIdToUpdate:-',recordIdToUpdate);
+                if(consoleLog===true){console.log('addressToSave:-\n',addressToSave);}
+                if(consoleLog===true){console.log('recordIdToUpdate:-',recordIdToUpdate);}
                 try {
                     const userEmailAddress = document.getElementById("user-email-address").textContent;
                     // const userEmailAddress = "donald.garton@outlook.com";
-                    console.log(userEmailAddress);
+                    if(consoleLog===true){console.log(userEmailAddress);}
                     const fetchUrl = "/dbRouter/update-data-record";
                     const fetchOptions = {
                             method: 'POST',
@@ -372,8 +372,8 @@ export function projectMJSisLoaded(){
                     if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
                     const response = await fetch(fetchUrl, fetchOptions);
                     const jso = await response.json(); // Fetch JSON 
-                    console.log(jso);
-                    console.log(jso.updates.image_address);
+                    if(consoleLog===true){console.log(jso);}
+                    if(consoleLog===true){console.log(jso.updates.image_address);}
                     if(jso.success===true){
                         const addressElement = document.getElementById(`address${recordIdToUpdate}`);
                         addressElement.textContent = jso.updates.image_address; // Update the address in the DOM
@@ -383,7 +383,7 @@ export function projectMJSisLoaded(){
                         showCustomMessage("failed to update address", "error");
                     }
                 } catch (error) {
-                    console.error(`Error updating record # ${recordIdToUpdate} image_address in photos :`, error);
+                    if(consoleLog===true){console.error(`Error updating record # ${recordIdToUpdate} image_address in photos :`, error);}
                 }
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
@@ -396,32 +396,32 @@ export function projectMJSisLoaded(){
                         // 🔹 hasOwnProperty ensures you're only accessing properties directly on the object (not inherited ones).
                         if (data.hasOwnProperty(key)) {
                             const value = data[key];
-                            console.log(`Key: ${key}, Value:`, value);
+                            if(consoleLog===true){console.log(`Key: ${key}, Value:`, value);}
                             // ensure all editing buttons are enabled for user clicks
                                 document.getElementById(`addressEdit${data[key].image_id}`).disabled=false;
                                 document.getElementById(`noteEdit${data[key].image_id}`).disabled=false;
                             // 2 destroy TinyMCE editor instance
                                 try{
                                     tinymce.get(`editNoteTinymceContainer${data[key].image_id}`)?.remove();
-                                    console.log(`✅ Removal of destroy TinyMCE editor instance ${data[key].image_id} successful 🟢.`);
+                                    if(consoleLog===true){console.log(`✅ Removal of destroy TinyMCE editor instance ${data[key].image_id} successful 🟢.`);}
                                 }catch{
-                                    console.log(`✅ Removal of destroy TinyMCE editor instance ${data[key].image_id} skipped ⚠️.`);
+                                    if(consoleLog===true){console.log(`✅ Removal of destroy TinyMCE editor instance ${data[key].image_id} skipped ⚠️.`);}
                                 }
                             // 3 remove the notes input element
                                 try{
                                     const editNoteTinymceContainer = document.getElementById(`editNoteTinymceContainer${data[key].image_id}`);
                                     editNoteTinymceContainer.remove(); // Remove the notes input element
-                                    console.log(`✅ Removal of editNoteTinymceContainer${data[key].image_id} successful. 🟢`);
+                                    if(consoleLog===true){console.log(`✅ Removal of editNoteTinymceContainer${data[key].image_id} successful. 🟢`);}
                                 }catch{
-                                    console.log(`✅ Removal of editNoteTinymceContainer${data[key].image_id} skipped. ⚠️`);
+                                    if(consoleLog===true){console.log(`✅ Removal of editNoteTinymceContainer${data[key].image_id} skipped. ⚠️`);}
                                 }
                             // remove the address autocomplete container
                                 try{
                                     const addressInputContainer = document.getElementById(`autocomplete-address-container-${data[key].image_id}`);
                                     addressInputContainer.remove(); // Remove the address input container
-                                    console.log(`✅ Removal of autocomplete-address-container-${data[key].image_id} successful. 🟢`);
+                                    if(consoleLog===true){console.log(`✅ Removal of autocomplete-address-container-${data[key].image_id} successful. 🟢`);}
                                 }catch{
-                                    console.log(`✅ Removal of autocomplete-address-container-${data[key].image_id} skipped ⚠️.`);
+                                    if(consoleLog===true){console.log(`✅ Removal of autocomplete-address-container-${data[key].image_id} skipped ⚠️.`);}
                                 }
                             index++;
                         }
@@ -431,12 +431,12 @@ export function projectMJSisLoaded(){
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             // filterBy START
                 export async function filterBy(filterField) {
-                    console.log("filterBy() called.");
+                    if(consoleLog===true){console.log("filterBy() called.");}
                     document.getElementById("filteredList-container").textContent = ""
                     try {
                         const userEmailAddress = document.getElementById("user-email-address").textContent;
                         // const userEmailAddress = "donald.garton@outlook.com";
-                        console.log(userEmailAddress);
+                        if(consoleLog===true){console.log(userEmailAddress);}
                         const filterText = `%${document.getElementById("search-input").value}%`;
                         if (!filterText) {
                             showCustomMessage("Please enter part of an address to search.");
@@ -447,7 +447,7 @@ export function projectMJSisLoaded(){
                         let dateYYYY = null;
                         if (filterField === "date") {
                             const date = new Date(document.getElementById("search-input").value);
-                            console.log(date);
+                            if(consoleLog===true){console.log(date);}
                             if (isNaN(date)) {
                                 showCustomMessage("Please enter a valid date.");
                                 return;
@@ -455,7 +455,7 @@ export function projectMJSisLoaded(){
                                 dateDD = date.getDate().toString().padStart(2, '0');
                                 dateMM = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
                                 dateYYYY = date.getFullYear().toString();
-                                console.log(dateDD, dateMM, dateYYYY);
+                                if(consoleLog===true){console.log(dateDD, dateMM, dateYYYY);}
                             }
                         }
                         const fetchUrl = "/dbRouter/filter-by";
@@ -490,14 +490,14 @@ export function projectMJSisLoaded(){
                             return;
                         }
                         const filteredList = jso.formattedPhotos || [];
-                        console.log("Filtered List:", filteredList);
+                        if(consoleLog===true){console.log("Filtered List:", filteredList);}
                         // re-set all previous filtered records START
                             const filteredListContainer = document.getElementById("filteredList-container");
                             while (filteredListContainer.firstChild) {
                                 filteredListContainer.removeChild(filteredListContainer.firstChild);
                             }
                             const x = filteredListContainer;
-                            console.log("filteredListContainer:-\n",x);
+                            if(consoleLog===true){console.log("filteredListContainer:-\n",x);}
                         // re-set all previous filtered records END
                         if (!filteredList.length) {
                             filteredListContainer.innerHTML = "<p>No photos available.</p>";
@@ -550,7 +550,7 @@ export function projectMJSisLoaded(){
                             }
                         });
                     } catch (error) {
-                        console.error("Error in filterBy():", error);
+                        if(consoleLog===true){console.error("Error in filterBy():", error);}
                     }
 
                 }
@@ -584,7 +584,7 @@ export function projectMJSisLoaded(){
                         return response.json();
                     })
                     .then(data => {
-                        console.log("Search results:", data);
+                        if(consoleLog===true){console.log("Search results:", data);}
                         const resultsContainer = document.getElementById("search-results");
                         resultsContainer.innerHTML = ''; // Clear previous results
                         if (data.length === 0) {
@@ -605,7 +605,7 @@ export function projectMJSisLoaded(){
                         }
                     })
                     .catch(error => {
-                        console.error("Error fetching search results:", error);
+                        if(consoleLog===true){console.error("Error fetching search results:", error);}
                         showCustomMessage("Error fetching search results. Please try again.");
                     });
                 }
@@ -619,8 +619,8 @@ export function projectMJSisLoaded(){
                         const imageData = ctx.getImageData(0, 0, canvasII.width, canvasII.height);
                         const pixels = new Uint32Array(imageData.data.buffer);
                         const hasImage = pixels.some(pixel => pixel !== 0);
-                        console.log(hasImage);
-                        console.log(hasImage ? "Canvas has image data" : "Canvas is blank");
+                        if(consoleLog===true){console.log(hasImage);}
+                        if(consoleLog===true){console.log(hasImage ? "Canvas has image data" : "Canvas is blank");}
                         if(hasImage===false){
                             showCustomMessage("No image exists.  Please capture an image.")
                             return;
@@ -655,7 +655,7 @@ export function projectMJSisLoaded(){
                         async function canvasToBlob(canvas,imageCompression=1) {
                             return new Promise(resolve => {
                                 canvas.toBlob(blob => {
-                                    console.log("canvasToBlob(canvas,imageCompression=1):-", blob); // Log Blob
+                                    if(consoleLog===true){console.log("canvasToBlob(canvas,imageCompression=1):-", blob);} // Log Blob
                                     window.window_image_Blob_compressed = blob; // Store Blob globally if needed
                                     resolve(blob);
                                 }, "image/jpeg", imageCompression);
@@ -665,15 +665,15 @@ export function projectMJSisLoaded(){
                         function canvasToDataURL(canvas,imageCompression=1) {
                             return canvas.toDataURL("image/jpeg", imageCompression); // Compress to smaller JPEG
                         }
-                    console.log("insertFormDataRecord() called.");
+                    if(consoleLog===true){console.log("insertFormDataRecord() called.");}
                     // ✅ Save Photo & Data to SQLite via API
                         const canvas = document.getElementById("canvasII");                
                         const image_DataURL_compressed = canvasToDataURL(canvas, imageCompression);
-                        console.log("Compressed Image DataURL:", image_DataURL_compressed); // Log DataURL
+                        if(consoleLog===true){console.log("Compressed Image DataURL:", image_DataURL_compressed);} // Log DataURL
                         const image_Blob_compressed = await canvasToBlob(canvas,imageCompression);
-                        console.log("Compressed Image Blob:", image_Blob_compressed); // Log Blob
-                        console.log("Compressed Image Blob:", window_image_Blob_compressed); // Log Blob
-                        console.log("image_Blob_compressed.type",image_Blob_compressed.type); // Should log something like "image/jpeg"
+                        if(consoleLog===true){console.log("Compressed Image Blob:", image_Blob_compressed);} // Log Blob
+                        if(consoleLog===true){console.log("Compressed Image Blob:", window_image_Blob_compressed);} // Log Blob
+                        if(consoleLog===true){console.log("image_Blob_compressed.type",image_Blob_compressed.type);} // Should log something like "image/jpeg"
                         // const userEmailAddress = document.getElementById("user-email-address").textContent; // Get user email from element
                         const imageDATE = new Date().toLocaleDateString();
                         const imageDD = newDateAttributes().date;
@@ -691,7 +691,7 @@ export function projectMJSisLoaded(){
                         formData.append("image_notes", notesHTML);
                         formData.append("userEmailAddress", userEmailAddress);
                         // formData.append("userEmailAddress", "donald.garton@outlook.com");
-                        console.log("FormData entries:", Array.from(formData.entries())); // Log FormData entries
+                        if(consoleLog===true){console.log("FormData entries:", Array.from(formData.entries()));} // Log FormData entries
                         try {
                             const fetchUrl = "/dbRouter/insert-form-data-record";
                             const fetchOptions = {
@@ -711,11 +711,11 @@ export function projectMJSisLoaded(){
                             if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
                             if(consoleLog===true){console.log(fetchOptions);}
                             for (const [key, value] of formData.entries()) {
-                                console.log(`${key}:`, value);
+                                if(consoleLog===true){console.log(`${key}:`, value);}
                             }
                             const response = await fetch(fetchUrl, fetchOptions);
                             const result = await response.json();
-                            console.log(result.message);
+                            if(consoleLog===true){console.log(result.message);}
                             if(result.success===true){
                                 showCustomMessage("Added new record, successfully.");
                             }
@@ -723,7 +723,7 @@ export function projectMJSisLoaded(){
                                 showCustomMessage("Missing user details ~ authentication denied");
                             }
                         } catch (error) {
-                            console.error("Error saving photo:", error);
+                            if(consoleLog===true){console.error("Error saving photo:", error);}
                         }
                 }
             // insertFormDataRecord END
@@ -767,20 +767,20 @@ export function projectMJSisLoaded(){
                         event.stopPropagation(); // Prevents the event from bubbling up to parent elements
                     // Prevents the event from bubbling up to parent elements END
                     logCount++;
-                    console.log(logCount,event.target); // will log twice if clicked on a radio button label.
+                    if(consoleLog===true){console.log(logCount,event.target);} // will log twice if clicked on a radio button label.
                     const action = event.target.dataset.action;
                     const handler = actions[action];
-                    console.log(`Action: ${action}, Handler: ${handler}`);
+                    if(consoleLog===true){console.log(`Action: ${action}, Handler: ${handler}`);}
                     if (typeof handler === "function"){
                         try{
-                            console.warn(`🟢 Handler found for action: ${event.target.dataset.action}`);
-                            console.warn(`🟢 Handler found at element: ${event.target.id}`);
+                            if(consoleLog===true){console.warn(`🟢 Handler found for action: ${event.target.dataset.action}`);}
+                            if(consoleLog===true){console.warn(`🟢 Handler found at element: ${event.target.id}`);}
                             handler(event);
                         } catch (error) {
-                            console.error(`🔴 Error executing handler for action: ${event.target.dataset.action}`, error);
+                            if(consoleLog===true){console.error(`🔴 Error executing handler for action: ${event.target.dataset.action}`, error);}
                         }   
                     } else {
-                        console.warn(`🔴 No handler found for action: ${event.target.dataset.action}`);
+                        if(consoleLog===true){console.warn(`🔴 No handler found for action: ${event.target.dataset.action}`);}
                     }
                 });
             // add PROJECT SPECIFIC event listeners END
