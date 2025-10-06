@@ -577,8 +577,10 @@ console.log(("🔰").repeat(45));
             }
             console.log(`🪵 ${trace()} 🪵🪵🪵 LOG date/time (local): ${now.toLocaleString()} | (ISO): ${toLocalISOString()}`);
             const ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress;
-            console.log(`🪵 ${trace()} 🪵 ${req.method} ${req.originalUrl} ${req.url}`);
-            console.log(`🪵 ${trace()} 🪵 Origin IP: ${req.ip}`);
+            console.log(`🪵 ${trace()} 🪵 req.method:      ${req.method}`);
+            console.log(`🪵 ${trace()} 🪵 req.originalUrl: ${req.originalUrl}`);
+            console.log(`🪵 ${trace()} 🪵 req.url:         ${req.url}`);
+            console.log(`🪵 ${trace()} 🪵 Origin IP:                            ${req.ip}`);
             console.log(`🪵 ${trace()} 🪵 Origin req.headers['x-forwarded-for'] ${ip}`);
             console.log(`🪵 ${trace()} 🪵 User-Agent: ${req.headers['user-agent']}`);
             const authHeader = req.headers['authorization'];
@@ -631,6 +633,27 @@ console.log(("🔰").repeat(45));
     console.log((`🚀  A U T H E N T I C A T E   U S E R S`));
     // Middleware to authenticate users based on JWT token in cookies
         app.use((req, res, next) => {
+            // safeURLs START
+                console.log((`🚀   C H E C K   k n o w n U R L s . j s o n`));
+                const safeURLs = JSON.parse(fs.readFileSync("knownURLs.json", "utf8")).safe_URLs;
+                if (!safeURLs.includes(req.url)) {
+                    const allowedRouters = ["/tinymce/", "/dbRouter/", "/projectRouter/", "/globalRouter/", "/loginRouter/", "/sessionsRouter/", "/googleAPIsRouter/"];
+                    if (allowedRouters.some(prefix => req.url.startsWith(prefix))) {
+                        console.log(`🪣 ${trace()}🔑✅🟢 Access allowed to router:- ${req.url}`);
+//                     } else {
+//                         // console.log("Access denied");
+//                         console.log(`🪣 ${trace()}🔑❌🔴 Access denied due to session inconsistency:- ${req.url}`);
+// // console.log(trace(),"Cookie SID:", req.cookies.sid);
+// // console.log(trace(),"Headers SID:", req.headers["sid"]);
+// // console.log(trace(),"Session ID:", req.sessionID);
+//                         return res.status(403).send({message:"Access denied.",status:false});
+                    }
+                }else{
+                    console.log(`🪣 ${trace()}🔑✅🟢 Access allowed to safe path:- ${req.url}`);
+                    next();
+                }
+
+            // safeURLs END
             // const publicPaths = [
             //     '/loginRouter/login',
             //     '/loginRouter/signup',
@@ -652,36 +675,44 @@ console.log(("🔰").repeat(45));
             // }
             // JWT authentication START
                 console.log((`🚀   A U T H E N T I C A T E   U S E R S   ~   J W T`));
-                const token = req.cookies.guestToken;
-                if (!token) {
-                    console.log(`🔒 ${trace()} 🔒🔒🔒 No token provided. Access denied to ${req.path}`);
-                    return res.status(401).json({ message: 'Access denied. No token provided.' });
-                }
-                try {
-                    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-                    req.user = decoded;
-                    console.log(`🔓 ${trace()} 🔓🔓🔓 Token verified. User authenticated for ${req.path}`);
-                    next();
-                } catch (error) {
-                    console.log(`🔒 ${trace()} 🔒🔒🔒 Invalid token. Access denied to ${req.path}`, error);
-                    return res.status(400).json({ message: 'Invalid token.' });
+                if (!safeURLs.includes(req.url)) {
+                    const token = req.cookies.guestToken;
+                    if (!token) {
+                        console.log(`🔒 ${trace()} 🔒🔒🔒 No token provided. Access denied to ${req.path}`);
+                        return res.status(401).json({ message: 'Access denied. No token provided.' });
+                    }
+                    try {
+                        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+                        req.user = decoded;
+                        console.log(`🔓 ${trace()} 🔓🔓🔓 Token verified. User authenticated for ${req.path}`);
+                        next();
+                    } catch (error) {
+                        console.log(`🔒 ${trace()} 🔒🔒🔒 Invalid token. Access denied to ${req.path}`, error);
+                        return res.status(400).json({ message: 'Invalid token.' });
+                    }
+                }else{
+                    console.log(`🪣 ${trace()}🔑✅🟢 Access allowed to safe path:- ${req.url}`);
                 }
             // JWT authentication END
             // COOKIE authenticate START
                 console.log((`🚀   A U T H E N T I C A T E   U S E R S   ~   C O O K I E`));
-                const guestCookie = req.cookies.guestCookie;
-                if (!guestCookie) {
-                    console.log(`🔒 ${trace()} 🔒🔒🔒 No cookie provided. Access denied to ${req.path}`);
-                    return res.status(401).json({ message: 'Access denied. No cookie provided.' });
-                }
-                try {
-                    // const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-                    // req.user = decoded;
-                    console.log(`🔓 ${trace()} 🔓🔓🔓 Cookie verified. User authenticated for ${req.path}`);
-                    next();
-                } catch (error) {
-                    console.log(`🔒 ${trace()} 🔒🔒🔒 Invalid cookie. Access denied to ${req.path}`, error);
-                    return res.status(400).json({ message: 'Invalid cookie.' });
+                if (!safeURLs.includes(req.url)) {
+                    const guestCookie = req.cookies.guestCookie;
+                    if (!guestCookie) {
+                        console.log(`🔒 ${trace()} 🔒🔒🔒 No cookie provided. Access denied to ${req.path}`);
+                        return res.status(401).json({ message: 'Access denied. No cookie provided.' });
+                    }
+                    try {
+                        // const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+                        // req.user = decoded;
+                        console.log(`🔓 ${trace()} 🔓🔓🔓 Cookie verified. User authenticated for ${req.path}`);
+                        next();
+                    } catch (error) {
+                        console.log(`🔒 ${trace()} 🔒🔒🔒 Invalid cookie. Access denied to ${req.path}`, error);
+                        return res.status(400).json({ message: 'Invalid cookie.' });
+                    }
+                }else{
+                    console.log(`🪣 ${trace()}🔑✅🟢 Access allowed to safe path:- ${req.url}`);
                 }
             // COOKIE authenticate END
         });

@@ -29,7 +29,8 @@
         "/_Search.png",
         "/favicon.png",
         "/session-reset?reload=true",
-        "/map-marker.webp"
+        "/map-marker.webp",
+        "/robots.txt"
     ],
     "startup_URLs": [
         "/establish-session",

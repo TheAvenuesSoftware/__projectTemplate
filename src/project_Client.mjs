@@ -150,12 +150,21 @@ export function projectMJSisLoaded(){
                             // const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
                             // if(consoleLog===true){console.log(`filteredRecord imageID:- `,imageID);}
                             const imageID = filteredRecords[`${filteredRecordID}`].image_id || ''; // image_id INTEGER PRIMARY KEY AUTOINCREMENT
-                            localStorage.setItem(`tas_toEdit_imageID`,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
-                            if(consoleLog===true){console.log(`filteredRecord imageID:- `,imageID);} // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
                             if(imageID !== parseInt(filteredRecordID)){
                                 showCustomMessage("Error: conflicting ID.  Edit cannot proceed.");
                                 return;
                             }
+                            localStorage.setItem(`tas_toEdit_imageID`,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            if(consoleLog===true){console.log(`filteredRecord imageID:- `,imageID);} // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            // // update other sections with edited record details START
+                            //     // store Address in the location page
+                            //         document.getElementById("googlePlacesAPIautocomplete_0").value = filteredRecords[`${filteredRecordID}`].image_address || '';
+                            //     // store Date & Time in the note page
+                            //         document.getElementById("note-date-time").textContent = filteredRecords[`${filteredRecordID}`].image_date + ' ' + filteredRecords[`${filteredRecordID}`].image_time || ''; // store edited address in the note page
+                            //     // store Address in the note page
+                            //         document.getElementById("note-address").textContent = filteredRecords[`${filteredRecordID}`].image_address || ''; // store edited address in the note page
+                            //     // store Note in the note page
+                            // // update other sections with edited record details END
                             // insert DOM element textarea START
                                 const editNoteTinymceContainer = document.createElement("div");
                                 editNoteTinymceContainer.id = `editNoteTinymceContainer${imageID}`;
@@ -281,12 +290,15 @@ export function projectMJSisLoaded(){
                             }
                             localStorage.setItem(`tas_toEdit_imageID`,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
                             if(consoleLog===true){console.log(`filteredRecord imageID:- `,imageID);} // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
-                            // store Address in the location page
-                                document.getElementById("googlePlacesAPIautocomplete_0").value = filteredRecords[`${filteredRecordID}`].image_address || '';
-                            // store Date & Time in the note page
-                                document.getElementById("note-date-time").textContent = filteredRecords[`${filteredRecordID}`].image_date + ' ' + filteredRecords[`${filteredRecordID}`].image_time || ''; // store edited address in the note page
-                            // store Address in the note page
-                                document.getElementById("note-address").textContent = filteredRecords[`${filteredRecordID}`].image_address || ''; // store edited address in the note page
+                            // // update other sections with edited record details START
+                            //     // store Address in the location page
+                            //         document.getElementById("googlePlacesAPIautocomplete_0").value = filteredRecords[`${filteredRecordID}`].image_address || '';
+                            //     // store Date & Time in the note page
+                            //         document.getElementById("note-date-time").textContent = filteredRecords[`${filteredRecordID}`].image_date + ' ' + filteredRecords[`${filteredRecordID}`].image_time || ''; // store edited address in the note page
+                            //     // store Address in the note page
+                            //         document.getElementById("note-address").textContent = filteredRecords[`${filteredRecordID}`].image_address || ''; // store edited address in the note page
+                            //     // store Note in the note page
+                            // // update other sections with edited record details END
                             // insert DOM element input START
                                 const editAddressDiv = document.createElement("div");
                                 // editAddressDiv.className = "record-card-edit-address";
@@ -375,10 +387,14 @@ export function projectMJSisLoaded(){
                     if(consoleLog===true){console.log(jso);}
                     if(consoleLog===true){console.log(jso.updates.image_address);}
                     if(jso.success===true){
-                        const addressElement = document.getElementById(`address${recordIdToUpdate}`);
-                        addressElement.textContent = jso.updates.image_address; // Update the address in the DOM
-                        const addressInputContainer = document.getElementById("autocomplete-address-container");
-                        addressInputContainer.remove(); // Remove the address input container
+                        // steps START
+                            // 1 update the notes in the DOM
+                                const addressElement = document.getElementById(`address${recordIdToUpdate}`);
+                                addressElement.textContent = jso.updates.image_address; // Update the address in the DOM
+                            // 2 remove address input element
+                                const addressInputContainer = document.getElementById(`autocomplete-address-container-${recordIdToUpdate}`);
+                                addressInputContainer.remove(); // Remove the address input container
+                        // steps END
                     }else{
                         showCustomMessage("failed to update address", "error");
                     }
