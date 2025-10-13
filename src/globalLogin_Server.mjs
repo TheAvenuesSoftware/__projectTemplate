@@ -1,5 +1,3 @@
-const consoleLog = true;
-
 console.log("LOADED:- globalLoginServer.mjs is loaded",new Date().toLocaleString());
 export function globalLoginServerMJSisLoaded(){
     return true;
@@ -10,27 +8,24 @@ export function globalLoginServerMJSisLoaded(){
     import { Router } from "express";
     const loginRouter = Router();
     import fs from 'fs';
-    // import * as projectSQLite from './projectSQLite.mjs'
-    // import {accessDb} from './SQLite_ServerSide.mjs'
     import { randomInt, randomBytes } from "crypto";
     import { sendMail } from './global_Server.mjs'
-    import { loginEmailHtml } from './projectConfig_Server.mjs'
+    import { loginEmailHtml } from '../config/projectConfig_Server.mjs'
     import dotenv from "dotenv";
         dotenv.config({path:`./config/globalServer.env`});
         dotenv.config({path:`./config/projectServer.env`});
     import { trace} from "./global_Server.mjs";
-    // import { postLoginActions_serverSide } from "./projectServer.mjs";
     import { optPer, insertDataRecord, insertFormDataRecord, getRecord, initDB, setupSchema, updateDataRecord, updateFormDataRecord } from "./projectSQLite_Server.mjs";
     import * as cookie from "cookie";
     import { isValidJSONString } from "./global_Server.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 loginRouter.post("/isLoginRequired", (req, res) => {
-    // if(consoleLog===true){console.log(trace(),"\nrouter.get('/isLoginRequired");}
+    // console.log(trace(),"\nrouter.get('/isLoginRequired");
     // ❗❗❗const isLoginRequired = process.env.IS_LOGIN_REQUIRED; // DOESN'T WORK! it stores a text value of true, not the boolean.
         const isLoginRequired = process.env.IS_LOGIN_REQUIRED?.toLowerCase() === "true"; // Handles case variations
     // ❗❗❗const isLoginRequired = process.env.IS_LOGIN_REQUIRED; // DOESN'T WORK! it stores a text value of true, not the boolean.
-    // if(consoleLog===true){console.log(trace(),'\nisLoginRequired:- ',isLoginRequired);}
+    // console.log(trace(),'\nisLoginRequired:- ',isLoginRequired);
     if(isLoginRequired===true){
         // res.send({"message":true});
         res.send({isLoginRequired:true});
@@ -41,26 +36,26 @@ loginRouter.post("/isLoginRequired", (req, res) => {
 });
 
 loginRouter.post("/fileExists", (req, res) => {
-    if(consoleLog===true){console.log(trace(),"fileExists req.body:-\n",req.body);}
+    console.log(trace(),"fileExists req.body:-\n",req.body);
     // const filePath = `./data/${loginEmailAddressInputValue}/${loginEmailAddressInputValue}.db`;
     const fileToFind = `${process.env.APP_PATH_TO_DATA}${req.body.fileName}.db`;
-    if(consoleLog===true){console.log(trace(),fileToFind);}
+    console.log(trace(),fileToFind);
     if (fs.existsSync(fileToFind)) {
-        if(consoleLog===true){console.log(trace(),`🟢 File exists - ${fileToFind}`);}
+        console.log(trace(),`🟢 File exists - ${fileToFind}`);
         res.send({message:`File "${fileToFind}" found.`,fileExists:true});
     } else {
-        if(consoleLog===true){console.log(trace(),`🔴 File not found - ${fileToFind}`);}
+        console.log(trace(),`🔴 File not found - ${fileToFind}`);
         res.send({message:`File "${fileToFind}" not found.`,fileExists:false});
     }
 });
 
 loginRouter.post("/emailCode", async (req, res) => {
-    if(consoleLog===true){console.log(trace(),"Login: req.body:-",req.body);}
+    console.log(trace(),"Login: req.body:-",req.body);
     // generate securityCode START
         const securityCode = randomInt(100000, 999999); // 6-digit code
-        if(consoleLog===true){console.log(trace(),`Login: session regen - Session securityCode:- ${securityCode}`);}
+        console.log(trace(),`Login: session regen - Session securityCode:- ${securityCode}`);
         const securityCodeX = randomBytes(4).toString("hex"); // Hex-based code, more complex code if needed
-        if(consoleLog===true){console.log(trace(),`Login: session regen - Session securityCodeX:- ${securityCodeX}`);}
+        console.log(trace(),`Login: session regen - Session securityCodeX:- ${securityCodeX}`);
     // save the code in users.db; table logIns; schema: 
         optPer("users"); // optimise database performance
         const insertedId = await insertDataRecord(

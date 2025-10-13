@@ -530,6 +530,12 @@ body {
   object-fit: contain;
   border-radius: 5px;
 }
+.section-search .record-card .record-card-item-heading {
+  color: navy;
+  font-weight: bold;
+  margin-top: 5px;
+  text-decoration: underline;
+}
 
 .section-note .toolbar, .record-card-edit-note .toolbar {
   margin-top: 10px;

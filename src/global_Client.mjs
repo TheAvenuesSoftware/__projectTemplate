@@ -1,6 +1,4 @@
-const consoleLog = true;
-
-console.log("LOADED:- global_Client.mjs is loaded",new Date().toLocaleString());
+if(window.consoleLog===true){console.log("LOADED:- global_Client.mjs is loaded",new Date().toLocaleString());}
 export function globalClientJSisLoaded(){
     return true;
 }
@@ -10,7 +8,7 @@ export function globalClientJSisLoaded(){
     import { getGooglePlacesAPIkey } from "./projectGoogleAPIs_Client.mjs";
     import { doAfterDOMandWindowLoad__globalLogin_ClientMJS } from "./globalLogin_Client.mjs";
     // import { sessionLogout } from "./globalSessions_Client.mjs";
-    import { clientConfigSettings } from "./projectConfig_Client.mjs";
+    import { clientConfigSettings } from "../config/projectConfig_Client.mjs";
     // import { showCustomMessage } from "./globalUIpopups_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
@@ -19,11 +17,11 @@ export function globalClientJSisLoaded(){
 
     document.addEventListener("DOMContentLoaded",async () => {
     //1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ START
-        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ global_Client.',new Date().toLocaleString());}
+        if(window.consoleLog===true){console.log('DOMContentLoaded successsful ~ global_Client.',new Date().toLocaleString());}
 
         window.addEventListener("load",async () => {
         // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
-            if(consoleLog===true){console.log('Window load successsful ~ global_Client.',new Date().toLocaleString());}
+            if(window.consoleLog===true){console.log('Window load successsful ~ global_Client.',new Date().toLocaleString());}
             
             await new Promise(resolve => setTimeout(resolve, 500)); // Simulated async process
             await doAfterDOMandWindowLoad__globalLogin_ClientMJS();
@@ -40,7 +38,7 @@ export function globalClientJSisLoaded(){
 // 1️⃣🔹1️⃣ START
     async function doAfterDOMandWindowLoad__global_ClientMJS(){
 
-        if(consoleLog===true){console.log('doAfterDOMandWindowLoad__global_ClientMJS() launched.',new Date().toLocaleString());}
+        if(window.consoleLog===true){console.log('doAfterDOMandWindowLoad__global_ClientMJS() launched.',new Date().toLocaleString());}
 
         // // 1. Initialize guest session by hitting your backend
         //     async function initSession() {
@@ -100,31 +98,31 @@ export function globalClientJSisLoaded(){
 
 // fetch responseHandler
     export function fetchResponseHandler(res) {
-        if(consoleLog===true){console.log("fetchResponseHandler() res:- ",res);}
+        if(window.consoleLog===true){console.log("fetchResponseHandler() res:- ",res);}
         const status = res.headers.get('Status');
-        if(consoleLog===true){console.log("fetchResponseHandler() status:- ",res.status);}
+        if(window.consoleLog===true){console.log("fetchResponseHandler() status:- ",res.status);}
         const contentType = res.headers.get('Content-Type');
-        if(consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
+        if(window.consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
         if (res.ok) {
             // Handle response dynamically based on content type
             if (contentType.includes('application/json')) {
-                if(consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
+                if(window.consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
                 return res.json(); // Parse JSON
             } else if (contentType.includes('text/plain')) {
-                if(consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
+                if(window.consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
                 return res.text(); // Parse plain text
             } else if (contentType.includes('text/html')) {
-                if(consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
+                if(window.consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
                 return res.text(); // Parse plain text
             } else if (contentType.includes('application/octet-stream')) {
-                if(consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
+                if(window.consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
                 return res.blob(); // Handle binary data
             } else {
-                if(consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
+                if(window.consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
                 throw new Error('Unexpected Content-Type');
             }
         } else {
-                if(consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
+                if(window.consoleLog===true){console.log("fetchResponseHandler() content-type:- ",contentType);}
             // Handle error response
             resStatusHandler(res);
             throw new Error(`HTTP Error ${res.status}: ${res.statusText}`);
@@ -142,7 +140,7 @@ export function globalClientJSisLoaded(){
 
 // universal fetch I
     export async function universalFetch(url, method = 'GET', data = null) {
-        if(consoleLog===true){console.log("\n",url,'\n',method,'\n',data);}
+        if(window.consoleLog===true){console.log("\n",url,'\n',method,'\n',data);}
         try {
             // Ensure data is correctly formatted before using it in the request
                 const body = await isValidJSONString(data)
@@ -151,9 +149,9 @@ export function globalClientJSisLoaded(){
                         ? JSON.stringify(data) // Convert object to JSON string
                         : null; // No valid data, avoid sending an incorrect body
                 if(typeof body === "undefined"){
-                    if(consoleLog===true){console.log(`🔴 This is not valid JSON:-\n${data}`);}
+                    if(window.consoleLog===true){console.log(`🔴 This is not valid JSON:-\n${data}`);}
                 }else{
-                    if(consoleLog===true){console.log(`🟢 Valid JSON:-\n${data}`);}
+                    if(window.consoleLog===true){console.log(`🟢 Valid JSON:-\n${data}`);}
                 }
             // 
                 const options = {
@@ -163,12 +161,12 @@ export function globalClientJSisLoaded(){
                     body
                 };
             // 
-                if(consoleLog===true){console.log(url,'\n',options,'\n',options.body);}
+                if(window.consoleLog===true){console.log(url,'\n',options,'\n',options.body);}
                 const response = await fetch(url, options);
                     if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
                     return await response.json();
         } catch (error) {
-            console.error('Fetch error:', error);
+            if(window.consoleLog===true){console.error('Fetch error:', error);}
         }
     }
 
@@ -204,10 +202,10 @@ export async function universalFetchII(url,options){
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const jso = await response.json();
-        console.log('🟢 Request Success:', jso);
+        if(window.consoleLog===true){console.log('🟢 Request Success:', jso);}
         return jso;  // Return response data
     } catch (error) {
-        console.error('🔴 Request Failed:', error);
+        if(window.consoleLog===true){console.error('🔴 Request Failed:', error);}
         return null;
     }
 }
@@ -246,34 +244,34 @@ export async function universalFetchII(url,options){
 
         const newDate = new Date();
 
-        // if(consoleLog===true){console.log('newDate',newDate);}
-        // if(consoleLog===true){console.log('newDate.toDateString()',newDate.toDateString());}
-        // if(consoleLog===true){console.log('newDate.toISOString()',newDate.toISOString());}
-        // if(consoleLog===true){console.log('newDate.toJSON()',newDate.toJSON());}
-        // if(consoleLog===true){console.log('newDate.toLocaleDateString()',newDate.toLocaleDateString());}
-        // if(consoleLog===true){console.log('newDate.toLocaleString()',newDate.toLocaleString());}
-        // if(consoleLog===true){console.log('newDate.toLocaleTimeString()',newDate.toLocaleTimeString());}
-        // if(consoleLog===true){console.log('newDate.toString()',newDate.toString());}
-        // if(consoleLog===true){console.log('newDate.toTimeString()',newDate.toTimeString());}
-        // if(consoleLog===true){console.log('newDate.toUTCString()',newDate.toUTCString());}
-        // if(consoleLog===true){console.log('newDate.getTimezoneOffset()',newDate.getTimezoneOffset());}
-        // if(consoleLog===true){console.log('newDate.getTime()',newDate.getTime());}
-        // if(consoleLog===true){console.log('newDate.getDate()',newDate.getDate());}
-        // if(consoleLog===true){console.log('newDate.getDay()',newDate.getDay());}
-        // if(consoleLog===true){console.log('newDate.getMonth()',newDate.getMonth());}
-        // if(consoleLog===true){console.log('newDate.getFullYear()',newDate.getFullYear());}
-        // if(consoleLog===true){console.log('newDate.getHours()',newDate.getHours());}
-        // if(consoleLog===true){console.log('newDate.getMinutes()',newDate.getMinutes());}
-        // if(consoleLog===true){console.log('newDate.getSeconds()',newDate.getSeconds());}
-        // if(consoleLog===true){console.log('newDate.getMilliseconds()',newDate.getMilliseconds());}
-        // if(consoleLog===true){console.log('newDate.getUTCDate()',newDate.getUTCDate());}
-        // if(consoleLog===true){console.log('newDate.getUTCDay()',newDate.getUTCDay());}
-        // if(consoleLog===true){console.log('newDate.getUTCMonth()',newDate.getUTCMonth());}
-        // if(consoleLog===true){console.log('newDate.getUTCFullYear()',newDate.getUTCFullYear());}
-        // if(consoleLog===true){console.log('newDate.getUTCHours()',newDate.getUTCHours());}
-        // if(consoleLog===true){console.log('newDate.getUTCMinutes()',newDate.getUTCMinutes());}
-        // if(consoleLog===true){console.log('newDate.getUTCSeconds()',newDate.getUTCSeconds());}
-        // if(consoleLog===true){console.log('newDate.getUTCMilliseconds()',newDate.getUTCMilliseconds());}
+        // if(window.consoleLog===true){console.log('newDate',newDate);}
+        // if(window.consoleLog===true){console.log('newDate.toDateString()',newDate.toDateString());}
+        // if(window.consoleLog===true){console.log('newDate.toISOString()',newDate.toISOString());}
+        // if(window.consoleLog===true){console.log('newDate.toJSON()',newDate.toJSON());}
+        // if(window.consoleLog===true){console.log('newDate.toLocaleDateString()',newDate.toLocaleDateString());}
+        // if(window.consoleLog===true){console.log('newDate.toLocaleString()',newDate.toLocaleString());}
+        // if(window.consoleLog===true){console.log('newDate.toLocaleTimeString()',newDate.toLocaleTimeString());}
+        // if(window.consoleLog===true){console.log('newDate.toString()',newDate.toString());}
+        // if(window.consoleLog===true){console.log('newDate.toTimeString()',newDate.toTimeString());}
+        // if(window.consoleLog===true){console.log('newDate.toUTCString()',newDate.toUTCString());}
+        // if(window.consoleLog===true){console.log('newDate.getTimezoneOffset()',newDate.getTimezoneOffset());}
+        // if(window.consoleLog===true){console.log('newDate.getTime()',newDate.getTime());}
+        // if(window.consoleLog===true){console.log('newDate.getDate()',newDate.getDate());}
+        // if(window.consoleLog===true){console.log('newDate.getDay()',newDate.getDay());}
+        // if(window.consoleLog===true){console.log('newDate.getMonth()',newDate.getMonth());}
+        // if(window.consoleLog===true){console.log('newDate.getFullYear()',newDate.getFullYear());}
+        // if(window.consoleLog===true){console.log('newDate.getHours()',newDate.getHours());}
+        // if(window.consoleLog===true){console.log('newDate.getMinutes()',newDate.getMinutes());}
+        // if(window.consoleLog===true){console.log('newDate.getSeconds()',newDate.getSeconds());}
+        // if(window.consoleLog===true){console.log('newDate.getMilliseconds()',newDate.getMilliseconds());}
+        // if(window.consoleLog===true){console.log('newDate.getUTCDate()',newDate.getUTCDate());}
+        // if(window.consoleLog===true){console.log('newDate.getUTCDay()',newDate.getUTCDay());}
+        // if(window.consoleLog===true){console.log('newDate.getUTCMonth()',newDate.getUTCMonth());}
+        // if(window.consoleLog===true){console.log('newDate.getUTCFullYear()',newDate.getUTCFullYear());}
+        // if(window.consoleLog===true){console.log('newDate.getUTCHours()',newDate.getUTCHours());}
+        // if(window.consoleLog===true){console.log('newDate.getUTCMinutes()',newDate.getUTCMinutes());}
+        // if(window.consoleLog===true){console.log('newDate.getUTCSeconds()',newDate.getUTCSeconds());}
+        // if(window.consoleLog===true){console.log('newDate.getUTCMilliseconds()',newDate.getUTCMilliseconds());}
 
         const date = newDate.getDate().toString().padStart(2, '0');
         const day = newDate.getDay().toString();
@@ -294,7 +292,7 @@ export async function universalFetchII(url,options){
         if(hour >= 12 & second > 0){
             hour12 = (hour - 12).toString().padStart(2,"0");
             ampm = "pm"
-            // if(consoleLog===true){console.log("ampm");}
+            // if(window.consoleLog===true){console.log("ampm");}
         }
 
         const jsonObject = {
@@ -317,7 +315,7 @@ export async function universalFetchII(url,options){
             hhmmss12:`${hour12}:${minute}:${second}`,
             ampm:ampm
         };
-        if(consoleLog===true){(console.log(`newDate:- ${newDate}\ndate:- ${date}\nday:- ${day}\nmonth:- ${month}\nyear:- ${year}\nhour12:- ${hour12}${ampm}\nhour24:- ${hour24}${ampm}\nminute:- ${minute}\nsecond:- ${second}\n`));}
+        if(window.consoleLog===true){(console.log(`newDate:- ${newDate}\ndate:- ${date}\nday:- ${day}\nmonth:- ${month}\nyear:- ${year}\nhour12:- ${hour12}${ampm}\nhour24:- ${hour24}${ampm}\nminute:- ${minute}\nsecond:- ${second}\n`));}
         return jsonObject;
     // return attributes for:- new Date() END
     }
@@ -341,9 +339,9 @@ export async function universalFetchII(url,options){
     // addToDate(baseDate, years = 0, months = 0, days = 0, hours = 0, minutes = 0, seconds = 0) END
     }
     const newDate = new Date(); // Base date
-    // if(consoleLog===true){console.log('Base Date:', newDate);}
+    // if(window.consoleLog===true){console.log('Base Date:', newDate);}
     const modifiedDate = addToDate(newDate, 1, -2, 10, -5, 30, 45); // Add/subtract values
-    // if(consoleLog===true){console.log('Modified Date:', modifiedDate);}
+    // if(window.consoleLog===true){console.log('Modified Date:', modifiedDate);}
 
 // test API end point active/not-active START
     export async function sendDataToApi(testData,localhostEndpoint,wwwEndpoint) {
@@ -366,7 +364,7 @@ export async function universalFetchII(url,options){
         }
         // Return response if successful
         const result = await response.json();
-        if(consoleLog===true){console.log('Success from Primary API:', result);}
+        if(window.consoleLog===true){console.log('Success from Primary API:', result);}
         return result;
         } catch (error) {
         console.warn('Primary API failed, switching to Secondary API:', error.message);
@@ -384,10 +382,10 @@ export async function universalFetchII(url,options){
             }
             // Return response if successful
             const fallbackResult = await fallbackResponse.json();
-            if(consoleLog===true){console.log('Success from Secondary API:', fallbackResult);}
+            if(window.consoleLog===true){console.log('Success from Secondary API:', fallbackResult);}
             return fallbackResult;
         } catch (fallbackError) {
-            console.error('Both APIs failed:', fallbackError.message);
+            if(window.consoleLog===true){console.error('Both APIs failed:', fallbackError.message);}
             throw fallbackError;
         }
         }
@@ -416,7 +414,7 @@ export function detectDeviceType() {
         return "Unknown Device";
 // detectDeviceType() END
 }
-// if(consoleLog===true){console.log(detectDeviceType());}
+// if(window.consoleLog===true){console.log(detectDeviceType());}
 
 // detectOS() START
 export function detectOS() {
@@ -443,12 +441,12 @@ export function detectOS() {
     return "Unknown Operating System";
 // detectOS() END
 }
-// if(consoleLog===true){console.log(detectOS());}
+// if(window.consoleLog===true){console.log(detectOS());}
 
 // getGlobalFooter()
 export async function getGlobalFooter() {
-    if(consoleLog===true){console.log('getGlobalFooter()...');}
-    if(consoleLog===true){console.log('clientConfigSettings.CLIENT_SESSION_CREDENTIALS:-',clientConfigSettings.CLIENT_SESSION_CREDENTIALS);}
+    if(window.consoleLog===true){console.log('getGlobalFooter()...');}
+    if(window.consoleLog===true){console.log('clientConfigSettings.CLIENT_SESSION_CREDENTIALS:-',clientConfigSettings.CLIENT_SESSION_CREDENTIALS);}
     const fetchUrl = `/globalRouter/getGlobalFooter`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
@@ -465,20 +463,20 @@ export async function getGlobalFooter() {
             //     a:"a"
             // }) // Converts object to JSON for request
         }
-    if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
+    if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
     try {
         // fetch
             const response = await fetch(fetchUrl,fetchOptions);
             const html = await fetchResponseHandler(response); // Use the fetchResponseHandler to process the response
-            if(consoleLog===true){console.log("getGlobalFooter() responseParsed:- ",html);}
+            if(window.consoleLog===true){console.log("getGlobalFooter() responseParsed:- ",html);}
             // if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
             // const html = await response.text(); // Fetch HTML as text
-            // if(consoleLog===true){console.log(html);} // Logs correctly? Great!
+            // if(window.consoleLog===true){console.log(html);} // Logs correctly? Great!
         // Inject into the page
             document.getElementById("global-footer").innerHTML = html;
     } catch (error) {
-        console.error("Error fetching from:",fetchUrl, error.message);
-        console.error("Error fetching from:",fetchUrl, error.message);
+        if(window.consoleLog===true){console.error("Error fetching from:",fetchUrl, error.message);}
+        if(window.consoleLog===true){console.error("Error fetching from:",fetchUrl, error.message);}
         resStatusHandler(response);
     }
 }
@@ -505,7 +503,7 @@ function logAllEvents(target = document.body) {
         }, true); // useCapture: true to catch in capturing phase too
     });
 
-    console.log("🎧 Event logging activated. Interact with the page to see event logs.");
+    if(window.consoleLog===true){console.log("🎧 Event logging activated. Interact with the page to see event logs.");}
 }
 // logAllEvents();
 
@@ -615,8 +613,175 @@ function logAllEvents(target = document.body) {
             return success && hasMX;
         } catch (err) {
             // DNS check failed (offline or blocked)
-            console.warn("MX check failed:", err);
+            if(window.consoleLog===true){console.warn("MX check failed:", err);}
             return false;
         }
     }
 //  isEmailValid() END
+
+// Detect dark mode preference START
+    function detectDarkLightMode(){
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        // if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        //     console.log('Dark mode is enabled.  isDark =',isDark);
+        // } else {
+        //     console.log('Light mode is enabled.  isDark =',isDark);
+        // }
+        const favicon = document.getElementById('favicon');
+        favicon.href = isDark ? './favicon_darkMode.png' : './favicon_lightMode.png';
+        const appleTouchIcon = document.getElementById('apple-touch-icon');
+        appleTouchIcon.href = isDark ? './favicon_darkMode.png' : './favicon_lightMode.png';
+        // long-hand START
+            // if(isDark===true){
+            //     console.log('Dark mode is enabled.  isDark =',isDark);
+            //     favicon.href = './favicon_darkMode.png';
+            //     appleTouchIcon.href = './favicon_darkMode.png';
+            // }else{
+            //     console.log('Dark mode is NOT enabled.  isDark =',isDark);
+            //     favicon.href = './favicon_lightMode.png';
+            //     appleTouchIcon.href = './favicon_lightMode.png';
+            // }
+        // long-hand END
+    }
+// Detect dark mode preference END
+
+// parse text date depending on known format d/m/y OR m/d/y START
+    export function parseDate(rawDate, format = "d/m/y") {
+        if (!rawDate || typeof rawDate !== "string") return null;
+
+        const parts = rawDate.split(/[\/\-.]/); // Supports /, -, or . as separators
+        let day, month, year;
+
+        switch (format) {
+            case "d/m/y":
+                [day, month, year] = parts;
+                break;
+            case "m/d/y":
+                [month, day, year] = parts;
+                break;
+            case "y/m/d":
+                [year, month, day] = parts;
+                break;
+            default:
+                console.warn("Unknown date format. Using raw date.");
+                return new Date(rawDate);
+        }
+
+        // Zero-pad month/day if needed and convert to numbers
+        const d = parseInt(day, 10);
+        const m = parseInt(month, 10) - 1; // JavaScript months are 0-indexed
+        const y = parseInt(year, 10);
+
+        const date = new Date(y, m, d);
+        return isNaN(date.getTime()) ? null : date;
+    }
+// parse text date depending on known format d/m/y OR m/d/y START
+
+// // check the data type of a value START
+//     export function getType_Simple(value) {
+//         if (value === null) return 'null';
+//         if (typeof value === 'number' && !isNaN(value)) return 'number';
+//         if (typeof value === 'string') {
+//             // Check for date (ISO format or valid date string)
+//             const date = new Date(value);
+//             if (!isNaN(date.getTime())){
+//                 return 'date';
+//             }
+//             return 'text';
+//         }
+//         return 'unknown';
+//     }
+// // check the data type of a value END
+
+// // ROBUST for CSV - check the data type of a value START
+// export function getType_RobustCSV(value, dateFormat='d/m/y') {
+//     console.log('getType_RobustCSV(value):-',value);
+//     function sanitisedValue(raw) {
+//         const val = typeof raw === 'string' ? raw.trim() : raw;
+//         console.log("typeof raw === 'string' ? raw.trim() : raw;:-",val);
+//         // Null or empty string → null
+//             if (val === '' || val === null){
+//                  return null;
+//             }
+//         // Check for signed numbers: +42, -3.14, etc.
+//             // // if (/^[+-]?\d+(\.\d+)?$/.test(val)){
+//             // if (/^[+-]?(?:\d+\.?\d*|\.\d+)$/.test(val)) {
+//             //     console.log('Number detected:-',val);
+//             //     console.log('Number detected:-',Number(val));
+//             //     return Number(val);
+//             // }
+//             if(isNumeric(val)===true){
+//                 console.log('isNumeric true detected:-',val);
+//                 console.log('isNumeric true detected:-',Number(val.replace(/,/g, '')));
+//                 // return Number(val.replace(/,/g, ''));
+//                 return val.replace(/,/g, '');
+//             }
+//         // // Check for ISO-style date
+//         //     const date = new Date(val);
+//         //     if (!isNaN(date.getTime()) && /^\d{4}-\d{2}-\d{2}/.test(val)){
+//         //          return date;
+//         //     }
+//         // Try to parse date using provided format
+//             const parsedDate = parseDate(val, dateFormat);
+//             if (parsedDate instanceof Date && !isNaN(parsedDate.getTime())) {
+//                 return parsedDate;
+//             }
+//         // Otherwise, treat as text
+//             return val;
+//     }
+//     const actualValue= sanitisedValue(value);
+//     console.log('actualValue:-',actualValue);
+//     // Type detection
+//         if (actualValue === null) return 'null';
+//         if (typeof actualValue === 'number') return 'number';
+//         if (actualValue instanceof Date) return 'date';
+//         return 'text';
+// }
+// // ROBUST for CSV - check the data type of a value END
+
+export function isNumeric(val) {
+    if(window.consoleLog===true){console.log('isNumeric val:-',val);}
+    if (typeof val !== 'string'){
+        return false;
+    } // we only process strings!
+    const cleaned = val.replace(/,/g, '').replace(/"/g, "").trim(); // remove commas and whitespace
+    if(window.consoleLog===true){console.log('isNumeric cleaned:-',cleaned);}
+    // return !isNaN(Number(cleaned));
+    if (!isNaN(Number(cleaned))) return 'number';
+}
+export function getTypeOf(value, dateFormat='d/m/y') {
+    if(window.consoleLog===true){console.log(value);}
+    if (value === null) return 'null';
+    if (isNumeric(String(value)) === 'number') return 'number';
+    if(parseDate(value, dateFormat) instanceof Date && !isNaN(parseDate(value, dateFormat).getTime())) return 'date';
+    if (typeof value === 'string') return 'text';
+    return 'not: null; number; date; text';
+}
+
+function dmyToISO(dateStr, separator = "/",format = "d/m/y") {
+    const [day, month, year] = dateStr.split("/").map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    return date.toISOString(); // Returns in ISO 8601 format (UTC)
+}
+function mdyToISO(dateStr, separator = "/",format = "m/d/y") {
+    const [month, day, year] = dateStr.split("/").map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    return date.toISOString(); // Returns in ISO 8601 format (UTC)
+}
+function ymdToISO(dateStr, separator = "/",format = "y/m/d") {
+    const [year, month, day] = dateStr.split("/").map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    return date.toISOString(); // Returns in ISO 8601 format (UTC)
+}
+export function convertToISO(dateStr, separator = "/",format = "d/m/y") {
+    if(format === "d/m/y"){
+        return dmyToISO(dateStr, separator, format);
+    }else if(format === "m/d/y"){
+        return mdyToISO(dateStr, separator, format);
+    }else if(format === "y/m/d"){
+        return ymdToISO(dateStr, separator, format);
+    }else{
+        if(window.consoleLog===true){console.warn("Unknown date format. Using raw date.");}
+        return new Date(dateStr).toISOString();
+    }
+}

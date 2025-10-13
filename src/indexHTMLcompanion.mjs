@@ -34,7 +34,7 @@
                     const layoutHeight = window.innerHeight;
                     const visualHeight = window.visualViewport.height;
                     const safariUIHeight = Math.max(layoutHeight - visualHeight, 0);
-                    console.log("Safari UI height:", safariUIHeight.toFixed(2));
+                    if(window.consoleLog===true){console.log("Safari UI height:", safariUIHeight.toFixed(2));}
                     // alert(`Safari UI height:- ${safariUIHeight.toFixed(2)}`);
                 }
         }
@@ -52,7 +52,7 @@
         window.addEventListener("scroll", scheduleUpdate);
 
     if (window.visualViewport) {
-        console.log(`visualViewport.height: ${window.visualViewport.height}`);
+        if(window.consoleLog===true){console.log(`visualViewport.height: ${window.visualViewport.height}`);}
         // alert(`visualViewport.height: ${window.visualViewport.height}`);
         window.visualViewport.addEventListener("resize", scheduleUpdate);
         window.visualViewport.addEventListener("scroll", scheduleUpdate);
@@ -198,15 +198,15 @@
         input?.focus();
     }
     function switchSection(index) {
-        console.log(current,index);
+        if(window.consoleLog===true){console.log(current,index);}
         if (index === current) return;
         const currentSection = document.getElementById(`section${current}`);
-        console.log(currentSection);
+        if(window.consoleLog===true){console.log(currentSection);}
         const nextSection = document.getElementById(`section${index}`);
         currentSection.classList.remove('active');
         setTimeout(() => {
             nextSection.classList.add('active');
-            console.log(nextSection);
+            if(window.consoleLog===true){console.log(nextSection);}
             current = index;
             focusInput(index);
             localStorage.setItem("tas_sectionNumber",index);
@@ -226,7 +226,7 @@
     // set last session values START
         const address = localStorage.getItem("tas_address_0")? localStorage.getItem("tas_address_0") : "";
         document.getElementById("googlePlacesAPIautocomplete_0").value = address;
-        console.log(address);
+        if(window.consoleLog===true){console.log(address);}
 // Menu section focus and switch END   🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅
 // 🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅🍇🍈🍉🍊🍌🍍🍑🍒🍓🥝🍅
         // // re-load START

@@ -246,7 +246,7 @@ console.log(("🔰").repeat(45));
             } else if (process.env.APP_SERVER_MODE_PRODUCTION === "true") {
                 console.log(`${trace()}🔒✅ CORS headers set up for Production commenced.`);
                 app.use(cors({
-                        origin: "https://netit.au", // use just one, don't use ["https://netit.au", "https://www.netit.au"] 
+                        origin: "https://ridesharedriver.com.au", // use just one, don't use ["https://ridesharedriver.com.au", "https://www.ridesharedriver.com.au"] 
                         credentials: true,
                         methods: ["GET", "POST", "PUT", "DELETE"],
                         allowedHeaders: ["Content-Type", "Authorization"],
@@ -397,7 +397,7 @@ console.log(("🔰").repeat(45));
                             console.log(`${trace()} 🟢 🏃‍♂️🏃‍♂️‍➡️ RATE LIMITER Rate limiter set to a limit of ${rateLimitNumber} requests every ${rateLimitDuration} minutes.`);
                 })();
             }else{
-                console.log(`${trace()} 🔴 🏃‍♂️🏃‍♂️‍➡️ RATE LIMITER not used.`);
+                console.log(`${trace()} 🔴 🏃‍♂️🏃‍♂️‍➡️ RATE LIMITER not used.\n${trace()}    :-`);
             }
         // RATE LIMITER end
         // MIDDLEWARE to parse incoming request bodies START
@@ -441,7 +441,7 @@ console.log(("🔰").repeat(45));
 // ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
 // 3️⃣ map static folders START
     console.log((`🚀  S E T U P   S T A T I C   F O L D E R S`));
-    const staticFolders = ['config', 'db', 'media', 'public', 'src', 'styles'];
+    const staticFolders = ['config', 'db', 'media', 'public', 'schema', 'src', 'styles'];
     try{
         staticFolders.forEach(folder => {
             app.use(express.static(folder));
@@ -720,18 +720,20 @@ console.log(("🔰").repeat(45));
 // ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
 // 7️⃣ start server START
     function logServerStartup(){
-        console.log(("🎾").repeat(45));
-        console.log(`🎾 S T A R T   S E R V E R${(" ").repeat(88-("🎾 S T A R T   S E R V E R").length)}🎾`);
-        // console.log(`🎾 SERVER MODE = production: ${isProduction}.${(" ").repeat(88-("🎾 SERVER MODE = production: false.").length)}🎾`);
-        // console.log(`🎾 SERVER MODE = development:${isDevelopment}.${(" ").repeat(88-("🎾 SERVER MODE = production: true.").length)}🎾`);
+        console.log(("🚗").repeat(45));
+        console.log(`🚗 S T A R T   S E R V E R${(" ").repeat(88-("🚗 S T A R T   S E R V E R").length)}🚗`);
+        // console.log(`🚗 SERVER MODE = production: ${isProduction}.${(" ").repeat(88-("🚗 SERVER MODE = production: false.").length)}🚗`);
+        // console.log(`🚗 SERVER MODE = development:${isDevelopment}.${(" ").repeat(88-("🚗 SERVER MODE = production: true.").length)}🚗`);
         myDate = new Date();
-        console.log(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}${(" ").repeat(88-(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`).length)}🎾`);
-        console.log(`🎾 Server is running on port:${PORT}.${(" ").repeat(88-(`🎾 Server is running on port:${PORT}.`).length)}🎾`);
+        console.log(`🚗 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}${(" ").repeat(88-(`🚗 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`).length)}🚗`);
+        console.log(`🚗 Server is running on port:${PORT}.${(" ").repeat(88-(`🚗 Server is running on port:${PORT}.`).length)}🚗`);
         console.log(isProduction==="true" ?
-            `🎾 Server is running in Production mode. ${(" ").repeat(88-(`🎾 Server is running in Production mode. `).length)}🎾` : 
-            `🎾 Server is running in Development mode. ${(" ").repeat(88-(`🎾 Server is running in Development mode. `).length)}🎾`);
-        // console.log(`🎾 Server is running on port # ${process.env.APP_PORT}${(" ").repeat(118-(`🎾 Server is running on port # ${process.env.APP_PORT}`).length)}🎾`);
-        console.log(("🎾").repeat(45));
+            `🚗 Server is running in Production mode. ${(" ").repeat(88-(`🚗 Server is running in Production mode. `).length)}🚗` : 
+            `🚗 Server is running in Development mode. ${(" ").repeat(88-(`🚗 Server is running in Development mode. `).length)}🚗`);
+        // console.log(`🚗 Server is running on port # ${process.env.APP_PORT}${(" ").repeat(118-(`🚗 Server is running on port # ${process.env.APP_PORT}`).length)}🚗`);
+        console.log(`🚗 Server data folder is:${dataFolder}.${(" ").repeat(88-(`🚗 Server data folder is:${dataFolder}.`).length)}🚗`);
+        console.log(`🚗 Server root folder is:${__dirname}.${(" ").repeat(88-(`🚗 Server root folder is:${__dirname}.`).length)}🚗`);
+        console.log(("🚗").repeat(45));
     };
     const PORT = process.env.APP_PORT;
     const DEV_IP_ADDRESS = process.env.APP_DEV_IP_ADDRESS;
@@ -739,6 +741,7 @@ console.log(("🔰").repeat(45));
     const isDevelopment = process.env.APP_SERVER_MODE_DEVELOPMENT?.toLowerCase();
     const onWebServer = process.env.APP_HOSTED_ON_WEB_SERVER?.toLowerCase();
     const onDevelopmentMachine = process.env.APP_HOSTED_ON_DEVELOPMENT_MACHINE?.toLowerCase();
+    const dataFolder = process.env.APP_PATH_TO_DATA?.toLowerCase();
 
     if (isProduction==="true") {
         if(onWebServer==="true"){

@@ -40,7 +40,7 @@ export function trace(whoCalled="") {
     }
 };
 
-if(consoleLog===true){console.log(trace(),"\nLOADED:- globalServer.mjs is loaded",new Date().toLocaleString());}
+console.log(trace(),"\nLOADED:- globalServer.mjs is loaded",new Date().toLocaleString());
 export function globalServerMJSisLoaded(){
     return true;
 }
@@ -70,12 +70,12 @@ export function globalServerMJSisLoaded(){
 
 // nodemailer sendMail START
     export async function sendMail(from="",to="",subject="",html="",text=""){
-        if(consoleLog===true){console.log(`${trace()}from:- ${from}`);}
-        if(consoleLog===true){console.log(`${trace()}to:-${to}`);}
-        if(consoleLog===true){console.log(`${trace()}subject:- ${subject}`);}
-        if(consoleLog===true){console.log(`${trace()}html:- ${html.replace(" ","")}`);}
-        if(consoleLog===true){console.log(`${trace()}text:- ${text}`);}
-        // if(consoleLog===true){console.log(`${trace()}\nfrom:- ${from}\nto:-${to}\nsubject:- ${subject}\nhtml:- ${html.replace(" ","")}\ntext:- ${text}\n`);}
+        console.log(`${trace()}from:- ${from}`);
+        console.log(`${trace()}to:-${to}`);
+        console.log(`${trace()}subject:- ${subject}`);
+        console.log(`${trace()}html:- ${html.replace(" ","")}`);
+        console.log(`${trace()}text:- ${text}`);
+        // console.log(`${trace()}\nfrom:- ${from}\nto:-${to}\nsubject:- ${subject}\nhtml:- ${html.replace(" ","")}\ntext:- ${text}\n`);
         // data validation START
                 if ([from, to, subject, html, text].some(val => !val)) {
                     console.error(trace(),`🔴 Something went wrong. Missing or undefined values`);
@@ -106,7 +106,7 @@ export function globalServerMJSisLoaded(){
                 }
             });
             // 🔴🔴🔴 KEEP PRIVATE 🔴🔴🔴 
-                // console.log(`log(trace()\nSMTP_HOST:- ${process.env.SMTP_HOST}\nSMTP_USER:- ${process.env.SMTP_USER}\nSMTP_PASS:- ${process.env.SMTP_PASS}\n`);}
+                // console.log(`log(trace()\nSMTP_HOST:- ${process.env.SMTP_HOST}\nSMTP_USER:- ${process.env.SMTP_USER}\nSMTP_PASS:- ${process.env.SMTP_PASS}\n`);
             // 🔴🔴🔴 KEEP PRIVATE 🔴🔴🔴 
         // Create a transporter object using SMTP transport END
         // send mail START
@@ -152,7 +152,7 @@ export function globalServerMJSisLoaded(){
                             console.error('Error saving the image:', err);
                             return res.status(500).json({ error: 'Failed to save the image' });
                         }
-                        if(consoleLog===true){console.log(`Image saved successfully at ${savePath}`);}
+                        console.log(`Image saved successfully at ${savePath}`);
                         res.status(200).json({ message: 'Image uploaded successfully', path: savePath });
                     });
             } catch (error) {
@@ -163,7 +163,7 @@ export function globalServerMJSisLoaded(){
         }
 
 globalRouter.post("/getGlobalFooter", (req, res) => {
-    // if(consoleLog===true){console.log("globalRouter.get('/getGlobalFooter...");}
+    // console.log("globalRouter.get('/getGlobalFooter...");}
     const moment = new Date();
     const myHtml = `
         <div class=global-footer-content>

@@ -249,7 +249,7 @@
 		if (stream) {
 			stream.getTracks().forEach(track => track.stop());
 			stream = null;
-			console.log("Camera stopped.");
+			if(window.consoleLog===true){console.log("Camera stopped.");}
 		}
 	}
   // stopCamera();

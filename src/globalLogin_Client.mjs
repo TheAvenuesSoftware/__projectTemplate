@@ -1,6 +1,4 @@
-const consoleLog = true
-
-console.log("LOADED:- globalLogin_Client.mjs is loaded",new Date().toLocaleString());
+if(window.consoleLog===true){console.log("LOADED:- globalLogin_Client.mjs is loaded",new Date().toLocaleString());}
 export function globalLoginClientJSisLoaded(){
     return true;
 }
@@ -8,7 +6,7 @@ export function globalLoginClientJSisLoaded(){
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
     import { sessionLogout } from './globalSessions_Client.mjs';
-    import { clientConfigSettings } from "./projectConfig_Client.mjs";
+    import { clientConfigSettings } from "../config/projectConfig_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 const popupHTML = 
@@ -91,7 +89,7 @@ function login_stepOne(){
 
 function login_stepTwo(loginEmailAddress){
     // verify email address format
-        if(consoleLog===true){console.log(`isValidEmailFormat(${loginEmailAddress})`);}
+        if(window.consoleLog===true){console.log(`isValidEmailFormat(${loginEmailAddress})`);}
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const validEmailFormat = emailRegex.test(loginEmailAddress);
         if(validEmailFormat===true){
@@ -103,20 +101,20 @@ function login_stepTwo(loginEmailAddress){
 
 async function login_stepThree(loginEmailAddress) {
     // verify mx domain for the email address
-        if(consoleLog===true){console.log(`isDomainValid(${loginEmailAddress})`);}
+        if(window.consoleLog===true){console.log(`isDomainValid(${loginEmailAddress})`);}
             const domain = loginEmailAddress.split('@')[1];
         try {
             const response = await fetch(`https://dns.google/resolve?name=${domain}&type=MX`);
             const data = await response.json();
-            if(consoleLog===true){console.log(data);}
+            if(window.consoleLog===true){console.log(data);}
             // return data.Answer && data.Answer.length > 0; // Checks if MX records exist
-            if(consoleLog===true){console.log('data.Status:- ',data.Status);} // 0 (Success) or 3 (Name Error)
-            if(consoleLog===true){console.log('data.Question:- ',data.Question);} // Checks if MX records exist, 15
-            if(consoleLog===true){console.log('data.Question.type:- ',data.Question[0].type);} // Checks if MX records exist, 15
-            if(consoleLog===true){console.log('data.Answer:- ',data.Answer);} //
+            if(window.consoleLog===true){console.log('data.Status:- ',data.Status);} // 0 (Success) or 3 (Name Error)
+            if(window.consoleLog===true){console.log('data.Question:- ',data.Question);} // Checks if MX records exist, 15
+            if(window.consoleLog===true){console.log('data.Question.type:- ',data.Question[0].type);} // Checks if MX records exist, 15
+            if(window.consoleLog===true){console.log('data.Answer:- ',data.Answer);} //
             let validDomain = true;
             if(data.Status!=0){
-                if(consoleLog===true){console.log('data.Status:- ',data.Status);}
+                if(window.consoleLog===true){console.log('data.Status:- ',data.Status);}
                 login_cancel("Domain does not exist. Please check the email address and try again.");
                 validDomain = false;
             }
@@ -163,13 +161,13 @@ async function login_stepFour(loginEmailAddress){
                 fileName:loginEmailAddress      // add file extension server side not here
             })
         }
-    if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
+    if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
     try {
         // fetch
             const response = await fetch(fetchUrl,fetchOptions);
             if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
             const jso = await response.json(); // Fetch JSON object
-            if(consoleLog===true){console.log(`fileExists?:- `,jso);} // Logs correctly? Great!
+            if(window.consoleLog===true){console.log(`fileExists?:- `,jso);} // Logs correctly? Great!
             if(jso.fileExists===true){
                 window.localStorage.setItem("accountExists",true);
                 login_stepFive(loginEmailAddress, true); // Account exists
@@ -262,13 +260,13 @@ async function login_stepSix(loginEmailAddress, accountExists, createNewAccount)
                 // fileName:loginEmailAddress + ".db"
             })
         }
-    if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
+    if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
     try {
         // fetch
             const response = await fetch(fetchUrl,fetchOptions);
             if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
             const jso = await response.json(); // Fetch JSON object
-            if(consoleLog===true){console.log(`emailCode:- `,jso);} // Logs correctly? Great!
+            if(window.consoleLog===true){console.log(`emailCode:- `,jso);} // Logs correctly? Great!
             if(jso.loginCodeEmailed===true){
                 window.localStorage.setItem("loginsDBinsertedID", jso.loginsDBinsertedID);
                 login_stepSeven(loginEmailAddress, accountExists,createNewAccount,jso.loginCodeEmailed,jso.loginsDBinsertedID);
@@ -276,7 +274,7 @@ async function login_stepSix(loginEmailAddress, accountExists, createNewAccount)
                 login_cancel(`Problem generating login code. ${jso.loginCodeEmailed}`);
             }
     } catch (error) {
-        console.error("Error sending email:",error.message);
+        if(window.consoleLog===true){console.error("Error sending email:",error.message);}
         login_cancel(`${jso.loginCodeEmailed}`);
     }
 
@@ -290,20 +288,20 @@ function passcodeEntry() {
     const submitButton = document.getElementById('popup-button-1'); // button with class .passcodeSubmit has been replace with popup-button-1
 
     const updateSubmitState = () => {
-        console.log("Updating submit button state...");
+        if(window.consoleLog===true){console.log("Updating submit button state...");}
         const allFilled = Array.from(inputs).every(input => input.value.match(/^\d$/)); // 0-9 required
-        console.log("Updating submit button state...", allFilled);
+        if(window.consoleLog===true){console.log("Updating submit button state...", allFilled);}
         submitButton.disabled = !allFilled;
         if (allFilled) {
             const code = Array.from(inputs).map(input => input.value).join('');
-            console.log('Passcode entered:', code); 
+            if(window.consoleLog===true){console.log('Passcode entered:', code);}
             document.getElementById("popup-input").value = code; // Update the popup input with the passcode
             document.getElementById("popup-button-1").click();
         } else {
         }
     };
     // const updateSubmitState = () => {
-    //     console.log("Updating submit button state...");
+    //     if(window.consoleLog===true){console.log("Updating submit button state...");}
     //     const allFilled = Array.from(inputs).every(input => input.value.trim() !== ""); // Check if all inputs are filled
     //     submitButton.disabled = !allFilled;
     // };
@@ -311,14 +309,14 @@ function passcodeEntry() {
     inputs[0].focus();
 
     inputs.forEach((input, index) => {
-        console.log(`Input ${index} initialized.`);
+        if(window.consoleLog===true){console.log(`Input ${index} initialized.`);}
         input.addEventListener('input', () => {
             if (/^\d$/.test(input.value) && index < inputs.length - 1) {
                 if(index <= 5){
                     inputs[index + 1].focus();
                     inputs[index + 1].select();
                 }else{
-                    console.log("Last input reached, no next input to focus.");
+                    if(window.consoleLog===true){console.log("Last input reached, no next input to focus.");}
                 }
             } else if (!/^\d$/.test(input.value)) {
                   input.value = '';
@@ -350,7 +348,7 @@ function passcodeEntry() {
       const code = Array.from(inputs).map(input => input.value).join('');
       if (code.length === 6) {
         // Example: send code to server or log
-        console.log('Passcode submitted:', code);
+        if(window.consoleLog===true){console.log('Passcode submitted:', code);}
 
         // Example fetch (replace with your API endpoint)
         /*
@@ -385,13 +383,13 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
                 loginEmailAddress:loginEmailAddress
             })
         }
-    if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
+    if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
     try {
         // fetch
             const response = await fetch(fetchUrl,fetchOptions);
             if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
             const jso = await response.json(); // Fetch JSON object
-            if(consoleLog===true){console.log(`sessionRegen:- `,jso);}
+            if(window.consoleLog===true){console.log(`sessionRegen:- `,jso);}
             // if(jso.sessionRegenOK===true){
             if(jso.sessionInitOK===true){
                 passcodeEntry(); // Initialize passcode entry functionality
@@ -450,7 +448,7 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
                 login_cancel(`Problem generating login code. ${jso.sessionRegenOK}`);
             }
     } catch (error) {
-        console.error("Error in sessionRegen:",error.message);
+        if(window.consoleLog===true){console.error("Error in sessionRegen:",error.message);}
         login_cancel(`${jso.sessionRegenOK}`);
     }
 
@@ -475,20 +473,20 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
                 loginsDBinsertedID:loginsDBinsertedID
             })
         }
-    if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
+    if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
     try {
         // fetch
             const response = await fetch(fetchUrl,fetchOptions);
             if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
             const jso = await response.json(); // Fetch JSON object
-            if(consoleLog===true){console.log(`/loginRouter/loginCodeSubmit response:- `,jso);}
+            if(window.consoleLog===true){console.log(`/loginRouter/loginCodeSubmit response:- `,jso);}
             if(jso.loginApproved===true){
                 document.getElementById("busy-animation-overlay").remove();
                 document.getElementById("popup-overlay").remove();
                 document.getElementById("padlock-icon").src="__padlock_unlocked.png";
                 document.getElementById("sign-in-out-icon-container").setAttribute("data-status","signed-in");
                 document.getElementById("sign-in-out-icon-container").title = "Click to sign out.";
-                console.log("🟦 🟦 🟦 postLoginActions L A U N C H 🟦 🟦 🟦");
+                if(window.consoleLog===true){console.log("🟦 🟦 🟦 postLoginActions L A U N C H 🟦 🟦 🟦");}
                 postLoginActions({createNewAccount:createNewAccount,loginEmailAddress:loginEmailAddress}); // any actions to do after login success
                 alert("🟢 Secure login is successful."); // best to leave this to the end so that it doesn't interrupt execution?
             }else{
@@ -501,7 +499,7 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
             }
     } catch (error) {
         alert("🔴 Error checking login code submitted, please try again.");
-        console.error("Error in sessionRegen:",error.message);
+        if(window.consoleLog===true){console.error("Error in sessionRegen:",error.message);}
         login_cancel(`${jso.sessionRegenOK}`);
     }
 
@@ -510,12 +508,12 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
 function login_cancel(message=""){
     // cancel login process
     alert("Login process cancelled.\n" + message);
-    console.log("Login process cancelled.\n" + message);
+    if(window.consoleLog===true){console.log("Login process cancelled.\n" + message);}
 }
 
 // isLoginRequired
 export async function isLoginRequired() {
-    if(consoleLog===true){console.log('isLoginRequired()');}
+    if(window.consoleLog===true){console.log('isLoginRequired()');}
     const fetchUrl = `/loginRouter/isLoginRequired`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
@@ -531,20 +529,20 @@ export async function isLoginRequired() {
                 a:"a",
             })
         }
-    if(consoleLog===true){console.log(fetchUrl);}
+    if(window.consoleLog===true){console.log(fetchUrl);}
     try {
         // fetch
             const response = await fetch(fetchUrl,fetchOptions);
             if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
             const data = await response.json(); // Fetch JSON object
-            if(consoleLog===true){console.log(`isLoginRequired():- `,data);} // Logs correctly? Great!
-            // if(consoleLog===true){console.log(`isLoginRequi red():- `,data.message);} // Logs correctly? Great!
+            if(window.consoleLog===true){console.log(`isLoginRequired():- `,data);} // Logs correctly? Great!
+            // if(window.consoleLog===true){console.log(`isLoginRequi red():- `,data.message);} // Logs correctly? Great!
             if(data.message===true){
                 login_stepOne();
             }
     } catch (error) {
         // console.error("Error fetching HTML from:",fetchUrl, error.message);
-        console.error("Error fetching HTML from:",error.message);
+        if(window.consoleLog===true){console.error("Error fetching HTML from:",error.message);}
     }
 }
 
@@ -552,7 +550,7 @@ export async function isLoginRequired() {
         // 1️⃣🔹2️⃣ START // doAfterDOMandWindowLoad_globalLoginClient() START
         // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
     
-            if(consoleLog===true){console.log('doAfterDOMandWindowLoad_globalLoginClient() launched.',new Date().toLocaleString());}
+            if(window.consoleLog===true){console.log('doAfterDOMandWindowLoad_globalLoginClient() launched.',new Date().toLocaleString());}
 
             // initialise guest session START
                 const url = window.location;
@@ -566,8 +564,8 @@ export async function isLoginRequired() {
 
             // signin-out button START
                 document.getElementById("sign-in-out-icon-container").addEventListener("click", (ev) => {
-                    console.log("sign-in-out-icon-container clicked");
-                    console.log(ev.target.getAttribute("data-status"));
+                    if(window.consoleLog===true){console.log("sign-in-out-icon-container clicked");}
+                    if(window.consoleLog===true){console.log(ev.target.getAttribute("data-status"));}
                     if(ev.target.getAttribute("data-status")==="signed-out"){
                         login_stepOne();
                     }
@@ -595,12 +593,12 @@ export async function isLoginRequired() {
 
     // postLoginActions START
         export async function postLoginActions(jso){
-            console.log("💥🚀postLoginActions(jso) launched.🚀💥");
+            if(window.consoleLog===true){console.log("💥🚀postLoginActions(jso) launched.🚀💥");}
             // place "PROJECT SPECIFIC" actions to take post secure login here
             document.getElementById("user-email-address").textContent = jso.loginEmailAddress;
-            console.log("postLoginActions(jso) - create new account? ",jso.createNewAccount);
+            if(window.consoleLog===true){console.log("postLoginActions(jso) - create new account? ",jso.createNewAccount);}
             if(jso.createNewAccount==="true"){
-                    console.log("💥🚀/loginRouter/createNewAccount launched.🚀💥");
+                    if(window.consoleLog===true){console.log("💥🚀/loginRouter/createNewAccount launched.🚀💥");}
                     const fetchUrl = `/loginRouter/createNewAccount`;
                     const fetchOptions = {
                             method: 'POST',                // Specifies a POST request
@@ -616,16 +614,16 @@ export async function isLoginRequired() {
                                 fileName:jso.loginEmailAddress // file extension is added server side + ".db"
                             })
                         }
-                    if(consoleLog===true){console.log(fetchUrl);}
+                    if(window.consoleLog===true){console.log(fetchUrl);}
                     try {
                         // fetch
                             const response = await fetch(fetchUrl,fetchOptions);
                             if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
                             const data = await response.json(); // Fetch JSON object
-                            if(consoleLog===true){console.log(`/createNewAccount:- `,data);}
+                            if(window.consoleLog===true){console.log(`/createNewAccount:- `,data);}
                     } catch (error) {
                         // console.error("Error fetching HTML from:",fetchUrl, error.message);
-                        console.error("Error creating new account:-",error.message);
+                        if(window.consoleLog===true){console.error("Error creating new account:-",error.message);}
                     }
             }
         }

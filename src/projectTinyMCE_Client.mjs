@@ -21,7 +21,7 @@
                 // - Uses TinyMCE’s getContent() and setContent() instead of accessing .value, since it’s not a basic textarea anymore.
                     editor.on('init', function () {
                         // 📝Load from localStorage on init START
-                            // console.log(editor.id);
+                            // if(window.consoleLog===true){console.log(editor.id);}
                             if(editor.id==="tinymce_0"){
                                 const savedNote = localStorage.getItem('tas_note_0');
                                 if (savedNote) {
@@ -39,7 +39,7 @@
                     editor.on('blur', function () {
                         // 📝Save to localStorage when focus is lost START
                             const currentContent = editor.getContent();
-                            // console.log(editor.id);
+                            // if(window.consoleLog===true){console.log(editor.id);}
                             if(editor.id==="tinymce_0"){
                                 localStorage.setItem('tas_note_0', currentContent);
                                 document.getElementById("save_note_0").innerHTML = currentContent;
@@ -103,7 +103,7 @@
 // export function initTinyMCE(id="tinymce_0") {
 //     // Initialize TinyMCE for all elements with class 'tinymce-editor'
 //         document.querySelectorAll('.tinymce-editor').forEach(el => {
-//             console.log(`Initialising TinyMCE editor for:- ${el.id}`)
+//             if(window.consoleLog===true){console.log(`Initialising TinyMCE editor for:- ${el.id}`);}
 //             tinymce.init({
 //                 ...tinymceConfig,
 //                 target: el
@@ -112,15 +112,15 @@
 // }
 export function removeTinyMCE(){
     document.querySelectorAll('.tinymce-editor').forEach(el => {
-        console.log(`Removing TinyMCE editor from:- ${el.id}`)
+        if(window.consoleLog===true){console.log(`Removing TinyMCE editor from:- ${el.id}`);}
         tinymce.remove(el);
     });
 }
 export async function initTinyMCE(el) {
     await removeTinyMCE();
-    console.log(`Initialising TinyMCE editor for:- ${el.id}`)
+    if(window.consoleLog===true){console.log(`Initialising TinyMCE editor for:- ${el.id}`);}
     const textareaHTML = document.getElementById(`${el.id}`).textContent;
-    console.log(textareaHTML);
+    if(window.consoleLog===true){console.log(textareaHTML);}
     localStorage.setItem("tas_note_0",textareaHTML);
     tinymce.init({
         ...tinymceConfig,

@@ -1,13 +1,11 @@
-const consoleLog = true;
-
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
-console.log("LOADED:- projectGoogleAPIs_Client.mjs is loaded",new Date().toLocaleString());
+if(window.consoleLog===true){console.log("LOADED:- projectGoogleAPIs_Client.mjs is loaded",new Date().toLocaleString());}
 
 async function loadScript(src) {
-    console.log(`loadScript(src) executed.`)
+    if(window.consoleLog===true){console.log(`loadScript(src) executed.`);}
     return new Promise((resolve, reject) => {
         const script = document.createElement("script");
         script.src = src;
@@ -46,15 +44,15 @@ export function initAutocomplete(inputId) {
     // added by Donald END
 
     function handlePlaceChange() {
-        console.log(`📌📍 place changed 📍📌`);
+        if(window.consoleLog===true){console.log(`📌📍 place changed 📍📌`);}
         var place = autocomplete.getPlace();
         if (!place) {
             // if (!place.geometry) {
                 console.error("No location data found.");
                 return;
         }else{
-            // console.log(`📌📍 place changed to 📍📌:- ${JSON.stringify(place)}`);
-            console.log(`📌📍 place changed to 📍📌:- ${JSON.stringify(place.geometry)}`);
+            // if(window.consoleLog===true){console.log(`📌📍 place changed to 📍📌:- ${JSON.stringify(place)}`);}
+            if(window.consoleLog===true){console.log(`📌📍 place changed to 📍📌:- ${JSON.stringify(place.geometry)}`);}
             const save_address = document.getElementById("save_address");
             save_address.textContent = document.getElementById("googlePlacesAPIautocomplete_0").value;
         }
@@ -176,21 +174,21 @@ export async function getGooglePlacesAPIkey() {
                 getGoogleAPIkey:'Get Google API key'
             })
         }
-        if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
+        if(window.consoleLog===true){console.log(JSON.stringify(fetchOptions));}
         const response = await fetch(fetchUrl, fetchOptions);
         // const response = await fetch('/googleAPIsRouter/get-google-places-api-key');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const jso = await response.json();
-        if(consoleLog===true){console.log(jso.success?"✅ Google Places API key fetched successfully.":"❌ Failed to fetch Google Places API key.");}
+        if(window.consoleLog===true){console.log(jso.success?"✅ Google Places API key fetched successfully.":"❌ Failed to fetch Google Places API key.");}
         // DON'T LOG THE API KEY!!! console.log(`https://maps.googleapis.com/maps/api/js?key=${jso.apiKey}&loading=async&libraries=places&callback=initMap`);
         // DON'T LOG THE API KEY!!! console.log(jso);
         // DON'T LOG THE API KEY!!! console.log(jso.apiKey);
 
         await loadScript(`https://maps.googleapis.com/maps/api/js?key=${jso.apiKey}&libraries=places`)
         .then(() => {
-            console.log("Google Maps API script loaded successfully.");
+            if(window.consoleLog===true){console.log("Google Maps API script loaded successfully.");}
 			googlePlacesAndMapsAPIkey = jso.apiKey;
             // initAutocomplete("googlePlacesAPIautocomplete_0"); // Ensures autocomplete runs **after** Maps loads
             // initMap(); // Initializes the map to fixed location...

@@ -1,42 +1,31 @@
 // project settings for the server - also see project.env
 // 💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚💚
 
-const consoleLog = false
-
 console.log("LOADED:- projectConfig_Server.mjs is loaded",new Date().toLocaleString());
-
-function trace() {
-    try {
-        const stack = new Error().stack;
-        const firstLine = stack.split('\n')[2].trim();
-        return `Trace line: ${firstLine}`;
-    } catch (error) {
-        return 'Trace line: not available';
-    }
-};
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  SERVER SIDE IMPORTS ONLY
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
-console.log("LOADED:- projectConfig_Server.mjs is loaded");
-export function projectServerConfigJSisLoaded(){
+export function projectServerConfigMJSisLoaded(){
     return true;
 }
 
-// const sessionWarningDelay = (60 * 60 * 1000);
-// const sessionExpiredDelay = (65 * 60 * 1000);
-export const serverConfigSettings = {
-    SERVER_APP_NAME: "Tradie Photo",
-    SERVER_API_KEY: "your-key-here", // public key only!!!
-    SERVER_BASE_URL: "http://192.168.1.117:3000",
-    SERVER_DATES_ALLOW_FUTURE: false,
-    SERVER_DATES_ALLOW_ANY_PAST: false,
-    // SERVER_SESSION_WARNING_DELAY: sessionWarningDelay,
-    // SERVER_SESSION_EXPIRED_DELAY: sessionExpiredDelay,
-};
-if(consoleLog===true){console.log('Project server configuration variables, from projectServerConfig.mjs:-\n',serverConfigSettings);}
-if(consoleLog===true){console.log('Project server configuration variables, from projectServerConfig.mjs:- SERVER_APP_NAME\n',serverConfigSettings.SERVER_APP_NAME);}
+// commented out 2025-10-07 START
+    // // const sessionWarningDelay = (60 * 60 * 1000);
+    // // const sessionExpiredDelay = (65 * 60 * 1000);
+    export const serverConfigSettings = {
+        SERVER_APP_NAME: "Tradie Photo", // used for emails to users
+    //     SERVER_API_KEY: "your-key-here", // public key only!!!
+    //     SERVER_BASE_URL: "http://192.168.1.117:3000",
+    //     SERVER_DATES_ALLOW_FUTURE: false,
+    //     SERVER_DATES_ALLOW_ANY_PAST: false,
+    //     // SERVER_SESSION_WARNING_DELAY: sessionWarningDelay,
+    //     // SERVER_SESSION_EXPIRED_DELAY: sessionExpiredDelay,
+    };
+    // console.log('Project server configuration variables, from projectServerConfig.mjs:-\n',serverConfigSettings);
+    // console.log('Project server configuration variables, from projectServerConfig.mjs:- SERVER_APP_NAME\n',serverConfigSettings.SERVER_APP_NAME);
+// commented out 2025-10-07 END
 
 // loginEmailHtml
     export function loginEmailHtml(loginCode){

@@ -621,6 +621,13 @@ body {
             object-fit: contain;
             border-radius: 5px;
         }
+        .record-card-item-heading{
+            color: navy;
+            font-weight: bold;
+            margin-top: 5px;
+            text-decoration: underline;
+            // border:1px solid red;
+        }
     }
 }
 

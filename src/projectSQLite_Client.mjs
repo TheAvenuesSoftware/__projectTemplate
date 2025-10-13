@@ -1,6 +1,4 @@
-const consoleLog = true;
-
-console.log("LOADED:- projectSQLite_Client.mjs is loaded",new Date().toLocaleString());
+if(window.consoleLog===true){console.log("LOADED:- projectSQLite_Client.mjs is loaded",new Date().toLocaleString());}
 export function projectSQLite_Client_isLoaded(){
     return true;
 }
@@ -13,7 +11,7 @@ export function projectSQLite_Client_isLoaded(){
 
     // Load Photos from SQLite 🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍
     async function filterPhotos(userEmailAddress,image_id) {
-        console.log("Filtering photos");
+        if(window.consoleLog===true){console.log("Filtering photos");}
         try {
                     const fetchUrl = "/dbRouter/filter-photos-by-address";
                     const fetchOptions = {
@@ -31,22 +29,22 @@ export function projectSQLite_Client_isLoaded(){
                             filterText:filterText
                         })
                     }
-            if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
+            if(window.consoleLog===true){console.log(JSON.stringify(fetchOptions));}
             const response = await fetch(fetchUrl, fetchOptions);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const result = await response.json();
-            console.log(response.message);
+            if(window.consoleLog===true){console.log(response.message);}
         } catch (error) {
-            console.error("Error applying filter:", error);
+            if(window.consoleLog===true){console.error("Error applying filter:", error);}
         }
     }
 
     // 🗑️ DELETE Photos from SQLite 🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️🗑️
     async function deletePhoto(userEmailAddress,image_id) {
-        console.log(image_id);
-        console.log("Delete button clicked for image ID:", image_id);
+        if(window.consoleLog===true){console.log(image_id);}
+        if(window.consoleLog===true){console.log("Delete button clicked for image ID:", image_id);}
         try {
                     const fetchUrl = "/dbRouter/delete-photo-by-id";
                     const fetchOptions = {
@@ -64,21 +62,21 @@ export function projectSQLite_Client_isLoaded(){
                             image_id:image_id 
                         })
                     }
-            if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
+            if(window.consoleLog===true){console.log(JSON.stringify(fetchOptions));}
             const deleteResponse = await fetch(fetchUrl, fetchOptions);
             if (!deleteResponse.ok) {
                 throw new Error(`HTTP error! status: ${deleteResponse.status}`);
             }
             const deleteResult = await deleteResponse.json();
-            console.log(deleteResult.message);
+            if(window.consoleLog===true){console.log(deleteResult.message);}
             if (deleteResult.success) {
                 // Remove the photo card from the DOM
                 event.target.parentElement.remove();
             } else {
-                console.error("Failed to delete photo:", deleteResult.message);
+                if(window.consoleLog===true){console.error("Failed to delete photo:", deleteResult.message);}
             }
         } catch (error) {
-            console.error("Error deleting photo:", error);
+            if(window.consoleLog===true){console.error("Error deleting photo:", error);}
         }
     }
 
@@ -107,7 +105,7 @@ export function projectSQLite_Client_isLoaded(){
                         },
                         body:JSON.stringify({userEmailAddress:userEmailAddress, image_address:address })
                     }
-                    if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
+                    if(window.consoleLog===true){console.log(JSON.stringify(fetchOptions));}
                     const response = await fetch(fetchUrl, fetchOptions);
             const photos = await response.json();
             photosContainer.innerHTML = ""; // Clear previous content
@@ -226,7 +224,7 @@ function renderRecord(record, container) {
 // Update record on server
 async function updateRecord(id, data) {
   // Replace with actual PUT/PATCH logic
-  console.log(`Updating record ${id}:`, data);
+  if(window.consoleLog===true){console.log(`Updating record ${id}:`, data);}
   // Example:
   // await fetch(`/api/records/${id}`, {
   //   method: "PATCH",
