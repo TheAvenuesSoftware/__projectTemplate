@@ -65,6 +65,8 @@ console.log(("🔰").repeat(45));
 // ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
 // 1️⃣ import packages START
     console.log((`🚀  I M P O R T   P A C K A G E S`));
+    // TLS
+        import tls from 'tls'; // used to check SSL certificates
     // EXPRESS
         import express from "express";
     // https
@@ -718,7 +720,40 @@ console.log(("🔰").repeat(45));
         });
 // 7️⃣ authenticate users END
 // ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
-// 7️⃣ start server START
+// S S L   C E R T I F I C A T E   C H E C K   📃📃📃📃📃📃📃📃📃📃📃📃📃   S T A R T
+        async function getCertificateExpiry(domain, port) {
+            console.log(`${trace()} 📃📃📃 checking expiry of SSL Certificates`);
+            return new Promise((resolve, reject) => {
+                const socket = tls.connect(port, domain, { servername: domain }, () => {
+                    const cert = socket.getPeerCertificate();
+                    if (!cert || !cert.valid_to) {
+                        reject(new Error('No certificate found'));
+                    } else {
+                        resolve(new Date(cert.valid_to));
+                    }
+                    socket.end();
+                });
+                socket.on('error', reject);
+            });
+        }
+        async function checkSSL() {
+            try {
+                const expiryDate = await getCertificateExpiry(process.env.SSL_CHECK_DOMAIN, process.env.SSL_CHECK_PORT);
+                const daysLeft = Math.ceil((expiryDate - new Date()) / (1000 * 60 * 60 * 24));
+                // console.log(daysLeft , parseFloat(process.env.SSL_CHECK_EXPIRY_WARNING_DAYS));
+                if (daysLeft <= parseFloat(process.env.SSL_CHECK_EXPIRY_WARNING_DAYS)){
+                    console.warn(`${trace()} 📃📃📃 ⚠️⚠️⚠️ SSL certificate for ${process.env.SSL_CHECK_DOMAIN}\n${trace()} 📃📃📃 ⚠️⚠️⚠️ expires in ${daysLeft} days\n${trace()} 📃📃📃 ⚠️⚠️⚠️ on (${expiryDate})`);
+                    // await sendEmailAlert(daysLeft, expiryDate);
+                } else {
+                    console.log(`${trace()} 📃📃📃 ✅✅✅ SSL certificate for ${process.env.SSL_CHECK_DOMAIN} is valid (${daysLeft} days left, expires ${expiryDate})`);
+                }
+            } catch (err) {
+                console.error(`${trace()} 📃📃📃 🔴🟥🚩❗🔴🟥🚩❗🔴🟥🚩❗\n${trace()} 📃📃📃 Validating SSL certificate FAILED:\n`, err,`\n${trace()} 📃📃📃 🔴🟥🚩❗🔴🟥🚩❗🔴🟥🚩❗`);
+            }
+        }
+        checkSSL();
+// S S L   C E R T I F I C A T E   C H E C K   📃📃📃📃📃📃📃📃📃📃📃📃📃   E N D
+// 7️⃣ start server START 🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾
     function logServerStartup(){
         console.log(("🚗").repeat(45));
         console.log(`🚗 S T A R T   S E R V E R${(" ").repeat(88-("🚗 S T A R T   S E R V E R").length)}🚗`);
@@ -778,5 +813,5 @@ console.log(("🔰").repeat(45));
             //   D E V E L O P M E N T   M O D E   H O S T E D   L O C A L L Y
         }
     }
-// 7️⃣ start server END
+// 7️⃣ start server END   🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾
 // 🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫🛑⛔🚫

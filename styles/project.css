@@ -765,6 +765,7 @@ section.active {
 .icon {
   width: 30px;
   height: 25px;
+  border: 1px solid grey;
   border-radius: 5px;
   display: block;
 }
@@ -780,8 +781,20 @@ section.active {
 }
 
 /* Spacer div to balance flexbox */
-.spacer {
+.header-spacer {
   width: 40px; /* same width as icon container */
+}
+
+/* Second row */
+.second-row {
+  text-align: center;
+  font-size: small;
+  font-weight: normal !important;
+  font-style: italic;
+}
+.second-row div a {
+  color: inherit;
+  text-decoration: none;
 }
 
 /* Email row */
