@@ -24,9 +24,16 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensures the body is at least as tall as the screen */
+  margin: 0;
   color: var(--primary-color);
   font-family: var(--font-stack);
-  padding: var(--one-spacing-unit);
+}
+
+main {
+  flex: 1; /* This tells the main area to "grow" and take up all empty space */
 }
 
 * {
@@ -35,11 +42,6 @@ body {
   box-sizing: border-box;
   user-select: none;
   font-family: "Roboto", sans-serif;
-}
-
-body {
-  height: 100vh;
-  overflow: hidden;
 }
 
 .section-heading {
@@ -74,6 +76,7 @@ body {
   border: 1px solid blue;
   border-radius: 5px;
   transition: all 0.5s ease-in-out;
+  cursor: pointer;
 }
 .std-btn:hover {
   transform: scale(1.05);
@@ -402,45 +405,16 @@ body {
   cursor: pointer;
 }
 
-.camera-container_OLD {
-  top: 0;
-  left: 0;
-  max-width: 702px;
-  margin: 0px auto;
-  height: auto;
-  background: rgba(0, 0, 0, 0.8);
-  background: var(--std-bckgrnd);
-}
-.camera-container_OLD .camera-stream_OLD {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-  border: 5px solid red;
-  background: #1440AF;
-  background: var(--std-bckgrnd);
-}
-.camera-container_OLD .photo-canvas_OLD {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-  border: 5px solid blue;
-  background: #1440AF;
-  background: var(--std-bckgrnd);
-}
-
 .video-container {
   position: relative;
-  display: flex;
+  display: block;
   align-items: center;
-  width: 300px;
-  width: 100%;
-  height: 200px;
-  height: 100%;
+  min-width: 50%;
+  min-height: 100%;
   overflow: hidden;
-  border: 2px solid var(--header-bckgrnd);
   touch-action: none; /* prevent native gestures, enables custom touch handling */
+  padding: 0;
+  border: none;
 }
 .video-container video {
   position: absolute;
@@ -449,11 +423,27 @@ body {
   transform-origin: top left;
   user-select: none;
   pointer-events: none;
-  border: 1px solid var(--header-bckgrnd);
-  border: 2px solid #007BFF;
+  padding: 0;
   width: 100%;
   height: 100%;
   overflow: contain;
+}
+.video-container .controls-wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  bottom: 10px;
+  max-width: 400px;
+  margin-left: 20px;
+}
+.video-container .controls-wrapper label {
+  text-align: center;
+}
+.video-container .controls-wrapper input {
+  text-align: center;
+  width: 90%;
+  max-width: 390px;
 }
 
 .canvas-container-heading {
@@ -467,17 +457,29 @@ body {
 }
 
 .canvas-container {
-  position: relative;
   display: none;
+  position: relative;
   align-items: center;
-  width: 300px;
-  width: 100%;
-  height: 200px;
-  height: 100%;
-  height: auto;
+  justify-content: center;
+  min-width: 100%;
+  min-height: 100%;
   overflow: hidden;
-  border: 2px solid var(--header-bckgrnd);
   touch-action: none; /* prevent native gestures, enables custom touch handling */
+  padding: 0;
+  border: none;
+}
+.canvas-container canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
 }
 
 .canvas-upload-container {
@@ -498,24 +500,6 @@ body {
   margin-top: 10px;
 }
 
-.controls-wrapper {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  bottom: 10px;
-  max-width: 400px;
-  margin-left: 20px;
-}
-.controls-wrapper label {
-  text-align: center;
-}
-.controls-wrapper input {
-  text-align: center;
-  width: 90%;
-  max-width: 390px;
-}
-
 .section-search .search-criteria {
   display: flex;
   flex-direction: column;
@@ -533,20 +517,32 @@ body {
   margin: auto;
   padding: 5px;
 }
+.section-search .search-results {
+  background-color: lightgrey;
+  border: 1px solid var(--header-bckgrnd);
+  border-radius: 5px;
+  padding: 3px;
+}
 .section-search .record-card {
-  border: 1px solid black;
+  border: 1px solid grey;
   padding: 10px;
   margin-bottom: 5px;
   width: 250px;
   width: 100%;
   background: var(--std-bckgrnd);
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 2px 5px rgba(128, 128, 128, 0.1);
 }
 .section-search .record-card .photo {
   max-width: 100%;
   height: auto;
   object-fit: contain;
   border-radius: 5px;
+}
+.section-search .record-card .record-card-item-heading {
+  color: navy;
+  font-weight: bold;
+  margin-top: 5px;
+  text-decoration: underline;
 }
 
 .section-note .toolbar, .record-card-edit-note .toolbar {
@@ -645,6 +641,257 @@ body {
 
 .display-none {
   display: none;
+}
+
+@media print {
+  html, body, main, #main-element, .section-search, .search-results {
+    /* Reset all parent containers to allow natural height */
+    display: block !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important; /* Removes the grey border in print */
+    background-color: transparent !important;
+  }
+  ::-webkit-scrollbar {
+    /* Force the scrollbar to disappear */
+    display: none !important;
+  }
+  .record-card {
+    /* Create a "Page Bottom" container that increments correctly */
+    /* We attach this to the cards to force the browser to recalculate per page */
+    position: relative;
+    display: block !important;
+    width: 100% !important;
+    break-inside: avoid-page !important;
+    margin-bottom: 20px !important;
+  }
+  #printable-area {
+    /* The Printable Area Container */
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+  }
+  .record-card {
+    /* Style your Record Cards for the page */
+    display: block !important;
+    width: 100% !important;
+    page-break-inside: avoid !important; /* Keeps a card from splitting across pages */
+    break-inside: avoid !important;
+    margin-bottom: 20px !important;
+    border: 1px solid #ccc !important; /* Visible border for the printout */
+    box-shadow: none !important; /* Shadows look messy on paper */
+  }
+  .record-card .photo {
+    /* Handle Photos */
+    max-height: 10cm; /* Prevent massive images from wasting paper */
+    page-break-inside: avoid;
+  }
+  .no-print, header, footer, .std-btn, .std-btn-red {
+    /* Hide other elements but DON'T use absolute positioning on the wrapper */
+    display: none !important;
+  }
+  @page {
+    size: landscape;
+    margin: 1.5cm;
+    margin-bottom: 2cm; /* Extra space for the "Page X" footer */
+  }
+}
+footer {
+  width: 100vw; /* Use viewport width */
+  height: auto;
+  padding: 5px;
+  background-color: rgb(67, 248, 67);
+  z-index: 9999;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling */
+}
+
+.footer-control {
+  /* margin: 0 2.5px; */
+  padding: 0 2.5px;
+  cursor: pointer;
+  height: 30px;
+  width: 44px;
+}
+
+.footer-control:hover {
+  border: 2px solid black;
+}
+
+/* Flex layout for controls START */
+.footer-controls-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* important for absolute positioning inside */
+  padding: 0 1rem;
+}
+
+/* Icon style START */
+.footer-control {
+  padding: 0 2.5px;
+  cursor: pointer;
+  height: 30px;
+  width: 44px;
+}
+
+.footer-control:hover {
+  border: 2px solid black;
+}
+
+/* Icon style END */
+/* Flex layout for controls END */
+main {
+  position: relative;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+section {
+  position: absolute;
+  top: 0;
+  left: 0px;
+  right: 0;
+  bottom: 0;
+  flex: 1;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+  padding: 1rem;
+}
+
+section.active {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0.25s;
+}
+
+.section-heading {
+  font-weight: 900;
+}
+
+/* header css START */
+/* General header styling */
+.header {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #43f843;
+  color: #003700;
+  font-weight: 900;
+  padding: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  user-select: none;
+}
+
+/* Top row layout */
+.top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* Icon container on left */
+.sign-in-out-icon-container {
+  width: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  outline: none;
+}
+
+.sign-in-out-icon-container:focus {
+  outline: 2px solid #005500;
+  outline-offset: 2px;
+}
+
+/* Padlock icon styling */
+.icon {
+  width: 30px;
+  height: 25px;
+  border-radius: 5px;
+  display: block;
+}
+
+/* App name centered */
+.app-name {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  white-space: nowrap;
+  pointer-events: none; /* So clicks pass through */
+}
+
+/* Spacer div to balance flexbox */
+.spacer {
+  width: 40px; /* same width as icon container */
+}
+
+/* Email row */
+.email-row {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* header css END */
+.off-screen-placeholder {
+  position: fixed;
+  left: -5000px;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.margin-left-20px {
+  margin-left: 20px;
+}
+
+.margin-left-40px {
+  margin-left: 40px;
+}
+
+.list-style-type-none {
+  list-style-type: none;
+}
+
+.progress-circle {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  z-index: 5;
+}
+
+.progress-circle-svg {
+  /* svg { */
+  transform: rotate(-90deg);
+}
+
+.progress-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
 }
 
 /*# sourceMappingURL=project.css.map */

@@ -65,10 +65,39 @@ $base-padding: 16px;
 }
 
 body {
-  color: var(--primary-color);
-  font-family: var(--font-stack);
-  padding: var(--one-spacing-unit);
+    // push footer to bottom if no cotent
+        // this is also required on the <main> element
+            // main{
+            //     flex: 1; /* This tells the main area to "grow" and take up all empty space */
+            // }
+        // this is also required on the <main> element
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Ensures the body is at least as tall as the screen */
+        margin: 0;
+    // push footer to bottom if no cotent
+    color: var(--primary-color);
+    font-family: var(--font-stack);
+    // padding: var(--one-spacing-unit);
 }
+main{
+    // push footer to bottom if no cotent
+        // this is also required on the <body> element
+            // display: flex;
+            // flex-direction: column;
+            // min-height: 100vh; /* Ensures the body is at least as tall as the screen */
+            // margin: 0;
+        // this is also required on the <body> element
+        flex: 1; /* This tells the main area to "grow" and take up all empty space */
+    // push footer to bottom if no cotent
+}
+
+// SEE indexHTML.scss
+    // body{
+    //     height:100vh;
+    //     overflow: hidden;
+    // }
+// SEE indexHTML.scss
 
 * {
     margin: 0;
@@ -77,11 +106,6 @@ body {
     user-select: none;
     // font-family: "Consolas", "Courier New", monospace;
     font-family: 'Roboto', sans-serif;
-}
-
-body{
-    height:100vh;
-    overflow: hidden;
 }
 
 .section-heading{
@@ -117,6 +141,7 @@ body{
     border:1px solid blue;
     border-radius: 5px;
     transition: all 0.5s ease-in-out;
+    cursor: pointer;
     &:hover{
         transform:scale(1.05);
         background:var(--std-btn-bckgrnd-hover);
@@ -466,97 +491,60 @@ body{
 // GOOGLE PLACES API end
 // 📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌📌
 
-// ❌📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
-// CAMERA / PHOTO start
-.camera-container_OLD{
-    // position: fixed;
-    top: 0;
-    left: 0;
-    max-width: 702px;
-    margin: 0px auto;
-    height: auto;
-    background: rgba(0, 0, 0, 0.8);
-    background: var(--std-bckgrnd);
-    // Hidden by default
-        // display: block;
-        // display: none;
-    // Hidden by default
-    // z-index: -5000;
-    .camera-stream_OLD{
-        // position: relative;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 5px;
-        border: 5px solid red;
-        background: #1440AF;
-        // background-color: red;
-        background: var(--std-bckgrnd);
-        // z-index: -5000;
-    }
-    .photo-canvas_OLD{
-        // position: relative;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 5px;
-        border: 5px solid blue;
-        background: #1440AF;
-        background: var(--std-bckgrnd);
-        // z-index: -5000;
-    }   
-}
-// CAMERA / PHOTO end
-// ❌📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
-
 // ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷
 // CAMERA - ZOOM & PAN start
-    // body {
-    //   margin: 0;
-    //   background: #111;
-    //   color: white;
-    //   font-family: sans-serif;
-    //   display: flex;
-    //   flex-direction: column;
-    //   align-items: center;
-    //   justify-content: center;
-    // }
-    // .video-container-wrapper {
-    //     display: flex;
-    //     align-items: center;
-    //     // gap: 10px;
         .video-container{
             position: relative;
-            display: flex;
+            display: block;
             align-items: center;
-            width: 300px;
-            width: 100%;
-            height: 200px;
-            height: 100%;
+            // w i d t h
+                min-width: 50%;
+            //  h e i g t h
+                min-height: 100%;
             overflow: hidden;
-            border: 2px solid var(--header-bckgrnd);
             touch-action: none; /* prevent native gestures, enables custom touch handling */
+            // box-sizing: content-box; /* or border-box depending on your layout */
+            padding: 0;
+            // border: 2px solid var(--header-bckgrnd);
+            border: none;
             video {
                 position: absolute;
                 top: 0;
+                // top: 50%;
                 left: 0;
+                // left: 50%;
                 transform-origin: top left;
-                // object-fit: contain;
+                // transform-origin: center center;
+                // transform: translate(-50%, -50%);
                 user-select: none;
                 pointer-events: none; // avoids blocking user input
-                border: 1px solid var(--header-bckgrnd);
-                border: 2px solid #007BFF;
+                // border: 2px solid #007BFF;
+                padding: 0;
+                // border: 2px solid black;
+                // border-radius: 5px;
+                // background-color: black;
                 width:100%;
                 height:100%;
                 overflow: contain; // OR cover, depending on your preference
             }
+            .controls-wrapper {
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                bottom:10px;
+                max-width: 400px;
+                margin-left:20px;
+                label {
+                    text-align: center;
+                }
+                input {
+                    text-align: center;
+                    width:90%;
+                    max-width: 390px;
+                }
+            }
         }
-    // canvas {
-    //     margin-top: 10px;
-    //     // border: 1px solid #ccc;
-    //     border: 1px solid blue;
-    //     background-color: red;
-    // }
         .canvas-container-heading{
             margin-top: 10px;
             display: none;
@@ -565,33 +553,35 @@ body{
             margin-top: 10px;
             display: none;
         }
-        .canvas-container{ // identical to .video-container, except for display:none
-            position: relative;
+        .canvas-container{
             // display: flex;
             display: none;
+            position: relative;
             align-items: center;
-            width: 300px;
-            width: 100%;
-            height: 200px;
-            height: 100%;
-            height: auto;
+            justify-content: center;
+            // w i d t h
+                min-width: 100%;
+            //  h e i g t h
+                min-height: 100%;
             overflow: hidden;
-            border: 2px solid var(--header-bckgrnd);
             touch-action: none; /* prevent native gestures, enables custom touch handling */
-            // video {
-            //     position: absolute;
-            //     top: 0;
-            //     left: 0;
-            //     transform-origin: top left;
-            //     // object-fit: contain;
-            //     user-select: none;
-            //     pointer-events: none; // avoids blocking user input
-            //     border: 1px solid var(--header-bckgrnd);
-            //     border: 2px solid #007BFF;
-            //     width:100%;
-            //     height:100%;
-            //     overflow: contain; // OR cover, depending on your preference
-            // }
+            padding: 0;
+            border: none;
+            // border:2px solid green;
+            canvas{
+                position: absolute;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
+                padding:0;
+                margin:0;
+                // border:4px solid red;
+                display: flex;
+                box-sizing: border-box;
+                align-items: center;
+                justify-content: center;
+            }
         }
         .canvas-upload-container{ // identical to .video-container, except for display:none
             position: relative;
@@ -606,47 +596,11 @@ body{
             overflow: hidden;
             border: 2px solid var(--header-bckgrnd);
             touch-action: none; /* prevent native gestures, enables custom touch handling */
-            // video {
-            //     position: absolute;
-            //     top: 0;
-            //     left: 0;
-            //     transform-origin: top left;
-            //     // object-fit: contain;
-            //     user-select: none;
-            //     pointer-events: none; // avoids blocking user input
-            //     border: 1px solid var(--header-bckgrnd);
-            //     border: 2px solid #007BFF;
-            //     width:100%;
-            //     height:100%;
-            //     overflow: contain; // OR cover, depending on your preference
-            // }
         }
         .image-upload-selection-heading{
             margin-top: 10px;
         }
     // }
-    .controls-wrapper {
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        bottom:10px;
-        // left:50%;
-        // transform: translateX(-50%);
-        // width: 90%;
-        max-width: 400px;
-        // margin-top: 10px;
-        margin-left:20px;
-        label {
-            text-align: center;
-            // font-size: 14px;
-        }
-        input {
-            text-align: center;
-            width:90%;
-            max-width: 390px;
-        }
-    }
 // CAMERA - ZOOM & PAN end
 // ✅📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷📸📷
 
@@ -668,8 +622,14 @@ body{
         margin:auto;
         padding:5px;
     }
+    .search-results{
+        background-color: lightgrey;
+        border: 1px solid var(--header-bckgrnd);
+        border-radius: 5px;
+        padding:3px;
+    }
     .record-card {
-        border: 1px solid black;
+        border: 1px solid grey;
         padding: 10px;
         margin-bottom:5px;
         width: 250px;
@@ -677,12 +637,19 @@ body{
         // text-align: center;
         // background-color: #f9f9f9;
         background: var(--std-bckgrnd);
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 2px 2px 5px rgba(128, 128, 128, 0.1);
         .photo {
             max-width: 100%;
             height: auto;
             object-fit: contain;
             border-radius: 5px;
+        }
+        .record-card-item-heading{
+            color: navy;
+            font-weight: bold;
+            margin-top: 5px;
+            text-decoration: underline;
+            // border:1px solid red;
         }
     }
 }
@@ -893,3 +860,94 @@ body{
 .display-none{
     display:none;
 }
+
+// 🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️ P R I N T   T O   P D F   S T A R T 🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️
+    // .no-screen { display: none; }
+    @media print {
+        // body {
+        //     /* Setup the page counter */
+        //         counter-reset: page;
+        // }
+        html, body, main, #main-element, .section-search, .search-results {
+            /* Reset all parent containers to allow natural height */
+            display: block !important;
+            height: auto !important;
+            min-height: auto !important;
+            overflow: visible !important;
+            position: static !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important; /* Removes the grey border in print */
+            background-color: transparent !important;
+        }
+
+        ::-webkit-scrollbar {
+            /* Force the scrollbar to disappear */
+            display: none !important;
+        }
+
+        .record-card {
+            /* Create a "Page Bottom" container that increments correctly */
+            /* We attach this to the cards to force the browser to recalculate per page */
+                position: relative;
+                display: block !important;
+                width: 100% !important;
+                break-inside: avoid-page !important;
+                margin-bottom: 20px !important;
+        }
+
+        #printable-area {
+            /* The Printable Area Container */
+                display: block !important;
+                position: relative !important;
+                width: 100% !important;
+            // /* 4. The Correct Way to do Page Numbers in Chrome/Edge/Safari */
+            // /* This uses a fixed footer that the browser increments per fragment */
+            //     counter-reset: page;
+        }
+
+        .record-card {
+            /* Style your Record Cards for the page */
+                display: block !important;
+                width: 100% !important;
+                page-break-inside: avoid !important; /* Keeps a card from splitting across pages */
+                break-inside: avoid !important;
+                margin-bottom: 20px !important;
+                border: 1px solid #ccc !important; /* Visible border for the printout */
+                box-shadow: none !important; /* Shadows look messy on paper */
+        }
+
+        .record-card .photo {
+            /* Handle Photos */
+                max-height: 10cm; /* Prevent massive images from wasting paper */
+                page-break-inside: avoid;
+        }
+     
+        // .page-number-footer {
+        //     /* Create a footer that actually increments */
+        //         display: block !important;
+        //         position: fixed !important;
+        //         bottom: 0;
+        //         right: 0;
+        //         font-size: 10pt;
+        //         color: #555;
+        //         background: white; /* ensure text behind doesn't bleed through */
+        //         width: 100%;
+        //         text-align: right;
+        //         z-index: 9999;
+        // }
+        // .page-number-footer::after {
+        //     counter-increment: page;
+        //     content: "Page " counter(page);
+        // }
+        .no-print, header, footer, .std-btn, .std-btn-red  {
+            /* Hide other elements but DON'T use absolute positioning on the wrapper */
+                display: none !important;
+        }
+        @page {
+            size: landscape;
+            margin: 1.5cm;
+            margin-bottom: 2cm; /* Extra space for the "Page X" footer */
+        }
+    }
+// 🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️ P R I N T   T O   P D F   E N D     🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️🖨️

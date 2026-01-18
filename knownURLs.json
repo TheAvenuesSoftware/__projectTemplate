@@ -43,7 +43,7 @@
         "/googleAPIsRouter/get-google-places-api-key"
     ],
     "archived_startup_URLs": [
-        "/dbRouter/filter-by",
+        "/SQLiteRouter/filter-by",
         "/establish-session",
         "/globalRouter/getProjectFunctionsMap",
         "/globalRouter/getGlobalFooter",

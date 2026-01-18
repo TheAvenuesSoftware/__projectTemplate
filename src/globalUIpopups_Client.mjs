@@ -1,6 +1,4 @@
-const consoleLog = false;
-
-console.log("LOADED:- globalUIpopups.mjs is loaded",new Date().toLocaleString());
+if(window.consoleLog===true){console.log("LOADED:- globalUIpopups.mjs is loaded",new Date().toLocaleString());}
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE

@@ -1,6 +1,6 @@
 const consoleLog = true;
 
-console.log("LOADED:- project_Client.mjs is loaded",new Date().toLocaleString());
+if(window.consoleLog===true){console.log("LOADED:- project_Client.mjs is loaded",new Date().toLocaleString());}
 export function projectMJSisLoaded(){
     return true;
 }
@@ -16,6 +16,7 @@ export function projectMJSisLoaded(){
     import { selectImageToUpload } from "./globalUploadImage_Client.mjs";
     import { uploadImageToCanvas } from "./globalUploadImage_Client.mjs";
     import { isEmailValid } from "./global_Client.mjs";
+    import { showProgressCircle } from "./indexHTMLcompanion.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 // 🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️
@@ -28,17 +29,23 @@ export function projectMJSisLoaded(){
             uploadImageToCanvas: () => uploadImageToCanvas(),
             insertFormDataRecord: async () => await insertFormDataRecord(),
             // find search retrieve get START
+                pleaseChooseFilter: () => {
+                    showCustomMessage("Please choose a filter.  Address, note or date.");
+                },
                 searchByAddress: () => {
                     document.getElementById("search-button").setAttribute("data-action", "filterByAddress")
                     document.getElementById("search-input").type = "text"; // Ensures numeric input for date
+                    document.getElementById("filteredList-container").textContent = ""
                 },
                 searchByNote: () => {
                     document.getElementById("search-button").setAttribute("data-action", "filterByNote")
                     document.getElementById("search-input").type = "text"; // Ensures numeric input for date
+                    document.getElementById("filteredList-container").textContent = ""
                 },
                 searchByDate: () => {
                     document.getElementById("search-button").setAttribute("data-action", "filterByDate");
                     document.getElementById("search-input").type = "date"; // Ensures numeric input for date
+                    document.getElementById("filteredList-container").textContent = ""
                 },
                 filterByAddress: () => filterBy("address"),
                 filterByNote: () => filterBy("note"),
@@ -64,12 +71,12 @@ export function projectMJSisLoaded(){
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export async function deleteRecord(event){
                 const recordIdToDELETE = event.target.dataset.recordId;
-                console.log('recordIdToDELETE:-',recordIdToDELETE);
+                if(window.consoleLog===true){console.log('recordIdToDELETE:-',recordIdToDELETE);}
                 try {
                     const userEmailAddress = document.getElementById("user-email-address").textContent;
                     // const userEmailAddress = "donald.garton@outlook.com";
-                    console.log(userEmailAddress);
-                    const fetchUrl = "/dbRouter/delete-record";
+                    if(window.consoleLog===true){console.log(userEmailAddress);}
+                    const fetchUrl = "/SQLiteRouter/delete-record";
                     const fetchOptions = {
                             method: 'POST',
                             mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -97,10 +104,10 @@ export function projectMJSisLoaded(){
                                 }
                             })
                         }
-                    if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
+                    if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
                     const response = await fetch(fetchUrl, fetchOptions);
                     const jso = await response.json(); // Fetch JSON 
-                    console.log(jso);
+                    if(window.consoleLog===true){console.log(jso);}
                     if(jso.success===true){
                         if(jso.deleted === 0){
                             showCustomMessage(`No records found to delete`);
@@ -114,73 +121,100 @@ export function projectMJSisLoaded(){
                                 }
                             // 2 remove the record from filteredRecords
                                 delete filteredRecords[`${recordIdToDELETE}`];
-                                console.log(`Record # ${recordIdToDELETE} deleted from filteredRecords.`);
+                                if(window.consoleLog===true){console.log(`Record # ${recordIdToDELETE} deleted from filteredRecords.`);}
                         // steps END
                         showCustomMessage(`Record # ${recordIdToDELETE} deleted successfully.`);
                     }
                 } catch (error) {
-                    console.error(`Error DELETING record # ${recordIdToDELETE} in photos :`, error);
+                    if(window.consoleLog===true){console.error(`Error DELETING record # ${recordIdToDELETE} in photos :`, error);}
                 }
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export function editRecordNote(event){
-                event.target.disabled = true;
-                console.log(`filteredRecords:-\n`,filteredRecords);
-                const filteredRecordID = event.target.dataset.recordId;
-                console.log(`filteredRecordID:- `,filteredRecordID);
-                console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
-                const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
-                console.log(`filteredRecord imageID:- `,imageID);
-                if(imageID !== parseInt(filteredRecordID)){
-                    showCustomMessage("Error: conflicting ID.  Edit cannot proceed.");
-                    return;
-                }
-                // insert DOM element textarea START
-                    const editNoteTinymceContainer = document.createElement("div");
-                    editNoteTinymceContainer.id = `editNoteTinymceContainer${imageID}`;
-                    editNoteTinymceContainer.className = "record-card-edit-note";
-                    // const noteHTML = filteredRecords[`${filteredRecordID}`].image_notes || '';
-                    const noteHTML = document.getElementById(`notes${filteredRecordID}`).innerHTML;
-                    console.log(noteHTML);
-                    localStorage.setItem('tas_note_toEdit', noteHTML);
-                    editNoteTinymceContainer.innerHTML = `<textarea id='tinymce_${imageID}' class='tinymce-editor'>${noteHTML}</textarea>`;
-                    const anchorElement = document.getElementById(event.target.id);
-                    anchorElement.after(editNoteTinymceContainer); // append after the anchor element.  append; prepend; before; after
-                // insert DOM element textarea END
-                // initialise TinyMCE START
-                    // const tinymceEditor = document.getElementById(`noteEdit${imageID}`);
-                    const tinymceEditor = document.getElementById(`editNoteTinymceContainer${imageID}`);
-                    console.log(tinymceEditor); // textarea, now style="display: none;"
-                    initTinyMCE(tinymceEditor); // Call this to initialize TinyMCE editor
-                // initialise TinyMCE END
-                // insert save button START
-                    const editNoteTinymceContainerSaveBtn = document.createElement("div");
-                    editNoteTinymceContainerSaveBtn.style.textAlign = "center";
-                    editNoteTinymceContainerSaveBtn.innerHTML = 
-                    `
-                        <button id='saveEditedNote${imageID}' class="std-btn" data-action="saveEditedNote" data-record-id='${imageID}'>Save changes to note # ${imageID}</button>
-                    `
-                    const anchorIIElement = document.getElementById(`deleteRecord${imageID}`);
-                    console.log(event.target.id);
-                    console.log(anchorIIElement);
-                    anchorIIElement.before(editNoteTinymceContainerSaveBtn); // append after the anchorII element.  append; prepend; before; after
-                // insert save button END
+                // thing1 - cannot use setTimeout, fetch, or await otherwise thing2 will start before thing1 finishes
+                    (() => {
+                        try{
+                            removeAllDomEditElements();
+                        }catch (err){
+                            if(window.consoleLog===true){console.error(`Error in editRecordNote(event) >>> removeAllDomEditElements():`, err);}
+                        }
+                    })();
+                // thing2
+                    (() => {
+                        try{
+                            event.target.disabled = true;
+                            if(window.consoleLog===true){console.log(`filteredRecords:-\n`,filteredRecords);}
+                            const filteredRecordID = event.target.dataset.recordId;
+                            if(window.consoleLog===true){console.log(`filteredRecordID:- `,filteredRecordID);}
+                            if(window.consoleLog===true){console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);}
+                            // const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
+                            // if(window.consoleLog===true){console.log(`filteredRecord imageID:- `,imageID);}
+                            const imageID = filteredRecords[`${filteredRecordID}`].image_id || ''; // image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            if(imageID !== parseInt(filteredRecordID)){
+                                showCustomMessage("Error: conflicting ID.  Edit cannot proceed.");
+                                return;
+                            }
+                            localStorage.setItem(`tas_toEdit_imageID`,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            if(window.consoleLog===true){console.log(`filteredRecord imageID:- `,imageID);} // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            // // update other sections with edited record details START
+                            //     // store Address in the location page
+                            //         document.getElementById("googlePlacesAPIautocomplete_0").value = filteredRecords[`${filteredRecordID}`].image_address || '';
+                            //     // store Date & Time in the note page
+                            //         document.getElementById("note-date-time").textContent = filteredRecords[`${filteredRecordID}`].image_date + ' ' + filteredRecords[`${filteredRecordID}`].image_time || ''; // store edited address in the note page
+                            //     // store Address in the note page
+                            //         document.getElementById("note-address").textContent = filteredRecords[`${filteredRecordID}`].image_address || ''; // store edited address in the note page
+                            //     // store Note in the note page
+                            // // update other sections with edited record details END
+                            // insert DOM element textarea START
+                                const editNoteTinymceContainer = document.createElement("div");
+                                editNoteTinymceContainer.id = `editNoteTinymceContainer${imageID}`;
+                                editNoteTinymceContainer.className = "record-card-edit-note";
+                                // const noteHTML = filteredRecords[`${filteredRecordID}`].image_notes || '';
+                                const noteHTML = document.getElementById(`notes${filteredRecordID}`).innerHTML;
+                                if(window.consoleLog===true){console.log(noteHTML);}
+                                localStorage.setItem('tas_toEdit_note', noteHTML);
+                                editNoteTinymceContainer.innerHTML = `<textarea id='tinymce_${imageID}' class='tinymce-editor'>${noteHTML}</textarea>`;
+                                const anchorElement = document.getElementById(event.target.id);
+                                anchorElement.after(editNoteTinymceContainer); // append after the anchor element.  append; prepend; before; after
+                            // insert DOM element textarea END
+                            // initialise TinyMCE START
+                                // const tinymceEditor = document.getElementById(`noteEdit${imageID}`);
+                                const tinymceEditor = document.getElementById(`editNoteTinymceContainer${imageID}`);
+                                if(window.consoleLog===true){console.log(tinymceEditor);} // textarea, now style="display: none;"
+                                initTinyMCE(tinymceEditor); // Call this to initialize TinyMCE editor
+                            // initialise TinyMCE END
+                            // insert save button START
+                                const editNoteTinymceContainerSaveBtn = document.createElement("div");
+                                editNoteTinymceContainerSaveBtn.style.textAlign = "center";
+                                editNoteTinymceContainerSaveBtn.innerHTML = 
+                                    `
+                                        <button id='saveEditedNote${imageID}' class="std-btn" data-action="saveEditedNote" data-record-id='${imageID}'>Save changes to note # ${imageID}</button>
+                                    `
+                                const anchorIIElement = document.getElementById(`deleteRecord${imageID}`);
+                                if(window.consoleLog===true){console.log(event.target.id);}
+                                if(window.consoleLog===true){console.log(anchorIIElement);}
+                                anchorIIElement.before(editNoteTinymceContainerSaveBtn); // append after the anchorII element.  append; prepend; before; after
+                            // insert save button END
+                        }catch (err){
+                            if(window.consoleLog===true){console.error(`Error in editRecordNote(event):`, err);}
+                        }
+                    })();
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export async function saveEditedNote(event){
-                console.log('saveEditedNote:-\n',event);
+                if(window.consoleLog===true){console.log('saveEditedNote:-\n',event);}
                 const recordIdToUpdate = event.target.dataset.recordId;
                 const editNoteBtn = document.getElementById(`noteEdit${recordIdToUpdate}`);
                 editNoteBtn.disabled = false; // Re-enable the edit button
-                const noteToSave = localStorage.getItem("tas_note_edited"); // this localStorage item is updated by TinyMCE editor.on 'blur'
+                const noteToSave = localStorage.getItem("tas_edited_note"); // this localStorage item is updated by TinyMCE editor.on 'blur'
                 event.target.remove();
-                console.log('noteToSave:-\n',noteToSave);
-                console.log('recordIdToUpdate:-',recordIdToUpdate);
+                if(window.consoleLog===true){console.log('noteToSave:-\n',noteToSave);}
+                if(window.consoleLog===true){console.log('recordIdToUpdate:-',recordIdToUpdate);}
                 try {
                     const userEmailAddress = document.getElementById("user-email-address").textContent;
                     // const userEmailAddress = "donald.garton@outlook.com";
-                    console.log(userEmailAddress);
-                    const fetchUrl = "/dbRouter/update-data-record";
+                    if(window.consoleLog===true){console.log(userEmailAddress);}
+                    const fetchUrl = "/SQLiteRouter/update-data-record";
                     const fetchOptions = {
                             method: 'POST',
                             mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -208,11 +242,11 @@ export function projectMJSisLoaded(){
                                 }
                             })
                         }
-                    if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
+                    if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
                     const response = await fetch(fetchUrl, fetchOptions);
                     const jso = await response.json(); // Fetch JSON 
-                    console.log(jso);
-                    console.log(jso.updates.image_notes);
+                    if(window.consoleLog===true){console.log(jso);}
+                    if(window.consoleLog===true){console.log(jso.updates.image_notes);}
                     if(jso.success===true){
                         // steps START
                             // 1 update the notes in the DOM
@@ -228,72 +262,98 @@ export function projectMJSisLoaded(){
                         showCustomMessage("Failed to update note", "error");
                     }
                 } catch (error) {
-                    console.error(`Error updating record # ${recordIdToUpdate} image_notes in photos :`, error);
+                    if(window.consoleLog===true){console.error(`Error updating record # ${recordIdToUpdate} image_notes in photos :`, error);}
                 }
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export function editRecordAddress(event){
-                event.target.disabled = true;
-                console.log(`filteredRecords:-\n`,filteredRecords);
-                const filteredRecordID = event.target.dataset.recordId;
-                console.log(`filteredRecordID:- `,filteredRecordID);
-                console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);
-                const imageID = filteredRecords[`${filteredRecordID}`].image_id || '';
-                console.log(`filteredRecord imageID:- `,imageID);
-                document.getElementById("googlePlacesAPIautocomplete_0").value = filteredRecords[`${filteredRecordID}`].image_address || '';
-                document.getElementById("note-date-time").textContent = filteredRecords[`${filteredRecordID}`].image_date + ' ' + filteredRecords[`${filteredRecordID}`].image_time || '';
-                document.getElementById("note-address").textContent = filteredRecords[`${filteredRecordID}`].image_address || '';
-                // insert DOM element input START
-                    const editAddressDiv = document.createElement("div");
-                    // editAddressDiv.className = "record-card-edit-address";
-                    editAddressDiv.id = "autocomplete-address-container";
-                    editAddressDiv.className = "autocomplete-address-container";
-                    // const addressValue = filteredRecords[`${filteredRecordID}`].image_address || '';
-                    const addressElement = document.getElementById(`address${imageID}`);
-                    const addressValue = addressElement.textContent || '';
-                    console.log(addressValue);
-                    localStorage.setItem(`tas_address_toEdit`,addressValue);
-                    editAddressDiv.innerHTML = `
-                        <input id="googlePlacesAPIautocomplete_${imageID}" class="autocomplete-address-input" type="text" placeholder="Enter address here..."><br>
-                        `;
-                    const anchorElement = document.getElementById(event.target.id);
-                    console.log(event.target.id);
-                    console.log(anchorElement);
-                    anchorElement.after(editAddressDiv); // append after the anchor element
-                // insert DOM element input END
-                // initialise Google API START
-                    // document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = filteredRecords[`${filteredRecordID}`].image_address || '';
-                    document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = addressElement.textContent || '';
-                    initAutocomplete(`googlePlacesAPIautocomplete_${imageID}`);
-                // initialise Google API END
-                // insert save button START
-                    const editAddressDivSaveBtn = document.createElement("div");
-                    editAddressDivSaveBtn.style.textAlign = "center";
-                    editAddressDivSaveBtn.innerHTML = `
-                        <button id='saveEditedAddress${imageID}' class="std-btn" data-action="saveEditedAddress" data-record-id='${imageID}'>Save changes to address # ${imageID}</button>
-                        `;
-                    const anchorIIElement = document.getElementById(`googlePlacesAPIautocomplete_${imageID}`);
-                    console.log(event.target.id);
-                    console.log(anchorIIElement);
-                    anchorIIElement.after(editAddressDivSaveBtn); // append after the anchorII element.  append; prepend; before; after
-                // insert save button END
+                // thing1 - cannot use setTimeout, fetch, or await otherwise thing2 will start before thing1 finishes
+                    (() => {
+                        try{
+                            removeAllDomEditElements();
+                        }catch (err){
+                            if(window.consoleLog===true){console.error(`Error in editRecordAddress(event) >>> removeAllDomEditElements():`, err);}
+                        }
+                    })();
+                // thing2
+                    (() => {
+                        try{
+                            event.target.disabled = true;
+                            if(window.consoleLog===true){console.log(`filteredRecords:-\n`,filteredRecords);}
+                            const filteredRecordID = event.target.dataset.recordId; // If 4 records are returned, filteredRecordID can be 0, 1, 2 or 3.
+                            if(window.consoleLog===true){console.log(`filteredRecordID:- `,filteredRecordID);}
+                            if(window.consoleLog===true){console.log(`filteredRecord:-\n`,filteredRecords[`${filteredRecordID}`]);}
+                            const imageID = filteredRecords[`${filteredRecordID}`].image_id || ''; // image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            if(imageID !== parseInt(filteredRecordID)){
+                                showCustomMessage("Error: conflicting ID.  Edit cannot proceed.");
+                                return;
+                            }
+                            localStorage.setItem(`tas_toEdit_imageID`,imageID); // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            if(window.consoleLog===true){console.log(`filteredRecord imageID:- `,imageID);} // imageID = image_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            // // update other sections with edited record details START
+                            //     // store Address in the location page
+                            //         document.getElementById("googlePlacesAPIautocomplete_0").value = filteredRecords[`${filteredRecordID}`].image_address || '';
+                            //     // store Date & Time in the note page
+                            //         document.getElementById("note-date-time").textContent = filteredRecords[`${filteredRecordID}`].image_date + ' ' + filteredRecords[`${filteredRecordID}`].image_time || ''; // store edited address in the note page
+                            //     // store Address in the note page
+                            //         document.getElementById("note-address").textContent = filteredRecords[`${filteredRecordID}`].image_address || ''; // store edited address in the note page
+                            //     // store Note in the note page
+                            // // update other sections with edited record details END
+                            // insert DOM element input START
+                                const editAddressDiv = document.createElement("div");
+                                // editAddressDiv.className = "record-card-edit-address";
+                                editAddressDiv.id = `autocomplete-address-container-${imageID}`;
+                                editAddressDiv.className = "autocomplete-address-container";
+                                // const addressValue = filteredRecords[`${filteredRecordID}`].image_address || '';
+                                const addressElement = document.getElementById(`address${imageID}`);
+                                const addressValue = addressElement.textContent || '';
+                                if(window.consoleLog===true){console.log(addressValue);}
+                                localStorage.setItem(`tas_toEdit_address`,addressValue);
+                                editAddressDiv.innerHTML = `
+                                    <input id="googlePlacesAPIautocomplete_${imageID}" class="autocomplete-address-input" type="text" placeholder="Enter address here..."><br>
+                                    `;
+                                const anchorElement = document.getElementById(event.target.id);
+                                if(window.consoleLog===true){console.log(event.target.id);}
+                                if(window.consoleLog===true){console.log(anchorElement);}
+                                anchorElement.after(editAddressDiv); // append after the anchor element
+                            // insert DOM element input END
+                            // initialise Google API START
+                                // document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = filteredRecords[`${filteredRecordID}`].image_address || '';
+                                document.getElementById(`googlePlacesAPIautocomplete_${imageID}`).value = addressElement.textContent || '';
+                                initAutocomplete(`googlePlacesAPIautocomplete_${imageID}`);
+                            // initialise Google API END
+                            // insert save button START
+                                const editAddressDivSaveBtn = document.createElement("div");
+                                editAddressDivSaveBtn.style.textAlign = "center";
+                                editAddressDivSaveBtn.innerHTML = `
+                                    <button id='saveEditedAddress${imageID}' class="std-btn" data-action="saveEditedAddress" data-record-id='${imageID}'>Save changes to address # ${imageID}</button>
+                                    `;
+                                const anchorIIElement = document.getElementById(`googlePlacesAPIautocomplete_${imageID}`);
+                                if(window.consoleLog===true){console.log(event.target.id);}
+                                if(window.consoleLog===true){console.log(anchorIIElement);}
+                                anchorIIElement.after(editAddressDivSaveBtn); // append after the anchorII element.  append; prepend; before; after
+                            // insert save button END
+                        }catch (err){
+                            if(window.consoleLog===true){console.error(`Error in editRecordAddress(event):`, err);}
+                        }
+                    })();
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             export async function saveEditedAddress(event){
-                console.log('saveEditedAddress:-\n',event);
+                if(window.consoleLog===true){console.log('saveEditedAddress:-\n',event);}
                 const recordIdToUpdate = event.target.dataset.recordId;
                 const editAddressBtn = document.getElementById(`addressEdit${recordIdToUpdate}`);
                 editAddressBtn.disabled = false; // Re-enable the edit button
                 const addressToSave = document.getElementById(`googlePlacesAPIautocomplete_${recordIdToUpdate}`).value;
                 event.target.remove();
-                localStorage.setItem("tas_address_edited",addressToSave);
-                console.log('addressToSave:-\n',addressToSave);
-                console.log('recordIdToUpdate:-',recordIdToUpdate);
+                localStorage.setItem("tas_edited_address",addressToSave);
+                if(window.consoleLog===true){console.log('addressToSave:-\n',addressToSave);}
+                if(window.consoleLog===true){console.log('recordIdToUpdate:-',recordIdToUpdate);}
                 try {
                     const userEmailAddress = document.getElementById("user-email-address").textContent;
                     // const userEmailAddress = "donald.garton@outlook.com";
-                    console.log(userEmailAddress);
-                    const fetchUrl = "/dbRouter/update-data-record";
+                    if(window.consoleLog===true){console.log(userEmailAddress);}
+                    const fetchUrl = "/SQLiteRouter/update-data-record";
                     const fetchOptions = {
                             method: 'POST',
                             mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -321,147 +381,216 @@ export function projectMJSisLoaded(){
                                 }
                             })
                         }
-                    if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
+                    if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
                     const response = await fetch(fetchUrl, fetchOptions);
                     const jso = await response.json(); // Fetch JSON 
-                    console.log(jso);
-                    console.log(jso.updates.image_address);
+                    if(window.consoleLog===true){console.log(jso);}
+                    if(window.consoleLog===true){console.log(jso.updates.image_address);}
                     if(jso.success===true){
-                        const addressElement = document.getElementById(`address${recordIdToUpdate}`);
-                        addressElement.textContent = jso.updates.image_address; // Update the address in the DOM
-                        const addressInputContainer = document.getElementById("autocomplete-address-container");
-                        addressInputContainer.remove(); // Remove the address input container
+                        // steps START
+                            // 1 update the notes in the DOM
+                                const addressElement = document.getElementById(`address${recordIdToUpdate}`);
+                                addressElement.textContent = jso.updates.image_address; // Update the address in the DOM
+                            // 2 remove address input element
+                                const addressInputContainer = document.getElementById(`autocomplete-address-container-${recordIdToUpdate}`);
+                                addressInputContainer.remove(); // Remove the address input container
+                        // steps END
                     }else{
                         showCustomMessage("failed to update address", "error");
                     }
                 } catch (error) {
-                    console.error(`Error updating record # ${recordIdToUpdate} image_address in photos :`, error);
+                    if(window.consoleLog===true){console.error(`Error updating record # ${recordIdToUpdate} image_address in photos :`, error);}
                 }
             }
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
+            // remove all DOM edit elements START
+                function removeAllDomEditElements(){
+                    const data = filteredRecords;
+                    let index = 0;
+                    for (let key in data) {
+                        showProgressCircle(data.length,index);
+                        // 🔹 hasOwnProperty ensures you're only accessing properties directly on the object (not inherited ones).
+                        if (data.hasOwnProperty(key)) {
+                            const value = data[key];
+                            if(window.consoleLog===true){console.log(`Key: ${key}, Value:`, value);}
+                            // ensure all editing buttons are enabled for user clicks
+                                document.getElementById(`addressEdit${data[key].image_id}`).disabled=false;
+                                document.getElementById(`noteEdit${data[key].image_id}`).disabled=false;
+                            // 2 destroy TinyMCE editor instance
+                                try{
+                                    tinymce.get(`editNoteTinymceContainer${data[key].image_id}`)?.remove();
+                                    if(window.consoleLog===true){console.log(`✅ Removal of destroy TinyMCE editor instance ${data[key].image_id} successful 🟢.`);}
+                                }catch{
+                                    if(window.consoleLog===true){console.log(`✅ Removal of destroy TinyMCE editor instance ${data[key].image_id} skipped ⚠️.`);}
+                                }
+                            // 3 remove the notes input element
+                                try{
+                                    const editNoteTinymceContainer = document.getElementById(`editNoteTinymceContainer${data[key].image_id}`);
+                                    editNoteTinymceContainer.remove(); // Remove the notes input element
+                                    if(window.consoleLog===true){console.log(`✅ Removal of editNoteTinymceContainer${data[key].image_id} successful. 🟢`);}
+                                }catch{
+                                    if(window.consoleLog===true){console.log(`✅ Removal of editNoteTinymceContainer${data[key].image_id} skipped. ⚠️`);}
+                                }
+                            // remove the address autocomplete container
+                                try{
+                                    const addressInputContainer = document.getElementById(`autocomplete-address-container-${data[key].image_id}`);
+                                    addressInputContainer.remove(); // Remove the address input container
+                                    if(window.consoleLog===true){console.log(`✅ Removal of autocomplete-address-container-${data[key].image_id} successful. 🟢`);}
+                                }catch{
+                                    if(window.consoleLog===true){console.log(`✅ Removal of autocomplete-address-container-${data[key].image_id} skipped ⚠️.`);}
+                                }
+                            index++;
+                        }
+                    }
+                }
+            // remove all DOM edit elements END
+        // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
             // filterBy START
                 export async function filterBy(filterField) {
-                    console.log("filterBy() called.");
-                    try {
-                        const userEmailAddress = document.getElementById("user-email-address").textContent;
-                        // const userEmailAddress = "donald.garton@outlook.com";
-                        console.log(userEmailAddress);
-                        const filterText = `%${document.getElementById("search-input").value}%`;
-                        if (!filterText) {
-                            showCustomMessage("Please enter part of an address to search.");
-                            return;
+                    if(window.consoleLog===true){console.log("filterBy() called.");}
+                    document.getElementById("filteredList-container").textContent = ""
+                    // check if a search option has been checked - superfluous, see function map START
+                        const selectedRadio = document.querySelector('input[name="searchOption"]:checked');
+                        if (selectedRadio) {
+                            if(window.consoleLog===true){console.log("Selected:", selectedRadio.value);}
+                        } else {
+                            showCustomMessage("Please select a search option.");
+                            return
                         }
-                        let dateDD = null;
-                        let dateMM = null;
-                        let dateYYYY = null;
-                        if (filterField === "date") {
-                            const date = new Date(document.getElementById("search-input").value);
-                            console.log(date);
-                            if (isNaN(date)) {
-                                showCustomMessage("Please enter a valid date.");
-                                return;
-                            } else {
-                                dateDD = date.getDate().toString().padStart(2, '0');
-                                dateMM = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-                                dateYYYY = date.getFullYear().toString();
-                                console.log(dateDD, dateMM, dateYYYY);
-                            }
-                        }
-                        const fetchUrl = "/dbRouter/filter-by";
-                        const fetchOptions = {
-                                method: 'POST',
-                                mode: 'cors',                  // Ensures cross-origin requests are handled
-                                cache: 'no-cache',             // Prevents caching issues
-                                credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
-                                headers: {
-                                    'Content-Type': 'application/json',  // Sets content type
-                                    // - POTENTIAL Content-Type header issue:
-                                    //     - IF you're using FormData, you shouldn't manually set "Content-Type": "multipart/form-data".
-                                    //     - The browser automatically sets the correct boundary for multipart/form-data. Manually setting it could lead to an error because the boundary isn’t included. You should remove that header.
-                                    // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
-                                    // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
-                                },
-                                body: JSON.stringify({
-                                    userEmailAddress: userEmailAddress,
-                                    filterField: filterField,
-                                    filterText: filterText,
-                                    dateDD: dateDD,
-                                    dateMM: dateMM,
-                                    dateYYYY: dateYYYY
-                                })
-                            }
-                        if(consoleLog===true){console.log(fetchUrl,fetchOptions);}
-                        const response = await fetch(fetchUrl, fetchOptions);
-                        const jso = await response.json();
-                        if(jso.success !== true){
-                            // showCustomMessage("Error filtering records. Please try again.", "error");
-                            showCustomMessage(jso.message);
-                            return;
-                        }
-                        const filteredList = jso.formattedPhotos || [];
-                        console.log("Filtered List:", filteredList);
-                        // re-set all previous filtered records START
-                            const filteredListContainer = document.getElementById("filteredList-container");
-                            while (filteredListContainer.firstChild) {
-                                filteredListContainer.removeChild(filteredListContainer.firstChild);
-                            }
-                            const x = filteredListContainer;
-                            console.log("filteredListContainer:-\n",x);
-                        // re-set all previous filtered records END
-                        if (!filteredList.length) {
-                            filteredListContainer.innerHTML = "<p>No photos available.</p>";
-                            return;
-                        }
-                        filteredList.forEach(photo => {
-                            const recordCard = document.createElement("div");
-                            recordCard.className = "record-card";
-                            // Handle null values gracefully
-                                // 1 causes error, but can be ignored
-                                    const imageSrc = photo.image_blob || "placeholder.jpg"; // Use default if null
-                                // // 2 doesn't work
-                                //     const imageSrc = photo.image_blob 
-                                //                     ? `data:image/png;base64,${photo.image_blob.toString("base64")}` 
-                                //                     : "placeholder.jpg"; // Fallback
-                                // // 3 doesn't work
-                                //     const imageSrc = photo.image_blob?.buffer 
-                                //                     ? `data:image/png;base64,${photo.image_blob.buffer.toString("base64")}`
-                                //                     : "placeholder.jpg";
-                                const imageDate = photo.image_date || "Unknown Date";
-                                const imageTime = photo.image_time || "Unknown Time";
-                                const imageAddress = photo.image_address || "No Address Provided";
-                                const imageNotes = photo.image_notes || "No Notes Available";
-                                const imageID = photo.image_id;
-                                recordCard.id = `recordCard${imageID}`;
-                            recordCard.innerHTML = `
-                                <p><strong>Photo # ${imageID}</strong></p>
-                                <img src="${imageSrc}" alt="Photo" class="photo">
-                                <p><strong>Date:</strong> ${imageDate}</p>
-                                <p><strong>Time:</strong> ${imageTime}</p>
-                                <hr>
-                                <p><strong>Address:</strong></p>
-                                <p id='address${imageID}' style="border:1px solid black;padding:5px;">${imageAddress}</p>
-                                <button id='addressEdit${imageID}' class="std-btn" data-action="editRecordAddress" data-record-id='${imageID}'>Edit address # ${imageID}</button>
-                                <hr>
-                                <p><strong>Notes:</strong></p>
-                                <div id='notes${imageID}' class="tinymce-textarea">${imageNotes}</div>
-                                <button id='noteEdit${imageID}' class="std-btn" data-action="editRecordNote" data-record-id='${imageID}'>Edit note # ${imageID}</button>
-                                <hr>
-                                <button id='deleteRecord${imageID}' class="std-btn-red" data-action="deleteRecord" data-record-id='${imageID}'>DELETE RECORD # ${imageID}</button>
-                            `;
-                            filteredListContainer.appendChild(recordCard);
-                            filteredRecords[`${imageID}`] = {
-                                image_blob: imageSrc,
-                                image_date: imageDate,
-                                image_time: imageTime,
-                                image_address: imageAddress,
-                                image_notes: imageNotes,
-                                image_id: imageID
-                            }
-                        });
-                    } catch (error) {
-                        console.error("Error in filterBy():", error);
+                    // check if a search option has been checked - superfluous, see function map END
+                    if(window.consoleLog===true){console.log(clientConfigSettings.CLIENT_NOT_SIGNED_IN_TEXT);}
+                    if(window.consoleLog===true){console.log(document.getElementById("user-email-address").textContent);}
+                    if(document.getElementById("user-email-address").textContent === clientConfigSettings.CLIENT_NOT_SIGNED_IN_TEXT){
+                        showCustomMessage("Please sign in.  See padlock icon at top left.");
+                        return;
+                    }else{
                     }
-
+                    // search & retrieve START
+                        try {
+                            const userEmailAddress = document.getElementById("user-email-address").textContent;
+                            if(window.consoleLog===true){console.log(userEmailAddress);}
+                            const filterText = `%${document.getElementById("search-input").value}%`;
+                            if (!filterText) {
+                                showCustomMessage("Please enter something to search for...");
+                                return;
+                            }
+                            let dateDD = null;
+                            let dateMM = null;
+                            let dateYYYY = null;
+                            if (filterField === "date") {
+                                const date = new Date(document.getElementById("search-input").value);
+                                if(window.consoleLog===true){console.log(date);}
+                                if (isNaN(date)) {
+                                    showCustomMessage("Please enter a valid date.");
+                                    return;
+                                } else {
+                                    dateDD = date.getDate().toString().padStart(2, '0');
+                                    dateMM = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+                                    dateYYYY = date.getFullYear().toString();
+                                    if(window.consoleLog===true){console.log(dateDD, dateMM, dateYYYY);}
+                                }
+                            }
+                            const fetchUrl = "/SQLiteRouter/filter-by";
+                            const fetchOptions = {
+                                    method: 'POST',
+                                    mode: 'cors',                  // Ensures cross-origin requests are handled
+                                    cache: 'no-cache',             // Prevents caching issues
+                                    credentials: clientConfigSettings.CLIENT_SESSION_CREDENTIALS,
+                                    headers: {
+                                        'Content-Type': 'application/json',  // Sets content type
+                                        // - POTENTIAL Content-Type header issue:
+                                        //     - IF you're using FormData, you shouldn't manually set "Content-Type": "multipart/form-data".
+                                        //     - The browser automatically sets the correct boundary for multipart/form-data. Manually setting it could lead to an error because the boundary isn’t included. You should remove that header.
+                                        // 'Authorization': `Bearer ${yourAccessToken}`, // Uses token-based auth (if applicable)
+                                        // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
+                                    },
+                                    body: JSON.stringify({
+                                        userEmailAddress: userEmailAddress,
+                                        filterField: filterField,
+                                        filterText: filterText,
+                                        dateDD: dateDD,
+                                        dateMM: dateMM,
+                                        dateYYYY: dateYYYY
+                                    })
+                                }
+                            if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
+                            const response = await fetch(fetchUrl, fetchOptions);
+                            const jso = await response.json();
+                            if(jso.success !== true){
+                                // showCustomMessage("Error filtering records. Please try again.", "error");
+                                showCustomMessage(jso.message);
+                                return;
+                            }
+                            const filteredList = jso.formattedPhotos || [];
+                            if(window.consoleLog===true){console.log("Filtered List:", filteredList);}
+                            // re-set all previous filtered records START
+                                const filteredListContainer = document.getElementById("filteredList-container");
+                                while (filteredListContainer.firstChild) {
+                                    filteredListContainer.removeChild(filteredListContainer.firstChild);
+                                }
+                                const x = filteredListContainer;
+                                if(window.consoleLog===true){console.log("filteredListContainer:-\n",x);}
+                            // re-set all previous filtered records END
+                            if (!filteredList.length) {
+                                filteredListContainer.innerHTML = "<p>No photos available.</p>";
+                                return;
+                            }
+                            filteredList.forEach(photo => {
+                                const recordCard = document.createElement("div");
+                                recordCard.className = "record-card";
+                                // Handle null values gracefully
+                                    // 1 causes error, but can be ignored
+                                        const imageSrc = photo.image_blob || "placeholder.jpg"; // Use default if null
+                                    // // 2 doesn't work
+                                    //     const imageSrc = photo.image_blob 
+                                    //                     ? `data:image/png;base64,${photo.image_blob.toString("base64")}` 
+                                    //                     : "placeholder.jpg"; // Fallback
+                                    // // 3 doesn't work
+                                    //     const imageSrc = photo.image_blob?.buffer 
+                                    //                     ? `data:image/png;base64,${photo.image_blob.buffer.toString("base64")}`
+                                    //                     : "placeholder.jpg";
+                                    const imageDate = photo.image_date || "Unknown Date";
+                                    const imageTime = photo.image_time || "Unknown Time";
+                                    const imageAddress = photo.image_address || "No Address Provided";
+                                    const imageNotes = photo.image_notes || "No Notes Available";
+                                    const imageID = photo.image_id;
+                                    recordCard.id = `recordCard${imageID}`;
+                                recordCard.innerHTML = `
+                                    <p><span class="record-card-item-heading">Photo #</span> ${imageID}</p>
+                                    <img src="${imageSrc}" alt="Photo" class="photo">
+                                    <p><span class="record-card-item-heading"></span>Date: ${imageDate}</p>
+                                    <p><span class="record-card-item-heading"></span>Time: ${imageTime}</p>
+                                    <hr>
+                                    <p class="record-card-item-heading">Address:</p>
+                                    <p id='address${imageID}'>${imageAddress}</p>
+                                    <button id='addressEdit${imageID}' class="std-btn" data-action="editRecordAddress" data-record-id='${imageID}'>Edit address # ${imageID}</button>
+                                    <hr>
+                                    <p><span class="record-card-item-heading">Notes:</span></p>
+                                    <div id='notes${imageID}' class="tinymce-textarea">${imageNotes}</div>
+                                    <button id='noteEdit${imageID}' class="std-btn" data-action="editRecordNote" data-record-id='${imageID}'>Edit note # ${imageID}</button>
+                                    <hr>
+                                    <button id='deleteRecord${imageID}' class="std-btn-red" data-action="deleteRecord" data-record-id='${imageID}'>DELETE RECORD # ${imageID}</button>
+                                `;
+                                filteredListContainer.appendChild(recordCard);
+                                recordCard.scrollIntoView({ behavior: 'smooth' });
+                                // recordCard.style.border = "2px solid blue"; // Highlight the new record
+                                // setTimeout(() => {
+                                //     recordCard.style.border = "1px solid #ccc"; // Revert after 2 seconds
+                                // }, 2000);
+                                recordCard.classList.add("search-results-record-cards");
+                                filteredRecords[`${imageID}`] = {
+                                    image_blob: imageSrc,
+                                    image_date: imageDate,
+                                    image_time: imageTime,
+                                    image_address: imageAddress,
+                                    image_notes: imageNotes,
+                                    image_id: imageID
+                                }
+                            });
+                        } catch (error) {
+                            if(window.consoleLog===true){console.error("Error in filterBy():", error);}
+                        }
+                    // search & retrieve END
                 }
             // filterBy END
         // 🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦
@@ -472,7 +601,7 @@ export function projectMJSisLoaded(){
                         showCustomMessage("Please enter a note to search.");
                         return;
                     }
-                    const fetchUrl = `/dbRouter/get-by-note/${encodeURIComponent(note)}`;
+                    const fetchUrl = `/SQLiteRouter/get-by-note/${encodeURIComponent(note)}`;
                     const fetchOptions = {
                         method: 'GET',
                         mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -484,7 +613,7 @@ export function projectMJSisLoaded(){
                             // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
                         }
                     };
-                    if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
+                    if(window.consoleLog===true){console.log(JSON.stringify(fetchOptions));}
                     fetch(fetchUrl, fetchOptions)
                     .then(response => {
                         if (!response.ok) {
@@ -493,7 +622,7 @@ export function projectMJSisLoaded(){
                         return response.json();
                     })
                     .then(data => {
-                        console.log("Search results:", data);
+                        if(window.consoleLog===true){console.log("Search results:", data);}
                         const resultsContainer = document.getElementById("search-results");
                         resultsContainer.innerHTML = ''; // Clear previous results
                         if (data.length === 0) {
@@ -514,7 +643,7 @@ export function projectMJSisLoaded(){
                         }
                     })
                     .catch(error => {
-                        console.error("Error fetching search results:", error);
+                        if(window.consoleLog===true){console.error("Error fetching search results:", error);}
                         showCustomMessage("Error fetching search results. Please try again.");
                     });
                 }
@@ -528,8 +657,8 @@ export function projectMJSisLoaded(){
                         const imageData = ctx.getImageData(0, 0, canvasII.width, canvasII.height);
                         const pixels = new Uint32Array(imageData.data.buffer);
                         const hasImage = pixels.some(pixel => pixel !== 0);
-                        console.log(hasImage);
-                        console.log(hasImage ? "Canvas has image data" : "Canvas is blank");
+                        if(window.consoleLog===true){console.log(hasImage);}
+                        if(window.consoleLog===true){console.log(hasImage ? "Canvas has image data" : "Canvas is blank");}
                         if(hasImage===false){
                             showCustomMessage("No image exists.  Please capture an image.")
                             return;
@@ -564,7 +693,7 @@ export function projectMJSisLoaded(){
                         async function canvasToBlob(canvas,imageCompression=1) {
                             return new Promise(resolve => {
                                 canvas.toBlob(blob => {
-                                    console.log("canvasToBlob(canvas,imageCompression=1):-", blob); // Log Blob
+                                    if(window.consoleLog===true){console.log("canvasToBlob(canvas,imageCompression=1):-", blob);} // Log Blob
                                     window.window_image_Blob_compressed = blob; // Store Blob globally if needed
                                     resolve(blob);
                                 }, "image/jpeg", imageCompression);
@@ -574,15 +703,15 @@ export function projectMJSisLoaded(){
                         function canvasToDataURL(canvas,imageCompression=1) {
                             return canvas.toDataURL("image/jpeg", imageCompression); // Compress to smaller JPEG
                         }
-                    console.log("insertFormDataRecord() called.");
+                    if(window.consoleLog===true){console.log("insertFormDataRecord() called.");}
                     // ✅ Save Photo & Data to SQLite via API
                         const canvas = document.getElementById("canvasII");                
                         const image_DataURL_compressed = canvasToDataURL(canvas, imageCompression);
-                        console.log("Compressed Image DataURL:", image_DataURL_compressed); // Log DataURL
+                        if(window.consoleLog===true){console.log("Compressed Image DataURL:", image_DataURL_compressed);} // Log DataURL
                         const image_Blob_compressed = await canvasToBlob(canvas,imageCompression);
-                        console.log("Compressed Image Blob:", image_Blob_compressed); // Log Blob
-                        console.log("Compressed Image Blob:", window_image_Blob_compressed); // Log Blob
-                        console.log("image_Blob_compressed.type",image_Blob_compressed.type); // Should log something like "image/jpeg"
+                        if(window.consoleLog===true){console.log("Compressed Image Blob:", image_Blob_compressed);} // Log Blob
+                        if(window.consoleLog===true){console.log("Compressed Image Blob:", window_image_Blob_compressed);} // Log Blob
+                        if(window.consoleLog===true){console.log("image_Blob_compressed.type",image_Blob_compressed.type);} // Should log something like "image/jpeg"
                         // const userEmailAddress = document.getElementById("user-email-address").textContent; // Get user email from element
                         const imageDATE = new Date().toLocaleDateString();
                         const imageDD = newDateAttributes().date;
@@ -600,9 +729,9 @@ export function projectMJSisLoaded(){
                         formData.append("image_notes", notesHTML);
                         formData.append("userEmailAddress", userEmailAddress);
                         // formData.append("userEmailAddress", "donald.garton@outlook.com");
-                        console.log("FormData entries:", Array.from(formData.entries())); // Log FormData entries
+                        if(window.consoleLog===true){console.log("FormData entries:", Array.from(formData.entries()));} // Log FormData entries
                         try {
-                            const fetchUrl = "/dbRouter/insert-form-data-record";
+                            const fetchUrl = "/SQLiteRouter/insert-form-data-record";
                             const fetchOptions = {
                                     method: 'POST',
                                     mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -617,14 +746,14 @@ export function projectMJSisLoaded(){
                                     },
                                     body: formData  // Use FormData for file uploads / blobs
                                 }
-                            if(consoleLog===true){console.log(JSON.stringify(fetchOptions));}
-                            if(consoleLog===true){console.log(fetchOptions);}
+                            if(window.consoleLog===true){console.log(JSON.stringify(fetchOptions));}
+                            if(window.consoleLog===true){console.log(fetchOptions);}
                             for (const [key, value] of formData.entries()) {
-                                console.log(`${key}:`, value);
+                                if(window.consoleLog===true){console.log(`${key}:`, value);}
                             }
                             const response = await fetch(fetchUrl, fetchOptions);
                             const result = await response.json();
-                            console.log(result.message);
+                            if(window.consoleLog===true){console.log(result.message);}
                             if(result.success===true){
                                 showCustomMessage("Added new record, successfully.");
                             }
@@ -632,7 +761,7 @@ export function projectMJSisLoaded(){
                                 showCustomMessage("Missing user details ~ authentication denied");
                             }
                         } catch (error) {
-                            console.error("Error saving photo:", error);
+                            if(window.consoleLog===true){console.error("Error saving photo:", error);}
                         }
                 }
             // insertFormDataRecord END
@@ -645,13 +774,13 @@ export function projectMJSisLoaded(){
 
     document.addEventListener("DOMContentLoaded",async () => {
 
-        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ projectClient.',new Date().toLocaleString());}
+        if(window.consoleLog===true){console.log('DOMContentLoaded successsful ~ projectClient.',new Date().toLocaleString());}
 
         // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
 
             window.addEventListener("load",async () => {
 
-                if(consoleLog===true){console.log('Window load successsful ~ projectClient.',new Date().toLocaleString());}
+                if(window.consoleLog===true){console.log('Window load successsful ~ projectClient.',new Date().toLocaleString());}
 
                 await new Promise(resolve => setTimeout(resolve, 500)); // Simulated async process
                 await doAfterDOMandWindowLoad();
@@ -668,6 +797,8 @@ export function projectMJSisLoaded(){
 
     function doAfterDOMandWindowLoad(){
 
+        document.getElementById("user-email-address").textContent = clientConfigSettings.CLIENT_NOT_SIGNED_IN_TEXT; // reset user email address
+
         // 🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻🔊🎤🦻
             // add PROJECT SPECIFIC event listeners START
                 let logCount = 0;
@@ -676,20 +807,20 @@ export function projectMJSisLoaded(){
                         event.stopPropagation(); // Prevents the event from bubbling up to parent elements
                     // Prevents the event from bubbling up to parent elements END
                     logCount++;
-                    console.log(logCount,event.target); // will log twice if clicked on a radio button label.
+                    if(window.consoleLog===true){console.log(logCount,event.target);} // will log twice if clicked on a radio button label.
                     const action = event.target.dataset.action;
                     const handler = actions[action];
-                    console.log(`Action: ${action}, Handler: ${handler}`);
+                    if(window.consoleLog===true){console.log(`Action: ${action}, Handler: ${handler}`);}
                     if (typeof handler === "function"){
                         try{
-                            console.warn(`🟢 Handler found for action: ${event.target.dataset.action}`);
-                            console.warn(`🟢 Handler found at element: ${event.target.id}`);
+                            if(window.consoleLog===true){console.warn(`🟢 Handler found for action: ${event.target.dataset.action}`);}
+                            if(window.consoleLog===true){console.warn(`🟢 Handler found at element: ${event.target.id}`);}
                             handler(event);
                         } catch (error) {
-                            console.error(`🔴 Error executing handler for action: ${event.target.dataset.action}`, error);
+                            if(window.consoleLog===true){console.error(`🔴 Error executing handler for action: ${event.target.dataset.action}`, error);}
                         }   
                     } else {
-                        console.warn(`🔴 No handler found for action: ${event.target.dataset.action}`);
+                        if(window.consoleLog===true){console.warn(`🔴 No handler found for action: ${event.target.dataset.action}`);}
                     }
                 });
             // add PROJECT SPECIFIC event listeners END

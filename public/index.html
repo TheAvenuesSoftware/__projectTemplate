@@ -206,7 +206,7 @@
                         <div class="upload-image-container">
                                 <div class="upload-image-file">
                                     <label for="imageInput" class="std-btn NO-custom-file-upload">Select Image</label>
-                                    <input type="file" data-action="selectImageToUpload" id="imageInput" accept="image/*" />
+                                    <!-- <input type="file" data-action="selectImageToUpload" id="imageInput" accept="image/*" /> -->
                                     <span class="file-name" id="fileName">No file chosen</span>
                                     <br>
                                 </div>
@@ -258,13 +258,15 @@
                     <div id="canvas-container-II" class="save-canvas">
                         <canvas id="canvasII"></canvas>
                     </div>
-                    <button class="std-btn mapped-event" data-action="insertFormDataRecord">ADD NEW: Photo, Address & Note.</button>
+                    <button class="std-btn mapped-event" data-action="insertFormDataRecord">ADD THIS: Photo, Address & Note to my database.</button>
                     <!-- 💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾💾 -->
                 </section>
                 <section id="section6" class="section6 section-search">
                     <!-- 🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍 -->
                     <!-- search -->
                     <input id="section6-focus-on-activation" class="off-screen-placeholder" tabindex="-1">
+<div id="printable-area">
+    <!-- <div class="page-number-footer no-screen">DIV with classes: page-number-footer no-screen.&nbsp</div> -->
                     <p class="section-heading">Search</p>
                     <form id="search-criteria" class="search-criteria">
                         <span>Search by:</span>
@@ -284,21 +286,26 @@
                     <div class="search-container">
                         <input id="search-input" class="search-input" type="text" placeholder="Enter search term...">
                         <div class="text-align-center;">
-                            <button id="search-button" class="std-btn">Search</button>
+                            <button id="search-button" class="std-btn no-print">Search</button>
                         </div>
                     </div>
                     <div id="search-results" class="search-results">
-                        <p class="section-heading">Search Results</p>
-                        <ul id="filteredList-container">
-                            <!-- Search results will be dynamically populated here -->
-                        </ul>
+                        <!-- <div id="printable-area"> -->
+                            <p class="section-heading">Search Results</p>
+                            <ul id="filteredList-container">
+                                <!-- Search results will be dynamically populated here -->
+                            </ul>
+                        <!-- </div> -->
                     </div>
+</div>
                     <!-- 🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍 -->
                 </section>
 
     </main>
 
-    <footer>
+    <div id="scroll-buffer" class="scroll-buffer">&nbsp</div>
+
+    <footer class="no-print">
         <div id="footer-controls-container" class="footer-controls-container">
             <img id="footer-control-home" src="/_Home.png" class="footer-control" data-section-number="0">
             <!-- <img id="footer-control-menu" src="/_Menu.png" class="footer-control" data-section-number="1"> -->

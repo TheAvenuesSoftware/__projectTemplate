@@ -5,7 +5,7 @@
         const end = textarea.selectionEnd;
         const selected = textarea.value.substring(start, end);
         const wrapped = before + selected + after;
-        console.log(wrapped,before,after);
+        if(window.consoleLog===true){console.log(wrapped,before,after);}
         
       textarea.setRangeText(wrapped, start, end, 'end');
       textarea.focus();

@@ -53,13 +53,13 @@ export async function postLogoutActions_serverSide(req,res){
 }
 
 projectRouter.post('/validate_date', (req,res) => {
-    if(consoleLog===true){console.log(trace());}
-    if(consoleLog===true){console.log('req.body:- ',req.body);}
+    if(window.consoleLog===true){console.log(trace());}
+    if(window.consoleLog===true){console.log('req.body:- ',req.body);}
     const date = new Date(req.body.date);
-    if(consoleLog===true){console.log('new Date(req.body.date):- ',date);}
+    if(window.consoleLog===true){console.log('new Date(req.body.date):- ',date);}
     let today = new Date().toLocaleDateString();
     today = new Date(new Date());
-    if(consoleLog===true){console.log('today:- ',today);}
+    if(window.consoleLog===true){console.log('today:- ',today);}
     if(date > today){
         res.send({message:"A future date is not valid, please try again.",status:false})
     }
@@ -71,8 +71,8 @@ projectRouter.post('/validate_date', (req,res) => {
 
 // // Endpoint to get data from database
 //     projectRouter.get("/getExpenses", (req, res) => {
-//         if(consoleLog===true){console.log(trace());}
-//         if(consoleLog===true){console.log("app.get('/getExpenses', async (req, res)");}
+//         if(window.consoleLog===true){console.log(trace());}
+//         if(window.consoleLog===true){console.log("app.get('/getExpenses', async (req, res)");}
 //         db.all("SELECT * FROM expenses", [], (err, rows) => {
 //             if (err) {
 //                 res.status(500).send(err.message);
@@ -84,11 +84,11 @@ projectRouter.post('/validate_date', (req,res) => {
 
 // // Endpoint to get data from database
 //     projectRouter.post('/getAllExpenses', async (req, res) => {
-//         if(consoleLog===true){console.log(trace());}
-//         if(consoleLog===true){console.log("app.get('/getAllExpenses', async (req, res)");}
+//         if(window.consoleLog===true){console.log(trace());}
+//         if(window.consoleLog===true){console.log("app.get('/getAllExpenses', async (req, res)");}
 //         try {
-//             if(consoleLog===true){console.log(trace());}
-//             if(consoleLog===true){console.log(req.body);}
+//             if(window.consoleLog===true){console.log(trace());}
+//             if(window.consoleLog===true){console.log(req.body);}
 //             // Step 1: Fetch data from an external source (mocked for simplicity)
 //                 const externalData = [
 //                     { id: 1, item: 'Groceries', amount: 50 },
@@ -111,7 +111,7 @@ projectRouter.post('/validate_date', (req,res) => {
 //                 res.status(200).json(validatedData);
 // 
 //         } catch (error) {
-//             if(consoleLog===true){console.log(trace());}
+//             if(window.consoleLog===true){console.log(trace());}
 //             console.error('🔴 Error:', error.message);
 //             res.status(500).json({ error: 'Failed to process expenses' });
 //         }

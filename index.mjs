@@ -94,7 +94,7 @@ const consoleLog = false;
                 // });
                 // console.log(cleanInput); // Only keeps `<p>`, `<strong>`, and `<a>`
     // ROUTERS
-        import dbRouter from "./src/projectSQLite_Server.mjs";
+        import SQLiteRouter from "./src/projectSQLite_Server.mjs";
         import loginRouter from './src/globalLogin_Server.mjs';
         import globalRouter from './src/global_Server.mjs'; 
         import projectRouter from './src/project_Server.mjs';
@@ -124,7 +124,7 @@ const consoleLog = false;
             console.log("Imported sqlite3:", sqlite3 ? "✅ " : "❌ Failed");
             console.log("Imported sqlite { open }:", open ? "✅ " : "❌ Failed");
             console.log("Imported busboy:", busboy ? "✅ " : "❌ Failed");
-            console.log("Imported dbRouter:", dbRouter ? "✅ " : "❌ Failed");
+            console.log("Imported SQLiteRouter:", SQLiteRouter ? "✅ " : "❌ Failed");
             console.log("Imported loginRouter:", loginRouter ? "✅ " : "❌ Failed");
             console.log("Imported globalRouter:", globalRouter ? "✅ " : "❌ Failed");
             console.log("Imported projectRouter:", projectRouter ? "✅ " : "❌ Failed");
@@ -209,7 +209,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 // 5️⃣ MOUNT EXTERNAL ROUTERS
         // function mountRouters() {
             try{
-                app.use("/dbRouter", dbRouter);
+                app.use("/SQLiteRouter", SQLiteRouter);
                 app.use("/loginRouter", loginRouter);
                 app.use("/globalRouter", globalRouter);
                 app.use("/projectRouter", projectRouter);
@@ -299,7 +299,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
             // console.log(`🔒 ${trace()} req.body`,req.body);
             const safeURLs = JSON.parse(fs.readFileSync("knownURLs.json", "utf8")).safe_URLs;
                 if (!safeURLs.includes(req.url)) {
-                    const allowedRouters = ["/tinymce/", "/dbRouter/", "/projectRouter/", "/globalRouter/", "/loginRouter/", "/sessionsRouter/", "/googleAPIsRouter/"];
+                    const allowedRouters = ["/tinymce/", "/SQLiteRouter/", "/projectRouter/", "/globalRouter/", "/loginRouter/", "/sessionsRouter/", "/googleAPIsRouter/"];
                     if (allowedRouters.some(prefix => req.url.startsWith(prefix))) {
                         // console.log("Request is allowed");
                         console.warn(`🪣 ${trace()}🔑✅🟢 Access allowed to router:- ${req.url}`);
@@ -796,7 +796,7 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 // //                 console.warn(`🪣 ${trace()}🔒⚠️Session ID mismatch detected, cookieSid != headersSid:-\n🪣 ${cookieSid} v \n🪣 ${headerSid_decoded}`);
 // //                 console.warn(`🪣 ${trace()}🔒⚠️Session ID mismatch detected for ${req.url}`);
 // //                 if (!safeURLs.includes(req.url)) {
-// //                     const allowedRouters = ["/dbRouter/", "/projectRouter/", "/globalRouter/", "/loginRouter/", "/sessionsRouter/", "/googleAPIsRouter/"];
+// //                     const allowedRouters = ["/SQLiteRouter/", "/projectRouter/", "/globalRouter/", "/loginRouter/", "/sessionsRouter/", "/googleAPIsRouter/"];
 // //                     if (allowedRouters.some(prefix => req.url.startsWith(prefix))) {
 // //                         // console.log("Request is allowed");
 // //                         console.warn(`🪣 ${trace()}🔒⚠️🟢 Access allowed to router:- ${req.url}`);

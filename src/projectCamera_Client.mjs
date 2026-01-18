@@ -8,6 +8,9 @@
 	const ctx = canvas.getContext('2d');
 	const ctxII = canvasII.getContext('2d'); // in section-save
 
+	// const containerDashboard = document.getElementById('container-dashboard');
+	// const videoDashboard = document.getElementById('video-dashboard');
+
 	let zoom = 1;
 	let minZoom = 1;
 	let offsetX = 0, offsetY = 0;
@@ -55,14 +58,26 @@
 		const vh = video.videoHeight;
 		video.style.width = `${vw * zoom}px`;
 		video.style.height = `${vh * zoom}px`;
-		video.style.left = `${-offsetX * zoom}px`;
-		video.style.top = `${-offsetY * zoom}px`;
-		// // added by Donald 29 July 2025 START
-		// 	container.style.width = `${vw * zoom}px`;
-		// 	container.style.height = `${vh * zoom}px`;
-		// 	container.style.left = `${-offsetX * zoom}px`;
-		// 	container.style.top = `${-offsetY * zoom}px`;
-		// // added by Donald 29 July 2025 END
+		// video.style.left = `${-offsetX * zoom}px`;
+		video.style.left = `${(container.clientWidth - vw * zoom) / 2}px`;
+		// video.style.top = `${-offsetY * zoom}px`;
+		video.style.top = `${(container.clientHeight - vh * zoom) / 2}px`;
+
+		// videoDashboard.innerHTML = `Video zoom:-🔎 ${zoom}<br> Video zoom width:-🔎 ${(vw * zoom).toFixed(1)}px<br> Video zoom height:-🔎 ${(vh * zoom).toFixed(1)}px<br> Video zoom left:-🔎 ${(-offsetX * zoom).toFixed(1)}px<br> Video zoom top:-🔎 ${(-offsetY * zoom).toFixed(1)}px<br>`;
+		// videoDashboard.innerHTML += `Video width:- ${(vw).toFixed(1)}px<br> Video height:- ${(vh).toFixed(1)}px<br> Video left:- ${(-offsetX).toFixed(1)}px<br> Video top:- ${(-offsetY).toFixed(1)}px`;
+		// const vcRect = container.getBoundingClientRect();
+		// containerDashboard.innerHTML = `Video container zoom:-🔎 ${zoom}<br> Video container zoom width:-🔎 ${(vcRect.width * zoom).toFixed(1)}px<br> Video container zoom height:-🔎 ${(vcRect.height * zoom).toFixed(1)}px<br> Video container zoom left:-🔎 ${(vcRect.left * zoom).toFixed(1)}px<br> Video container zoom top:-🔎 ${(vcRect.top * zoom).toFixed(1)}px<br>`;
+		// containerDashboard.innerHTML += `Video container width:- ${(vcRect.width).toFixed(1)}px<br> Video container height:- ${(vcRect.height).toFixed(1)}px<br> Video container left:- ${(vcRect.left).toFixed(1)}px<br> Video container top:- ${(vcRect.top).toFixed(1)}px<br>`;
+		// // // added by Donald 29 July 2025 START
+		// // 	container.style.width = `${vw * zoom}px`;
+		// // 	container.style.height = `${vh * zoom}px`;
+		// // 	container.style.left = `${-offsetX * zoom}px`;
+		// // 	container.style.top = `${-offsetY * zoom}px`;
+		// // // added by Donald 29 July 2025 END
+		// const vcRect2 = container.getBoundingClientRect();
+		// containerDashboard.innerHTML += `Video container width:- ${(vcRect2.width).toFixed(1)}px<br> Video container height:- ${(vcRect2.height).toFixed(1)}px<br> Video container left:- ${(vcRect2.left).toFixed(1)}px<br> Video container top:- ${(vcRect2.top).toFixed(1)}px<br>`;
+		// video.style.border = '2px solid red';
+		// container.style.border = '2px dashed blue';
 	}
 
 	function clampOffsets() {
@@ -83,45 +98,58 @@
 		updateVideoStyle();
 	});
 
-	// capture still image START
-		document.getElementById('capture-still').addEventListener('click', () => {
+	// capture still image START 📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷
+		// 📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷
+			document.getElementById('capture-still').addEventListener('click', () => {
 
-			canvasContainer.style.display = 'flex';
-			canvasContainer.scrollIntoView({ behavior: 'smooth' });
-			document.getElementsByClassName('canvas-container-heading')[0].style.display = 'block';
+				canvasContainer.style.display = 'flex';
+				canvasContainer.scrollIntoView({ behavior: 'smooth' });
+				document.getElementsByClassName('canvas-container-heading')[0].style.display = 'block';
 
-			canvasContainerII.style.display = 'flex';
-			canvasContainerII.scrollIntoView({ behavior: 'smooth' });
+				canvasContainerII.style.display = 'flex';
+				canvasContainerII.scrollIntoView({ behavior: 'smooth' });
 
-			const cw = container.clientWidth;
-			const ch = container.clientHeight;
-			const cropWidth = cw / zoom;
-			const cropHeight = ch / zoom;
+				// 1 source > cropping the video source from (offsetX, offsetY) with dimensions cropWidth x cropHeight.
+				// 2 destination > drawing that crop into full canvas size, cw x ch.
+				// 3 the crop has to appear centered horizontally within the canvas with empty space on the sides
+				// 4 so, you must reduce the draw size (destination width), and then calculate dx.
 
-			canvas.width = cw;
-			canvas.height = ch;
+				const cw = container.clientWidth;
+				const ch = container.clientHeight;
+				const cropWidth = cw / zoom;
+				const cropHeight = ch / zoom;
 
-			canvasII.width = cw;
-			canvasII.height = ch;
+				const offsetX = (video.videoWidth - cropWidth) / 2;
+				const offsetY = (video.videoHeight - cropHeight) / 2;
 
-			ctx.drawImage(
-				video,
-				offsetX, offsetY,
-				cropWidth, cropHeight,
-				0, 0,
-				cw, ch
-			);
+				canvas.width = cw;
+				canvas.height = ch;
 
-			ctxII.drawImage(
-				video,
-				offsetX, offsetY,
-				cropWidth, cropHeight,
-				0, 0,
-				cw, ch
-			);
+				canvasII.width = cw;
+				canvasII.height = ch;
 
-		});
-	// capture still image END
+				const dx = 0;
+				const dy = 0;
+
+				ctx.drawImage(
+					video, // source
+					offsetX, offsetY, // source x, source y
+					cropWidth, cropHeight, // wource width, source height
+					dx, dy, // destination x on canvas, destination y on canvas
+					cw, ch // destination width on canvas, destination height on canvas
+				);
+
+				ctxII.drawImage(
+					video, // source
+					offsetX, offsetY, // source x, source y
+					cropWidth, cropHeight, // wource width, source height
+					dx, dy, // destination x on canvas, destination y on canvas
+					cw, ch // destination width on canvas, destination height on canvas
+				);
+
+			});
+		// 📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷
+	// capture still image END  📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷📷
 
 	container.addEventListener("touchstart", e => {
 		lastTouches = [...e.touches];
@@ -221,7 +249,7 @@
 		if (stream) {
 			stream.getTracks().forEach(track => track.stop());
 			stream = null;
-			console.log("Camera stopped.");
+			if(window.consoleLog===true){console.log("Camera stopped.");}
 		}
 	}
   // stopCamera();

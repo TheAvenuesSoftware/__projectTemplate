@@ -69,11 +69,11 @@ import session from "express-session";
                         //             console.log(trace(),"🔴🟢❓ Login: session regen - Security code expired and removed!");
                         //         }
                         //     }, ( securityCodeTTL + 1 ) * 60 * 1000);
-                        if(consoleLog===true){console.log(trace(),"Login: session regen - Session regen ok.");}
-                        // if(consoleLog===true){console.log(trace(),"Login: session regen - Session securityCode updated.");}
-                        if(consoleLog===true){console.log(trace(),"Login: session regen - req.session:-",JSON.stringify(req.session, null, 2));}
-                        // if(consoleLog===true){console.log(trace(),"Login: session regen - req.session.securityCode:-",JSON.stringify(req.session.securityCode, null, 2));}
-                        // if(consoleLog===true){console.log(trace(),"Login: session regen - req.session.securityCode.code:-",JSON.stringify(req.session.securityCode.code, null, 2));}
+                        if(window.consoleLog===true){console.log(trace(),"Login: session regen - Session regen ok.");}
+                        // if(window.consoleLog===true){console.log(trace(),"Login: session regen - Session securityCode updated.");}
+                        if(window.consoleLog===true){console.log(trace(),"Login: session regen - req.session:-",JSON.stringify(req.session, null, 2));}
+                        // if(window.consoleLog===true){console.log(trace(),"Login: session regen - req.session.securityCode:-",JSON.stringify(req.session.securityCode, null, 2));}
+                        // if(window.consoleLog===true){console.log(trace(),"Login: session regen - req.session.securityCode.code:-",JSON.stringify(req.session.securityCode.code, null, 2));}
                         const sessionID_postRegen = req.sessionID;
                         let sessionRegenOK = false; // Set to false to indicate regen failure
                         if(sessionID_preRegen === sessionID_postRegen){

@@ -2,14 +2,14 @@
 
 	// Select image to upload START
 		export async function selectImageToUpload(){
-			console.log("selectImageToUpload() called");
+			if(window.consoleLog===true){console.log("selectImageToUpload() called");}
 			const input = document.getElementById('imageInput');
 			input.value = ""; // Clear previous selection
 			input.addEventListener('change', handleFileSelect,{once: true});
 			input.click(); // Trigger file selection dialog
 		}
 		async function handleFileSelect(event) {
-			console.log("selectImageToUpload() called & file selected");
+			if(window.consoleLog===true){console.log("selectImageToUpload() called & file selected");}
 			const file = event.target.files[0];
 			const fileNameSpan = document.getElementById('fileName');
 			if (!file) {
@@ -17,7 +17,7 @@
 				fileNameSpan.textContent = "No file chosen";
 				return;
 			}
-			console.log("Selected file:", file);
+			if(window.consoleLog===true){console.log("Selected file:", file);}
 			fileNameSpan.textContent = await file.name;
 			uploadImageToCanvas(); // Call the function to upload image to canvas
 		}
@@ -31,7 +31,7 @@
 		const ctxUpload = canvasUpload.getContext('2d');
 		const ctxII = canvasII.getContext('2d'); // in section-save
 		export function uploadImageToCanvas(){
-			console.log("uploadImageToCanvas() called");
+			if(window.consoleLog===true){console.log("uploadImageToCanvas() called");}
 			const input = document.getElementById('imageInput');
 			const file = input.files[0];
 			if (!file) {

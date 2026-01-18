@@ -1,7 +1,7 @@
 const consoleLog = true;
 
-console.log("LOADED:- projectMenu_Client.mjs is loaded",new Date().toLocaleString());
-export function projectMenuClientJSisLoaded(){
+if(window.consoleLog===true){console.log("LOADED:- projectMenu_Client.mjs is loaded",new Date().toLocaleString());}
+export function projectMenuClientMJSisLoaded(){
     return true;
 }
 
@@ -157,11 +157,11 @@ export function projectMenuClientJSisLoaded(){
         // footer menu START 🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶🦶
             document.addEventListener("DOMContentLoaded",async () => {
                 //1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ START
-                    if(consoleLog===true){console.log('DOMContentLoaded successsful ~ projectMenu_Client.',new Date().toLocaleString());}
+                    if(window.consoleLog===true){console.log('DOMContentLoaded successsful ~ projectMenu_Client.',new Date().toLocaleString());}
 
                     window.addEventListener("load",async () => {
                     // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
-                        if(consoleLog===true){console.log('Window load successsful ~ projectMenu_Client.',new Date().toLocaleString());}
+                        if(window.consoleLog===true){console.log('Window load successsful ~ projectMenu_Client.',new Date().toLocaleString());}
 
                         // function displayUiPage(displaySection){
                         //     const uiPages = document.querySelectorAll(".ui-page");
@@ -260,20 +260,20 @@ export function setRequiredMenuWidth(){
             const itemFont = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
         let itemWidth = getTextWidth(itemText, itemFont);
         itemWidth = itemWidth + itemMargin + itemLeftMarginOffset + itemPadding + itemBuffer;
-        console.log(itemWidth,maxWidth);
+        if(window.consoleLog===true){console.log(itemWidth,maxWidth);}
         if((itemWidth * 1) > (maxWidth * 1)) {
             maxWidth = itemWidth;
         }
-        // console.log(item.textContent);
+        // if(window.consoleLog===true){console.log(item.textContent);}
         const elRectangle = item.getBoundingClientRect();
-        // console.log(maxWidth);
+        // if(window.consoleLog===true){console.log(maxWidth);}
     });
     const menuItems = document.querySelectorAll(".menu-item");
     itemMargin = 40; // px
     itemLeftMarginOffset = 16; // px
     itemPadding = 5 + 5; // px
     itemBuffer = 16; // px, an extra buffer width
-    console.log(menuItems[0]);
+    if(window.consoleLog===true){console.log(menuItems[0]);}
     menuItems.forEach((item, index) => {
         const itemText = item.textContent;
         // const itemFont = getComputedStyle(item).fontFamily;
@@ -281,32 +281,32 @@ export function setRequiredMenuWidth(){
             const itemFont = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
         let itemWidth = getTextWidth(itemText, itemFont);
         itemWidth = itemWidth + itemMargin + itemLeftMarginOffset  + itemPadding + itemBuffer;
-        console.log(itemWidth,maxWidth);
+        if(window.consoleLog===true){console.log(itemWidth,maxWidth);}
         if((itemWidth * 1) > (maxWidth * 1)) {
             maxWidth = itemWidth;
         }
-        // console.log(item.textContent);
+        // if(window.consoleLog===true){console.log(item.textContent);}
         const elRectangle = item.getBoundingClientRect();
-        // console.log(maxWidth);
+        // if(window.consoleLog===true){console.log(maxWidth);}
     });
-    console.log(maxWidth);
+    if(window.consoleLog===true){console.log(maxWidth);}
     const varName = "--menuItemsMaxWidth"; 
     maxWidth += 15;
     setCSSvariable(varName,`${maxWidth.toFixed(0)}px`);
     const x = getCSSvariable(varName);
-    console.log(`${varName} = ${x}`);
+    if(window.consoleLog===true){console.log(`${varName} = ${x}`);}
     menuContainer.style.width = x;
 }
 setRequiredMenuWidth();
 export function setRequiredMenuHeight(){
     const requiredMenuHeight = window.innerHeight;
-    console.log(requiredMenuHeight);
+    if(window.consoleLog===true){console.log(requiredMenuHeight);}
     document.getElementById("classic-menu-container").style.maxHeight = requiredMenuHeight + "px";
 }
 // const el = document.getElementById("mobile-device-footer-menu");
-// console.log(el);
+// if(window.consoleLog===true){console.log(el);}
 // const dims = getDims(el);
-// console.log(dims);
+// if(window.consoleLog===true){console.log(dims);}
 
 // export function saveToDB() {
 //     alert("Saving to the database...");
@@ -314,14 +314,14 @@ export function setRequiredMenuHeight(){
 
 // export function showAddress(event) {
 //     event.preventDefault();
-//     console.log("Address function executed!",event);
+//     if(window.consoleLog===true){console.log("Address function executed!",event);}
 //     // Implement the logic to show address
 //     document.getElementById("googlePlacesAPIautocomplete").focus();
 // }
 
 // export function showNotes(event) {
 //     event.preventDefault();
-//     console.log("Notes function executed!",event);
+//     if(window.consoleLog===true){console.log("Notes function executed!",event);}
 //     // Implement the logic to show notes
 //     document.getElementById("notesTextArea").focus();
 // }

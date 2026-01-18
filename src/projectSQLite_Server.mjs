@@ -1,5 +1,3 @@
-const consoleLog = true;
-
 console.log("LOADED:- SQLite_ServerSide.mjs is loaded",new Date().toLocaleString());
 export function SQLite_ServerSideMJSisLoaded(){
     return true;
@@ -8,7 +6,7 @@ export function SQLite_ServerSideMJSisLoaded(){
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  SERVER SIDE IMPORTS ONLY
     import { Router } from "express";
-    const dbRouter = Router();
+    const SQLiteRouter = Router();
     import sqlite3 from "sqlite3";
     import { open } from "sqlite";
     import { trace } from "./global_Server.mjs";
@@ -18,13 +16,13 @@ export function SQLite_ServerSideMJSisLoaded(){
             // 1. Initialize SQLite database based on a user's unique identifier: email address for example.
                 export async function initDB(dbFileName) {
                     try {
-                        if(consoleLog===true){console.log(`🟢${trace()}🟢 Initialising database ${dbFileName}🟢[${new Date().toISOString()}]`);}
+                        console.log(`🟢${trace()}🟢 Initialising database ${dbFileName}🟢[${new Date().toISOString()}]`);
                         return open({
                             filename: `${process.env.APP_PATH_TO_DATA}${dbFileName}.db`, // Use env variable
                             driver: sqlite3.Database,
                         });
                     } catch (error) {
-                            if(consoleLog===true){console.log(`🔴${trace()}🔴 Error initializing database for ${dbFileName}🔴:`, error);}       
+                            console.log(`🔴${trace()}🔴 Error initializing database for ${dbFileName}🔴:`, error); 
                             throw error; // Ensure the error is propagated
                     }
                 }
@@ -52,13 +50,13 @@ export function SQLite_ServerSideMJSisLoaded(){
                 // ✅ Speeds up access to databases already opened
             // Ensure your schema is properly structured with indexing for performance:
                 export async function setupSchema(dbFileName,dbSchema) {
-                    if(consoleLog===true){console.log(trace(),'Setup schema for ',dbFileName);}
+                    console.log(trace(),'Setup schema for ',dbFileName);
                     const db = await getDB(dbFileName);
                     try{
                         await db.exec(dbSchema);
-                        if(consoleLog===true){console.log(trace(),'Setup schema successful for ',dbFileName);}
+                        console.log(trace(),'Setup schema successful for ',dbFileName);
                     } catch (error){
-                        if(consoleLog===true){console.log(trace(),dbFileName,error);}
+                        console.log(trace(),dbFileName,error);
                     }
                 }
                 // ✅ Indexes speed up queries
@@ -91,9 +89,9 @@ export function SQLite_ServerSideMJSisLoaded(){
                         // centralise error handling function
                             export function handleDBError(err, action, database) {
                                 if (err.code === 'SQLITE_CONSTRAINT') {
-                                    if(consoleLog===true){console.error(`${trace()} Constraint error during ${action} on database ${database}.db`);}
+                                    console.error(`${trace()} Constraint error during ${action} on database ${database}.db`);
                                 } else {
-                                    if(consoleLog===true){console.error(`${trace()} Database error during ${action} ${database}:`, err);}
+                                    console.error(`${trace()} Database error during ${action} ${database}:`, err);
                                 }
                             }
                         // CRUD - insert
@@ -102,7 +100,7 @@ export function SQLite_ServerSideMJSisLoaded(){
                                 try {
                                     // await db.run('INSERT INTO users (name, email) VALUES (?, ?)', name, email);
                                     await db.run('INSERT INTO users (name, email) VALUES (?, ?)', name, email);
-                                    if(consoleLog===true){console.log(`${trace()} User added!`);}
+                                    console.log(`${trace()} User added!`);
                                 } catch (err) {
                                     // localised error handling
                                         // if (err.code === 'SQLITE_CONSTRAINT') {
@@ -149,7 +147,7 @@ export function SQLite_ServerSideMJSisLoaded(){
                                 //     preloadData("alice123");
                                 //     // - ✅ Ensures frequently queried records are cached in memory, reducing execution time.
                         }catch (error){
-                            if(consoleLog===true){console.log(`${trace()}📕📚 `,error);}
+                            console.log(`${trace()}📕📚 `,error);
                         }
                     }
                     // optPer("alice123");
@@ -160,18 +158,12 @@ export async function closeDB(dbFileName) {
         try {
             await db.close(); // Release SQLite lock
             dbInstances.delete(dbFileName); // Remove from in-memory cache
-            if (consoleLog === true) {
-                console.log(`${trace()} 🟢 Database ${dbFileName} closed (file remains).`);
-            }
+            console.log(`${trace()} 🟢 Database ${dbFileName} closed (file remains).`);
         } catch (error) {
-            if (consoleLog === true) {
-                console.error(`${trace()} 🔴 Error closing ${dbFileName}:`, error);
-            }
+            console.error(`${trace()} 🔴 Error closing ${dbFileName}:`, error);
         }
     } else {
-        if (consoleLog === true) {
-            console.log(`${trace()} ⚪ Database ${dbFileName} not found in cache — nothing to close.`);
-        }
+        console.log(`${trace()} ⚪ Database ${dbFileName} not found in cache — nothing to close.`);
     }
 }
 
@@ -212,7 +204,7 @@ export async function closeDB(dbFileName) {
                     const selectedRecords = await db.all(query, values);
                     return selectedRecords;
                 } catch (err) {
-                    if(consoleLog===true){console.error(`${trace()} Select error in ${table}:`, err);}
+                    console.error(`${trace()} Select error in ${table}:`, err);
                     return [];
                 }
             }
@@ -224,7 +216,7 @@ export async function closeDB(dbFileName) {
         //             const query = `UPDATE ${table} SET ${setClause} WHERE ${condition}`;
         //             await db.run(query, [...Object.values(updates), ...values]);
         //         } catch (err) {
-        //             if(consoleLog===true){console.error(`${trace()} Update error in ${table}:`, err);}
+        //             console.error(`${trace()} Update error in ${table}:`, err);}
         //         }
         //     }
         // 4. Delete (Remove)
@@ -234,7 +226,7 @@ export async function closeDB(dbFileName) {
                     const query = `DELETE FROM ${table} WHERE ${condition}`;
                     await db.run(query, values);
                 } catch (err) {
-                    if(consoleLog===true){console.error(`${trace()} Delete error in ${table}:`, err);}
+                    console.error(`${trace()} Delete error in ${table}:`, err);
                 }
             }
         // Usage
@@ -243,7 +235,7 @@ export async function closeDB(dbFileName) {
             // Fetch users
                 // getRecord("alice123", "users")
                 // .then(()=>{
-                //     if(consoleLog===true){console.log(`${trace()}`);}
+                //     console.log(`${trace()}`);
                 // });
             // Update user email
                 // updateRecord("alice123", "users", { email: "alice@newmail.com" }, "name = ?", ["Alice"]);
@@ -263,7 +255,7 @@ export async function closeDB(dbFileName) {
 // Endpoint to save a photo START
     // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
         // ADD NEW RECORD start
-            dbRouter.post("/insert-form-data-record", async (req, res) => {
+            SQLiteRouter.post("/insert-form-data-record", async (req, res) => {
 
                 let responseSent = false;
                 const safeRespond = (status, body) => {
@@ -393,14 +385,14 @@ export async function closeDB(dbFileName) {
             });
         // ADD NEW RECORD end
         // REPLACE RECORD BY ID start
-            dbRouter.post("/replace-record-by-id", async (req, res) => {
+            SQLiteRouter.post("/replace-record-by-id", async (req, res) => {
                 console.log(trace(), '/replace-record-by-id:', req.body);
             });
         // REPLACE RECORD BY ID END
     // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
 // Endpoint to save a photo END
 
-    dbRouter.post("/get-all-photos", async (req, res) => {
+    SQLiteRouter.post("/get-all-photos", async (req, res) => {
         try {
             console.log(trace(), 'Received request with Content-Type:', req.headers['content-type']);
             console.log(trace(), 'Received request with "body":', req.body);
@@ -437,7 +429,7 @@ export async function closeDB(dbFileName) {
         }
     });
 
-    // dbRouter.post("/delete-record", async (req, res) => {
+    // SQLiteRouter.post("/delete-record", async (req, res) => {
     //     console.log(trace(),`req.body`, req.body);
     //     const { fileName, tableName, updates, where } = req.body;
     // 
@@ -500,7 +492,7 @@ export async function closeDB(dbFileName) {
     //     }
     // 
     // });
-    dbRouter.post("/delete-record", async (req, res) => {
+    SQLiteRouter.post("/delete-record", async (req, res) => {
         console.log(trace(), `req.body`, req.body);
         const { fileName, tableName, where } = req.body;
 
@@ -530,7 +522,7 @@ export async function closeDB(dbFileName) {
             res.status(400).json({ success: false, error: err.message });
         }
     });
-    dbRouter.post("/delete-photo-by-id", async (req, res) => {
+    SQLiteRouter.post("/delete-photo-by-id", async (req, res) => {
         try {
             const db = await getDB(`${req.body.fileName}`);
             // const result = await db.run("DELETE FROM photos WHERE id = ?", [req.body.image_id]);
@@ -545,7 +537,7 @@ export async function closeDB(dbFileName) {
         }
     });
 
-    // dbRouter.post("/filter-photos-by-address", async (req, res) => {
+    // SQLiteRouter.post("/filter-photos-by-address", async (req, res) => {
     //     try{
     //         console.log(trace(), 'Received request with Content-Type:', req.headers['content-type']);
     //         console.log(trace(), 'Received request:', req.body);
@@ -584,7 +576,7 @@ export async function closeDB(dbFileName) {
     //     }
     // });
 
-    dbRouter.post("/filter-by", async (req, res) => {
+    SQLiteRouter.post("/filter-by", async (req, res) => {
         let db; // makes it visible to both try and catch.
         try{
             console.log(trace(), 'Received request with Content-Type:', req.headers['content-type']);
@@ -772,9 +764,9 @@ export async function closeDB(dbFileName) {
             return { success: false, message: updates };
         }
     }
-    dbRouter.post("/update-form-data-record", async (req, res) => {
+    SQLiteRouter.post("/update-form-data-record", async (req, res) => {
     });
-    dbRouter.post("/update-data-record", async (req, res) => {
+    SQLiteRouter.post("/update-data-record", async (req, res) => {
         //  // server uses:- app.use(express.json()); // Middleware to parse JSON data
             console.log(trace(),"/update-record req.body:-\n",req.body);
             console.log(trace(),"/update-record req.body:-\n",JSON.stringify(req.body,null,2));
@@ -799,4 +791,4 @@ export async function closeDB(dbFileName) {
 
 // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
 
-export default dbRouter;
+export default SQLiteRouter;

@@ -1,25 +1,13 @@
-body {
-  margin: 0;
-  font-family: sans-serif;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 footer {
-  /* display:flex; */
-  display: block;
-  position: relative;
-  /* flex-shrink: 0; */
-  /* flex-direction: row; */
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* gap: 5px; */
+  width: 100vw; /* Use viewport width */
+  height: auto;
+  padding: 5px;
   background-color: rgb(67, 248, 67);
-  color: rgb(0, 55, 0);
-  font-weight: 900;
-  padding: 5px 0;
-  margin: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling */
 }
 
 .footer-control {
@@ -178,6 +166,30 @@ section.active {
 
 .list-style-type-none {
   list-style-type: none;
+}
+
+.progress-circle {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  z-index: 5;
+}
+
+.progress-circle-svg {
+  /* svg { */
+  transform: rotate(-90deg);
+}
+
+.progress-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
 }
 
 /*# sourceMappingURL=indexHTMLcompanion.css.map */

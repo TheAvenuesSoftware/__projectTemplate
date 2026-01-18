@@ -1,19 +1,17 @@
-const consoleLog = true;
-
-console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleString());
+if(window.consoleLog===true){console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleString());}
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
-    import { clientConfigSettings } from "./projectConfig_Client.mjs";
+    import { clientConfigSettings } from "../config/projectConfig_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
     document.addEventListener("DOMContentLoaded",async () => {
     //1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣1️⃣ START
-        if(consoleLog===true){console.log('DOMContentLoaded successsful ~ globalSessions_Client.',new Date().toLocaleString());}
+        if(window.consoleLog===true){console.log('DOMContentLoaded successsful ~ globalSessions_Client.',new Date().toLocaleString());}
 
         window.addEventListener("load",async () => {
         // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ START
-            if(consoleLog===true){console.log('Window load successsful ~ globalSessions_Client.',new Date().toLocaleString());}
+            if(window.consoleLog===true){console.log('Window load successsful ~ globalSessions_Client.',new Date().toLocaleString());}
 
         });
         // 2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣2️⃣ END
@@ -23,7 +21,7 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
 // 🚪 🚪 🚪 logout START
     // postLogoutActions START
         export function postLogoutActions(){
-            if(consoleLog===true){console.log('postLogoutActions() launched.',new Date().toLocaleString());}
+            if(window.consoleLog===true){console.log('postLogoutActions() launched.',new Date().toLocaleString());}
             // place "PROJECT SPECIFIC" actions to take post secure logout here
         }
     // postLogoutActions END
@@ -45,20 +43,20 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
                         silent: mode.silent  // if true, do not show alerts
                     })  // Converts object to JSON for request
                 }
-            if(consoleLog===true){console.log(JSON.stringify(fetchOptions,null,2));}
+            if(window.consoleLog===true){console.log(JSON.stringify(fetchOptions,null,2));}
             const response = await fetch(fetchUrl,fetchOptions);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const jso = await response.json(); // converts fetch response from JSON to a JSO
-            console.log('🟢 Request response:-', JSON.stringify(jso,null,2));
+            if(window.consoleLog===true){console.log('🟢 Request response:-', JSON.stringify(jso,null,2));}
             if(jso.logoutConfirmed===true){
                 document.querySelectorAll('.overlay').forEach(el => {
                     el.style.transition = "opacity 0.5s";
                     el.style.opacity = "0";
                     setTimeout(() => el.remove(), 500);
                 });
-                console.log("🟢 logout successful.");
+                if(window.consoleLog===true){console.log("🟢 logout successful.");}
                 document.getElementById("padlock-icon").src="__padlock_locked.png";
                 document.getElementById("sign-in-out-icon-container").setAttribute("data-status","signed-out");
                 document.getElementById("sign-in-out-icon-container").title = "Click to sign in.";
@@ -72,11 +70,11 @@ console.log("LOADED:- globalSessions_Client.mjs is loaded",new Date().toLocaleSt
                     setTimeout(() => el.remove(), 500);
                 });
                 alert("🔴 logout failed, please try again");
-                console.log("🔴 logout failed, please try again");
+                if(window.consoleLog===true){console.log("🔴 logout failed, please try again");}
             }
         }catch (error){
             alert("🔴 Fatal error logging out!");
-            console.log("🔴 Fatal error logging out!",error);
+            if(window.consoleLog===true){console.log("🔴 Fatal error logging out!",error);}
         }
     }
 // 🚪 🚪 🚪 logout END

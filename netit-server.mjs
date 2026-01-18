@@ -12,7 +12,7 @@
 
 let myDate;
 
-import { trace } from "./src/global_Server.mjs";
+import { trace, maskString } from "./src/global_Server.mjs";
 
 // export function trace(whoCalled="") {
 //     try {
@@ -125,7 +125,7 @@ console.log(("🔰").repeat(45));
                 // });
                 // console.log(cleanInput); // Only keeps `<p>`, `<strong>`, and `<a>`
     // ROUTERS
-        import dbRouter from "./src/projectSQLite_Server.mjs";
+        import SQLiteRouter from "./src/projectSQLite_Server.mjs";
         import loginRouter from './src/globalLogin_Server.mjs';
         import globalRouter from './src/global_Server.mjs'; 
         import projectRouter from './src/project_Server.mjs';
@@ -155,7 +155,7 @@ console.log(("🔰").repeat(45));
             console.log(trace(),"Imported sqlite3:", sqlite3 ? "✅ " : "❌ Failed");
             console.log(trace(),"Imported sqlite { open }:", open ? "✅ " : "❌ Failed");
             console.log(trace(),"Imported busboy:", busboy ? "✅ " : "❌ Failed");
-            console.log(trace(),"Imported dbRouter:", dbRouter ? "✅ " : "❌ Failed");
+            console.log(trace(),"Imported SQLiteRouter:", SQLiteRouter ? "✅ " : "❌ Failed");
             console.log(trace(),"Imported loginRouter:", loginRouter ? "✅ " : "❌ Failed");
             console.log(trace(),"Imported globalRouter:", globalRouter ? "✅ " : "❌ Failed");
             console.log(trace(),"Imported projectRouter:", projectRouter ? "✅ " : "❌ Failed");
@@ -210,7 +210,7 @@ console.log(("🔰").repeat(45));
                     const envVar = result.parsed;
                     Object.keys(envVar).forEach(key => {
                         // console.log(`key:- ${key} :- ${envVar[key]}`);  //  DO NOT LOG ~ SECRET INDO !!!
-                        if(logAll===true){console.log(`      key:- ${key}`);}
+                        if(logAll===true){console.log(`      key:- ${maskString(key,15,10)}`);}
                     }); 
                     console.log(`${trace()}🟢 Project environment variables loaded.`);
                 } else {
@@ -287,21 +287,21 @@ console.log(("🔰").repeat(45));
                     ],
                     "style-src": [
                         "'self'",
-                        // "'unsafe-inline'", // only if you're using inline styles ❗❗❗REMOVE FOR PRODUCTION❗❗❗
+                        "'unsafe-inline'", // only if you're using inline styles ❗❗❗REMOVE FOR PRODUCTION❗❗❗
                         "https://fonts.googleapis.com",
-                        // Hashes for Google places; Google maps START
-                            "'sha256-cwZgAPm2CTAW2GLDlL0o2J5isI4Gr0wno+xO/MvtT3s='", // this hash applies to "https://fonts.googleapis.com"
-                            "'sha256-mmA4m52ZWPKWAzDvKQbF7Qhx9VHCZ2pcEdC0f9Xn/Po='", // this hash applies to "https://fonts.googleapis.com"
-                            "'sha256-pzRbDTkOofZpG91nLe+vEuUeKxXX9yPEAiFygDXB4h4='", // this hash applies to "https://fonts.googleapis.com"
-                            "'sha256-/VVOq+Ws/EiUxf2CU6tsqsHdOWqBgHSgwBPqCTjYD3U='", // this hash applies to "https://fonts.googleapis.com"
-                            "'sha256-zZp8BI/LRCsExnI71KZA79vRfTQ/33qQr5GcSWAOwto='", // this hash applies to "https://fonts.googleapis.com"
-                            "'sha256-j69g0Z+HAbHBMIzQNFis9uADYR6LPo2LYlSo6DI4wy0='", // this hash applies to "https://fonts.googleapis.com"
-                            "'sha256-g/+r3r7IhgvloBqpNntHVylYT3vrqlLIZ5V0tTv7Cvg='", // this hash applies to "https://fonts.googleapis.com"
-                            "'sha256-IaM8xvcujDol1nAtq0BzSXIFdWOl+DiuhOV5dqL9STo='", // this hash applies to "https://fonts.googleapis.com"
-                            "'sha256-PNsPul0zQFUiYu9XLVKzTdD5Cz5ghp1MT4H5/zAeI3Q='", // this hash applies to "https://fonts.googleapis.com"
-                            "'sha256-bSUb8oATdiRWGj6+osFexUukuqc+3yxgEYRAj67mELQ='", //this hash applies to "https://fonts.googleapis.com"
-                            "'sha256-vNrevWaq6uKv3XSoEo/8TU13p1HYuC7oFmoCZ3zHhGM='"  // this hash is for iframe
-                        // Hashes for Google places; Google maps END
+                        // // Hashes for Google places; Google maps START
+                        //     "'sha256-cwZgAPm2CTAW2GLDlL0o2J5isI4Gr0wno+xO/MvtT3s='", // this hash applies to "https://fonts.googleapis.com"
+                        //     "'sha256-mmA4m52ZWPKWAzDvKQbF7Qhx9VHCZ2pcEdC0f9Xn/Po='", // this hash applies to "https://fonts.googleapis.com"
+                        //     "'sha256-pzRbDTkOofZpG91nLe+vEuUeKxXX9yPEAiFygDXB4h4='", // this hash applies to "https://fonts.googleapis.com"
+                        //     "'sha256-/VVOq+Ws/EiUxf2CU6tsqsHdOWqBgHSgwBPqCTjYD3U='", // this hash applies to "https://fonts.googleapis.com"
+                        //     "'sha256-zZp8BI/LRCsExnI71KZA79vRfTQ/33qQr5GcSWAOwto='", // this hash applies to "https://fonts.googleapis.com"
+                        //     "'sha256-j69g0Z+HAbHBMIzQNFis9uADYR6LPo2LYlSo6DI4wy0='", // this hash applies to "https://fonts.googleapis.com"
+                        //     "'sha256-g/+r3r7IhgvloBqpNntHVylYT3vrqlLIZ5V0tTv7Cvg='", // this hash applies to "https://fonts.googleapis.com"
+                        //     "'sha256-IaM8xvcujDol1nAtq0BzSXIFdWOl+DiuhOV5dqL9STo='", // this hash applies to "https://fonts.googleapis.com"
+                        //     "'sha256-PNsPul0zQFUiYu9XLVKzTdD5Cz5ghp1MT4H5/zAeI3Q='", // this hash applies to "https://fonts.googleapis.com"
+                        //     "'sha256-bSUb8oATdiRWGj6+osFexUukuqc+3yxgEYRAj67mELQ='", //this hash applies to "https://fonts.googleapis.com"
+                        //     "'sha256-vNrevWaq6uKv3XSoEo/8TU13p1HYuC7oFmoCZ3zHhGM='"  // this hash is for iframe
+                        // // Hashes for Google places; Google maps END
                     ],
                     "font-src": [
                         "'self'",
@@ -382,7 +382,7 @@ console.log(("🔰").repeat(45));
                 // Applies to all requests, causes issues with static assets/images/icons END
                 // app.use('/api', limiter); // ✅ Applies to API traffic only
                 // Apply rate limiter to individual routers START
-                    app.use("/dbRouter", limiter);
+                    app.use("/SQLiteRouter", limiter);
                     app.use("/loginRouter", limiter);
                     app.use("/globalRouter", limiter);
                     app.use("/projectRouter", limiter);
@@ -415,13 +415,13 @@ console.log(("🔰").repeat(45));
     // IF a router includes public routes (e.g., login, signup, health checks, static files, etc.),
     // then it should not be mounted after global authentication — otherwise users can’t access it
     // without being logged in (which creates a chicken-and-egg problem).
-        app.use("/dbRouter", dbRouter);
+        app.use("/SQLiteRouter", SQLiteRouter);
         app.use("/loginRouter", loginRouter);
         app.use("/globalRouter", globalRouter);
         app.use("/projectRouter", projectRouter);
         app.use("/sessionsRouter", sessionsRouter);
         app.use("/googleAPIsRouter", googleAPIsRouter);
-        console.log(trace()," ✅ /dbRouter");
+        console.log(trace()," ✅ /SQLiteRouter");
         console.log(trace()," ✅ /loginRouter");
         console.log(trace()," ✅ /globalRouter");
         console.log(trace()," ✅ /projectRouter");
@@ -641,18 +641,18 @@ console.log(("🔰").repeat(45));
 // ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
 // 7️⃣ start server START
     function logServerStartup(){
-        console.log(("🎾").repeat(45));
-        console.log(`🎾 S T A R T   S E R V E R${(" ").repeat(88-("🎾 S T A R T   S E R V E R").length)}🎾`);
-        // console.log(`🎾 SERVER MODE = production: ${isProduction}.${(" ").repeat(88-("🎾 SERVER MODE = production: false.").length)}🎾`);
-        // console.log(`🎾 SERVER MODE = development:${isDevelopment}.${(" ").repeat(88-("🎾 SERVER MODE = production: true.").length)}🎾`);
+        console.log(("🧑‍🔧").repeat(45));
+        console.log(`🧑‍🔧 S T A R T   S E R V E R${(" ").repeat(91-("🧑‍🔧 S T A R T   S E R V E R").length)}🧑‍🔧`);
+        // console.log(`🧑‍🔧 SERVER MODE = production: ${isProduction}.${(" ").repeat(88-("🧑‍🔧 SERVER MODE = production: false.").length)}🧑‍🔧`);
+        // console.log(`🧑‍🔧 SERVER MODE = development:${isDevelopment}.${(" ").repeat(88-("🧑‍🔧 SERVER MODE = production: true.").length)}🧑‍🔧`);
         myDate = new Date();
-        console.log(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}${(" ").repeat(88-(`🎾 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`).length)}🎾`);
-        console.log(`🎾 Server is running on port:${PORT}.${(" ").repeat(88-(`🎾 Server is running on port:${PORT}.`).length)}🎾`);
+        console.log(`🧑‍🔧 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}${(" ").repeat(91-(`🧑‍🔧 ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`).length)}🧑‍🔧`);
+        console.log(`🧑‍🔧 Server is running on port:${PORT}.${(" ").repeat(91-(`🧑‍🔧 Server is running on port:${PORT}.`).length)}🧑‍🔧`);
         console.log(isProduction==="true" ?
-            `🎾 Server is running in Production mode. ${(" ").repeat(88-(`🎾 Server is running in Production mode. `).length)}🎾` : 
-            `🎾 Server is running in Development mode. ${(" ").repeat(88-(`🎾 Server is running in Development mode. `).length)}🎾`);
-        // console.log(`🎾 Server is running on port # ${process.env.APP_PORT}${(" ").repeat(118-(`🎾 Server is running on port # ${process.env.APP_PORT}`).length)}🎾`);
-        console.log(("🎾").repeat(45));
+            `🧑‍🔧 Server is running in Production mode. ${(" ").repeat(91-(`🧑‍🔧 Server is running in Production mode. `).length)}🧑‍🔧` : 
+            `🧑‍🔧 Server is running in Development mode. ${(" ").repeat(91-(`🧑‍🔧 Server is running in Development mode. `).length)}🧑‍🔧`);
+        // console.log(`🧑‍🔧 Server is running on port # ${process.env.APP_PORT}${(" ").repeat(118-(`🧑‍🔧 Server is running on port # ${process.env.APP_PORT}`).length)}🧑‍🔧`);
+        console.log(("🧑‍🔧").repeat(45));
     };
     const PORT = process.env.APP_PORT;
     const DEV_IP_ADDRESS = process.env.APP_DEV_IP_ADDRESS;
