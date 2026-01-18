@@ -7,7 +7,8 @@ export function globalLoginServerMJSisLoaded(){
 //  SERVER SIDE IMPORTS ONLY
     import { Router } from "express";
     const loginRouter = Router();
-    import fs from 'fs';
+    import * as fsCore from 'fs';
+    import * as fsPromises from 'fs/promises';
     import { randomInt, randomBytes } from "crypto";
     import { sendMail } from './global_Server.mjs'
     import { loginEmailHtml } from '../config/projectConfig_Server.mjs'
@@ -20,33 +21,20 @@ export function globalLoginServerMJSisLoaded(){
     import { isValidJSONString } from "./global_Server.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
-loginRouter.post("/isLoginRequired", (req, res) => {
-    // console.log(trace(),"\nrouter.get('/isLoginRequired");
-    // ❗❗❗const isLoginRequired = process.env.IS_LOGIN_REQUIRED; // DOESN'T WORK! it stores a text value of true, not the boolean.
-        const isLoginRequired = process.env.IS_LOGIN_REQUIRED?.toLowerCase() === "true"; // Handles case variations
-    // ❗❗❗const isLoginRequired = process.env.IS_LOGIN_REQUIRED; // DOESN'T WORK! it stores a text value of true, not the boolean.
-    // console.log(trace(),'\nisLoginRequired:- ',isLoginRequired);
-    if(isLoginRequired===true){
-        // res.send({"message":true});
-        res.send({isLoginRequired:true});
-    }else{
-        // res.send({"message":false});
-        res.send({isLoginRequired:false});
-    }
-});
-
 loginRouter.post("/fileExists", (req, res) => {
-    console.log(trace(),"fileExists req.body:-\n",req.body);
-    // const filePath = `./data/${loginEmailAddressInputValue}/${loginEmailAddressInputValue}.db`;
-    const fileToFind = `${process.env.APP_PATH_TO_DATA}${req.body.fileName}.db`;
-    console.log(trace(),fileToFind);
-    if (fs.existsSync(fileToFind)) {
-        console.log(trace(),`🟢 File exists - ${fileToFind}`);
-        res.send({message:`File "${fileToFind}" found.`,fileExists:true});
-    } else {
-        console.log(trace(),`🔴 File not found - ${fileToFind}`);
-        res.send({message:`File "${fileToFind}" not found.`,fileExists:false});
-    }
+    // check if user's data file exists
+        console.log(trace(),"fileExists req.body:-\n",req.body);
+        // const fileToFind = `./data/${loginEmailAddressInputValue}/${loginEmailAddressInputValue}.db`;
+        // const fileToFind = `${process.env.APP_PATH_TO_DATA}${req.body.fileName}.db`;
+        const fileToFind = `${process.env.APP_PATH_TO_DATA}${req.body.fileNamePrefix}${req.body.loginEmailAddress}${req.body.fileNameSuffix}${req.body.fileNameExtension}`;
+        console.log(`${trace()} 🟢❔ File to find:- ${fileToFind.trim()}`);
+        if (fsCore.existsSync(fileToFind)) {
+            console.log(trace(),`🟢✅ File exists - ${fileToFind}`);
+            res.send({message:`File "${fileToFind}" found.`,fileExists:true});
+        } else {
+            console.log(trace(),`🔴❌ File not found - ${fileToFind}`);
+            res.send({message:`File "${fileToFind}" not found.`,fileExists:false});
+        }
 });
 
 loginRouter.post("/emailCode", async (req, res) => {
@@ -114,7 +102,7 @@ loginRouter.post("/loginCodeSubmit", async (req, res) => {
     if(x.toString().toLowerCase().trim() === records[0].login_code.toString().toLowerCase().trim()){
         // update sessions file
             const parsed = cookie.parse(req.headers.cookie);
-            fs.readFile('./sessions/' + parsed.connectSID + '.json','utf8',(errASync,fileContentsASync) => {
+            await fsPromises.readFile('./sessions/' + parsed.connectSID + '.json','utf8',(errASync,fileContentsASync) => {
                 if (errASync){
                     console.log('/loginCodeSubmit: login errASync:- error');
                 } else {
@@ -166,48 +154,55 @@ loginRouter.post("/loginCodeSubmit", async (req, res) => {
 loginRouter.post("/createNewAccount", async (req, res) => {
     console.log(trace(),"🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦 createNewAccount START 🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦");
     console.log(trace(),"createNewAccount: req.body:-\n",req.body);
-    const dbFileName = req.body.fileName; // Ensure this matches the actual database file
-    // const dbSchema = 
-    // `CREATE TABLE IF NOT EXISTS photos (
-    //     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    //     image BLOB,
-    //     image_date TEXT,
-    //     image_time TEXT,
-    //     image_address TEXT,
-    //     image_notes TEXT,
-    //     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    // );
-    // CREATE INDEX IF NOT EXISTS idx_photos ON photos(image_address);`
-    const dbSchema = 
-    `CREATE TABLE IF NOT EXISTS "photos" (
-        image_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        image_record_created_at TEXT DEFAULT (datetime('now', 'localtime')),
-        image_date TEXT,
-        image_time TEXT,
-        image_address TEXT,
-        image_notes TEXT,
-        image_blob BLOB,
-        image_dd TEXT,
-        image_mm TEXT,
-        image_yyyy TEXT,
-        image_yyyymmdd TEXT,
-        image_status TEXT,
-        image_record_last_edit_date TEXT,
-        image_record_last_edit_time TEXT
-    );
-    CREATE INDEX IF NOT EXISTS idx_photos ON photos(image_address);
-    CREATE INDEX IF NOT EXISTS idx_photos_yyyymmdd ON photos(image_yyyymmdd);`
-    try{
-        await initDB(dbFileName); // file extension of the database file is added by initDB
-        await setupSchema(dbFileName,dbSchema);
-        // send response to client
-            res.send({message:`Account created for ${req.body.fileName}.`});
-            console.log(`${trace()}📚📗 account creation success`);
-    }catch{
-        res.send({message:`Account not created for ${req.body.fileName}.`});
-        console.log(`${trace()}📚📕 account creation fail`,req.body.loginCodeEmailed,records[0].login_code);
-    }
+    // 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ START
+        const fileName = `${req.body.fileName}_RsdDayBook.ndjson`;
+        const filePath = `${process.env.APP_PATH_TO_DATA}${fileName}`;
+        // fs.writeFileSync(filePath, '');
+        await fsPromises.writeFile(filePath, '');
+    // 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ END
+    // 💽 d a t a b a s e 💽 💽 d a t a b a s e 💽 💽 d a t a b a s e 💽 START
+        const dbFileName = req.body.fileName; // Ensure this matches the actual database file
+        // const dbSchema = 
+        // `CREATE TABLE IF NOT EXISTS photos (
+        //     id INTEGER PRIMARY KEY AUTOINCREMENT,
+        //     image BLOB,
+        //     image_date TEXT,
+        //     image_time TEXT,
+        //     image_address TEXT,
+        //     image_notes TEXT,
+        //     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        // );
+        // CREATE INDEX IF NOT EXISTS idx_photos ON photos(image_address);`
+        const dbSchema = 
+        `CREATE TABLE IF NOT EXISTS "photos" (
+            image_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            image_record_created_at TEXT DEFAULT (datetime('now', 'localtime')),
+            image_date TEXT,
+            image_time TEXT,
+            image_address TEXT,
+            image_notes TEXT,
+            image_blob BLOB,
+            image_dd TEXT,
+            image_mm TEXT,
+            image_yyyy TEXT,
+            image_yyyymmdd TEXT,
+            image_status TEXT,
+            image_record_last_edit_date TEXT,
+            image_record_last_edit_time TEXT
+        );
+        CREATE INDEX IF NOT EXISTS idx_photos ON photos(image_address);
+        CREATE INDEX IF NOT EXISTS idx_photos_yyyymmdd ON photos(image_yyyymmdd);`
+        try{
+            await initDB(dbFileName); // file extension of the database file is added by initDB
+            await setupSchema(dbFileName,dbSchema);
+            // send response to client
+                res.send({message:`Account created for ${req.body.fileName}.`});
+                console.log(`${trace()}📚📗 account creation success`);
+        }catch{
+            res.send({message:`Account not created for ${req.body.fileName}.`});
+            console.log(`${trace()}📚📕 account creation fail`,req.body.loginCodeEmailed,records[0].login_code);
+        }
+    // 💽 d a t a b a s e 💽 💽 d a t a b a s e 💽 💽 d a t a b a s e 💽 END
 });
-
 
 export default loginRouter;

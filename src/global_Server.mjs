@@ -1,6 +1,7 @@
-const consoleLog = false;
-
 console.log("LOADED:- globalServer.mjs is loaded",new Date().toLocaleString());
+export function globalServerMJSisLoaded(){
+    return true;
+}
 
 // export function trace(whoCalled="") {
 //     try {
@@ -46,20 +47,16 @@ export function maskString(str,firstX,lastX) {
         return `${str.substring(0, firstX)}...${str.slice(-lastX)}`;
 }
 
-console.log(trace(),"\nLOADED:- globalServer.mjs is loaded",new Date().toLocaleString());
-export function globalServerMJSisLoaded(){
-    return true;
-}
-
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  SERVER SIDE IMPORTS ONLY
     import { Router } from "express";
     const globalRouter = Router();
     import nodemailer from 'nodemailer';
-    import fs from 'fs';
+    import * as fsCore from 'fs';
+    import * as fsPromises from 'fs/promises';
     import path from 'path';
+    import { join } from 'node:path';
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
-
 
 // ===========================================================================================================================
 
@@ -79,9 +76,11 @@ export function globalServerMJSisLoaded(){
         console.log(`${trace()}from:- ${from}`);
         console.log(`${trace()}to:-${to}`);
         console.log(`${trace()}subject:- ${subject}`);
-        console.log(`${trace()}html:- ${html.replace(" ","")}`);
-        console.log(`${trace()}text:- ${text}`);
-        // console.log(`${trace()}\nfrom:- ${from}\nto:-${to}\nsubject:- ${subject}\nhtml:- ${html.replace(" ","")}\ntext:- ${text}\n`);
+        // console.log(`${trace()}html:- ${html}`);
+        console.log(trace(),'Login Email HTML:',html.replace(/\s+/g, ' ').trim());
+        console.log(`${trace()}Login email generated for ${to}`);
+        console.log(`${trace()}${text.replace(/\s+/g, ' ').trim()}`);
+        // console.log(`${trace()}\nfrom:- ${from}\nto:-${to}\nsubject:- ${subject}\nhtml:- ${html.replace(" ","")}\ntext:- ${text}\n`);}
         // data validation START
                 if ([from, to, subject, html, text].some(val => !val)) {
                     console.error(trace(),`🔴 Something went wrong. Missing or undefined values`);
@@ -112,7 +111,7 @@ export function globalServerMJSisLoaded(){
                 }
             });
             // 🔴🔴🔴 KEEP PRIVATE 🔴🔴🔴 
-                // console.log(`log(trace()\nSMTP_HOST:- ${process.env.SMTP_HOST}\nSMTP_USER:- ${process.env.SMTP_USER}\nSMTP_PASS:- ${process.env.SMTP_PASS}\n`);
+                // console.log(`log(trace()\nSMTP_HOST:- ${process.env.SMTP_HOST}\nSMTP_USER:- ${process.env.SMTP_USER}\nSMTP_PASS:- ${process.env.SMTP_PASS}\n`);}
             // 🔴🔴🔴 KEEP PRIVATE 🔴🔴🔴 
         // Create a transporter object using SMTP transport END
         // send mail START
@@ -141,7 +140,7 @@ export function globalServerMJSisLoaded(){
         // import fs from 'fs'; // MUST BE DONE IN Node.mjs environment
         // import path from 'path'; // MUST BE DONE IN Node.mjs environment
     // API endpoint to receive image data
-        export function convertImageData(req, res){
+        export async function convertImageData(req, res){
             try {
                 // Extract image data and filename from the request body
                     const { imageData, filename } = req.body;
@@ -153,7 +152,7 @@ export function globalServerMJSisLoaded(){
                 // Specify the save path on the server
                     const savePath = path.join(__dirname, 'images', filename);
                 // Write the image file to the server
-                    fs.writeFile(savePath, buffer, (err) => {
+                    await fsPromises.writeFile(savePath, buffer, (err) => {
                         if (err) {
                             console.error('Error saving the image:', err);
                             return res.status(500).json({ error: 'Failed to save the image' });
@@ -169,7 +168,7 @@ export function globalServerMJSisLoaded(){
         }
 
 globalRouter.post("/getGlobalFooter", (req, res) => {
-    // console.log("globalRouter.get('/getGlobalFooter...");}
+    // console.log("globalRouter.get('/getGlobalFooter...");
     const moment = new Date();
     const myHtml = `
         <div class=global-footer-content>
@@ -191,7 +190,7 @@ globalRouter.post("/getGlobalFooter", (req, res) => {
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
     globalRouter.post("/getProjectFunctionsMap", (req, res) => {
         console.log(`${trace()} globalRouter.post("/getProjectFunctionsMap") called.`);
-        const projFunc = JSON.parse(fs.readFileSync("src/global_Client__projectFunctions.JSON", "utf8")).actions;
+        const projFunc = JSON.parse(fs.readFile("src/global_Client__projectFunctions.JSON", "utf8")).actions;
         console.log(`🪣 ${trace()} 📖 Project functions:-\n`,projFunc);
         res.send({message:`Project Functions Map retrieved successfully.`,actions:projFunc});
     });

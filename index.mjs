@@ -142,9 +142,9 @@ const consoleLog = false;
     // }
     // checkImports();
 
-if(consoleLog===true){console.log(("<>").repeat(60));}
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(trace());}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 2️⃣ environment configuration
     // .ENV;  .MJS
@@ -153,13 +153,13 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                 const envPath = "./config/globalServer.env";
                 if (fs.existsSync(envPath)) {
                     dotenv.config({ path: envPath });
-                    if(consoleLog===true){console.log(trace(),`\n   Global environment variables:- ${envPath}`);}
+                    if(window.consoleLog===true){console.log(trace(),`\n   Global environment variables:- ${envPath}`);}
                     const result = dotenv.config({ path: envPath });
-                    // if(consoleLog===true){console.log(trace(),`\n${envPath}:-\n`, result.parsed);}  
+                    // if(window.consoleLog===true){console.log(trace(),`\n${envPath}:-\n`, result.parsed);}  
                     const envVar = result.parsed;
                     Object.keys(envVar).forEach(key => {
                         // console.log(`key:- ${key} :- ${envVar[key]}`);  //  DO NOT LOG ~ SECRET INDO !!!
-                        if(consoleLog===true){console.log(`      key:- ${key}`);}
+                        if(window.consoleLog===true){console.log(`      key:- ${key}`);}
                     }); 
                     console.log(`${trace()}🟢 Global environment variables loaded.`);
                 } else {
@@ -174,13 +174,13 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                 const envPath = "./config/projectServer.env";
                 if (fs.existsSync(envPath)) {
                     dotenv.config({ path: envPath });
-                    if(consoleLog===true){console.log(trace(),`\n   Project environment variables:- ${envPath}`);}
+                    if(window.consoleLog===true){console.log(trace(),`\n   Project environment variables:- ${envPath}`);}
                     const result = dotenv.config({ path: envPath });
-                    // if(consoleLog===true){console.log(trace(),`\n${envPath}:`, result);}                
+                    // if(window.consoleLog===true){console.log(trace(),`\n${envPath}:`, result);}                
                     const envVar = result.parsed;
                     Object.keys(envVar).forEach(key => {
                         // console.log(`key:- ${key} :- ${envVar[key]}`);  //  DO NOT LOG ~ SECRET INDO !!!
-                        if(consoleLog===true){console.log(`      key:- ${key}`);}
+                        if(window.consoleLog===true){console.log(`      key:- ${key}`);}
                     }); 
                     console.log(`${trace()}🟢 Project environment variables loaded.`);
                 } else {
@@ -190,9 +190,9 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
                 console.log(`${trace()}🔴 ERROR:- ${envPath} not found!`);
             }
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
-if(consoleLog===true){console.log(("<>").repeat(60));}
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(trace());}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 3️⃣ create express app
     const app = express();
@@ -202,9 +202,9 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
         app.use(cookieParser()); // Enables reading of cookies, express specific cookie parser
     // exceptional placement - place this middleware right after express() END
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
-if(consoleLog===true){console.log(("<>").repeat(60));}
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(trace());}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 5️⃣ MOUNT EXTERNAL ROUTERS
         // function mountRouters() {
@@ -223,9 +223,9 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
         // }
         // mountRouters();
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
-if(consoleLog===true){console.log(("<>").repeat(60));}
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(trace());}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
     // 🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪
         // uuid4() vs randomUUID() START
@@ -331,9 +331,9 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 // ⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️⛹️
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
-if(consoleLog===true){console.log(("<>").repeat(60));}
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(trace());}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 // 3️⃣➖1️⃣ middleware
     app.disable('x-powered-by'); // Reduce fingerprinting by hiding that this is an ExpressJS app
@@ -446,9 +446,9 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
     // // 4️⃣ session management
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
-if(consoleLog===true){console.log(("<>").repeat(60));}
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(trace());}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
                     // let sessionInitialised=false;
                     // app.use(async (req, res, next) => {
@@ -600,9 +600,9 @@ app.post('/logout', (req, res) => {
         }
     });
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
-if(consoleLog===true){console.log(("<>").repeat(60));}
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(trace());}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
 
 
     // app.use(async (req, res, next) => {
@@ -785,13 +785,13 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 //             }
 
 // //             const rawCookieSessionId = req.cookies["connect.sid"];
-// //                 if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️cookie connect.sid:-              `,rawCookieSessionId);}
-// //                 if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️req.headers.cookie:-`,req.headers.cookie);}
+// //                 if(window.consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️cookie connect.sid:-              `,rawCookieSessionId);}
+// //                 if(window.consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️req.headers.cookie:-`,req.headers.cookie);}
 // //             const cookieSid = (req.cookies["connect.sid"] || "").replace(/^s:/, "");
 // //             const headerSid_raw = (req.headers.cookie || "").match(/connect\.sid=s%3A([^;]+)/)?.[1];
 // //             const headerSid_decoded = headerSid_raw ? decodeURIComponent(headerSid_raw) : "🔴...could not decode [headerSid_raw]";
-// //                 if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️cookieSid:-`,cookieSid);}
-// //                 if(consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️headerSid_decoded:-`,headerSid_decoded);}
+// //                 if(window.consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️cookieSid:-`,cookieSid);}
+// //                 if(window.consoleLog===true){console.log(`🪣 ${trace()}🔒 ⁉️headerSid_decoded:-`,headerSid_decoded);}
 // //             if (cookieSid !== headerSid_decoded) {
 // //                 console.warn(`🪣 ${trace()}🔒⚠️Session ID mismatch detected, cookieSid != headersSid:-\n🪣 ${cookieSid} v \n🪣 ${headerSid_decoded}`);
 // //                 console.warn(`🪣 ${trace()}🔒⚠️Session ID mismatch detected for ${req.url}`);
@@ -844,9 +844,9 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 //     console.log(`${trace()}🔒✅ Authentication setup END.`);
 //    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪    🚪
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
-if(consoleLog===true){console.log(("<>").repeat(60));}
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(trace());}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
 // 6️⃣ routes AND business logic
     // log REQuest START
         async function logREQuest(req){
@@ -891,9 +891,9 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
         }
     // log REQuest END
 //    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹    🔹
-if(consoleLog===true){console.log(("<>").repeat(60));}
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(trace());}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
 // 🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣
     app.use((req, res, next) => {
 
@@ -946,9 +946,9 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
 
     });
 // 🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣🪣
-if(consoleLog===true){console.log(("<>").repeat(60));}
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(trace());}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     app.post("/establish-session", (req, res) => {
     // app.get("/establish-session", (req, res) => {
@@ -999,10 +999,10 @@ if(consoleLog===true){console.log(("<>").repeat(60));}
     // Client heartbeat detected, extend session.💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 myDate = new Date();
-// if(consoleLog===true){console.log(`${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`);}
-if(consoleLog===true){console.log(("<>").repeat(60));}
-if(consoleLog===true){console.log(trace());}
-if(consoleLog===true){console.log(("<>").repeat(60));}
+// if(window.consoleLog===true){console.log(`${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`);}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
+if(window.consoleLog===true){console.log(trace());}
+if(window.consoleLog===true){console.log(("<>").repeat(60));}
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // monitor memory usage
     const formatMemoryUsage = (data) => `${(data / 1024 / 1024).toFixed(2)} MB`;
@@ -1052,7 +1052,7 @@ setInterval(() => {
     console.log(`RSS:        ${formatMemoryBar(memory.rss, 100000000)} [1Gb bar length] % of total memory used:- ${memoryUsagePercent.toFixed(2)}% ${(memory.rss / 1024 / 1024).toFixed(1)} MB`);
     memoryUsagePercent = (memory.heapUsed / os.totalmem()) * 100;
     console.log(`Heap Used:  ${formatMemoryBar(memory.heapUsed, 100000000)} [1Gb bar length] % of total memory used:- ${memoryUsagePercent.toFixed(2)}% ${(memory.heapUsed / 1024 / 1024).toFixed(1)} MB`);
-    // if(consoleLog===true){console.log(`Heap Used:  ${formatMemoryBar(memory.heapUsed, 100000000)} ${memory.heapUsed / 1024 / 1024} MB`);}
+    // if(window.consoleLog===true){console.log(`Heap Used:  ${formatMemoryBar(memory.heapUsed, 100000000)} ${memory.heapUsed / 1024 / 1024} MB`);}
     console.log(("~~").repeat(55));
 }, 1000 * 60 * 60);
 // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹

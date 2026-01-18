@@ -361,7 +361,7 @@ console.log(("🔰").repeat(45));
             } else if (process.env.APP_SERVER_MODE_PRODUCTION === "true") {
                 console.log(`${trace()}🔒✅ CORS headers set up for Production commenced.`);
                 app.use(cors({
-                        origin: "https://ridesharedriver.com.au", // use just one, don't use ["https://ridesharedriver.com.au", "https://www.ridesharedriver.com.au"] 
+                        origin: "https://netit.au", // use just one, don't use ["https://ridesharedriver.com.au", "https://www.ridesharedriver.com.au"] 
                         credentials: true,
                         methods: ["GET", "POST", "PUT", "DELETE"],
                         allowedHeaders: ["Content-Type", "Authorization"],
@@ -521,28 +521,45 @@ app.use(
       "default-src": ["'self'"],
       "script-src": [
         "'self'", 
-        "https://maps.googleapis.com"
+        // "'unsafe-inline'", // only if you're using inline scripts ❗❗❗REMOVE FOR PRODUCTION❗❗❗
+        "https://maps.googleapis.com",
+        "https://unpkg.com"              // ✅ Trust Leaflet JS
     ],
     "connect-src": [
         "'self'", 
         "https://dns.google",           // 👈 Added for your MX record lookups
         "https://maps.googleapis.com",
-        "https://*.googleapis.com" // For Places and Geocoding APIs
+        "https://*.googleapis.com", // For Places and Geocoding APIs
+        "https://nominatim.openstreetmap.org",
+        "https://router.project-osrm.org",
+        "https://photon.komoot.io",
+        "https://unpkg.com"
       ],
       "img-src": [
         "'self'", 
         "data:", 
+        "https:",
         "https://maps.gstatic.com", 
         "https://*.googleapis.com"
       ],
       "style-src": [
         "'self'", 
-        "'unsafe-inline'", // Required for Google Maps UI styling
-        "https://fonts.googleapis.com"
+        "'unsafe-inline'", // ✅🆗 Required for Google Maps UI styling
+        "https://fonts.googleapis.com",
+        "https://unpkg.com"
       ],
-      "font-src": ["'self'", "https://fonts.gstatic.com"],
-      "worker-src": ["'self'", "blob:"], // Required for fluid map movement
-      "frame-src": ["'self'", "https://www.google.com"], // If using the embed iframe
+      "font-src": [
+        "'self'", 
+        "https://fonts.gstatic.com"
+      ],
+      "worker-src": [
+        "'self'", 
+        "blob:"
+      ], // Required for fluid map movement
+      "frame-src": [
+        "'self'", 
+        "https://www.google.com"
+      ], // If using the embed iframe
     },
   })
 );
@@ -552,7 +569,7 @@ app.use(
                 JSON.stringify({
                     group: "csp-endpoint",
                     max_age: 10886400, // 18 weeks
-                    endpoints: [{ url: "https://ridesharedriver.com.au/csp-violation-report-endpoint" }],
+                    endpoints: [{ url: "https://netit.au/csp-violation-report-endpoint" }],
                 })
             );
             next();
@@ -583,49 +600,49 @@ app.use(
         // RATE LIMITER start
             if(useExpressRateLimit===true){
                 (() => { 
-                    // If you're using a rate limiter, put it early to block abusers before they hit your routes:
-                        const rateLimitNumber = 5
-                        const rateLimitDuration = 1; // minutes
-                        const limiter = rateLimit({
-                            windowMs: rateLimitDuration * 60 * 1000,
-                            limit: rateLimitNumber,
-                            handler: (req, res) => {
-                                // res.send('<html><head><title>Rate Limit Exceeded</title></head><body style="font-family: sans-serif; text-align: center; padding: 2em;"><h1>⏳ Too Many Requests</h1><p>You’ve hit the limit. Please wait a minute before trying again.</p><p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p></body></html>');
-                                res.send({success: false, message: "Too many attempts.  Please wait 5 minutes."});
-                                // res.set('Retry-After', '60').status(429).send({
-                                //     error: "Rate limit exceeded.  Try again after 1 minute.",
-                                //     retryAfter: "15 minutes",
-                                //     retryAt: new Date(Date.now() + 15 * 60 * 1000).toISOString()
-                                // });
-                                //     res.set('Retry-After', '60').status(429).send(`
-                                //         <html>
-                                //             <head><title>Rate Limit Exceeded</title></head>
-                                //             <body style="font-family: sans-serif; text-align: center; padding: 2em;">
-                                //             <h1>⏳ Too Many Requests</h1>
-                                //             <p>You’ve hit the limit. Please wait a minute before trying again.</p>
-                                //             <p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p>
-                                //             </body>
-                                //         </html>
-                                //     `);
-                            }
-                        });
-                        // Applies to all requests, causes issues with static assets/images/icons START
-                            // if (process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() == 'true') {
-                            //     // app.use(limiter); // ✅ Applies to all requests, causes issues with static assets/images/icons
-                            //     // console.log(`${trace()} ✅ RATE LIMITER [app.use(limiter);]\n${trace()}    :- enables rate limiting for all requests.`);
-                            // }
-                            // app.use('/', limiter); // ✅ Applies to ALL traffic
-                        // Applies to all requests, causes issues with static assets/images/icons END
-                        // app.use('/api', limiter); // ✅ Applies to API traffic only
-                        // Apply rate limiter to individual routers START
-                            app.use("/SQLiteRouter", limiter);
-                            app.use("/loginRouter", limiter);
-                            app.use("/globalRouter", limiter);
-                            app.use("/projectRouter", limiter);
-                            app.use("/sessionsRouter", limiter);
-                            app.use("/googleAPIsRouter", limiter);
-                            app.use("/trackerRouter", limiter);
-                            console.log(`${trace()} 🟢 🏃‍♂️🏃‍♂️‍➡️ RATE LIMITER Rate limiter set to a limit of ${rateLimitNumber} requests every ${rateLimitDuration} minutes.`);
+            // If you're using a rate limiter, put it early to block abusers before they hit your routes:
+                const rateLimitNumber = 5
+                const rateLimitDuration = 1; // minutes
+                const limiter = rateLimit({
+                    windowMs: rateLimitDuration * 60 * 1000,
+                    limit: rateLimitNumber,
+                    handler: (req, res) => {
+                        // res.send('<html><head><title>Rate Limit Exceeded</title></head><body style="font-family: sans-serif; text-align: center; padding: 2em;"><h1>⏳ Too Many Requests</h1><p>You’ve hit the limit. Please wait a minute before trying again.</p><p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p></body></html>');
+                        res.send('<html><head><title>Rate Limit Exceeded</title></head><body style="font-family: sans-serif; text-align: center; padding: 2em;"><h1>⏳ Too Many Requests</h1><p>You’ve hit the limit. Please wait a minute before trying again.</p><p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p></body></html>');
+                        // res.set('Retry-After', '60').status(429).send({
+                        //     error: "Rate limit exceeded.  Try again after 1 minute.",
+                        //     retryAfter: "15 minutes",
+                        //     retryAt: new Date(Date.now() + 15 * 60 * 1000).toISOString()
+                        // });
+                        //     res.set('Retry-After', '60').status(429).send(`
+                        //         <html>
+                        //             <head><title>Rate Limit Exceeded</title></head>
+                        //             <body style="font-family: sans-serif; text-align: center; padding: 2em;">
+                        //             <h1>⏳ Too Many Requests</h1>
+                        //             <p>You’ve hit the limit. Please wait a minute before trying again.</p>
+                        //             <p><small>Retry after: ${new Date(Date.now() + 60 * 1000).toLocaleTimeString()}</small></p>
+                        //             </body>
+                        //         </html>
+                        //     `);
+                    }
+                });
+                // Applies to all requests, causes issues with static assets/images/icons START
+                    // if (process.env.APP_SERVER_MODE_PRODUCTION?.toLowerCase() == 'true') {
+                    //     // app.use(limiter); // ✅ Applies to all requests, causes issues with static assets/images/icons
+                    //     // console.log(`${trace()} ✅ RATE LIMITER [app.use(limiter);]\n${trace()}    :- enables rate limiting for all requests.`);
+                    // }
+                    // app.use('/', limiter); // ✅ Applies to ALL traffic
+                // Applies to all requests, causes issues with static assets/images/icons END
+                // app.use('/api', limiter); // ✅ Applies to API traffic only
+                // Apply rate limiter to individual routers START
+                    app.use("/SQLiteRouter", limiter);
+                    app.use("/loginRouter", limiter);
+                    app.use("/globalRouter", limiter);
+                    app.use("/projectRouter", limiter);
+                    app.use("/sessionsRouter", limiter);
+                    app.use("/googleAPIsRouter", limiter);
+                    app.use("/trackerRouter", limiter);
+                    console.log(`${trace()} 🟢 🏃‍♂️🏃‍♂️‍➡️ RATE LIMITER Rate limiter set to a limit of ${rateLimitNumber} requests every ${rateLimitDuration} minutes.`);
                 })();
             }else{
                 console.log(`${trace()} 🔴 🏃‍♂️🏃‍♂️‍➡️ RATE LIMITER not used.\n${trace()}    :-`);
@@ -1171,12 +1188,12 @@ app.use(
 //         });
 // //  🔴 DON'T USE, IT'S A HEADACHE     C S P   r e p o r t s   E N D     🔐📃🔐📃🔐📃🔐📃🔐📃🔐📃🔐📃🔐📃🔐
 // 7️⃣ start server START 🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾🎾
-    function logServerStartup(){
-        const serverIcon = process.env.SERVER_ICON || "🧑‍🔧";
-        console.log((serverIcon).repeat(45));
-        console.log(`${serverIcon} S T A R T   S E R V E R${(" ").repeat(91-(`${serverIcon} S T A R T   S E R V E R`).length)}${serverIcon}`);
-        // console.log(`🧑‍🔧 SERVER MODE = production: ${isProduction}.${(" ").repeat(91-("🧑‍🔧 SERVER MODE = production: false.").length)}🧑‍🔧`);
-        // console.log(`🧑‍🔧 SERVER MODE = development:${isDevelopment}.${(" ").repeat(91-("🧑‍🔧 SERVER MODE = production: true.").length)}🧑‍🔧`);
+    async function logServerStartup(){
+        const serverIcon = process.env.SERVER_ICON || "🚗";
+        console.log(("🧑‍🔧").repeat(45));
+        console.log(`🧑‍🔧 S T A R T   S E R V E R${(" ").repeat(91-("🧑‍🔧 S T A R T   S E R V E R").length)}🧑‍🔧`);
+        // console.log(`🧑‍🔧 SERVER MODE = production: ${isProduction}.${(" ").repeat(88-("🧑‍🔧 SERVER MODE = production: false.").length)}🧑‍🔧`);
+        // console.log(`🧑‍🔧 SERVER MODE = development:${isDevelopment}.${(" ").repeat(88-("🧑‍🔧 SERVER MODE = production: true.").length)}🧑‍🔧`);
         myDate = new Date();
         console.log(`${serverIcon} ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}${(" ").repeat(91-(`${serverIcon} ${myDate.toLocaleDateString()} ${myDate.toLocaleTimeString()}`).length)}${serverIcon}`);
         console.log(`${serverIcon} Server is running on port:${PORT}.${(" ").repeat(91-(`${serverIcon} Server is running on port:${PORT}.`).length)}${serverIcon}`);

@@ -7,6 +7,7 @@ export function globalLoginClientJSisLoaded(){
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
     import { sessionLogout } from './globalSessions_Client.mjs';
     import { clientConfigSettings } from "../config/projectConfig_Client.mjs";
+    import { showCustomMessage } from './globalUIpopups_Client.mjs';
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 const popupHTML = 
@@ -106,12 +107,12 @@ async function login_stepThree(loginEmailAddress) {
         try {
             const response = await fetch(`https://dns.google/resolve?name=${domain}&type=MX`);
             const data = await response.json();
-            if(window.consoleLog===true){console.log(data);}
+            if(window.consoleLog===true){console.log('email address check:-\n',data);}
             // return data.Answer && data.Answer.length > 0; // Checks if MX records exist
-            if(window.consoleLog===true){console.log('data.Status:- ',data.Status);} // 0 (Success) or 3 (Name Error)
-            if(window.consoleLog===true){console.log('data.Question:- ',data.Question);} // Checks if MX records exist, 15
-            if(window.consoleLog===true){console.log('data.Question.type:- ',data.Question[0].type);} // Checks if MX records exist, 15
-            if(window.consoleLog===true){console.log('data.Answer:- ',data.Answer);} //
+            // if(window.consoleLog===true){console.log('email address check: data.Status:- ',data.Status);} // 0 (Success) or 3 (Name Error)
+            // if(window.consoleLog===true){console.log('email address check: data.Question:- ',data.Question);} // Checks if MX records exist, 15
+            // if(window.consoleLog===true){console.log('email address check: data.Question.type:- ',data.Question[0].type);} // Checks if MX records exist, 15
+            // if(window.consoleLog===true){console.log('email address check: data.Answer:- ',data.Answer);} //
             let validDomain = true;
             if(data.Status!=0){
                 if(window.consoleLog===true){console.log('data.Status:- ',data.Status);}
@@ -158,7 +159,10 @@ async function login_stepFour(loginEmailAddress){
                 // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
             },
             body: JSON.stringify({              // Converts object to JSON for request
-                fileName:loginEmailAddress      // add file extension server side not here
+                loginEmailAddress:loginEmailAddress,      // add file extension server side not here
+                fileNamePrefix:"",
+                fileNameSuffix:"_RsdDayBook",
+                fileNameExtension:".ndjson"
             })
         }
     if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
@@ -271,10 +275,11 @@ async function login_stepSix(loginEmailAddress, accountExists, createNewAccount)
                 window.localStorage.setItem("loginsDBinsertedID", jso.loginsDBinsertedID);
                 login_stepSeven(loginEmailAddress, accountExists,createNewAccount,jso.loginCodeEmailed,jso.loginsDBinsertedID);
             }else{
+                showCustomMessage(`Problem generating login code.  Please refresh your browser and try again.`);
                 login_cancel(`Problem generating login code. ${jso.loginCodeEmailed}`);
             }
     } catch (error) {
-        if(window.consoleLog===true){console.error("Error sending email:",error.message);}
+        console.error("Error sending email:",error.message);
         login_cancel(`${jso.loginCodeEmailed}`);
     }
 
@@ -288,9 +293,9 @@ function passcodeEntry() {
     const submitButton = document.getElementById('popup-button-1'); // button with class .passcodeSubmit has been replace with popup-button-1
 
     const updateSubmitState = () => {
-        if(window.consoleLog===true){console.log("Updating submit button state...");}
+        // if(window.consoleLog===true){console.log("Updating submit button state...");}
         const allFilled = Array.from(inputs).every(input => input.value.match(/^\d$/)); // 0-9 required
-        if(window.consoleLog===true){console.log("Updating submit button state...", allFilled);}
+        // if(window.consoleLog===true){console.log("Updating submit button state...", allFilled);}
         submitButton.disabled = !allFilled;
         if (allFilled) {
             const code = Array.from(inputs).map(input => input.value).join('');
@@ -309,7 +314,7 @@ function passcodeEntry() {
     inputs[0].focus();
 
     inputs.forEach((input, index) => {
-        if(window.consoleLog===true){console.log(`Input ${index} initialized.`);}
+        // if(window.consoleLog===true){console.log(`Input ${index} initialized.`);}
         input.addEventListener('input', () => {
             if (/^\d$/.test(input.value) && index < inputs.length - 1) {
                 if(index <= 5){
@@ -366,8 +371,8 @@ function passcodeEntry() {
 
 }
 
-async function login_stepSeven(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed,loginsDBinsertedID){
-    // const fetchUrl = `/sessionsRouter/sessionRegen`;
+async function login_stepSeven(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed, loginsDBinsertedID){
+    if(window.consoleLog===true){console.log(`🏳️ 🏳️ 🏳️  S e s s i o n   I n i t  ( l o g i n _ s t e p S e v e n ) 🏳️ 🏳️ 🏳️`);}
     const fetchUrl = `/sessionsRouter/sessionInit`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
@@ -380,16 +385,18 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
                 // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
             },
             body: JSON.stringify({          // Converts object to JSON for request
-                loginEmailAddress:loginEmailAddress
+                loginEmailAddress:loginEmailAddress,
+                authorisedAccess:false
             })
         }
-    if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
+    if(window.consoleLog===true){console.log(fetchUrl);}
+    if(window.consoleLog===true){console.log(fetchUrl, "options:-\n",fetchOptions);}
     try {
         // fetch
             const response = await fetch(fetchUrl,fetchOptions);
             if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
             const jso = await response.json(); // Fetch JSON object
-            if(window.consoleLog===true){console.log(`sessionRegen:- `,jso);}
+            if(window.consoleLog===true){console.log(fetchUrl,`sessionInit:- `,jso);}
             // if(jso.sessionRegenOK===true){
             if(jso.sessionInitOK===true){
                 passcodeEntry(); // Initialize passcode entry functionality
@@ -453,7 +460,7 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
     }
 
 }
-async function login_stepEight(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed,loginsDBinsertedID){
+async function login_stepEight(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed, loginsDBinsertedID){
     const fetchUrl = `/loginRouter/loginCodeSubmit`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
@@ -481,21 +488,26 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
             const jso = await response.json(); // Fetch JSON object
             if(window.consoleLog===true){console.log(`/loginRouter/loginCodeSubmit response:- `,jso);}
             if(jso.loginApproved===true){
+                login_stepNine(loginEmailAddress); // sessionRegen as authorised user
                 document.getElementById("busy-animation-overlay").remove();
                 document.getElementById("popup-overlay").remove();
                 document.getElementById("padlock-icon").src="__padlock_unlocked.png";
                 document.getElementById("sign-in-out-icon-container").setAttribute("data-status","signed-in");
                 document.getElementById("sign-in-out-icon-container").title = "Click to sign out.";
+                const x = parseInt(document.getElementById("sessionSignedin").textContent || 0);
+                document.getElementById("sessionSignedin").textContent = "🟢";
                 if(window.consoleLog===true){console.log("🟦 🟦 🟦 postLoginActions L A U N C H 🟦 🟦 🟦");}
                 postLoginActions({createNewAccount:createNewAccount,loginEmailAddress:loginEmailAddress}); // any actions to do after login success
-                alert("🟢 Secure login is successful."); // best to leave this to the end so that it doesn't interrupt execution?
+                // alert("🟢 Secure login is successful."); // best to leave this to the end so that it doesn't interrupt execution?
+                showCustomMessage("🟢 Secure login is successful."); // best to leave this to the end so that it doesn't interrupt execution?
             }else{
                 document.getElementById("busy-animation-overlay").remove();
                 document.getElementById("popup-overlay").remove();
                 document.getElementById("padlock-icon").src="__padlock_locked.png";
                 document.getElementById("sign-in-out-icon-container").setAttribute("data-status","signed-out");
                 document.getElementById("sign-in-out-icon-container").title = "Click to sign in.";
-                alert("🔴 Secure login failed, incorrect login code submitted."); // best to leave this to the end so that it doesn't interrupt execution?
+                // alert("🔴 Secure login failed, incorrect login code submitted."); // best to leave this to the end so that it doesn't interrupt execution?
+                showCustomMessage("🔴 Secure login failed, incorrect login code submitted."); // best to leave this to the end so that it doesn't interrupt execution?
             }
     } catch (error) {
         alert("🔴 Error checking login code submitted, please try again.");
@@ -505,18 +517,9 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
 
 }
 
-function login_cancel(message=""){
-    const busyAnimationHTML = document.getElementById("busy-animation-overlay");
-    document.body.removeChild(busyAnimationHTML); // Remove the dialog from the DOM
-    // cancel login process
-    alert("Login process cancelled.\n" + message);
-    if(window.consoleLog===true){console.log("Login process cancelled.\n" + message);}
-}
-
-// isLoginRequired
-export async function isLoginRequired() {
-    if(window.consoleLog===true){console.log('isLoginRequired()');}
-    const fetchUrl = `/loginRouter/isLoginRequired`;
+async function login_stepNine(loginEmailAddress){
+    if(window.consoleLog===true){console.log(`🏳️ 🏳️ 🏳️  S e s s i o n   R e g e n  ( l o g i n _ s t e p N i n e ) 🏳️ 🏳️ 🏳️`);}
+    const fetchUrl = `/sessionsRouter/sessionRegen`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
             mode: 'cors',                  // Ensures cross-origin requests are handled
@@ -528,24 +531,24 @@ export async function isLoginRequired() {
                 // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
             },
             body: JSON.stringify({          // Converts object to JSON for request
-                a:"a",
+                loginEmailAddress:loginEmailAddress,
+                authorisedAccess:true
             })
         }
     if(window.consoleLog===true){console.log(fetchUrl);}
-    try {
-        // fetch
-            const response = await fetch(fetchUrl,fetchOptions);
-            if (!response.ok) throw new Error(`Server Error: ${response.statusText}`);
-            const data = await response.json(); // Fetch JSON object
-            if(window.consoleLog===true){console.log(`isLoginRequired():- `,data);} // Logs correctly? Great!
-            // if(window.consoleLog===true){console.log(`isLoginRequi red():- `,data.message);} // Logs correctly? Great!
-            if(data.message===true){
-                login_stepOne();
-            }
-    } catch (error) {
-        // console.error("Error fetching HTML from:",fetchUrl, error.message);
-        if(window.consoleLog===true){console.error("Error fetching HTML from:",error.message);}
-    }
+    if(window.consoleLog===true){console.log(fetchUrl, "options:-\n",fetchOptions);}
+    const response = await fetch(fetchUrl,fetchOptions);
+    if(window.consoleLog===true){console.log(response);}
+    const x = parseInt(document.getElementById("sessionSignedinRegen").textContent || 0);
+    document.getElementById("sessionSignedinRegen").textContent = x + 1;
+
+
+}
+
+function login_cancel(message=""){
+    // cancel login process
+    alert("Login process cancelled.\n" + message);
+    if(window.consoleLog===true){console.log("Login process cancelled.\n" + message);}
 }
 
     export function doAfterDOMandWindowLoad__globalLogin_ClientMJS(){
@@ -553,16 +556,6 @@ export async function isLoginRequired() {
         // 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
     
             if(window.consoleLog===true){console.log('doAfterDOMandWindowLoad_globalLoginClient() launched.',new Date().toLocaleString());}
-
-            // initialise guest session START
-                const url = window.location;
-                // alert(`${url}api/initGuest`);
-                // fetch(`${url}api/initGuest`, {
-                fetch(`/api/initGuest`, {
-                    method: "POST",
-                    credentials: "include"
-                });
-            // initialise guest session END
 
             // signin-out button START
                 document.getElementById("sign-in-out-icon-container").addEventListener("click", (ev) => {
