@@ -13,41 +13,41 @@ export function projectRoutesMJSisLoaded(){
     import { initDB, getDB, setupSchema, insertUser } from "./projectSQLite_Server.mjs"
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
-export async function postLoginActions_serverSide(req,res){
-    const dbPromise = await initDB(req.body.userEmailAddress); // each user gets their own DB
-    const db = await getDB(req.body.userEmailAddress);
-    const dbSchema = 
-
-        // `CREATE TABLE IF NOT EXISTS users (
-        //     id INTEGER PRIMARY KEY AUTOINCREMENT,
-        //     active TEXT,
-        //     name TEXT NOT NULL,
-        //     email TEXT NOT NULL UNIQUE,
-        //     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        // );
-        // CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);`
-    
-        // `CREATE TABLE users (
-        //         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        //         active TEXT,
-        //         name TEXT NOT NULL,
-        //         email TEXT NOT NULL UNIQUE,
-        //         signedIn INTEGER CHECK(signedIn IN (0, 1)) DEFAULT 0,
-        //         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
-        //     CREATE INDEX idx_users_email ON users(email);`
-
-        `CREATE TABLE photos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            image BLOB,
-            address TEXT,
-            notes TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-        CREATE INDEX idx_photos ON photos(address);`
-
-    await setupSchema(req.body.userEmailAddress,dbSchema);
-    // await insertUser(req.body.userEmailAddress,db,req.body.userName,req.body.userEmailAddress);
-}
+// export async function postLoginActions_serverSide(req,res){
+//     const dbPromise = await initDB(req.body.userEmailAddress); // each user gets their own DB
+//     const db = await getDB(req.body.userEmailAddress);
+//     const dbSchema = 
+//
+//         // `CREATE TABLE IF NOT EXISTS users (
+//         //     id INTEGER PRIMARY KEY AUTOINCREMENT,
+//         //     active TEXT,
+//         //     name TEXT NOT NULL,
+//         //     email TEXT NOT NULL UNIQUE,
+//         //     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//         // );
+//         // CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);`
+//  
+//         // `CREATE TABLE users (
+//         //         id INTEGER PRIMARY KEY AUTOINCREMENT,
+//         //         active TEXT,
+//         //         name TEXT NOT NULL,
+//         //         email TEXT NOT NULL UNIQUE,
+//         //         signedIn INTEGER CHECK(signedIn IN (0, 1)) DEFAULT 0,
+//         //         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+//         //     CREATE INDEX idx_users_email ON users(email);`
+//
+//         `CREATE TABLE photos (
+//             id INTEGER PRIMARY KEY AUTOINCREMENT,
+//             image BLOB,
+//             address TEXT,
+//             notes TEXT,
+//             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//         );
+//         CREATE INDEX idx_photos ON photos(address);`
+//
+//     await setupSchema(req.body.userEmailAddress,dbSchema);
+//     // await insertUser(req.body.userEmailAddress,db,req.body.userName,req.body.userEmailAddress);
+// }
 
 export async function postLogoutActions_serverSide(req,res){
 }

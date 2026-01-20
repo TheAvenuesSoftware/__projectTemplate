@@ -1,7 +1,4 @@
 console.log("LOADED:- globalLoginServer.mjs is loaded",new Date().toLocaleString());
-export function globalLoginServerMJSisLoaded(){
-    return true;
-}
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  SERVER SIDE IMPORTS ONLY
@@ -15,8 +12,8 @@ export function globalLoginServerMJSisLoaded(){
     import dotenv from "dotenv";
         dotenv.config({path:`./config/globalServer.env`});
         dotenv.config({path:`./config/projectServer.env`});
-    import { trace} from "./global_Server.mjs";
-    import { optPer, insertDataRecord, insertFormDataRecord, getRecord, initDB, setupSchema, updateDataRecord, updateFormDataRecord } from "./projectSQLite_Server.mjs";
+    import { trace, maskString, dataFilePathName} from "./global_Server.mjs";
+    import { updateUsersLogins, optPer, insertDataRecord, insertFormDataRecord, getRecord, setupSchema, updateDataRecord, updateFormDataRecord } from "./projectSQLite_Server.mjs";
     import * as cookie from "cookie";
     import { isValidJSONString } from "./global_Server.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
@@ -24,16 +21,15 @@ export function globalLoginServerMJSisLoaded(){
 loginRouter.post("/fileExists", (req, res) => {
     // check if user's data file exists
         console.log(trace(),"fileExists req.body:-\n",req.body);
-        // const fileToFind = `./data/${loginEmailAddressInputValue}/${loginEmailAddressInputValue}.db`;
-        // const fileToFind = `${process.env.APP_PATH_TO_DATA}${req.body.fileName}.db`;
-        const fileToFind = `${process.env.APP_PATH_TO_DATA}${req.body.fileNamePrefix}${req.body.loginEmailAddress}${req.body.fileNameSuffix}${req.body.fileNameExtension}`;
-        console.log(`${trace()} 🟢❔ File to find:- ${fileToFind.trim()}`);
-        if (fsCore.existsSync(fileToFind)) {
-            console.log(trace(),`🟢✅ File exists - ${fileToFind}`);
-            res.send({message:`File "${fileToFind}" found.`,fileExists:true});
+        const dataFile = dataFilePathName(req.body.loginEmailAddress);
+        console.log(trace(),dataFile);
+        console.log(`${trace()} 🟢❔ File to find:- ${dataFile.filePath}${dataFile.fileName}`);
+        if (fsCore.existsSync(`${dataFile.filePath}${dataFile.fileName}`)) {
+            console.log(trace(),`🟢✅ File exists - ${dataFile.filePath}${dataFile.fileName}`);
+            res.send({message:`File "${dataFile.filePath}${dataFile.fileName}" found.`,fileExists:true});
         } else {
-            console.log(trace(),`🔴❌ File not found - ${fileToFind}`);
-            res.send({message:`File "${fileToFind}" not found.`,fileExists:false});
+            console.log(trace(),`🔴❌ File not found - ${dataFile.filePath}${dataFile.fileName}`);
+            res.send({message:`File "${dataFile.filePath}${dataFile.fileName}" not found.`,fileExists:false});
         }
 });
 
@@ -44,10 +40,14 @@ loginRouter.post("/emailCode", async (req, res) => {
         console.log(trace(),`Login: session regen - Session securityCode:- ${securityCode}`);
         const securityCodeX = randomBytes(4).toString("hex"); // Hex-based code, more complex code if needed
         console.log(trace(),`Login: session regen - Session securityCodeX:- ${securityCodeX}`);
-    // save the code in users.db; table logIns; schema: 
-        optPer("users"); // optimise database performance
-        const insertedId = await insertDataRecord(
-            "users",
+    // save the code in users_1000.db; table logIns; schema: 
+        const dataFile = dataFilePathName("users");
+        const filePath = dataFile.filePath;
+        const fileName = dataFile.fileName;
+        optPer(`${filePath}${fileName}`); // optimise database performance
+        // const insertedId = await insertDataRecord(
+        const insertedId = await updateUsersLogins(
+            `${filePath}${fileName}`,
             "logins",
             [
                 "login_date",
@@ -90,12 +90,13 @@ loginRouter.post("/emailCode", async (req, res) => {
 loginRouter.post("/loginCodeSubmit", async (req, res) => {
     console.log(trace(),"loginCodeSubmit: req.body:-\n",req.body);
     const x = req.body.loginCodeSubmit;
-    console.log(trace(),"/loginCodeSubmit:",typeof req.body.loginCodeSubmit); // "string"? "function"?
-    const dbFileName = "users"; // Ensure this matches the actual database file
+    console.log(trace(),"/loginCodeSubmit: variable 'loginCodeSubmit' is typeof: ",typeof req.body.loginCodeSubmit); // "string"? "function"?
+    // const dataFile = dataFilePathName("users_1000")
+    // const dbFileName = `${dataFile.filePath}${dataFile.fileName}`; // Ensure this matches the actual database file
     const table = "logins";
     const condition = "id = ?";
     const values = [req.body.loginsDBinsertedID]; // Example query parameter        
-    const records = await getRecord(dbFileName, table, condition, values);
+    const records = await getRecord("users", table, condition, values);
     console.log(trace(),"/loginCodeSubmit:",records);
     console.log(trace(),"/loginCodeSubmit:",records[0].id);
     console.log(trace(),"/loginCodeSubmit:",x);
@@ -104,10 +105,10 @@ loginRouter.post("/loginCodeSubmit", async (req, res) => {
             const parsed = cookie.parse(req.headers.cookie);
             await fsPromises.readFile('./sessions/' + parsed.connectSID + '.json','utf8',(errASync,fileContentsASync) => {
                 if (errASync){
-                    console.log('/loginCodeSubmit: login errASync:- error');
+                    console.log(trace(),'/loginCodeSubmit: login errASync:- error');
                 } else {
-                    console.log('/loginCodeSubmit: login fileContentsASync:-\n',fileContentsASync);
-                    console.log('/loginCodeSubmit: login fileContentsASync:- isJSON()?',isValidJSONString(fileContentsASync));
+                    console.log(trace(),'/loginCodeSubmit: login fileContentsASync:-\n',fileContentsASync);
+                    console.log(trace(),'/loginCodeSubmit: login fileContentsASync:- isJSON()?',isValidJSONString(fileContentsASync));
                     // res.json(fileContentsASync);
                     // res.end();
                 }
@@ -155,13 +156,13 @@ loginRouter.post("/createNewAccount", async (req, res) => {
     console.log(trace(),"🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦 createNewAccount START 🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦");
     console.log(trace(),"createNewAccount: req.body:-\n",req.body);
     // 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ START
-        const fileName = `${req.body.fileName}_RsdDayBook.ndjson`;
+        const fileName = `${req.body.fileName}`;
         const filePath = `${process.env.APP_PATH_TO_DATA}${fileName}`;
         // fs.writeFileSync(filePath, '');
         await fsPromises.writeFile(filePath, '');
     // 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ 🗃️ n d j s o n 🗃️ END
     // 💽 d a t a b a s e 💽 💽 d a t a b a s e 💽 💽 d a t a b a s e 💽 START
-        const dbFileName = req.body.fileName; // Ensure this matches the actual database file
+        const dbFileName = `${filePath}${fileName}`; // Ensure this matches the actual database file
         // const dbSchema = 
         // `CREATE TABLE IF NOT EXISTS photos (
         //     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -193,7 +194,7 @@ loginRouter.post("/createNewAccount", async (req, res) => {
         CREATE INDEX IF NOT EXISTS idx_photos ON photos(image_address);
         CREATE INDEX IF NOT EXISTS idx_photos_yyyymmdd ON photos(image_yyyymmdd);`
         try{
-            await initDB(dbFileName); // file extension of the database file is added by initDB
+            await getDB(dbFileName); // file extension of the database file is added by initDB
             await setupSchema(dbFileName,dbSchema);
             // send response to client
                 res.send({message:`Account created for ${req.body.fileName}.`});

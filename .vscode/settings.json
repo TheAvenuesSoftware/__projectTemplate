@@ -1,16 +1,49 @@
 {
     "workbench.colorTheme": "Default Dark Modern",
-    "workbench.colorCustomizations": {        
-        "activityBar.background":"#770303",
-        "activityBar.foreground": "#770303",
-        "activityBar.inactiveForeground":"rgb(255,255,255)",
-        "activityBar.activeBackground":"#fdfcfc",
-        "sideBar.foreground":"#fdfcfc",
-        "sideBar.background":"#770303",
-        "statusBar.background":"#770303",
-        "tab.activeForeground":"#fdfcfc",
-        "tab.activeBackground":"#770303",
-        "titleBar.activeBackground":"#770303",
-        "titleBar.inactiveBackground":"#770303"
+    "workbench.colorCustomizations": {
+        // top title bar START
+            "titleBar.activeForeground": "#ffffff",
+            "titleBar.activeBackground": "#770303",
+            "titleBar.border": "#fd04fd",
+        // top title bar END
+        // activity bar START
+            "activityBar.background":"#770303",
+            "activityBar.inactiveForeground":"#ffffff",
+            "activityBar.foreground": "#000000",
+            "activityBar.activeBackground":"#fdfcfc",
+        // activity bar END
+        // sidebar START
+            "sideBar.foreground":"#ffffff",
+            "sideBar.background":"#000000",
+        // sidebar END
+        // tabs START
+            // active 
+                "tab.activeForeground": "#ffffff",
+                "tab.activeBackground": "#000000",
+            // active
+            // inactive
+                "tab.inactiveForeground": "#000000",
+                "tab.inactiveBackground": "#ffffff",
+                "tab.hoverForeground": "#ffffff",
+                "tab.hoverBackground": "#000000",
+            // inactive
+        // tabs END
+        // bottom status bar START
+            "statusBar.foreground":"#ffffff",
+            "statusBar.background":"#770303",
+        // bottom status bar END
+
+        // // "activityBar.background":"#770303",
+        // // "activityBar.foreground": "#770303",
+        // // "activityBar.inactiveForeground":"rgb(255,255,255)",
+        // // "activityBar.activeBackground":"#fdfcfc",
+        // // "sideBar.foreground":"#fdfcfc",
+        // // "sideBar.background":"#770303",
+        // "statusBar.foreground":"#d1fb01",
+        // "statusBar.background":"#770303",
+        // "tab.activeForeground":"#fdfcfc",
+        // "tab.activeBackground":"#770303",
+        // "titleBar.activeBackground":"#770303",
+        // "titleBar.inactiveBackground":"#770303"
     }
 }

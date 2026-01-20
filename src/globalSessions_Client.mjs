@@ -4,6 +4,7 @@ import { showCustomMessage } from "./globalUIpopups_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
     import { clientConfigSettings } from "./projectConfig_Client.mjs";
+    import { login_cancel } from "./globalLogin_Client.mjs"
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 // initialise guest session START
@@ -64,7 +65,7 @@ export function getCookie(name, parseJson = true) {
             // place "PROJECT SPECIFIC" actions to take post secure logout here
         }
     // postLogoutActions END
-        export async function sessionLogout(mode={silent:false}){ // if mode.silent=true, do not show alerts
+        export async function sessionLogout(userEmailAddress){
             try {
                 const fetchUrl = `/sessionsRouter/sessionLogout`;
                 const fetchOptions = {
@@ -78,8 +79,8 @@ export function getCookie(name, parseJson = true) {
                             'Accept': 'application/json',        // Expect JSON response
                         },
                         body: JSON.stringify({ 
-                            logUserOut:true,
-                            silent: mode.silent  // if true, do not show alerts
+                            userEmailAddress: userEmailAddress,
+                            logUserOut: true,
                         })  // Converts object to JSON for request
                     }
                 if(window.consoleLog===true){console.log(JSON.stringify(fetchOptions,null,2));}
@@ -109,7 +110,8 @@ export function getCookie(name, parseJson = true) {
                 }
             }catch (error){
                 alert("🔴 Fatal error logging out!");
-                if(window.consoleLog===true){console.log("🔴 Fatal error logging out!",error);}
+                login_cancel();
+                if(window.cocancel_loginnsoleLog===true){console.log("🔴 Fatal error logging out!",error);}
             }
         }
 // 🚪 🚪 🚪 logout END
@@ -169,11 +171,11 @@ export function getCookie(name, parseJson = true) {
         export async function triggerGuestRefresh() {
             // If a refresh is already in progress, return the existing promise
                 if (isRefreshing) {
-                    console.log("⏳ Refresh already in flight, waiting for it...");
+                    if(window.consoleLog===true){console.log("⏳ Refresh already in flight, waiting for it...");}
                     return refreshPromise;
                 }
                 isRefreshing = true;
-            console.log("Starting guest token refresh attempt...");
+            if(window.consoleLog===true){console.log("Starting guest token refresh attempt...");}
 
             // Frontend Logic Suggestion to avoid Unnecessary Refresh Attempts
                 const guestCookie = getCookie('guestCookie'); // The non-httpOnly one - but still useful to check existence
@@ -213,7 +215,7 @@ export function getCookie(name, parseJson = true) {
                         });
 
                         if (response.status === 204 || response.ok) {
-                            console.log("⏱️ Token refresh successful. Setting new timer. ⏱️");
+                            if(window.consoleLog===true){console.log("⏱️ Token refresh successful. Setting new timer. ⏱️");}
                             // 4. Start the timer again for the newly issued token
                                 setGuestRefreshTimer();
                             return true;
@@ -252,7 +254,7 @@ export function getCookie(name, parseJson = true) {
         
         // Set the timer to call the refresh function in 55 minutes
             refreshTimer = setTimeout(triggerGuestRefresh, REFRESH_INTERVAL_MS);
-            console.log(`⏱️ Token refresh timer set for ${REFRESH_INTERVAL_MS / 60000} minutes from now at ${new Date().toLocaleTimeString()}. ⏱️`);
+            if(window.consoleLog===true){console.log(`⏱️ Token refresh timer set for ${REFRESH_INTERVAL_MS / 60000} minutes from now at ${new Date().toLocaleTimeString()}. ⏱️`);}
             const x = parseInt(document.getElementById("sessionGuestRegen").textContent || 0);
             document.getElementById("sessionGuestRegen").textContent = x + 1;
             document.getElementById("sessionGuest").textContent = "🟢";
@@ -272,7 +274,7 @@ export function getCookie(name, parseJson = true) {
         if (refreshPingTimer) {
             clearTimeout(refreshPingTimer);
             refreshPingTimer = null;
-            console.log("⏱️ PING timer stopped. ⏱️");
+            if(window.consoleLog===true){console.log("⏱️ PING timer stopped. ⏱️");}
         }   
     }
     function setRefreshPingTimer() {
@@ -282,13 +284,13 @@ export function getCookie(name, parseJson = true) {
             }
         // Set the timer to call the refresh function in 55 minutes
             refreshPingTimer = setTimeout(triggerPing, PING_INTERVAL_MS);
-            // console.log(`⏱️ PING timer set for ${PING_INTERVAL_MS / 60000} minutes from now. ⏱️`);
+            // if(window.consoleLog===true){console.log(`⏱️ PING timer set for ${PING_INTERVAL_MS / 60000} minutes from now. ⏱️`);}
     }
     async function triggerPing(){
         // Check if session is active
             const session = getCookie('guestCookie'); // The non-httpOnly one - but still useful to check existence
             if (!session) {
-                console.log("💗 ❌ No active session, skipping ping. ❌ 💗");
+                if(window.consoleLog===true){console.log("💗 ❌ No active session, skipping ping. ❌ 💗");}
                 return;
             }
         document.getElementById("sessionPing").classList.remove("sessionDashItemPulse");
@@ -308,17 +310,17 @@ export function getCookie(name, parseJson = true) {
             // Explicitly tell the browser not to use cache END
         });
         if (response.status === 200 || response.status === 204 || response.ok) {
-            console.log("💗✅ Keep-alive ping successful.");
+            if(window.consoleLog===true){console.log("💗✅ Keep-alive ping successful.");}
             // document.getElementById("sessionPing").classList.add("sessionDashItemPulse");
             setRefreshPingTimer();
         } else {
-            console.log("💗❌ Keep-alive ping failed.");
+            if(window.consoleLog===true){console.log("💗❌ Keep-alive ping failed.");}
         }
     }
     // // ✨ THE FIX FOR CHROME iOS: Handle visibility changes
     // document.addEventListener("visibilitychange", () => {
     //     if (document.visibilityState === "visible") {
-    //         console.log("📱 App returned to foreground. Triggering fresh ping...");
+    //         if(window.consoleLog===true){console.log("📱 App returned to foreground. Triggering fresh ping...");}
     //         triggerPing(); 
     //     }
     // });

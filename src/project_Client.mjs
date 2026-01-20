@@ -59,8 +59,30 @@ export function projectMJSisLoaded(){
                     editRecordNote: (event) => editRecordNote(event),
                     saveEditedNote: (event) => saveEditedNote(event),
                 // record
-                    deleteRecord: async (event) => await deleteRecord(event)
+                    deleteRecord: async (event) => await deleteRecord(event),
             // edit update END
+            printSearchResult: (event) => {
+                window.print();
+                // You can't pass orientation: 'landscape' in JavaScript, 
+                // but you can toggle a class on your body tag before calling print.                
+                // // function printLandscape() {
+                //     // Add a class that has the CSS landscape rule
+                //     document.body.classList.add('force-landscape');
+                //     window.print();
+                //     // Remove it after so the screen looks normal again
+                //     document.body.classList.remove('force-landscape');
+                // }
+                    // /* This only triggers when the user is printing */
+                    // @media print {
+                    //     body.force-landscape {
+                    //         size: landscape;
+                    //     }
+                    // }
+                        // Use CSS @page { margin: 0; }
+                        // Use CSS @page { size: A4; }
+                        // ...to hide certain elements:- Use CSS @media print { .no-print { display: none; } }
+                        // ...background colours:- Use CSS color-adjust: exact; (browsers often hide colors to save ink).
+            }
         };
     // functions mapping END
 // 🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️🗺️
@@ -91,7 +113,7 @@ export function projectMJSisLoaded(){
                                 // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
                             },
                             body: JSON.stringify({
-                                fileName: userEmailAddress,
+                                userEmailAddress: userEmailAddress,
                                 tableName: "photos",
                                 updates: {
                                     field_to_update: "None.  DELETE record."
@@ -563,13 +585,13 @@ export function projectMJSisLoaded(){
                                     <hr>
                                     <p class="record-card-item-heading">Address:</p>
                                     <p id='address${imageID}'>${imageAddress}</p>
-                                    <button id='addressEdit${imageID}' class="std-btn" data-action="editRecordAddress" data-record-id='${imageID}'>Edit address # ${imageID}</button>
+                                    <button id='addressEdit${imageID}' class="std-btn" data-action="editRecordAddress" data-record-id='${imageID}'>✏️ Edit address # ${imageID}</button>
                                     <hr>
                                     <p><span class="record-card-item-heading">Notes:</span></p>
                                     <div id='notes${imageID}' class="tinymce-textarea">${imageNotes}</div>
-                                    <button id='noteEdit${imageID}' class="std-btn" data-action="editRecordNote" data-record-id='${imageID}'>Edit note # ${imageID}</button>
+                                    <button id='noteEdit${imageID}' class="std-btn" data-action="editRecordNote" data-record-id='${imageID}'>✏️ Edit note # ${imageID}</button>
                                     <hr>
-                                    <button id='deleteRecord${imageID}' class="std-btn-red" data-action="deleteRecord" data-record-id='${imageID}'>DELETE RECORD # ${imageID}</button>
+                                    <button id='deleteRecord${imageID}' class="std-btn-red" data-action="deleteRecord" data-record-id='${imageID}'>🗑️ DELETE RECORD # ${imageID}</button>
                                 `;
                                 filteredListContainer.appendChild(recordCard);
                                 recordCard.scrollIntoView({ behavior: 'smooth' });

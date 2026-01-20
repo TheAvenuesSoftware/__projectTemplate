@@ -7,7 +7,7 @@ export function globalSessionsServerMJSisLoaded(){
 //  SERVER SIDE IMPORTS ONLY
     import { Router } from "express";
     const sessionsRouter = Router();
-    import { trace } from "./global_Server.mjs";
+    import { trace, maskString } from "./global_Server.mjs";
     import * as cookie from "cookie";
     import * as fsCore from "fs";
     import * as fsPromises from 'fs/promises';
@@ -114,35 +114,14 @@ export async function isAuthorised_cookie(req){
         }
 }
 
-
-
     // LOGOUT 🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️🚪➡️
-        // sessionsRouter.post("/sessionLogout", async (req, res) => {
-        //     // //         return res.status(500).send({"logoutConfirmed":false});
-        //     // try{
-        //     //     // 1. Remove session file from server
-        //     //         const parsed = cookie.parse(req.headers.cookie);
-        //     //         const sessionIdOld = parsed.connectSID;
-        //     //         fs.unlinkSync(`./sessions/${sessionIdOld}.json`);
-        //     //         console.log(trace(),"Session deleted from server OK!");
-        //     //     // 1.1 close DB connection if applicable
-        //     //         await closeDB(req.body.userEmailAddress);
-        //     //     // 2. Clear cookie from client
-        //     //         // res.cookie('session_id', '', { expires: new Date(0), path: '/' }); // MUST use same path and other options as when the cookie was set
-        //     //         res.clearCookie("connectSID"); // Remove session cookie
-        //     //     // 3. Confirm logout to client
-        //             res.status(200).json({success: true, logoutConfirmed: true, silent: req.body.silent});
-        //             // console.error(trace(),"🟢 Logout: success.  Cookie removed.  Session file deleted.");
-        //             console.error(trace(),"🟢 🔴Logout: FORCED success.  Cookie NOT removed.  Session file NOT deleted.🔴 🟢");
-        //     // }catch(err){
-        //     //     res.status(500).json({success: false, logoutConfirmed: false});
-        //     //     console.error(trace(),"🔴 Logout: Error during logout process:\n", err);
-        //     // }
-        // });
-            // Example of the essential Server-Side Logout Logic
+        // Example of the essential Server-Side Logout Logic
             sessionsRouter.post("/sessionLogout", async (req, res) => {
                 const parsedCookies = cookie.parse(req.headers.cookie || "");
                 const sessionIdToDestroy = parsedCookies.connectSID;
+
+                // 0. Close DB connection if applicable
+                    await closeDB(req.body.userEmailAddress);
 
                 // 1. Delete the server-side session file (Non-blocking)
                     if (sessionIdToDestroy) {
@@ -358,7 +337,7 @@ export async function isAuthorised_cookie(req){
             sessionsRouter.post("/sessionRegen", async (req, res) => {
                 console.log(`${trace()}🔒🟢 s e s s i o n R e g e n   f o r   s i g n e d   i n   u s e r s   S T A R T`);                
                 const sessionIdOld = getSessionIdFromReq(req);
-                console.log(`${trace()} sessionIdOld: `,sessionIdOld);                
+                console.log(`${trace()} sessionIdOld: `,maskString(sessionIdOld,20,20));
                 if (!sessionIdOld) {
                     // If there's no cookie, treat this as an unauthenticated request.
                         console.log(`${trace()} sessionIdOld: ?  no session to regenerate: `,sessionIdOld);                
@@ -390,11 +369,11 @@ export async function isAuthorised_cookie(req){
                     // --- File Operations: Write-Before-Delete Pattern START ---
                         // 3. Write New Session File (CRUCIAL: Write first for fault tolerance)
                             await fsPromises.writeFile(`./sessions/${sessionIdNew}.json`, sessionDataJson);
-                            console.log(`${trace()}🔒 New session file created: ${sessionIdNew}`);
+                            console.log(`${trace()}🔒 New session file created: ${maskString(sessionIdNew,20,20)}`);
                         // 4. Delete Old File (Crucial for preventing session fixation)
                             try {
                                 await fsPromises.unlink(`./sessions/${sessionIdOld}.json`);
-                                console.log(`${trace()}🔒 Old session file deleted: ${sessionIdOld}`);
+                                console.log(`${trace()}🔒 Old session file deleted: ${maskString(sessionIdOld,20,20)}`);
                             } catch (deleteError) {
                                 // New session is written, client gets new cookie. Log the error 
                                 // but continue the response. Old session file is now a 'zombie' 
@@ -425,6 +404,10 @@ export async function isAuthorised_cookie(req){
                         res.setHeader("Set-Cookie", newCookieHeader);
                     // 6. Success Response
                         console.log(`${trace()}🔒🟢 ${newCookieHeader}`);
+                        const cookieValue = newCookieHeader[0];
+                        const parts = cookieValue.split('; ');
+                        console.log(`${trace()}🔒🟢 Cookie Breakdown:`);
+                        parts.forEach(part => console.log(`   🔒🟢 ${part}`));
                         console.log(`${trace()}🔒🟢 s e s s i o n R e g e n   f o r   s i g n e d   i n   u s e r s   s u c c e s s.`);
                         console.log(`${trace()}🔒🟢 s e s s i o n R e g e n   f o r   s i g n e d   i n   u s e r s   E N D`);                
                         res.send({ sessionRegenOK: true });            
@@ -501,6 +484,10 @@ export async function isAuthorised_cookie(req){
                 const sessionInitOK = true; // Set to true to indicate save success
                 res.send({sessionInitOK:sessionInitOK});
                 console.log(`${trace()} 🗝️ /sessionInit cookie set.`,cookies);
+                const cookieValue = cookies[0];
+                const parts = cookieValue.split('; ');
+                console.log(`${trace()}🔒🟢 Cookie Breakdown:`);
+                parts.forEach(part => console.log(`   🔒🟢 ${part}`));
                 console.log(trace(),"i n i t i a l i s e   s e s s i o n   f o r   l o g i n   u s e r   E N D");
         });
 

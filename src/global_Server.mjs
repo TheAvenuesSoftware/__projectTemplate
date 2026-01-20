@@ -1,20 +1,9 @@
 console.log("LOADED:- globalServer.mjs is loaded",new Date().toLocaleString());
-export function globalServerMJSisLoaded(){
-    return true;
-}
 
-// export function trace(whoCalled="") {
-//     try {
-//         const stack = new Error().stack;
-//         const firstLine = stack.split('\n')[2].trim();
-//         const x = firstLine.lastIndexOf("/");
-//         const y = firstLine.lastIndexOf("/",x - 1);
-//         const fileName_rowNumber_position = firstLine.slice(y + 1,firstLine.length);
-//         return `▶️Trace: [${whoCalled? whoCalled : ""}] ${fileName_rowNumber_position} ▶️`;
-//     } catch (error) {
-//         return '▶️🔴 Trace: NOT AVAILABLE▶️',error;
-//     }
-// };
+// ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
+//  SERVER SIDE IMPORTS ONLY
+
+// ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
 export function trace(whoCalled="") {
     try {
@@ -47,6 +36,25 @@ export function maskString(str,firstX,lastX) {
         return `${str.substring(0, firstX)}...${str.slice(-lastX)}`;
 }
 
+export function dataFilePathName(emailAddress){
+    const filePrefix = process.env.DATA_FILE_PREFIX
+        ? process.env.DATA_FILE_PREFIX.endsWith('_')
+        ? process.env.DATA_FILE_PREFIX
+        : `${process.env.DATA_FILE_PREFIX}_`
+        : '';
+    const fileSuffix = process.env.DATA_FILE_SUFFIX
+        ? process.env.DATA_FILE_SUFFIX.startsWith('_')
+        ? process.env.DATA_FILE_SUFFIX
+        : `_${process.env.DATA_FILE_SUFFIX}`
+        : '';
+    const fileExtension = process.env.DATA_FILE_EXTENSION
+        ? process.env.DATA_FILE_EXTENSION.startsWith('.')
+        ? process.env.DATA_FILE_EXTENSION
+        : `.${process.env.DATA_FILE_EXTENSION}`
+        : '';
+    return {filePath: process.env.APP_PATH_TO_DATA, fileName: `${filePrefix}${emailAddress}${fileSuffix}${fileExtension}`};
+}
+
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  SERVER SIDE IMPORTS ONLY
     import { Router } from "express";
@@ -77,7 +85,7 @@ export function maskString(str,firstX,lastX) {
         console.log(`${trace()}to:-${to}`);
         console.log(`${trace()}subject:- ${subject}`);
         // console.log(`${trace()}html:- ${html}`);
-        console.log(trace(),'Login Email HTML:',html.replace(/\s+/g, ' ').trim());
+        console.log(trace(),'Login Email HTML:',maskString(html,100,100).replace(/\s+/g, ' ').trim());
         console.log(`${trace()}Login email generated for ${to}`);
         console.log(`${trace()}${text.replace(/\s+/g, ' ').trim()}`);
         // console.log(`${trace()}\nfrom:- ${from}\nto:-${to}\nsubject:- ${subject}\nhtml:- ${html.replace(" ","")}\ntext:- ${text}\n`);}

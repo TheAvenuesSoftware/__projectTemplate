@@ -1,7 +1,4 @@
 if(window.consoleLog===true){console.log("LOADED:- globalLogin_Client.mjs is loaded",new Date().toLocaleString());}
-export function globalLoginClientJSisLoaded(){
-    return true;
-}
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
@@ -44,6 +41,7 @@ const busyAnimationHTML =
     </div>`
 
 function login_stepOne(){
+    if(window.consoleLog===true){console.log("login_stepOne() called:");}
     document.body.insertAdjacentHTML("beforeend", popupHTML);
     document.getElementById("popup-heading").textContent = "Login";
     document.getElementById("popup-message").textContent = "Please enter your email address to log in.";
@@ -89,6 +87,7 @@ function login_stepOne(){
 }
 
 function login_stepTwo(loginEmailAddress){
+    if(window.consoleLog===true){console.log("login_stepTwo() called:");}
     // verify email address format
         if(window.consoleLog===true){console.log(`isValidEmailFormat(${loginEmailAddress})`);}
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -101,6 +100,7 @@ function login_stepTwo(loginEmailAddress){
 }
 
 async function login_stepThree(loginEmailAddress) {
+    if(window.consoleLog===true){console.log("login_stepThree() called:");}
     // verify mx domain for the email address
         if(window.consoleLog===true){console.log(`isDomainValid(${loginEmailAddress})`);}
             const domain = loginEmailAddress.split('@')[1];
@@ -147,6 +147,7 @@ async function login_stepThree(loginEmailAddress) {
         }
 }
 async function login_stepFour(loginEmailAddress){
+    if(window.consoleLog===true){console.log("login_stepFour() called:");}
     const fetchUrl = `/loginRouter/fileExists`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
@@ -159,10 +160,7 @@ async function login_stepFour(loginEmailAddress){
                 // 'Accept': 'application/json',        // Sets content type for res. If not json, server may return error. Use response.json() to parse the response.
             },
             body: JSON.stringify({              // Converts object to JSON for request
-                loginEmailAddress:loginEmailAddress,      // add file extension server side not here
-                fileNamePrefix:"",
-                fileNameSuffix:"_RsdDayBook",
-                fileNameExtension:".ndjson"
+                loginEmailAddress:loginEmailAddress
             })
         }
     if(window.consoleLog===true){console.log(fetchUrl,fetchOptions);}
@@ -185,6 +183,7 @@ async function login_stepFour(loginEmailAddress){
     }
 }
 function login_stepFive(loginEmailAddress, accountExists){
+    if(window.consoleLog===true){console.log("login_stepFive() called:");}
     let createNewAccount = false; // Account exists === true; createNewAccount === false
     if(accountExists===true){
         window.localStorage.setItem("createNewAccount",false);
@@ -246,6 +245,7 @@ function login_stepFive(loginEmailAddress, accountExists){
     }
 }
 async function login_stepSix(loginEmailAddress, accountExists, createNewAccount){
+    if(window.consoleLog===true){console.log("login_stepSix() called:");}
     const fetchUrl = `/loginRouter/emailCode`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
@@ -286,6 +286,7 @@ async function login_stepSix(loginEmailAddress, accountExists, createNewAccount)
 }
 
 function passcodeEntry() {
+    if(window.consoleLog===true){console.log("login passcodeEntry() called:");}
     const form = document.getElementById('passcodeForm');
     form.style.position = 'unset'; // Show the form
     const inputs = form.querySelectorAll('.passcodeInput');
@@ -372,6 +373,7 @@ function passcodeEntry() {
 }
 
 async function login_stepSeven(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed, loginsDBinsertedID){
+    if(window.consoleLog===true){console.log("login_stepSeven() called:");}
     if(window.consoleLog===true){console.log(`🏳️ 🏳️ 🏳️  S e s s i o n   I n i t  ( l o g i n _ s t e p S e v e n ) 🏳️ 🏳️ 🏳️`);}
     const fetchUrl = `/sessionsRouter/sessionInit`;
     const fetchOptions = {
@@ -438,7 +440,7 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
                     document.getElementById("popup-button-2").removeEventListener("click", popupButton2);
                     document.getElementById("popup-button-3").removeEventListener("click", popupButton3);
                     document.getElementById("popup-overlay").remove();
-                    sessionLogout({silent:true}); // logout to clear session
+                    sessionLogout({userEmailAddress: userEmailAddress, silent:true}); // logout to clear session
                 }
                 document.getElementById("popup-button-2").addEventListener("click", popupButton2); // Cancel button
 
@@ -461,6 +463,7 @@ async function login_stepSeven(loginEmailAddress, accountExists, createNewAccoun
 
 }
 async function login_stepEight(loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed, loginsDBinsertedID){
+    if(window.consoleLog===true){console.log("login_stepEight() called:",loginEmailAddress, accountExists, createNewAccount, loginCodeEmailed, loginsDBinsertedID);}
     const fetchUrl = `/loginRouter/loginCodeSubmit`;
     const fetchOptions = {
             method: 'POST',                // Specifies a POST request
@@ -518,6 +521,7 @@ async function login_stepEight(loginEmailAddress, accountExists, createNewAccoun
 }
 
 async function login_stepNine(loginEmailAddress){
+    if(window.consoleLog===true){console.log("login_stepNine() called:");}
     if(window.consoleLog===true){console.log(`🏳️ 🏳️ 🏳️  S e s s i o n   R e g e n  ( l o g i n _ s t e p N i n e ) 🏳️ 🏳️ 🏳️`);}
     const fetchUrl = `/sessionsRouter/sessionRegen`;
     const fetchOptions = {
@@ -545,8 +549,10 @@ async function login_stepNine(loginEmailAddress){
 
 }
 
-function login_cancel(message=""){
+export function login_cancel(message=""){
+    if(window.consoleLog===true){console.log("login_cancel() called:");}
     // cancel login process
+    document.body.removeChild(overlay);
     alert("Login process cancelled.\n" + message);
     if(window.consoleLog===true){console.log("Login process cancelled.\n" + message);}
 }
@@ -565,7 +571,8 @@ function login_cancel(message=""){
                         login_stepOne();
                     }
                     if(ev.target.getAttribute("data-status")==="signed-in"){
-                        sessionLogout();
+                        const userEmailAddress = document.getElementById("user-email-address").textContent;
+                        sessionLogout({userEmailAddress: userEmailAddress, silent:false}); // logout to clear session
                     }
                 });
                 // Ensure clicking the image triggers the container’s click event START

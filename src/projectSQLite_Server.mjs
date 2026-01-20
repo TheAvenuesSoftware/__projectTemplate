@@ -1,7 +1,4 @@
-console.log("LOADED:- SQLite_ServerSide.mjs is loaded",new Date().toLocaleString());
-export function SQLite_ServerSideMJSisLoaded(){
-    return true;
-}
+console.log("LOADED:- projectSQLite_Server.mjs is loaded",new Date().toLocaleString());
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 //  SERVER SIDE IMPORTS ONLY
@@ -9,16 +6,18 @@ export function SQLite_ServerSideMJSisLoaded(){
     const SQLiteRouter = Router();
     import sqlite3 from "sqlite3";
     import { open } from "sqlite";
-    import { trace } from "./global_Server.mjs";
+    import { trace, maskString, dataFilePathName } from "./global_Server.mjs";
     import busboy from 'busboy';
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
             // 1. Initialize SQLite database based on a user's unique identifier: email address for example.
-                export async function initDB(dbFileName) {
+                async function initDB(dbFileName) {
                     try {
-                        console.log(`🟢${trace()}🟢 Initialising database ${dbFileName}🟢[${new Date().toISOString()}]`);
+                        console.log(`${trace()}🟢 🗃️🗃️🗃️ Initialising database\n${dbFileName}\n${new Date().toISOString()} 🟢 🗃️🗃️🗃️`);
+                        // const dataFile = dataFilePathName(dbFileName);
                         return open({
-                            filename: `${process.env.APP_PATH_TO_DATA}${dbFileName}.db`, // Use env variable
+                            // filename: `${dataFile.filePath}${dataFile.fileName}`, // Use env variable
+                            filename: dbFileName, // Use env variable
                             driver: sqlite3.Database,
                         });
                     } catch (error) {
@@ -40,7 +39,7 @@ export function SQLite_ServerSideMJSisLoaded(){
                     if (!dbInstances.has(dbFileName)) {
                         dbInstances.set(dbFileName, await initDB(dbFileName));
                     }
-                    console.log(trace(),'dbInstances:-',dbInstances,`[${new Date().toISOString()}]`);
+                    console.log(trace(),'dbInstances:-\n',dbInstances,`\n as at:- [${new Date().toLocaleString()}]`);
                     return dbInstances.get(dbFileName);
                 }
                 // // Example usage
@@ -48,7 +47,8 @@ export function SQLite_ServerSideMJSisLoaded(){
                 //     const dbBob = await getDB("bob456");
                 // ✅ Prevents redundant reinitialization
                 // ✅ Speeds up access to databases already opened
-            // Ensure your schema is properly structured with indexing for performance:
+
+                // Ensure your schema is properly structured with indexing for performance:
                 export async function setupSchema(dbFileName,dbSchema) {
                     console.log(trace(),'Setup schema for ',dbFileName);
                     const db = await getDB(dbFileName);
@@ -152,30 +152,40 @@ export function SQLite_ServerSideMJSisLoaded(){
                     }
                     // optPer("alice123");
 
-export async function closeDB(dbFileName) {
-    const db = dbInstances.get(dbFileName);
-    if (db) {
-        try {
-            await db.close(); // Release SQLite lock
-            dbInstances.delete(dbFileName); // Remove from in-memory cache
-            console.log(`${trace()} 🟢 Database ${dbFileName} closed (file remains).`);
-        } catch (error) {
-            console.error(`${trace()} 🔴 Error closing ${dbFileName}:`, error);
-        }
-    } else {
-        console.log(`${trace()} ⚪ Database ${dbFileName} not found in cache — nothing to close.`);
-    }
-}
-
-
-
 // (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:)
 // Here’s a complete set of generic CRUD functions START:
 // ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️ ⬇️
         // 1. Create (Insert)
+            export async function updateUsersLogins(dbFileName, table, columns, values) {
+                // console.log(trace(),"\n",`${process.env.APP_PATH_TO_DATA}${dbFileName}`,"\n", table,"\n", columns,"\n", values);
+                console.log(trace(),"\n",dbFileName,"\n", table,"\n", columns,"\n", values);
+                // const dataFile = dataFilePathName(emailAddress)
+                try {
+                    // const db = await getDB(dbFileName);
+                    const db = await getDB(dbFileName);
+                    console.log(trace(),`${dbFileName} is now `,db)
+                    const placeholders = columns.map(() => '?').join(', ');
+                    const query = `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`;
+                    console.log(trace(),"QUERY:-",query,` on DB:-`, db);
+                    await db.exec("BEGIN TRANSACTION");
+                    // Insert record
+                        const result = await db.run(query, values);
+                    // Fetch last inserted row ID
+                        const row = await db.get("SELECT last_insert_rowid() AS id");
+                        await db.exec("COMMIT");
+                        console.log(`Inserted record with rowID: ${row.id}`);
+                        return row.id;
+                } catch (err) {
+                    console.error(`Transaction failed for ${table}:`, err);
+                    await db.exec("ROLLBACK"); // Undo changes if error occurs
+                    throw err;
+                }
+            }
             export async function insertFormDataRecord(dbFileName, table, columns, values) {
             }
             export async function insertDataRecord(dbFileName, table, columns, values) {
+                console.log(trace(),"\n",dbFileName,"\n", table,"\n", columns,"\n", values);
+                // const dataFile = dataFilePathName(emailAddress)
                 try {
                     const db = await getDB(dbFileName);
                     const placeholders = columns.map(() => '?').join(', ');
@@ -197,7 +207,12 @@ export async function closeDB(dbFileName) {
 
         // 2. Read (Select)
             export async function getRecord(dbFileName, table, condition = '', values = []) {
-                const db = await getDB(dbFileName);
+                console.log(trace(),`getRecord() called on:-\ndbFileName ${dbFileName},\ntable ${table},\ncondition ${condition},\nvalues ${values}`)
+                const dataFile = dataFilePathName(dbFileName);
+                const filePath = dataFile.filePath;
+                const fileName = dataFile.fileName;
+                const dbFileName2 = `${filePath}${fileName}`;
+                const db = await getDB(dbFileName2);
                 try {
                     const query = condition ? `SELECT * FROM ${table} WHERE ${condition}` : `SELECT * FROM ${table}`;
                     // return await db.all(query, values);
@@ -252,7 +267,7 @@ export async function closeDB(dbFileName) {
 // (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:) (:💡SQL:)
 
 
-// Endpoint to save a photo START
+// Endpoint to save a photo record START
     // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
         // ADD NEW RECORD start
             SQLiteRouter.post("/insert-form-data-record", async (req, res) => {
@@ -322,7 +337,11 @@ export async function closeDB(dbFileName) {
                             console.error(trace(), "❌ Missing userEmailAddress, cannot connect to database");
                             return res.status(400).json({ error: "Missing userEmailAddress" });
                         }
-                        const db = await getDB(`${formData.userEmailAddress}`);
+                        const dataFile = dataFilePathName(formData.userEmailAddress);
+                        const filePath = dataFile.filePath;
+                        const fileName = dataFile.fileName;
+                        const dbFileName = `${filePath}${fileName}`;
+                        const db = await getDB(dbFileName);
                         console.log(trace(),"Connected Database:-", db);
 
                         await db.run(query, [
@@ -390,13 +409,14 @@ export async function closeDB(dbFileName) {
             });
         // REPLACE RECORD BY ID END
     // 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
-// Endpoint to save a photo END
+// Endpoint to save a photo record END
 
     SQLiteRouter.post("/get-all-photos", async (req, res) => {
         try {
             console.log(trace(), 'Received request with Content-Type:', req.headers['content-type']);
             console.log(trace(), 'Received request with "body":', req.body);
 
+            const dataFile = dataFilePathName(req.body.userEmailAddress);
             const db = await getDB(`${req.body.userEmailAddress}`);
             
             // ✅ Use `db.all()` with `await` instead of callback-based `db.get()`
@@ -429,74 +449,15 @@ export async function closeDB(dbFileName) {
         }
     });
 
-    // SQLiteRouter.post("/delete-record", async (req, res) => {
-    //     console.log(trace(),`req.body`, req.body);
-    //     const { fileName, tableName, updates, where } = req.body;
-    // 
-    //     console.log(trace(), '🔧 updates:-\n', updates);
-    // 
-    //     function buildWhereClause({ conditions, logic = "AND" }) {
-    //         if (!Array.isArray(conditions) || conditions.length === 0) {
-    //             return { clause: "1", values: [] }; // no conditions = update all
-    //         }
-    // 
-    //         const safeLogic = logic.toUpperCase() === "OR" ? "OR" : "AND";
-    // 
-    //         const clause = conditions
-    //             .map(cond => `${cond.field} ${cond.operator} ?`)
-    //             .join(` ${safeLogic} `);
-    // 
-    //         const values = conditions.map(cond => cond.value);
-    // 
-    //         console.log(trace(), clause, values);
-    //         return { clause, values };
-    //     }
-    // 
-    //     const db = await getDB(fileName);
-    // 
-    //     const columns = await db.all(`PRAGMA table_info(${tableName});`);
-    //     console.log(trace(), '🧬 Table columns:', columns.map(c => c.name));
-    // 
-    //     // Modular WHERE clause
-    //     const { clause: whereClause, values: conditionValues } = buildWhereClause(where);
-    //     const match = await db.get(`DELETE FROM ${tableName} WHERE ${whereClause}`, conditionValues);
-    //     console.log(trace(), '🔍 Matching record:', match);
-    // 
-    //     // SET clause
-    //     const setClause = Object.keys(updates).map(key => `${key} = ?`).join(", ");
-    //     const updateValues = Object.values(updates);
-    // 
-    //     const query = `UPDATE ${tableName} SET ${setClause} WHERE ${whereClause}`;
-    //     const params = [...updateValues, ...conditionValues];
-    // 
-    //     console.log(`${trace()} query: ${query}`);
-    //     console.log(`${trace()} params:`, params);
-    // 
-    //     try {
-    //         // const result = await db.exec(query, params);
-    //         const result = await db.run(query, params);
-    //         console.log(trace(), result);
-    // 
-    //         if (fileName === "users") {
-    //             optPer(fileName); // optimize after a successful write
-    //             const walStats = await db.get("PRAGMA wal_checkpoint(PASSIVE);");
-    //             console.log(trace(), "🔍 WAL checkpoint stats:", walStats);
-    //         }
-    // 
-    //         const verify = await db.get(`SELECT * FROM ${tableName} WHERE ${whereClause}`, conditionValues);
-    //         console.log(trace(), '🔍 Post-update record:', verify);
-    // 
-    //         console.log(`${trace()} 🟢 Updated ok`, { fileName, tableName, updates, where });
-    //     } catch (err) {
-    //         console.error(`${trace()} 🔴 Update failed`, { fileName, tableName, updates, where }, err);
-    //     }
-    // 
-    // });
     SQLiteRouter.post("/delete-record", async (req, res) => {
         console.log(trace(), `req.body`, req.body);
-        const { fileName, tableName, where } = req.body;
+        const dataFile = dataFilePathName(req.body.userEmailAddress);
+        const filePath = dataFile.filePath;
+        const fileName = dataFile.fileName;
+        const dbFileName = `${filePath}${fileName}`
+        const { userEmailAddress, tableName, where } = req.body;
 
-        const db = await getDB(fileName);
+        const db = await getDB(dbFileName);
 
         function buildWhereClause({ conditions, logic = "AND" }) {
             if (!Array.isArray(conditions) || conditions.length === 0) {
@@ -513,6 +474,7 @@ export async function closeDB(dbFileName) {
         try {
             const { clause: whereClause, values: conditionValues } = buildWhereClause(where);
 
+            console.log(`${trace()} 🗑️ Deleted record(s):`, `DELETE FROM ${tableName} WHERE ${whereClause}`, conditionValues);
             const result = await db.run(`DELETE FROM ${tableName} WHERE ${whereClause}`, conditionValues);
             console.log(`${trace()} 🗑️ Deleted record(s):`, result);
 
@@ -524,6 +486,7 @@ export async function closeDB(dbFileName) {
     });
     SQLiteRouter.post("/delete-photo-by-id", async (req, res) => {
         try {
+            const dataFile = dataFilePathName(req.body.userEmailAddress);
             const db = await getDB(`${req.body.fileName}`);
             // const result = await db.run("DELETE FROM photos WHERE id = ?", [req.body.image_id]);
             const result = await db.run(`DELETE FROM ${req.body.tableName} WHERE id = ?`, [req.body.recordIdToDELETE]);
@@ -537,51 +500,14 @@ export async function closeDB(dbFileName) {
         }
     });
 
-    // SQLiteRouter.post("/filter-photos-by-address", async (req, res) => {
-    //     try{
-    //         console.log(trace(), 'Received request with Content-Type:', req.headers['content-type']);
-    //         console.log(trace(), 'Received request:', req.body);
-    //         const db = await getDB(`${req.body.userEmailAddress}`);
-    //         if(!db) {
-    //             console.error(trace(), "❌ Database connection failed for user:", req.body.userEmailAddress);
-    //             return res.status(500).json({ message: "Database connection failed" }); 
-    //         }
-    // 
-    //         const rows = await db.all("SELECT image_blob, image_date, image_time, image_address, image_notes FROM photos WHERE image_address LIKE ?", [req.body.filterText]);
-    //      
-    //         if (!rows.length) {
-    //             console.log(trace(), "No photos found.");
-    //             return res.status(404).json({ message: "No photos found." });
-    //         }
-    //
-    //         console.log(trace(), rows);
-    //
-    //         const formattedPhotos = rows.map(row => ({
-    //             // image_blob: `data:image/png;base64,${row.image_blob.toString("base64")}`,
-    //             image_id: row.id, 
-    //             image_blob: row.image_blob 
-    //                 ? `data:image/png;base64,${row.image_blob.toString("base64")}` 
-    //                 : null, // ✅ If null, don't process
-    //             image_date: row.image_date,
-    //             image_time: row.image_time,
-    //             image_address: row.image_address,
-    //             image_notes: row.image_notes
-    //         }));
-    //
-    //         console.log(trace(), formattedPhotos);
-    //         res.json(formattedPhotos);
-    //     } catch (err) {
-    //         console.error("Database error:", err);
-    //         res.status(500).json({ message: "Failed to filter photos" });
-    //     }
-    // });
-
     SQLiteRouter.post("/filter-by", async (req, res) => {
         let db; // makes it visible to both try and catch.
         try{
             console.log(trace(), 'Received request with Content-Type:', req.headers['content-type']);
             console.log(trace(), 'Received request:', req.body);
-            const db = await getDB(`${req.body.userEmailAddress}`); // .db is added in getDB function
+            const dataFile = dataFilePathName(req.body.userEmailAddress);
+            const dbFileName = `${dataFile.filePath}${dataFile.fileName}`
+            const db = await getDB(`${dbFileName}`);
 
             const filterField = req.body.filterField || 'image_address'; // Default to 'image_address' if not provided
             // rows = await db.all("SELECT image_id, image_blob, image_date, image_time, image_address, image_notes FROM photos WHERE image_address LIKE ?", [req.body.addressPortion]);
@@ -610,7 +536,7 @@ export async function closeDB(dbFileName) {
                 return res.status(404).json({ message: "No photos found." });
             }
 
-            console.log(trace(), rows);
+            console.log(trace(), "Record(s) retrieved:-\n",rows);
 
             const formattedPhotos = rows.map(row => ({
                 // image_blob: `data:image/png;base64,${row.image_blob.toString("base64")}`,
@@ -637,72 +563,14 @@ export async function closeDB(dbFileName) {
         }
     });
 
-    // export async function updateRecord(fileName, tableName, updates, conditionField, conditionValue, conditionComparison){
-    //     const db = await getDB(fileName); // initialises and retrieves database connection
-    //     const condition = `${conditionField} = ${conditionValue}`;                // maps to `WHERE image_id = ?`
-    //     console.log(`${trace()} conditionField:- ${conditionField}`);
-    //     console.log(`${trace()} conditionValue:- ${conditionValue}`);
-    //     const values = [conditionValue];                          // passed in as params
-    //     const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', '); // Dynamically builds the SQL SET clause for fields you're updating
-    //     console.log(`${trace()} setClause:- ${setClause}`);
-    //     const query = `UPDATE ${tableName} SET ${setClause} WHERE ${condition}`; // Constructs the SQL UPDATE statement, inserting table and condition.
-    //     console.log(`${trace()} query:- ${query}`);
-    //     try {
-    //         await db.run(query, [...Object.values(updates), ...values]); // Executes the update using parameterized values to prevent SQL injection.
-    //         console.error(`${trace()} 🟢 Updated ok:`, fileName, tableName, updates, conditionField, conditionValue);
-    //         // res.status(200).json({ success: true, error: false });
-    //     } catch (err) { // Gracefully handles and logs any errors encountered during the update.
-    //         console.error(`${trace()} 🔴 Update failed:`,fileName, tableName, updates, conditionField, conditionValue, err);
-    //         // res.status(500).json({ success: false, error: err.message });
-    //     }
-    // }
-
-    // export async function updateRecord({ fileName, tableName, updates, conditions }) {
-    //     console.log(trace(),fileName, tableName, updates, conditions);
-    // 
-    //     function buildWhereClause(conditions) {
-    //         if (!Array.isArray(conditions) || conditions.length === 0) return { clause: "1", values: [] }; // no conditions = update all
-    //         const clause = conditions.map(cond => `${cond.field} ${cond.comparison} ?`).join(" AND ");
-    //         const values = conditions.map(cond => cond.value);
-    //         console.log(trace(),clause, values);
-    //         return { clause, values };
-    //     }
-    // 
-    //     const db = await getDB(fileName);
-    // 
-    //     // Modular WHERE clause
-    //         const { clause: whereClause, values: conditionValues } = buildWhereClause(conditions);
-    // 
-    //     // SET clause
-    //         console.log(trace(),updates);
-    //         const setClause = Object.keys(updates).map(key => `${key} = ?`).join(", ");
-    //         const updateValues = Object.values(updates);
-    // 
-    //     const query = `UPDATE ${tableName} SET ${setClause} WHERE ${whereClause}`;
-    //     const params = [...updateValues, ...conditionValues];
-    // 
-    //     console.log(`${trace()} query: ${query}`);
-    //     console.log(`${trace()} params:`, params);
-    // 
-    //     try {
-    //         // await db.run(query, params);
-    //         const y = await db.exec(query, params);
-    //         console.log(trace(),y);
-    //         if(fileName==="users"){
-    //             optPer(`${fileName}`); // optimize after a successful write
-    //             const walStats = await db.get('PRAGMA wal_checkpoint(PASSIVE);');
-    //             console.log(trace(),"🔍 WAL checkpoint stats:", walStats);
-    //             // await db.exec("PRAGMA wal_checkpoint(RESTART);");
-    //         }
-    //         console.log(`${trace()} 🟢 Updated ok`, { fileName, tableName, updates, conditions });
-    //     } catch (err) {
-    //         console.error(`${trace()} 🔴 Update failed`, { fileName, tableName, updates, conditions }, err);
-    //     }
-    // }
     export async function updateFormDataRecord({ fileName, tableName, updates, where }) {
     }
     export async function updateDataRecord({ fileName, tableName, updates, where }) {
         console.log(trace(), fileName, tableName, updates, where);
+        const dataFile = dataFilePathName(fileName);
+        const filePath = dataFile.filePath;
+        const fileName2 = dataFile.fileName;
+        const dbFileName = `${filePath}${fileName2}`;
 
         console.log(trace(), '🔧 Updates object:', updates);
 
@@ -723,7 +591,7 @@ export async function closeDB(dbFileName) {
             return { clause, values };
         }
     
-        const db = await getDB(fileName);
+        const db = await getDB(dbFileName);
 
         const columns = await db.all(`PRAGMA table_info(${tableName});`);
         console.log(trace(), '🧬 Table columns:', columns.map(c => c.name));
@@ -748,7 +616,7 @@ export async function closeDB(dbFileName) {
             const result = await db.run(query, params);
             console.log(trace(), result);
 
-            if (fileName === "users") {
+            if (fileName === "users_1000.db") {
                 optPer(fileName); // optimize after a successful write
                 const walStats = await db.get("PRAGMA wal_checkpoint(PASSIVE);");
                 console.log(trace(), "🔍 WAL checkpoint stats:", walStats);
@@ -778,6 +646,7 @@ export async function closeDB(dbFileName) {
         console.log(trace(),updates);
         console.log(trace(),where);
         // updateRecord({fileName, tableName, updates, where});
+        const dataFile = dataFilePathName(req.body.userEmailAddress);
         const response = await updateDataRecord(req.body);
         res.status(200).json({
             success: response.success,
@@ -789,6 +658,98 @@ export async function closeDB(dbFileName) {
         });
     });
 
-// 📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸📸
+// 🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️ database housekeeping 🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️
+    // close a single user's database
+        export async function closeDB(payload) {
+            console.log(`${trace()} ⚪ closeDB() payload:-`,payload);
+            const dataFile = dataFilePathName(payload.userEmailAddress);
+            const filePath = dataFile.filePath;
+            const fileName = dataFile.fileName;
+            const dbFileName = `${filePath}${fileName}`
+            console.log(`${trace()} ⚪ Database to close:-`,payload.userEmailAddress, filePath, fileName, dbFileName);
+            const db = dbInstances.get(dbFileName);
+            if (db) {
+                try {
+                    await db.close(); // Release SQLite lock
+                    dbInstances.delete(dbFileName); // Remove from in-memory cache
+                    console.log(`${trace()} 🟢 Database ${dbFileName} closed (file remains).`);
+                    console.log(`${trace()} 🟢 Databases still open:-`, dbInstances);
+                } catch (error) {
+                    console.error(`${trace()} 🔴 Error closing ${dbFileName}:`, error);
+                    console.error(`${trace()} 🔴 Databases still open:-`, dbInstances);
+                }
+            } else {
+                console.log(`${trace()} ⚪ Database ${dbFileName} not found in cache — nothing to close.`);
+                console.log(`${trace()} ⚪ Databases still open:-`, dbInstances);
+            }
+        }
+
+    // close all databases
+        export async function closeAllDatabases() {
+            const total = dbInstances.size;
+            if (total === 0) return;
+            console.log(trace(),`\n🛑 Closing ${total} active database connections...`);
+            for (const [dbFileName, dbPromise] of dbInstances) {
+                try {
+                    const db = await dbPromise; // Ensure we wait for the init to finish
+                    await db.close();
+                    console.log(trace(),`   ✅ Closed: ${dbFileName}`);
+                } catch (err) {
+                    console.error(trace(),`   ❌ Error closing ${dbFileName}:`, err);
+                }
+            }
+            dbInstances.clear(); // Empty the Map so they don't get reused
+            console.log(trace(),'🏁 All database connections cleared.\n');
+        }
+
+    // get an array of all open databases
+        export function getActiveDatabases() {
+            return Array.from(dbInstances.keys());
+        }
+
+    // trigger when node.js stops
+        // In Node.js, process represents the actual running application. 
+        // These lines tell your app: 
+        // "If someone tries to kill this process, 
+        // don't just vanish—finish your chores first."
+        process.on('SIGINT', async () => { // process.on listens for a signal from the operating signal
+            // SIGINT = signal interrupt
+            await closeAllDatabases(); // this ensures that if the shutdown takes a second (because it's closing 50 databases), the app waits for that to finish before finally disappearing.
+            process.exit(0);
+        });
+
+        process.on('SIGTERM', async () => { // process.on listens for a signal from the operating signal
+            // SIGTERM = signal terminate
+            await closeAllDatabases(); // this ensures that if the shutdown takes a second (because it's closing 50 databases), the app waits for that to finish before finally disappearing.
+            process.exit(0);
+        });
+
+    // close users_1000.db if no other databases are open - check hourly START
+        // TO-DO - link this to session management, close databases where user has been idle for ??? perod of time
+        // TODO: Close user SQLite DBs when owning session becomes idle
+        // Close per-user SQLite DBs when sessions are idle/expired.
+        // If no user DBs remain, close users_1000.db as well.
+        const ONE_HOUR = 60 * 60 * 1000;
+        const BASE_DB_NAME_SHORT = "users_1000.db";
+        const BASE_DB_NAME_LONG = `${process.env.APP_PATH_TO_DATA}users_1000.db`;
+        setInterval(async () => {
+            try {
+                if (
+                    dbInstances.size === 1 &&
+                    (dbInstances.has(BASE_DB_NAME_SHORT) ||
+                    dbInstances.has(BASE_DB_NAME_LONG))
+                )  {
+                    console.log("[DB Watchdog] No user DBs open. Closing all databases.");
+                    await closeAllDatabases();
+                } else {
+                    console.log(`[DB Watchdog] ${dbInstances.size} user DB(s) still active.`);
+                }
+            } catch (err) {
+                console.error("[DB Watchdog] Error during DB cleanup:", err);
+            }
+        }, ONE_HOUR);
+    // close users_1000.db if no other databases are open - check hourly END
+
+// 🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️ database housekeeping 🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️🗃️
 
 export default SQLiteRouter;

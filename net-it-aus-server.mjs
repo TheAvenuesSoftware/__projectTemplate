@@ -538,6 +538,7 @@ app.use(
       "img-src": [
         "'self'", 
         "data:", 
+        "blob:", // allows image uploads of type blob
         "https:",
         "https://maps.gstatic.com", 
         "https://*.googleapis.com"
@@ -1231,8 +1232,8 @@ app.use(
                     key: await fsCore.readFileSync("serverGITignore.key"),
                     cert: await fsCore.readFileSync("serverGITignore.cert")
                 };
-                console.log(`${trace()}🔍 Production mode options key:- `, options.key.slice(0,15));
-                console.log(`${trace()}🔍 Production mode options cert:-`, options.cert.slice(0,15));
+                console.log(`${trace()}🔍 Production Key Snippet:`, maskString(String(options.key),22,22));
+                console.log(`${trace()}🔍 Production Cert Snippet:`, maskString(String(options.cert),22,22));
                 https.createServer(options, app).listen(PORT, () => {
                     // Logging for development...
                     logServerStartup();

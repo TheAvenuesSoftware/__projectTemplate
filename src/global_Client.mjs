@@ -7,9 +7,7 @@ export function globalClientJSisLoaded(){
 //  ONLY IMPORT CLIENT SIDE MODULES TO HERE
     import { getGooglePlacesAPIkey } from "./projectGoogleAPIs_Client.mjs";
     import { doAfterDOMandWindowLoad__globalLogin_ClientMJS } from "./globalLogin_Client.mjs";
-    // import { sessionLogout } from "./globalSessions_Client.mjs";
     import { clientConfigSettings } from "../config/projectConfig_Client.mjs";
-    // import { showCustomMessage } from "./globalUIpopups_Client.mjs";
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
 
     // console.log(actions);

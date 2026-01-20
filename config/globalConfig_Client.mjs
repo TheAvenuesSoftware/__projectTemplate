@@ -1,4 +1,4 @@
-window.consoleLog = false;
+window.consoleLog = true;
 if(window.consoleLog===true){console.log('window.consoleLog setting is, log to the cobsole: ',window.consoleLog);}
 window.consoleLogErros = true;
 if(window.consoleLogErrors===true){console.log('window.consoleLogErrors setting is, log to the cobsole: ',window.consoleLogErrors);}

@@ -208,7 +208,7 @@
                         <div class="upload-image-container">
                                 <div class="upload-image-file">
                                     <label for="imageInput" class="std-btn NO-custom-file-upload">Select Image</label>
-                                    <!-- <input type="file" data-action="selectImageToUpload" id="imageInput" accept="image/*" /> -->
+                                    <input type="file" data-action="selectImageToUpload" id="imageInput" accept="image/*" />
                                     <span class="file-name" id="fileName">No file chosen</span>
                                     <br>
                                 </div>
@@ -297,6 +297,7 @@
                             <ul id="filteredList-container">
                                 <!-- Search results will be dynamically populated here -->
                             </ul>
+                            <button id="print-search-result" class="std-btn" data-action="printSearchResult">🖨️ Print</button>
                         <!-- </div> -->
                     </div>
 </div>
@@ -308,6 +309,9 @@
     <div id="scroll-buffer" class="scroll-buffer">&nbsp</div>
 
     <footer>
+        <div id="sessionGuest" class="sessionDashItem"></div>
+        <div id="sessionGuestRegen" class="sessionCount"></div>
+        <div id="sessionPing" class="sessionDashItem">💚</div>
         <div id="footer-controls-container" class="footer-controls-container">
             <img id="footer-control-home" src="/_Home.png" class="footer-control" data-section-number="0">
             <!-- <img id="footer-control-menu" src="/_Menu.png" class="footer-control" data-section-number="1"> -->
@@ -317,6 +321,8 @@
             <img id="footer-control-save" src="/_Save.png" class="footer-control" data-section-number="5">
             <img id="footer-control-search" src="/_Search.png" class="footer-control" data-section-number="6">
         </div>
+        <div id="sessionSignedinRegen" class="sessionCount"></div>
+        <div id="sessionSignedin" class="sessionDashItem">🔒</div>
     </footer>
 </body>
 </html>
