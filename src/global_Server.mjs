@@ -37,6 +37,11 @@ export function maskString(str,firstX,lastX) {
 }
 
 export function dataFilePathName(emailAddress){
+    // It sanitizes environment variables so that:
+    // prefixes always end with _
+    // suffixes always start with _
+    // extensions always start with .
+    // This prevents malformed filenames.
     const filePrefix = process.env.DATA_FILE_PREFIX
         ? process.env.DATA_FILE_PREFIX.endsWith('_')
         ? process.env.DATA_FILE_PREFIX
@@ -52,7 +57,8 @@ export function dataFilePathName(emailAddress){
         ? process.env.DATA_FILE_EXTENSION
         : `.${process.env.DATA_FILE_EXTENSION}`
         : '';
-    return {filePath: process.env.APP_PATH_TO_DATA, fileName: `${filePrefix}${emailAddress}${fileSuffix}${fileExtension}`};
+    console.log(trace(),`${process.env.APP_PATH_TO_DATA}${filePrefix}${emailAddress}${fileSuffix}${fileExtension}`);
+    return `${process.env.APP_PATH_TO_DATA}${filePrefix}${emailAddress}${fileSuffix}${fileExtension}`;
 }
 
 // ♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️♾️
