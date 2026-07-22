@@ -3,14 +3,14 @@
     "workbench.colorCustomizations": {
         // top title bar START
             "titleBar.activeForeground": "#ffffff",
-            "titleBar.activeBackground": "#770303",
+            "titleBar.activeBackground": "#029f2c",
             "titleBar.border": "#fd04fd",
         // top title bar END
         // activity bar START
-            "activityBar.background":"#770303",
+            "activityBar.background":"#029f2c",
             "activityBar.inactiveForeground":"#ffffff",
             "activityBar.foreground": "#000000",
-            "activityBar.activeBackground":"#fdfcfc",
+            "activityBar.activeBackground":"#ffffff",
         // activity bar END
         // sidebar START
             "sideBar.foreground":"#ffffff",
@@ -30,7 +30,7 @@
         // tabs END
         // bottom status bar START
             "statusBar.foreground":"#ffffff",
-            "statusBar.background":"#770303",
+            "statusBar.background":"#029f2c",
         // bottom status bar END
 
         // // "activityBar.background":"#770303",

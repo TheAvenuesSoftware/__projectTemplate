@@ -19,6 +19,13 @@
 	let lastMouseX = 0, lastMouseY = 0;
 
 	async function startCamera() {
+		// Grab DOM elements safely
+			// const video = document.querySelector("#video");
+			const video = document.querySelector("#camera-stream");
+			// const container = document.querySelector("#container");
+			const container = document.querySelector("#video-container");
+			// const zoomInput = document.querySelector("#zoomInput");
+			const zoomInput = document.querySelector("#zoom");
 		try {
 			const stream = await navigator.mediaDevices.getUserMedia({
 			video: {
